@@ -1,0 +1,36 @@
+version: "0.0.2"
+
+services:
+  app:
+    build: ./
+    volumes:
+      - KhodedSite:/project/site
+    container_name: KhodedSite
+    ports:
+      - 8081:8080
+    expose:
+      - 8081
+    networks:
+      - KhodedSiteContainer
+    depends_on:
+      - database
+  database:
+    image: postgres:alpine3.19
+    environment:
+      - POSTGRES_DB=khodedBackendData
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=khodedData
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    volumes:
+      - KhodedSite:/var/lib/postgresql/data
+    networks:
+      - KhodedSiteContainer
+networks:
+  KhodedSiteContainer:
+    driver: bridge
+volumes:
+  KhodedSite:
+    driver: local

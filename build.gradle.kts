@@ -1,0 +1,12 @@
+subprojects {
+    repositories {
+        mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        google()
+        maven("https://us-central1-maven.pkg.dev/varabyte-repos/public")
+
+        gradlePluginPortal()
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://jitpack.io")
+    }
+}

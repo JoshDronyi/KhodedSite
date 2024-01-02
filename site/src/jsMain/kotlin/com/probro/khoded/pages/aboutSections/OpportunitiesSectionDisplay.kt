@@ -1,0 +1,107 @@
+package com.probro.khoded.pages.aboutSections
+
+import androidx.compose.runtime.Composable
+import com.probro.khoded.BlueButtonVariant
+import com.probro.khoded.models.ButtonState
+import com.probro.khoded.pages.homeSections.ButtonDisplay
+import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.layout.SimpleGrid
+import com.varabyte.kobweb.silk.components.layout.numColumns
+import com.varabyte.kobweb.silk.components.style.toModifier
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.dom.P
+import org.jetbrains.compose.web.dom.Text
+
+@Composable
+fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Section.Opportunities) {
+    Column(
+        modifier = baseModifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        P(
+            attrs = BaseTextStyle.toModifier()
+                .fontSize(FontSize.XXLarge)
+                .fontWeight(FontWeight.Bold)
+                .toAttrs()
+        ) {
+            Text(mainText)
+        }
+        P(
+            attrs = BaseTextStyle.toModifier()
+                .fontSize(FontSize.Large)
+                .toAttrs()
+        ) {
+            Text(subText)
+        }
+        SimpleGrid(
+            numColumns = numColumns(base = 1, sm = 2, md = 3),
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(70.percent),
+        ) {
+            positions.forEach {
+                JobPositionDisplay(it)
+            }
+        }
+    }
+}
+
+@Composable
+fun JobPositionDisplay(position: Pages.About_Section.JobPosition) = with(position) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(70.percent)
+                .padding(topBottom = 10.px, leftRight = 15.px)
+                .border {
+                    width(1.px)
+                    color(Color.black)
+                    style(LineStyle.Solid)
+                }
+                .borderRadius(20.px),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            P(
+                attrs = BaseTextStyle.toModifier()
+                    .fontWeight(FontWeight.Bold)
+                    .fontSize(FontSize.Medium)
+                    .toAttrs()
+            ) {
+                Text(positionTitle)
+            }
+            P(
+                attrs = BaseTextStyle.toModifier()
+                    .fontSize(FontSize.Medium)
+                    .toAttrs()
+            ) {
+                Text(positionDesc)
+            }
+            ButtonDisplay(
+                state = ButtonState(
+                    buttonText = "Learn More",
+                    onButtonClick = { }
+                ),
+                variant = BlueButtonVariant,
+            )
+        }
+    }
+}
