@@ -1,28 +1,22 @@
 package com.probro.khoded.components.widgets
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
-import com.stevdza.san.kotlinbs.components.BSCollapse
-import com.stevdza.san.kotlinbs.components.showCollapse
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.color
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.silk.components.icons.fa.FaArrowDown
+import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.silk.components.icons.fa.FaAngleDown
+import com.varabyte.kobweb.silk.components.icons.fa.FaAngleRight
 import com.varabyte.kobweb.silk.components.icons.fa.FaArrowLeft
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 
 @Composable
@@ -37,17 +31,19 @@ fun SideNavigation(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(10.px),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             FaArrowLeft(
                 modifier = Modifier
-                    .padding(leftRight = 10.px)
+                    .padding(15.px)
+                    .color(Color.white)
                     .onClick {
                         onSideNavToggle()
                     },
-                size = IconSize.XL
+                size = IconSize.LG
             )
             LogoDisplay(
                 image = Images.Logos.circleLogo,
@@ -63,7 +59,6 @@ fun SideNavigation(
             )
         }
     }
-
 }
 
 @Composable
@@ -71,13 +66,42 @@ fun SideNavItem(
     section: Map.Entry<Navigator.PageRoot, List<PageSection>>,
     onNavItemSelect: (path: String) -> Unit
 ) {
-    var shouldShow: Boolean by mutableStateOf(false)
+    var shouldShow: Boolean by remember { mutableStateOf(false) }
     //TODO: FIGURE OUT THE BSCOLLAPSE TRIGGERING MECHANISM AND IMPLEMENT.
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .padding(10.px)
+            .borderBottom {
+                width(1.px)
+                color(Color.white)
+                style(LineStyle.Ridge)
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+        val angleModifier = Modifier
+            .padding(leftRight = 15.px)
+            .color(Color.white)
+
+        if (shouldShow) {
+            FaAngleDown(
+                modifier = angleModifier
+                    .onClick {
+                        println("Clicked down")
+                        shouldShow = false
+                    },
+                size = IconSize.LG
+            )
+        } else {
+            FaAngleRight(
+                modifier = angleModifier
+                    .onClick {
+                        println("Clicked right")
+                        shouldShow = true
+                    },
+                size = IconSize.LG
+            )
+        }
         NavigationItem(
             text = section.key.primaryText,
             sections = section.value,
@@ -85,33 +109,27 @@ fun SideNavItem(
         ) { path ->
             onNavItemSelect(path)
         }
-        FaArrowDown(
-            modifier = Modifier.fillMaxWidth()
-                .padding(leftRight = 10.px)
-                .color(Color.white)
-                .onClick { shouldShow = !shouldShow },
-            size = IconSize.XL
+    }
+    if (shouldShow) {
+        SideNavSubItems(
+            items = section.value,
+            onNavItemSelect = onNavItemSelect
         )
     }
-    SideNavSubItems(
-        id = section.key.name,
-        items = section.value,
-        onNavItemSelect = onNavItemSelect
-    )
 }
 
 @Composable
 fun SideNavSubItems(
-    id: String,
     items: List<PageSection>,
     onNavItemSelect: (path: String) -> Unit
 ) {
-    BSCollapse(
+    Column(
         modifier = Modifier
-            .showCollapse(id),
-        id = id
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items.forEach {
+        items.drop(1).forEach {
             NavSubItem(
                 section = it,
                 variant = SideSubItemVariant,

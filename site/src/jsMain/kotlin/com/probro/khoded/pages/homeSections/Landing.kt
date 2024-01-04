@@ -1,5 +1,7 @@
 package com.probro.khoded.pages.homeSections
 
+import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.models.ButtonState
@@ -21,6 +23,7 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -29,62 +32,70 @@ import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
-fun LandingSectionDisplay(data: Pages.Home_Section.LandingData) = with(data) {
-    Row(
-        modifier = Modifier.fillMaxWidth(80.percent)
-            .padding(topBottom = 20.px)
-            .id(Pages.Home_Section.LandingData.id),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+fun LandingSectionDisplay(breakpoint: Breakpoint, data: Pages.Home_Section.LandingData) = with(data) {
+    BackingCard(
+        breakpoint = breakpoint,
+        modifier = Modifier
+            .id(id)
+            .padding(topBottom = 20.px),
+        variant = NoBorderBackingCardVariant,
+        firstSection = { LandingText(data) },
+        secondSection = { LandingImage() }
+    )
+}
+
+@Composable
+fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        P(
+            attrs = BaseTextStyle.toModifier()
+                .fontSize(60.px)
+                .fontWeight(FontWeight.Bolder)
+                .fontFamily(SPACE_GROTESK)
+                .toAttrs()
         ) {
-            P(
-                attrs = BaseTextStyle.toModifier()
-                    .fontSize(60.px)
-                    .fontWeight(FontWeight.Bolder)
-                    .fontFamily(SPACE_GROTESK)
-                    .toAttrs()
-            ) {
-                Text(mainText)
-            }
-            P(
-                attrs = BaseTextStyle.toModifier()
-                    .fontSize(FontSize.Large)
-                    .fontStyle(FontStyle.Italic)
-                    .toAttrs()
-            ) {
-                Text(subText)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(70.percent)
-                    .padding(leftRight = 30.px),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                ButtonDisplay(startButton, BlueButtonVariant)
-                ButtonDisplay(learnMoreButton, BlueButtonVariant)
-            }
+            Text(mainText)
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(50.percent)
-                .fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        P(
+            attrs = BaseTextStyle.toModifier()
+                .fontSize(FontSize.Large)
+                .fontStyle(FontStyle.Italic)
+                .toAttrs()
         ) {
-            Image(
-                src = image,
-                description = "Landing section image.",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .objectFit(ObjectFit.Fill)
-            )
+            Text(subText)
         }
+        Row(
+            modifier = Modifier.fillMaxWidth(70.percent)
+                .padding(leftRight = 30.px),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            ButtonDisplay(startButton, BlueButtonVariant)
+            ButtonDisplay(learnMoreButton, BlueButtonVariant)
+        }
+    }
+}
+
+@Composable
+fun LandingImage() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            src = Pages.Home_Section.LandingData.image,
+            description = "Landing section image.",
+            modifier = Modifier
+                .fillMaxSize()
+                .objectFit(ObjectFit.Fill)
+        )
     }
 }
 

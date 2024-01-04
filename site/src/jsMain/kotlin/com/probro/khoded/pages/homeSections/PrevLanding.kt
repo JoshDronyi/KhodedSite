@@ -1,8 +1,8 @@
 //package com.probro.khoded.sections
 //
 //import androidx.compose.runtime.*
-//import com.probro.khoded.components.BackingCard
-//import com.probro.khoded.components.BackingCardStyle
+//import com.probro.khoded.components.com.probro.khoded.components.composables.BackingCard.kt
+//import com.probro.khoded.components.com.probro.khoded.components.composables.getBackingCardStyle
 //import com.probro.khoded.components.TitleCardDisplay
 //import com.probro.khoded.styles.BaseSectionStyles
 //import com.probro.khoded.styles.BaseTextStyle
@@ -141,8 +141,8 @@
 //    testimonial: Testimonial = Testimonial(),
 //    isVisible: Boolean = false
 //) {
-//    BackingCard(
-//        modifier = BackingCardStyle.toModifier().then(modifier)
+//    com.probro.khoded.components.composables.BackingCard.kt(
+//        modifier = com.probro.khoded.components.composables.getBackingCardStyle.toModifier().then(modifier)
 //            .fillMaxWidth()
 //            .maxWidth(60.percent)
 //            .opacity(if (isVisible) 90.percent else 0.percent)

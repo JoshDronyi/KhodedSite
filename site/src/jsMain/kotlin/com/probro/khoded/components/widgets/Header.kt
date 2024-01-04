@@ -42,6 +42,7 @@ fun Header(
     val breakpoint = rememberBreakpoint()
     Row(
         modifier = HeaderStyle.toModifier()
+            .fillMaxWidth()
             .fillMaxHeight()
             .padding(40.px)
             .then(modifier),
@@ -50,7 +51,14 @@ fun Header(
     ) {
         if (breakpoint <= Breakpoint.MD) Box(
             modifier = Modifier
-                .fillMaxWidth(30.percent),
+                .fillMaxWidth(
+                    when (breakpoint) {
+                        Breakpoint.ZERO -> 20.percent
+                        Breakpoint.SM -> 25.percent
+                        Breakpoint.MD -> 30.percent
+                        else -> 0.percent
+                    }
+                ),
             contentAlignment = Alignment.Center
         ) {
             FaBars(
@@ -60,23 +68,39 @@ fun Header(
                         println("Clicked")
                         onShouldShowClick()
                     },
-                size = IconSize.X3
+                size = when (breakpoint) {
+                    Breakpoint.ZERO -> IconSize.LG
+                    Breakpoint.SM -> IconSize.XL
+                    Breakpoint.MD -> IconSize.XXL
+                    else -> IconSize.XL
+                }
             )
         }
 
-        LogoDisplay(
-            image = Images.Logos.circleLogo,
-            variant = HeaderLogoVariant,
+        Box(
             modifier = Modifier.onClick { onNavItemSelect(Routes.Home.SLUG) }
                 .fillMaxWidth(
-                    if (breakpoint > Breakpoint.MD) 45.percent else 70.percent
-                )
-        )
+                    when (breakpoint) {
+                        Breakpoint.ZERO -> 70.percent
+                        Breakpoint.SM -> 75.percent
+                        Breakpoint.MD -> 80.percent
+                        Breakpoint.LG -> 30.percent
+                        Breakpoint.XL -> 35.percent
+                    }
+                ),
+            contentAlignment = if (breakpoint > Breakpoint.MD) Alignment.Center else Alignment.CenterStart
+        ) {
+            LogoDisplay(
+                image = Images.Logos.circleLogo,
+                variant = HeaderLogoVariant,
+                modifier = Modifier
+                    .fillMaxWidth(60.percent)
+            )
+        }
 
         if (breakpoint > Breakpoint.MD) HeaderNavItemDisplay(
             modifier = Modifier
-                .fillMaxWidth(80.percent)
-                .padding(top = 15.px),
+                .fillMaxWidth(80.percent),
             onNavItemSelect = onNavItemSelect
         )
     }

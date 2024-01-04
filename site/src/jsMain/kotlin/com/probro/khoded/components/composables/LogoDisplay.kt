@@ -72,7 +72,8 @@ fun LogoDisplay(
         Image(
             src = image,
             modifier = Modifier
-                .fillMaxWidth(30.percent)
+                .fillMaxWidth(50.percent)
+                .fillMaxHeight(75.percent)
                 .objectFit(ObjectFit.Fill)
         )
         P(

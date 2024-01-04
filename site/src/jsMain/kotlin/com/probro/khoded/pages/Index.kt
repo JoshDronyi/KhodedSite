@@ -11,6 +11,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 
 @Page("/index")
 @Composable
@@ -25,18 +26,19 @@ fun Index() {
 
 @Composable
 fun HomePageSections(modifier: Modifier = Modifier) {
+    val breakpoint = rememberBreakpoint()
     Column(
         modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LandingSectionDisplay(Pages.Home_Section.LandingData)
-        WebDesignSectionDisplay(Pages.Home_Section.WebDesign)
-        HostingSectionDisplay(Pages.Home_Section.Hosting)
-        BrandingSectionDisplay(Pages.Home_Section.Branding)
-        ConsultationSectionDisplay(Pages.Home_Section.Consultation)
+        LandingSectionDisplay(breakpoint, Pages.Home_Section.LandingData)
+        WebDesignSectionDisplay(breakpoint, Pages.Home_Section.WebDesign)
+        HostingSectionDisplay(breakpoint, Pages.Home_Section.Hosting)
+        BrandingSectionDisplay(breakpoint, Pages.Home_Section.Branding)
+        ConsultationSectionDisplay(breakpoint, Pages.Home_Section.Consultation)
 //        TestimonialSectionDisplay(Pages.Home_Section.Testimonials)
-        GetStartedSectionDisplay(Pages.Home_Section.GET_STARTED)
+        GetStartedSectionDisplay(breakpoint, Pages.Home_Section.GET_STARTED)
     }
 }

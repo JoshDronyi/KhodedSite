@@ -8,39 +8,79 @@ import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.layout.SimpleGrid
+import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (path: String) -> Unit) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+    SimpleGrid(
+        numColumns = numColumns(
+            base = 1,
+            sm = 2,
+            md = 3,
+            lg = 6
+        ),
+        modifier = modifier
+            .background(Colors.Black)
+            .color(Colors.White),
     ) {
-        LogoSection(Modifier)
+        LogoSection(
+            Modifier
+                .fillMaxWidth(20.percent)
+        )
         Navigator.sections.forEach {
-            NavigationItem(
-                text = it.key.primaryText,
-                sections = it.value,
-                navItemVariant = FooterNavItemVariant,
-                onNavItemSelect = onNavItemSelect,
+            NavigationDisplay(
                 modifier = Modifier
-            )
-            FooterNavSubItems(
-                items = it.value,
-                navSubItemVariant = FooterSubItemVariant,
-                onNavItemSelect = onNavItemSelect
+                    .fillMaxWidth(),
+                entry = it, onNavItemSelect
             )
         }
+    }
+}
+
+@Composable
+fun NavigationDisplay(
+    modifier: Modifier = Modifier,
+    entry: Map.Entry<Navigator.PageRoot, List<PageSection>>,
+    onNavItemSelect: (path: String) -> Unit
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        NavigationItem(
+            text = entry.key.primaryText,
+            sections = entry.value,
+            navItemVariant = FooterNavItemVariant,
+            onNavItemSelect = onNavItemSelect,
+            modifier = Modifier.fillMaxWidth()
+                .padding(topBottom = 15.px)
+                .border {
+                    width(1.px)
+                    color(Color.white)
+                    style(LineStyle.Ridge)
+                }
+
+        )
+        FooterNavSubItems(
+            items = entry.value,
+            navSubItemVariant = FooterSubItemVariant,
+            onNavItemSelect = onNavItemSelect
+        )
     }
 }
 
@@ -58,6 +98,7 @@ fun FooterNavSubItems(
         items.drop(1).forEach { item ->
             P(
                 attrs = NavSubItemStyle.toModifier(navSubItemVariant)
+                    .fillMaxWidth()
                     .onClick { onNavItemSelect(item.path) }
                     .toAttrs()
             ) {
@@ -76,6 +117,8 @@ fun LogoSection(modifier: Modifier = Modifier) {
     ) {
         LogoDisplay(
             image = Images.Logos.circleLogo,
+            modifier = Modifier
+                .fillMaxWidth(),
             variant = FooterLogoVariant
         )
         FooterSubText("Khoded Est. 2023")
