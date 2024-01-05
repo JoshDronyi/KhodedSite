@@ -8,17 +8,20 @@ import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.icons.fa.FaAngleRight
+import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
@@ -34,7 +37,8 @@ fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (path: String) -> Uni
         ),
         modifier = modifier
             .background(Colors.Black)
-            .color(Colors.White),
+            .color(Colors.White)
+            .padding(topBottom = 20.px),
     ) {
         LogoSection()
         Navigator.sections.forEach {
@@ -62,15 +66,7 @@ fun NavigationDisplay(
             text = entry.key.primaryText,
             sections = entry.value,
             navItemVariant = FooterNavItemVariant,
-            onNavItemSelect = onNavItemSelect,
-            modifier = Modifier.fillMaxWidth()
-                .padding(topBottom = 15.px)
-                .border {
-                    width(1.px)
-                    color(Color.white)
-                    style(LineStyle.Ridge)
-                }
-
+            onNavItemSelect = onNavItemSelect
         )
         FooterNavSubItems(
             items = entry.value,
@@ -87,19 +83,43 @@ fun FooterNavSubItems(
     onNavItemSelect: (path: String) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(90.percent),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items.drop(1).forEach { item ->
-            P(
-                attrs = NavSubItemStyle.toModifier(navSubItemVariant)
-                    .fillMaxWidth()
-                    .onClick { onNavItemSelect(item.path) }
-                    .toAttrs()
-            ) {
-                Text(item.title)
-            }
+            FooterSubItem(
+                item = item,
+                navSubItemVariant = navSubItemVariant,
+                onNavItemSelect = onNavItemSelect
+            )
+        }
+    }
+}
+
+@Composable
+fun FooterSubItem(
+    item: PageSection,
+    navSubItemVariant: ComponentVariant? = null,
+    onNavItemSelect: (path: String) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .padding(topBottom = 10.px, leftRight = 20.px),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FaAngleRight(
+            modifier = Modifier.color(Color.white)
+                .margin(right = 10.px),
+            size = IconSize.XL
+        )
+        P(
+            attrs = NavSubItemStyle.toModifier(navSubItemVariant)
+                .onClick { onNavItemSelect(item.path) }
+                .toAttrs()
+        ) {
+            Text(item.title)
         }
     }
 }

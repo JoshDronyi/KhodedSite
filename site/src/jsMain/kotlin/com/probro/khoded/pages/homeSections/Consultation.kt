@@ -135,7 +135,7 @@ fun StepDisplay(step: Pair<String, String>, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .padding(bottom = 20.px),
-        horizontalAlignment = Alignment.Start,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         P(

@@ -27,6 +27,9 @@ val NavItemStyle by ComponentStyle {
         Modifier
             .background(Color.black)
             .color(Color.white)
+            .padding(0.px)
+            .margin(0.px)
+            .textAlign(TextAlign.Center)
     }
 }
 
@@ -45,7 +48,14 @@ val HeaderNavItemVariant by NavItemStyle.addVariant {
 }
 val FooterNavItemVariant by NavItemStyle.addVariant {
     base {
-        Modifier
+        Modifier.fillMaxWidth(80.percent)
+            .padding(topBottom = 15.px)
+            .border {
+                width(1.px)
+                color(Color.white)
+                style(LineStyle.Ridge)
+            }
+            .borderRadius(20.px)
     }
 }
 val SideNavItemVariant by NavItemStyle.addVariant {
@@ -93,11 +103,7 @@ private fun NavSectionTitle(
     ) {
         P(
             attrs = NavItemStyle.toModifier(navItemVariant)
-                .padding(0.px)
-                .margin(0.px)
                 .onClick { onNavItemSelect(slug) }
-                .textAlign(TextAlign.Center)
-                .fillMaxWidth(70.percent)
                 .toAttrs()
         ) {
             Text(text)
@@ -108,6 +114,8 @@ private fun NavSectionTitle(
 val NavSubItemStyle by ComponentStyle {
     base {
         Modifier
+            .margin(0.px)
+            .padding(0.px)
     }
 }
 

@@ -43,19 +43,27 @@ val MainTextVariant by BaseTextStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
-            .fontSize(FontSize.XXLarge)
+            .fontSize(48.px)
             .textAlign(TextAlign.Start)
             .fontWeight(FontWeight.Bolder)
             .padding(leftRight = 15.px)
             .textAlign(TextAlign.Start)
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XLarge)
+        Modifier.fontSize(FontSize.XXLarge)
     }
-    Breakpoint.SM
-    Breakpoint.MD
-    Breakpoint.LG
-    Breakpoint.XL
+    Breakpoint.SM {
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(36.px)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(72.px)
+    }
 }
 val SubTextVariant by BaseTextStyle.addVariant {
     base {

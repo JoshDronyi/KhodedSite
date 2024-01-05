@@ -16,6 +16,7 @@ import com.stevdza.san.kotlinbs.components.BSButton
 import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -32,16 +33,25 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun LandingSectionDisplay(data: Pages.Home_Section.LandingData) = with(data) {
-    BackingCard(
+    Box(
         modifier = Modifier
             .id(id)
-            .padding(topBottom = 20.px, leftRight = 10.px)
             .fillMaxWidth()
+            .padding(topBottom = 20.px, leftRight = 10.px)
             .height(Height.FitContent),
-        variant = NoBorderBackingCardVariant,
-        firstSection = { LandingText(data) },
-        secondSection = { LandingImage() }
-    )
+        contentAlignment = Alignment.Center
+    ) {
+        BackingCard(
+            modifier = Modifier
+                .id(id)
+                .padding(topBottom = 20.px, leftRight = 10.px)
+                .fillMaxWidth()
+                .height(Height.FitContent),
+            variant = NoBorderBackingCardVariant,
+            firstSection = { LandingText(data) },
+            secondSection = { LandingImage() }
+        )
+    }
 }
 
 @Composable
