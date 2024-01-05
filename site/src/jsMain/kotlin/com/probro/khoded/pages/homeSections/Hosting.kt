@@ -11,6 +11,7 @@ import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -48,7 +49,8 @@ fun HostingSectionDisplay(data: Pages.Home_Section.Hosting) = with(data) {
 fun HostingText(data: Pages.Home_Section.Hosting) = with(data) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(leftRight = 16.px, topBottom = 20.px),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
@@ -70,7 +72,14 @@ fun HostingText(data: Pages.Home_Section.Hosting) = with(data) {
         ) {
             Text(subText)
         }
-        ButtonDisplay(learnMoreButton, BlueButtonVariant)
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(topBottom = 15.px),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ButtonDisplay(learnMoreButton, BlueButtonVariant)
+        }
     }
 }
 

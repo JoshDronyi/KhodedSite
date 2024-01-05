@@ -7,6 +7,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -48,6 +49,13 @@ val MainTextVariant by BaseTextStyle.addVariant {
             .padding(leftRight = 15.px)
             .textAlign(TextAlign.Start)
     }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }
 val SubTextVariant by BaseTextStyle.addVariant {
     base {
@@ -58,6 +66,14 @@ val SubTextVariant by BaseTextStyle.addVariant {
             .textAlign(TextAlign.Start)
 
     }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }
 
 val ParagraphTitleVariant by BaseTextStyle.addVariant {
@@ -89,14 +105,21 @@ val BaseSectionStyles by ComponentStyle {
 val ImageStyle by ComponentStyle {
     base {
         Modifier
-            .fillMaxWidth(30.percent)
+            .fillMaxWidth()
             .objectFit(ObjectFit.Fill)
     }
 }
 
 val ConsultationImageVariant by ImageStyle.addVariant {
     base {
-        Modifier.fillMaxWidth(40.percent)
+        Modifier.fillMaxWidth(50.percent)
             .objectFit(ObjectFit.Fill)
     }
+    Breakpoint.ZERO {
+        Modifier.fillMaxWidth(70.percent)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }

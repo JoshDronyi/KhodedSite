@@ -11,12 +11,15 @@ import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -61,8 +64,8 @@ fun ConsultationSectionDisplay(data: Pages.Home_Section.Consultation) = with(dat
 fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
     Column(
         modifier = Modifier.fillMaxWidth()
-            .padding(leftRight = 20.px)
-            .translateY(ty = (-100).px),
+            .padding(leftRight = 16.px, topBottom = 20.px)
+            .translateY(ty = getTranslationFromBreakpoint()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
@@ -79,14 +82,29 @@ fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
             attrs = BaseTextStyle.toModifier(SubTextVariant)
                 .toAttrs()
         ) { Text(subText) }
-        ButtonDisplay(startButton, PinkButtonVariant)
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(topBottom = 15.px),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ButtonDisplay(startButton, PinkButtonVariant)
+        }
     }
+}
+
+@Composable
+private fun getTranslationFromBreakpoint() = when (rememberBreakpoint()) {
+    Breakpoint.ZERO, Breakpoint.SM -> (-50).px
+    Breakpoint.MD -> (-80).px
+    Breakpoint.LG, Breakpoint.XL -> (-100).px
+
 }
 
 @Composable
 fun ConsultationSteps(data: Pages.Home_Section.Consultation) = with(data) {
     Column(
-        modifier = Modifier.fillMaxWidth(70.percent)
+        modifier = Modifier.fillMaxWidth(getWidthFromBreakpoint(rememberBreakpoint()))
             .padding(all = 20.px),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -102,6 +120,14 @@ fun ConsultationSteps(data: Pages.Home_Section.Consultation) = with(data) {
             )
         }
     }
+}
+
+fun getWidthFromBreakpoint(breakpoint: Breakpoint) = when (breakpoint) {
+    Breakpoint.ZERO -> 100.percent
+    Breakpoint.SM -> 90.percent
+    Breakpoint.MD -> 80.percent
+    Breakpoint.LG -> 70.percent
+    Breakpoint.XL -> 60.percent
 }
 
 @Composable

@@ -2,18 +2,20 @@ package com.probro.khoded
 
 import androidx.compose.runtime.Composable
 import com.probro.khoded.models.Res
+import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.background
-import com.varabyte.kobweb.compose.ui.modifiers.color
-import com.varabyte.kobweb.compose.ui.modifiers.minHeight
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.SilkApp
-import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.layout.Surface
+import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorStyle
 import com.varabyte.kobweb.silk.components.style.toModifier
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 
 @App
@@ -26,16 +28,43 @@ fun MyApp(content: @Composable () -> Unit) {
     }
 }
 
-val BlueButtonVariant by ButtonStyle.addVariant {
+val BaseButtonStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .width(Width.FitContent)
+            .textAlign(TextAlign.Center)
+            .borderRadius(r = 16.px)
+            .padding(16.px)
+            .padding(leftRight = 10.px, topBottom = 5.px)
+    }
+}
+
+val BlueButtonVariant by BaseButtonStyle.addVariant {
     base {
         Modifier.background(Res.BrandColors.KhodedBlue.rgb)
             .color(Colors.White)
     }
+    Breakpoint.ZERO {
+        Modifier.padding(leftRight = 10.px, topBottom = 5.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }
 
-val PinkButtonVariant by ButtonStyle.addVariant {
+val PinkButtonVariant by BaseButtonStyle.addVariant {
     base {
         Modifier.background(Res.BrandColors.KhodedPink.rgb)
             .color(Colors.White)
     }
+
+    Breakpoint.ZERO {
+        Modifier.padding(leftRight = 10.px, topBottom = 5.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }

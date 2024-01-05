@@ -49,7 +49,8 @@ fun BrandingSectionDisplay(data: Pages.Home_Section.Branding) = with(data) {
 @Composable
 fun BrandingText(data: Pages.Home_Section.Branding) = with(data) {
     Column(
-        modifier = Modifier.fillMaxWidth(80.percent),
+        modifier = Modifier.fillMaxWidth(80.percent)
+            .padding(leftRight = 16.px, topBottom = 20.px),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
@@ -66,7 +67,8 @@ fun BrandingText(data: Pages.Home_Section.Branding) = with(data) {
             Text(subText)
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .padding(topBottom = 15.px),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {

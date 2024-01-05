@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.BaseButtonStyle
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
@@ -21,11 +22,9 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
@@ -49,7 +48,8 @@ fun LandingSectionDisplay(data: Pages.Home_Section.LandingData) = with(data) {
 fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(leftRight = 16.px, topBottom = 20.px),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -68,12 +68,16 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
             Text(subText)
         }
         Row(
-            modifier = Modifier.fillMaxWidth(70.percent)
-                .padding(leftRight = 30.px),
+            modifier = Modifier.fillMaxWidth()
+                .padding(topBottom = 15.px),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.End
         ) {
-            ButtonDisplay(startButton, BlueButtonVariant)
+            ButtonDisplay(
+                startButton,
+                BlueButtonVariant,
+                modifier = Modifier.margin(right = 10.px)
+            )
             ButtonDisplay(learnMoreButton, BlueButtonVariant)
         }
     }
@@ -98,10 +102,7 @@ fun LandingImage() {
 @Composable
 fun ButtonDisplay(state: ButtonState, variant: ComponentVariant, modifier: Modifier = Modifier) = with(state) {
     BSButton(
-        modifier = ButtonStyle.toModifier(variant)
-            .borderRadius(r = 16.px)
-            .margin(right = 16.px)
-            .padding(16.px)
+        modifier = BaseButtonStyle.toModifier(variant)
             .then(modifier),
         text = buttonText,
         onClick = onButtonClick

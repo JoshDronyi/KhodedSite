@@ -11,7 +11,6 @@ import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.styles.SubTextVariant
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -21,7 +20,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
@@ -52,7 +50,7 @@ fun GetStartedSectionDisplay(data: Pages.Home_Section.GET_STARTED) = with(data) 
 fun GetStartedText(data: Pages.Home_Section.GET_STARTED) = with(data) {
     Column(
         modifier = Modifier.fillMaxWidth()
-            .padding(leftRight = 16.px),
+            .padding(leftRight = 16.px, topBottom = 20.px),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
@@ -70,7 +68,7 @@ fun GetStartedText(data: Pages.Home_Section.GET_STARTED) = with(data) {
         }
         Row(
             modifier = Modifier.fillMaxWidth()
-                .padding(20.px),
+                .padding(topBottom = 15.px),
             horizontalArrangement = Arrangement.Start
         ) {
             ButtonDisplay(startButton, BlueButtonVariant)
