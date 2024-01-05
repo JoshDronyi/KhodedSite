@@ -1,18 +1,19 @@
 package com.probro.khoded.pages.homeSections
 
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
+import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.SPACE_GROTESK
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.MainTextVariant
+import com.probro.khoded.styles.SubTextVariant
 import com.probro.khoded.utils.Pages
 import com.stevdza.san.kotlinbs.components.BSButton
-import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.FontStyle
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -23,7 +24,6 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -32,12 +32,13 @@ import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
-fun LandingSectionDisplay(breakpoint: Breakpoint, data: Pages.Home_Section.LandingData) = with(data) {
+fun LandingSectionDisplay(data: Pages.Home_Section.LandingData) = with(data) {
     BackingCard(
-        breakpoint = breakpoint,
         modifier = Modifier
             .id(id)
-            .padding(topBottom = 20.px),
+            .padding(topBottom = 20.px, leftRight = 10.px)
+            .fillMaxWidth()
+            .height(Height.FitContent),
         variant = NoBorderBackingCardVariant,
         firstSection = { LandingText(data) },
         secondSection = { LandingImage() }
@@ -53,17 +54,14 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(60.px)
-                .fontWeight(FontWeight.Bolder)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
                 .fontFamily(SPACE_GROTESK)
                 .toAttrs()
         ) {
             Text(mainText)
         }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.Large)
+            attrs = BaseTextStyle.toModifier(SubTextVariant)
                 .fontStyle(FontStyle.Italic)
                 .toAttrs()
         ) {
@@ -92,9 +90,7 @@ fun LandingImage() {
         Image(
             src = Pages.Home_Section.LandingData.image,
             description = "Landing section image.",
-            modifier = Modifier
-                .fillMaxSize()
-                .objectFit(ObjectFit.Fill)
+            modifier = ImageStyle.toModifier()
         )
     }
 }

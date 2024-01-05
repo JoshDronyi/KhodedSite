@@ -5,12 +5,9 @@ import com.probro.khoded.PinkButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.Constants
+import com.probro.khoded.styles.*
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -19,7 +16,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.percent
@@ -29,16 +25,16 @@ import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
-fun ConsultationSectionDisplay(breakpoint: Breakpoint, data: Pages.Home_Section.Consultation) = with(data) {
+fun ConsultationSectionDisplay(data: Pages.Home_Section.Consultation) = with(data) {
     Box(
         modifier = Modifier
             .id(id)
-            .height(Constants.SECTION_HEIGHT.px)
+            .height(Height.FitContent)
+            .padding(topBottom = 20.px, leftRight = 10.px)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         BackingCard(
-            breakpoint = breakpoint,
             modifier = Modifier.fillMaxWidth()
                 .zIndex(2),
             variant = SingleBorderBackingCardVaiant,
@@ -73,20 +69,14 @@ fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
         ImageBox(
             image = image,
             imageDesc = "Depiction of scheduling a consultation",
-            modifier = Modifier
-                .fillMaxWidth(60.percent)
+            modifier = ImageStyle.toModifier(ConsultationImageVariant)
         )
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(36.px)
-                .textAlign(TextAlign.Start)
-                .fontWeight(FontWeight.Bolder)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
                 .toAttrs()
         ) { Text(mainText) }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.Medium)
-                .textAlign(TextAlign.Start)
+            attrs = BaseTextStyle.toModifier(SubTextVariant)
                 .toAttrs()
         ) { Text(subText) }
         ButtonDisplay(startButton, PinkButtonVariant)
@@ -96,10 +86,10 @@ fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
 @Composable
 fun ConsultationSteps(data: Pages.Home_Section.Consultation) = with(data) {
     Column(
-        modifier = Modifier.fillMaxWidth(50.percent)
+        modifier = Modifier.fillMaxWidth(70.percent)
             .padding(all = 20.px),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         steps.forEachIndexed { index, step ->
             StepDisplay(
@@ -123,17 +113,11 @@ fun StepDisplay(step: Pair<String, String>, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontWeight(FontWeight.Bold)
-                .textAlign(TextAlign.Center)
-                .fontSize(30.px)
+            attrs = BaseTextStyle.toModifier(ParagraphTitleVariant)
                 .toAttrs()
         ) { Text(step.first) }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(16.px)
-                .textAlign(TextAlign.Start)
-                .color(Colors.DarkGray)
+            attrs = BaseTextStyle.toModifier(ParagraphTextVariant)
                 .toAttrs()
         ) { Text(step.second) }
     }

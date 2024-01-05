@@ -19,7 +19,6 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
@@ -31,16 +30,13 @@ fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (path: String) -> Uni
             base = 1,
             sm = 2,
             md = 3,
-            lg = 6
+            lg = 5
         ),
         modifier = modifier
             .background(Colors.Black)
             .color(Colors.White),
     ) {
-        LogoSection(
-            Modifier
-                .fillMaxWidth(20.percent)
-        )
+        LogoSection()
         Navigator.sections.forEach {
             NavigationDisplay(
                 modifier = Modifier
@@ -112,14 +108,14 @@ fun FooterNavSubItems(
 fun LogoSection(modifier: Modifier = Modifier) {
     Column(
         modifier,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LogoDisplay(
             image = Images.Logos.circleLogo,
-            modifier = Modifier
-                .fillMaxWidth(),
-            variant = FooterLogoVariant
+            variant = FooterLogoContainerVariant,
+            imageVariant = FooterImageVariant,
+            textVariant = FooterLogoTextVariant
         )
         FooterSubText("Khoded Est. 2023")
     }

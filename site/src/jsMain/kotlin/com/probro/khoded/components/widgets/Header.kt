@@ -1,10 +1,7 @@
 package com.probro.khoded.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.components.composables.HeaderLogoVariant
-import com.probro.khoded.components.composables.HeaderNavItemVariant
-import com.probro.khoded.components.composables.LogoDisplay
-import com.probro.khoded.components.composables.NavigationItem
+import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
 import com.probro.khoded.utils.Navigator
@@ -92,9 +89,9 @@ fun Header(
         ) {
             LogoDisplay(
                 image = Images.Logos.circleLogo,
-                variant = HeaderLogoVariant,
-                modifier = Modifier
-                    .fillMaxWidth(60.percent)
+                variant = HeaderLogoContainerVariant,
+                imageVariant = HeaderImageVariant,
+                textVariant = HeaderLogoTextVariant
             )
         }
 

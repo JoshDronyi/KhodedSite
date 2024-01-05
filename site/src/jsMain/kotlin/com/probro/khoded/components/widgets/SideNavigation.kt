@@ -47,9 +47,9 @@ fun SideNavigation(
             )
             LogoDisplay(
                 image = Images.Logos.circleLogo,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                variant = SideNavLogoVariant
+                variant = SideNavLogoContainerVariant,
+                imageVariant = SideNavImageVariant,
+                textVariant = SideNavLogoTextVariant,
             )
         }
         Navigator.sections.forEach { section ->

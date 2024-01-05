@@ -2,7 +2,6 @@ package com.probro.khoded.components.widgets
 
 import androidx.compose.runtime.*
 import com.varabyte.kobweb.compose.css.CSSTransition
-import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.ScrollBehavior
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -12,6 +11,8 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.navigation.Router
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.*
 
 @Composable
@@ -29,7 +30,7 @@ fun Scaffold(
     ) {
         SideNavigation(
             modifier = Modifier
-                .fillMaxWidth(if (showSideNav) 40.percent else 0.percent)
+                .fillMaxWidth(if (showSideNav) getWidthFromBreakpoint() else 0.percent)
                 .align(Alignment.TopStart)
                 .fillMaxHeight()
                 .zIndex(if (showSideNav) 2 else 0)
@@ -46,7 +47,7 @@ fun Scaffold(
             router.navigateTo(path)
         }
         Column(
-            modifier = modifier.height(Height.MaxContent)
+            modifier = modifier.height(100.vh)
                 .zIndex(1)
                 .fillMaxWidth()
                 .scrollBehavior(ScrollBehavior.Smooth),
@@ -70,5 +71,13 @@ fun Scaffold(
                 router.navigateTo(path)
             }
         }
+    }
+}
+
+@Composable
+private fun getWidthFromBreakpoint(): CSSSizeValue<CSSUnit.percent> {
+    return when (rememberBreakpoint()) {
+        Breakpoint.ZERO, Breakpoint.SM, Breakpoint.MD -> 90.percent
+        Breakpoint.LG, Breakpoint.XL -> 50.percent
     }
 }

@@ -5,19 +5,19 @@ import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.Constants.SECTION_HEIGHT
+import com.probro.khoded.styles.*
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.id
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
@@ -25,23 +25,25 @@ import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
-fun HostingSectionDisplay(breakpoint: Breakpoint, data: Pages.Home_Section.Hosting) = with(data) {
+fun HostingSectionDisplay(data: Pages.Home_Section.Hosting) = with(data) {
     Box(
         modifier = Modifier
             .id(id)
-            .height(SECTION_HEIGHT.px)
+            .height(Height.FitContent)
+            .padding(topBottom = 20.px, leftRight = 10.px)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         BackingCard(
-            breakpoint = breakpoint,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             variant = SingleBorderBackingCardVaiant,
             firstSection = { HostingImage(data) },
             secondSection = { HostingText(data) }
         )
     }
 }
+
 @Composable
 fun HostingText(data: Pages.Home_Section.Hosting) = with(data) {
     Column(
@@ -51,43 +53,38 @@ fun HostingText(data: Pages.Home_Section.Hosting) = with(data) {
         horizontalAlignment = Alignment.Start
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.Large)
+            attrs = BaseTextStyle.toModifier(TitleTextVariant)
                 .toAttrs()
         ) {
             Text(title)
         }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.XXLarge)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
                 .toAttrs()
         ) {
             Text(mainText)
         }
         P(
-            attrs = BaseTextStyle.toModifier()
+            attrs = BaseTextStyle.toModifier(SubTextVariant)
                 .toAttrs()
         ) {
             Text(subText)
         }
         ButtonDisplay(learnMoreButton, BlueButtonVariant)
-
     }
 }
 
 @Composable
 fun HostingImage(data: Pages.Home_Section.Hosting) = with(data) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
         ImageBox(
             image = image,
             imageDesc = "Image depicting hosting",
-            modifier = Modifier.objectFit(ObjectFit.Fill)
-                .fillMaxSize()
+            modifier = ImageStyle.toModifier()
         )
     }
 }
