@@ -4,10 +4,9 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.homeSections.ButtonDisplay
-import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.*
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -29,20 +28,17 @@ import org.jetbrains.compose.web.dom.Text
 fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Section.Opportunities) {
     Column(
         modifier = baseModifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.XXLarge)
-                .fontWeight(FontWeight.Bold)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
                 .toAttrs()
         ) {
             Text(mainText)
         }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.Large)
+            attrs = BaseTextStyle.toModifier(SubTextVariant)
                 .toAttrs()
         ) {
             Text(subText)
@@ -50,8 +46,9 @@ fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Secti
         SimpleGrid(
             numColumns = numColumns(base = 1, sm = 2, md = 3),
             modifier = Modifier
+                .height(Height.MinContent)
                 .fillMaxWidth()
-                .fillMaxHeight(70.percent),
+                .padding(topBottom = 20.px, leftRight = 10.px),
         ) {
             positions.forEach {
                 JobPositionDisplay(it)
@@ -63,34 +60,33 @@ fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Secti
 @Composable
 fun JobPositionDisplay(position: Pages.About_Section.JobPosition) = with(position) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .padding(20.px)
+            .height(Height.FitContent),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(70.percent)
+                .fillMaxSize(80.percent)
                 .padding(topBottom = 10.px, leftRight = 15.px)
                 .border {
                     width(1.px)
                     color(Color.black)
                     style(LineStyle.Solid)
                 }
-                .borderRadius(20.px),
+                .borderRadius(20.px)
+                .height(Height.FitContent),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             P(
-                attrs = BaseTextStyle.toModifier()
-                    .fontWeight(FontWeight.Bold)
-                    .fontSize(FontSize.Medium)
+                attrs = BaseTextStyle.toModifier(JobTitleVariant)
                     .toAttrs()
             ) {
                 Text(positionTitle)
             }
             P(
-                attrs = BaseTextStyle.toModifier()
-                    .fontSize(FontSize.Medium)
+                attrs = BaseTextStyle.toModifier(JobDescriptionVariant)
                     .toAttrs()
             ) {
                 Text(positionDesc)

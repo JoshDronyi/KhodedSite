@@ -1,15 +1,17 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.MainTextVariant
+import com.probro.khoded.styles.SubTextVariant
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -17,20 +19,27 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun AboutLandingDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section.Landing) {
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        contentAlignment = Alignment.Center
     ) {
-        OurTeamText(mainText, subText)
-        OurTeamImage(image)
+        BackingCard(
+            modifier = modifier
+                .fillMaxWidth(),
+            variant = NoBorderBackingCardVariant,
+            firstSection = {
+                OurTeamText(mainText, subText)
+            },
+            secondSection = {
+                OurTeamImage(image)
+            }
+        )
     }
 }
 
@@ -38,24 +47,21 @@ fun AboutLandingDisplay(modifier: Modifier = Modifier) = with(Pages.About_Sectio
 fun OurTeamText(text: String, subText: String) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxSize()
             .backgroundColor(Colors.Aquamarine),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(48.px)
-                .fontWeight(FontWeight.Bold)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
+                .textAlign(TextAlign.Center)
                 .toAttrs()
         ) {
             Text(text)
         }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.Large)
-                .fontWeight(FontWeight.Bold)
+            attrs = BaseTextStyle.toModifier(SubTextVariant)
+                .textAlign(TextAlign.Center)
                 .toAttrs()
         ) {
             Text(subText)

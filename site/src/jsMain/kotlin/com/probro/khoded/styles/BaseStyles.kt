@@ -25,6 +25,21 @@ val BaseTextStyle by ComponentStyle {
             .fillMaxWidth()
 
     }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
 }
 
 val TitleTextVariant by BaseTextStyle.addVariant {
@@ -102,6 +117,80 @@ val ParagraphTextVariant by BaseTextStyle.addVariant {
     }
 }
 
+val TeamBioParagraphVaraiant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .padding(0.px)
+            .margin(0.px)
+            .textAlign(TextAlign.Center)
+    }
+}
+
+val StoryTitleVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier.fillMaxWidth()
+            .fontStyle(FontStyle.Italic)
+            .fontWeight(FontWeight.Normal)
+            .textAlign(TextAlign.Start)
+
+    }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(36.px)
+    }
+}
+
+val StoryParagraphVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier.fillMaxWidth()
+            .textAlign(TextAlign.Start)
+            .padding(15.px)
+    }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+}
+
+val JobTitleVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier.fillMaxWidth()
+            .fontSize(FontSize.Larger)
+            .fontWeight(FontWeight.Bold)
+    }
+}
+val JobDescriptionVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier.fillMaxWidth()
+            .fontSize(FontSize.Large)
+    }
+}
+
 val BaseSectionStyles by ComponentStyle {
     base {
         Modifier.fillMaxWidth()
@@ -114,6 +203,7 @@ val ImageStyle by ComponentStyle {
     base {
         Modifier
             .fillMaxWidth()
+            .borderRadius(20.px)
             .objectFit(ObjectFit.Fill)
     }
 }

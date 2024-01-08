@@ -8,16 +8,17 @@ import com.probro.khoded.utils.EmailData
 import com.probro.khoded.utils.MailClient
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.id
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
 @Page
@@ -28,18 +29,16 @@ fun Contact() {
     Scaffold(
         router = ctx.router
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+                .id(Pages.Contact_Section.ContactInfo.id)
+                .height(Height.FitContent)
+                .fillMaxWidth()
+                .padding(20.px),
+            contentAlignment = Alignment.Center
         ) {
             ContactUsSection(
-                Modifier
-                    .id(Pages.Contact_Section.ContactInfo.id)
-                    .height(Height.FitContent)
-                    .fillMaxWidth(80.percent)
-                    .padding(20.px)
+                modifier = Modifier.fillMaxWidth()
             ) { name, email, organization, message ->
                 scope.launch(Dispatchers.Default) {
                     println("Using client for values $name, $email, $organization, $message")

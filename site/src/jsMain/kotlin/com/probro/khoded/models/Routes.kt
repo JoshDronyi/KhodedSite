@@ -32,7 +32,6 @@ sealed class Routes {
     object Contact {
         const val SLUG = "/contact"
         const val LANDING: String = "#contactLanding"
-        const val INTAKE_FORM: String = "#intakeForm"
         const val CONTACT_US: String = "#contactUs"
     }
 

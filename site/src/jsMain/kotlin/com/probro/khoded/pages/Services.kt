@@ -13,10 +13,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.height
-import com.varabyte.kobweb.compose.ui.modifiers.id
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -27,6 +24,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 
 @Page
 @Composable
@@ -37,7 +35,9 @@ fun Services(modifier: Modifier = Modifier.fillMaxSize()) {
     ) {
         Column(
             modifier = modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(Height.FitContent)
+                .padding(20.px),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -62,7 +62,7 @@ fun Services(modifier: Modifier = Modifier.fillMaxSize()) {
 fun PricingServiceSlides() {
     var intakeFormMode by remember { mutableStateOf(IntakeFormMode.IDLE) }
     when (intakeFormMode) {
-        IntakeFormMode.IDLE -> GetStartedService {
+        IntakeFormMode.IDLE -> GetStartedService(data = Pages.Services_Section.GetStarted) {
             intakeFormMode = IntakeFormMode.EDIT
         }
 

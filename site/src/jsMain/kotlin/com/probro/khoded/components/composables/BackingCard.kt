@@ -9,6 +9,7 @@ import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.ResponsiveValues
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
@@ -55,15 +56,48 @@ val DoubleBorderBackingCardVaraint by BackingCardStyle.addVariant {
 }
 
 @Composable
+fun TwoPaneCard(
+    numColumns: ResponsiveValues<Int>,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    SimpleGrid(
+        numColumns = numColumns,
+        modifier = modifier,
+        content = content
+    )
+}
+
+
+@Composable
 fun BackingCard(
     modifier: Modifier = Modifier,
     variant: ComponentVariant? = null,
     firstSection: @Composable () -> Unit,
     secondSection: @Composable () -> Unit,
 ) {
-    SimpleGrid(
+    TwoPaneCard(
         numColumns = numColumns(
             base = 1, md = 2
+        ),
+        modifier = BackingCardStyle.toModifier(variant)
+            .then(modifier)
+    ) {
+        firstSection()
+        secondSection()
+    }
+}
+
+@Composable
+fun TeamSectionCard(
+    modifier: Modifier = Modifier,
+    variant: ComponentVariant? = null,
+    firstSection: @Composable () -> Unit,
+    secondSection: @Composable () -> Unit
+) {
+    TwoPaneCard(
+        numColumns = numColumns(
+            base = 1, lg = 2
         ),
         modifier = BackingCardStyle.toModifier(variant)
             .then(modifier)

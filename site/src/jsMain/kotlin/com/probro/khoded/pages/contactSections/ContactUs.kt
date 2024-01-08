@@ -2,15 +2,19 @@ package com.probro.khoded.pages.contactSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.BlueButtonVariant
+import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.utils.Pages
 import com.stevdza.san.kotlinbs.forms.BSInput
 import com.stevdza.san.kotlinbs.forms.BSTextArea
 import com.stevdza.san.kotlinbs.models.InputSize
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -21,9 +25,9 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.layout.SimpleGrid
-import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
+import com.varabyte.kobweb.silk.components.style.ComponentVariant
+import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.LineStyle
@@ -39,31 +43,30 @@ fun ContactUsSection(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth(80.percent)
-            .fillMaxHeight(),
+            .padding(30.px)
+            .height(Height.FitContent),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fillMaxWidth()
-                .fontSize(FontSize.XXLarge)
-                .fontWeight(FontWeight.Bold)
-                .textAlign(TextAlign.Start)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
                 .toAttrs()
         ) {
             Text(Pages.Contact_Section.Landing.title)
         }
-        Row(
-            modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ComposeMessageSection(onMessageSend = onMessageSend)
-            ContactInformationSection(
-                Pages.Contact_Section.ContactInfo
-            )
-        }
+        BackingCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            variant = NoBorderBackingCardVariant,
+            firstSection = {
+                ComposeMessageSection(onMessageSend = onMessageSend)
+            },
+            secondSection = {
+                ContactInformationSection(
+                    Pages.Contact_Section.ContactInfo
+                )
+            }
+        )
     }
 }
 
@@ -72,11 +75,10 @@ fun ComposeMessageSection(
     modifier: Modifier = Modifier,
     onMessageSend: (name: String, email: String, organization: String, message: String) -> Unit
 ) = with(Pages.Contact_Section.Landing) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        contentAlignment = Alignment.Center
     ) {
         message.apply {
             MessageSubSection(name, email, message, organization, onMessageSend)
@@ -105,8 +107,7 @@ fun MessageSubSection(
     var messengerMessage by remember { mutableStateOf(message) }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxSize(80.percent),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BSInput(
@@ -146,7 +147,7 @@ fun MessageSubSection(
         )
         BSTextArea(
             modifier = MessageTextInputStyle.toModifier()
-                .fillMaxWidth(),
+                .fillMaxSize(),
             value = messengerMessage,
             placeholder = "Message...",
             id = "Message",
@@ -156,23 +157,30 @@ fun MessageSubSection(
             }
         )
 
-        ButtonDisplay(
-            state = ButtonState(
-                buttonText = "Send Message",
-                onButtonClick = {
-                    onMessageSend(
-                        messengerName,
-                        messengerEmail,
-                        messengerOrganization,
-                        messengerMessage
-                    )
-                }
-            ),
-            variant = BlueButtonVariant,
+        Row(
             modifier = Modifier.fillMaxWidth()
-                .margin(topBottom = 20.px)
-                .textAlign(TextAlign.Center)
-        )
+                .weight(1)
+                .margin(topBottom = 20.px),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ButtonDisplay(
+                state = ButtonState(
+                    buttonText = "Send Message",
+                    onButtonClick = {
+                        onMessageSend(
+                            messengerName,
+                            messengerEmail,
+                            messengerOrganization,
+                            messengerMessage
+                        )
+                    }
+                ),
+                variant = BlueButtonVariant,
+                modifier = Modifier
+                    .textAlign(TextAlign.Center)
+            )
+        }
     }
 }
 
@@ -189,36 +197,51 @@ val ContactInfoStyle by ComponentStyle {
                 blurRadius = 2.px,
                 color = Colors.DarkGray
             )
+            .fillMaxHeight()
+            .fillMaxWidth(80.percent)
     }
 }
-val ContactTextStyle by ComponentStyle {
+val ContactHeadingVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .padding(leftRight = 30.px)
+            .fontWeight(FontWeight.Medium)
+            .fontSize(FontSize.Large)
+            .textAlign(TextAlign.Start)
+    }
+}
+val ContactValueVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .fontWeight(FontWeight.Bold)
+            .fontSize(FontSize.Medium)
+            .padding(topBottom = 2.px, leftRight = 5.px)
+            .textAlign(TextAlign.Start)
+    }
+}
+
+val ContactTitleVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .textAlign(TextAlign.Center)
+            .fontSize(FontSize.XXLarge)
     }
 }
 
 @Composable
-fun ContactText(title: String, content: String, modifier: Modifier = ContactTextStyle.toModifier()) {
-    SimpleGrid(
-        numColumns(base = 1, md = 2),
-        modifier = modifier
+fun ContactText(title: String, content: String, variant: ComponentVariant = ContactHeadingVariant) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fillMaxWidth(60.percent)
-                .fontWeight(FontWeight.Medium)
-                .fontSize(FontSize.Large)
-                .textAlign(TextAlign.Start)
+            attrs = BaseTextStyle.toModifier(ContactHeadingVariant)
                 .toAttrs()
         ) { Text(title) }
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fillMaxWidth()
-                .fontWeight(FontWeight.Bold)
-                .fontSize(FontSize.Medium)
-                .padding(topBottom = 2.px, leftRight = 5.px)
-                .textAlign(TextAlign.Start)
+            attrs = BaseTextStyle.toModifier(ContactValueVariant)
                 .toAttrs()
         ) { Text(content) }
     }
@@ -231,18 +254,19 @@ fun ContactInformationSection(
 ) = with(contactInfo) {
     Box(
         modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.BottomCenter
+            .fillMaxSize()
+            .height(Height.FitContent),
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = ContactInfoStyle.toModifier()
-                .fillMaxWidth(60.percent),
+                .fillMaxSize(80.percent)
+                .height(Height.Inherit),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             P(
-                attrs = BaseTextStyle.toModifier()
-                    .fontWeight(FontWeight.Bold)
-                    .fontSize(FontSize.XLarge)
+                attrs = BaseTextStyle.toModifier(ContactTitleVariant)
                     .toAttrs()
             ) {
                 Text(title)

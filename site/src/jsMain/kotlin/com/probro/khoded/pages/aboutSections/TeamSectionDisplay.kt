@@ -1,18 +1,25 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
+import com.probro.khoded.components.composables.TeamSectionCard
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.MainTextVariant
+import com.probro.khoded.styles.TeamBioParagraphVaraiant
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.FontStyle
+import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -26,12 +33,12 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section
             .fillMaxWidth(80.percent)
             .height(Height.FitContent),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.Center
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(48.px)
-                .fontWeight(FontWeight.Bold)
+            attrs = BaseTextStyle.toModifier(MainTextVariant)
+                .textAlign(TextAlign.Center)
+                .margin(bottom = 15.px)
                 .toAttrs()
         ) {
             Text(mainText)
@@ -47,16 +54,18 @@ fun TeamBioDisplay(
     bio: Pages.About_Section.TeamBio,
     modifier: Modifier = Modifier
 ) = with(bio) {
-    Row(
+    TeamSectionCard(
         modifier = modifier
-            .fillMaxWidth(80.percent)
+            .fillMaxWidth()
             .padding(15.px),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TeammateImage(image, name, position)
-        TeammateStory(bio.story)
-    }
+        variant = NoBorderBackingCardVariant,
+        firstSection = {
+            TeammateImage(image, name, position)
+        },
+        secondSection = {
+            TeammateStory(bio.story)
+        }
+    )
 }
 
 @Composable
@@ -66,19 +75,24 @@ fun TeammateImage(
     position: String,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Box(
         modifier = modifier
-            .fillMaxWidth(40.percent),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
-        Image(
-            src = image,
-            modifier = Modifier
-                .objectFit(ObjectFit.Fill)
-                .borderRadius(r = 20.px)
-        )
-        ImageText(name, position)
+        Column(
+            modifier = Modifier.fillMaxWidth(60.percent),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ImageBox(
+                image = image,
+                imageDesc = "Teammate bio pic",
+                modifier = ImageStyle.toModifier()
+                    .fillMaxWidth()
+            )
+            ImageText(name, position)
+        }
     }
 }
 
@@ -116,13 +130,10 @@ fun TeammateStory(story: String, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         P(
-            attrs = BaseTextStyle.toModifier()
-                .fontSize(FontSize.Large)
-                .padding(20.px)
-                .textAlign(TextAlign.Center)
+            attrs = BaseTextStyle.toModifier(TeamBioParagraphVaraiant)
                 .toAttrs()
         ) {
-            Text(story) //TODO: CHANGE TO ACTUAL STORY VALUE
+            Text(story)
         }
     }
 }

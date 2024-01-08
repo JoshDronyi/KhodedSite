@@ -28,7 +28,6 @@ object Navigator {
     private val contactSection = listOf(
         Pages.Contact_Section.Landing,
         Pages.Contact_Section.ContactInfo,
-        Pages.Contact_Section.IntakeForm
     )
 
     val sections: Map<PageRoot, List<PageSection>> = mapOf(

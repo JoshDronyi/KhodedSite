@@ -226,7 +226,7 @@ object Pages {
 
         object Separator : About_Section(
             id = Routes.About.SEPARATOR,
-            title = "about",
+            title = "LogoSpacer",
             slug = Routes.About.SLUG,
             path = "${Routes.About.SLUG}${Routes.About.SEPARATOR}"
         )
@@ -365,14 +365,14 @@ object Pages {
                     " possible to address this."
         }
 
-        object IntakeForm : Contact_Section(
-            id = Routes.Contact.INTAKE_FORM,
-            title = "Client Request Form",
-            slug = Routes.Contact.SLUG,
-            path = "${Routes.Contact.SLUG}${Routes.Contact.INTAKE_FORM}"
-        ) {
-            //TODO: GET DATA CLASS FOR INTAKE FORM RESPONSES CALLED CLIENT REQUEST.
-        }
+//        object IntakeForm : Contact_Section(
+//            id = Routes.Contact.INTAKE_FORM,
+//            title = "Client Request Form",
+//            slug = Routes.Contact.SLUG,
+//            path = "${Routes.Contact.SLUG}${Routes.Contact.INTAKE_FORM}"
+//        ) {
+//            //TODO: GET DATA CLASS FOR INTAKE FORM RESPONSES CALLED CLIENT REQUEST.
+//        }
 
         object ContactInfo : Contact_Section(
             id = Routes.Contact.CONTACT_US,
