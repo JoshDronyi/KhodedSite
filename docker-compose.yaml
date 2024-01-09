@@ -18,8 +18,7 @@ services:
     image: postgres:alpine3.19
     environment:
       - POSTGRES_DB=khodedBackendData
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=khodedData
+      - POSTGRES_PASSWORD=khodedAdmin
     ports:
       - 5432:5432
     expose:

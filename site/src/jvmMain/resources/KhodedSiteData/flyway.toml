@@ -1,0 +1,28 @@
+databaseType = "PostgreSql"
+name = "KhodedSiteData"
+id = "02886a85-d6b7-407a-8cf8-7f9007c2bd24"
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+schemaModel = "./schema-model"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.postgres.options.ignores]
+ignoreNewlinesInTextObjects = "off"
+
+[flyway]
+mixed = true
+outOfOrder = true
+locations = [ "filesystem:migrations" ]
+validateMigrationNaming = true
+
+  [flyway.check]
+  majorTolerance = 0
+
+[environments.target1]
+url = "jdbc:postgresql://localhost:5432/khodedBackendData"
+schemas = [ "testDB" ]
+displayName = "Local Test Database"

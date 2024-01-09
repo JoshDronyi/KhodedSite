@@ -9,6 +9,7 @@ import ProjectRequests
 import com.probro.khoded.FormAnswerDTO
 import com.probro.khoded.IntakeFormDTO
 import com.probro.khoded.KhodedConfig
+import com.varabyte.kobweb.api.log.Logger
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.*
@@ -62,17 +63,26 @@ object KhodedDB {
         }
     }
 
-    suspend fun saveProjectRequest(intakeFormDTO: IntakeFormDTO) = suspendedTransactionAsync {
+    suspend fun saveProjectRequest(intakeFormDTO: IntakeFormDTO, logger: Logger) = suspendedTransactionAsync {
         val answers = getAnswers(intakeFormDTO).filterNotNull()
+        logger.info("Got answers $answers")
+        logger.info("Creating new Project request")
         ProjectRequest.new {
-            this.requester = intakeFormDTO.organization ?: "Unknown"
+            logger.info("getting requester info")
+            this.requester = getRequester(intakeFormDTO)
+            logger.info("setting answers")
             this.answers = SizedCollection(answers)
+            logger.info("SEtting requester budget")
             this.budget = Monetary.getDefaultAmountFactory()
                 .setCurrency(Monetary.getCurrency("U.S"))
                 .setNumber(0)
                 .create()
+            logger.info("creating request")
         }
     }
+
+    private fun getRequester(intakeFormDTO: IntakeFormDTO) =
+        intakeFormDTO.organization ?: intakeFormDTO.contactFormAnswers?.first()?.answerValue ?: "Unknown"
 
     private suspend fun getAnswers(intakeFormDTO: IntakeFormDTO): List<Answer?> = with(intakeFormDTO) {
         mutableListOf<Deferred<List<Answer>?>>().apply {

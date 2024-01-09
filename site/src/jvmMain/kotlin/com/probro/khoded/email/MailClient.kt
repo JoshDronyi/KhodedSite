@@ -2,6 +2,7 @@ package com.probro.khoded.email
 
 import com.google.api.services.gmail.model.Message
 import com.probro.khoded.IntakeFormDTO
+import com.probro.khoded.local.KhodedDB
 import com.varabyte.kobweb.api.log.Logger
 import kotlinx.coroutines.supervisorScope
 import java.io.IOException
@@ -55,7 +56,7 @@ class MailClient(
             bodyText = intakeFormDTO.toString()
         )
         logger.info("Sent email $email")
-//        KhodedDB.saveProjectRequest(intakeFormDTO)
+        KhodedDB.saveProjectRequest(intakeFormDTO, logger)
     }
 }
 
