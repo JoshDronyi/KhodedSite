@@ -5,11 +5,11 @@ import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
-import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.styles.SubTextVariant
+import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -71,7 +71,11 @@ fun GetStartedText(data: Pages.Home_Section.GET_STARTED) = with(data) {
                 .padding(topBottom = 15.px),
             horizontalArrangement = Arrangement.Start
         ) {
-            ButtonDisplay(startButton, BlueButtonVariant)
+            ButtonDisplay(startButton.copy(
+                onButtonClick = {
+                    Navigator.navigateTo(Pages.Services_Section.GetStarted)
+                }
+            ), BlueButtonVariant)
         }
     }
 }

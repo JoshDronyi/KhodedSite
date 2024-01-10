@@ -5,8 +5,8 @@ import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
-import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.*
+import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -72,7 +72,11 @@ fun BrandingText(data: Pages.Home_Section.Branding) = with(data) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            ButtonDisplay(tryItButton, BlueButtonVariant)
+            ButtonDisplay(tryItButton.copy(
+                onButtonClick = {
+                    Navigator.navigateTo(Pages.Services_Section.GetStarted)
+                }
+            ), BlueButtonVariant)
         }
     }
 }

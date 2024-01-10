@@ -6,6 +6,7 @@ import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.*
+import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -75,7 +76,11 @@ fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ButtonDisplay(startButton, PinkButtonVariant)
+            ButtonDisplay(startButton.copy(
+                onButtonClick = {
+                    Navigator.navigateTo(Pages.Services_Section.GetStarted)
+                }
+            ), PinkButtonVariant)
         }
     }
 }

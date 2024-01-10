@@ -11,6 +11,7 @@ import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.styles.SubTextVariant
+import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.stevdza.san.kotlinbs.components.BSButton
 import com.varabyte.kobweb.compose.css.FontStyle
@@ -82,7 +83,11 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             ButtonDisplay(
-                startButton,
+                startButton.copy(
+                    onButtonClick = {
+                        Navigator.navigateTo(Pages.Home_Section.Consultation)
+                    }
+                ),
                 BlueButtonVariant,
             )
             ButtonDisplay(learnMoreButton, BlueButtonVariant)

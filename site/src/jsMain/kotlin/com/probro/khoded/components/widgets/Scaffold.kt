@@ -95,7 +95,8 @@ fun Scaffold(
             }
         }
     }
-    LaunchedEffect(navState.currentSection) {
+    LaunchedEffect(navState.currentSection.path) {
+        println("Moving to path ${navState.currentSection.path}")
         router.navigateTo(navState.currentSection.path)
     }
 }

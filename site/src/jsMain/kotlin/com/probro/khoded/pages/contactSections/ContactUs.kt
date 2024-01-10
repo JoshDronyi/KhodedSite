@@ -255,13 +255,15 @@ fun ContactInformationSection(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .height(Height.FitContent),
+            .height(Height.MinContent)
+            .padding(topBottom = 40.px),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = ContactInfoStyle.toModifier()
                 .fillMaxSize(80.percent)
-                .height(Height.Inherit),
+                .fillMaxHeight()
+                .height(Height.MinContent),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {

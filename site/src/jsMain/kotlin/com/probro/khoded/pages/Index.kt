@@ -14,7 +14,7 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import org.jetbrains.compose.web.css.px
 
-@Page("/index")
+@Page
 @Composable
 fun Index() {
     val ctx = rememberPageContext()

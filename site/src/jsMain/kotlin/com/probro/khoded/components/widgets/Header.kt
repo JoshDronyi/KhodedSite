@@ -1,8 +1,6 @@
 package com.probro.khoded.components.widgets
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.utils.Navigator
@@ -40,7 +38,6 @@ fun Header(
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     val breakpoint = rememberBreakpoint()
-    val section by Navigator.pageState.collectAsState()
     Row(
         modifier = HeaderStyle.toModifier()
             .fillMaxWidth()
@@ -127,9 +124,21 @@ fun HeaderNavItemDisplay(
                 root = it.key,
                 modifier = Modifier.fillMaxWidth(),
                 navItemVariant = HeaderNavItemVariant,
-            ) { path ->
-                println("Clicked on ${it.key.primaryText}")
-                onNavItemSelect(path)
+            ) { secetion ->
+                println("Path was $secetion")
+                if (Navigator.pageState.value.currentSection.path == Pages.Home_Section.LandingData.path) {
+                    println("in first if.")
+                    if (secetion.path.equals(Pages.Home_Section.LandingData.path)) {
+                        println("nav to consultation.")
+                        onNavItemSelect(Pages.Home_Section.Consultation)
+                    } else {
+                        println("nav to Home.")
+                        onNavItemSelect(secetion)
+                    }
+                } else {
+                    println("Clicked on ${it.key.primaryText}")
+                    onNavItemSelect(secetion)
+                }
             }
         }
     }
