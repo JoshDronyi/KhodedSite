@@ -1,11 +1,55 @@
 package com.probro.khoded.utils
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.widgets.MAIN_CONTENT_ID
+import com.probro.khoded.components.widgets.SIDE_NAV_ID
 import com.probro.khoded.utils.Constants.SECTION_HEIGHT
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
 import org.w3c.dom.events.EventListener
+
+@Composable
+fun OnAmbiguousScaffoldClick(
+    onTargetClicked: () -> Unit
+) {
+    var isInSideNav by remember { mutableStateOf(false) }
+    var isInMainContent by remember { mutableStateOf(false) }
+    val clickTargetListener = remember {
+        EventListener {
+            if (it.type.equals("click", ignoreCase = true)) { // Make sure its a click event.
+                //Get the element
+                val sideNav = document.getElementById(SIDE_NAV_ID)
+                val mainContent = document.getElementById(MAIN_CONTENT_ID)
+                //Find the boundaries of each element.
+                val sideNavBounds = sideNav?.getBoundingClientRect()
+                val mainContentBounds = mainContent?.getBoundingClientRect()
+                val target = it.currentTarget
+                onTargetClicked()
+                println("Traget is $target")
+                isInMainContent = true
+            } else {
+                println("event type was ${it.type}")
+            }
+        }
+    }
+
+    LaunchedEffect(isInSideNav, isInMainContent) {
+        with(document) {
+            val mainContent = getElementById(MAIN_CONTENT_ID)
+            val sideNav = getElementById(SIDE_NAV_ID)
+            if (isInSideNav && isInMainContent) {
+                mainContent?.addEventListener("click", clickTargetListener)
+                sideNav?.addEventListener("click", clickTargetListener)
+            }
+            if (isInMainContent && isInSideNav.not()) {
+                mainContent?.removeEventListener("click", clickTargetListener)
+                sideNav?.removeEventListener("click", clickTargetListener)
+            }
+        }
+    }
+
+}
 
 @Composable
 fun OnViewPortEnteredObservable(

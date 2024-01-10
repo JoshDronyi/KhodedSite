@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.*
 import com.probro.khoded.utils.Pages
@@ -37,7 +38,7 @@ fun HostingSectionDisplay(data: Pages.Home_Section.Hosting) = with(data) {
     ) {
         BackingCard(
             modifier = Modifier,
-            variant = SingleBorderBackingCardVaiant,
+            variant = NoBorderBackingCardVariant,
             firstSection = { HostingImage(data) },
             secondSection = { HostingText(data) }
         )

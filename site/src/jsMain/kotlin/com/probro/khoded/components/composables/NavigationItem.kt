@@ -42,11 +42,6 @@ val HeaderNavItemVariant by NavItemStyle.addVariant {
         Modifier
             .padding(20.px)
             .textAlign(TextAlign.Center)
-            .border {
-                width(1.px)
-                style(LineStyle.Solid)
-                color(Color.white)
-            }
             .borderRadius(20.px)
     }
 }

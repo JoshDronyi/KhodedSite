@@ -3,8 +3,8 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.Composable
 import com.probro.khoded.PinkButtonVariant
 import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.DoubleBorderBackingCardVaraint
 import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.styles.MainTextVariant
@@ -38,17 +38,19 @@ fun WebDesignSectionDisplay(data: Pages.Home_Section.WebDesign) = with(data) {
     ) {
         BackingCard(
             modifier = Modifier
+                .fillMaxSize(80.percent)
                 .zIndex(2),
-            variant = DoubleBorderBackingCardVaraint,
+            variant = SingleBorderBackingCardVaiant,
             firstSection = { WebDesignText(data) },
             secondSection = { WebDesignImage() }
         )
-        Box(
+        BackingCard(
             modifier = Modifier
-                .zIndex(1)
-                .fillMaxWidth(75.percent)
-                .fillMaxHeight(50.percent)
-                .translateY(ty = 110.px)
+                .fillMaxSize(75.percent)
+                .translateY(ty = 30.px),
+            variant = SingleBorderBackingCardVaiant,
+            firstSection = {},
+            secondSection = {}
         )
     }
 }
