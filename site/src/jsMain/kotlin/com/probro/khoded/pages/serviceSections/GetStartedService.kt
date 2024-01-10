@@ -16,6 +16,7 @@ import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -23,7 +24,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
@@ -52,17 +52,10 @@ fun GetStartedService(
     ) {
         BackingCard(
             modifier = shadowBoxModifier
-                .fillMaxSize()
                 .zIndex(2),
             variant = SingleBorderBackingCardVaiant,
             firstSection = { GetStartedText(data, onCTAClicked) },
             secondSection = { GetStartedImage() }
-        )
-        Box(
-            modifier = shadowBoxModifier.fillMaxHeight(80.percent)
-                .fillMaxWidth(75.percent)
-                .translateY(15.px)
-                .zIndex(1)
         )
     }
 }
@@ -87,10 +80,17 @@ fun GetStartedText(data: Pages.Services_Section.GetStarted, onCTAClicked: () -> 
         ) {
             Text(subText)
         }
-        ButtonDisplay(
-            signUpButtonState.copy(onButtonClick = onCTAClicked),
-            PinkButtonVariant
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ButtonDisplay(
+                signUpButtonState.copy(onButtonClick = onCTAClicked),
+                PinkButtonVariant,
+            )
+        }
     }
 }
 

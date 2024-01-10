@@ -1,3 +1,4 @@
+CREATE DATABASE KhodedBackendData
 CREATE TABLE Questions(
     QuestionID int NOT NULL PRIMARY KEY,
     IsAnswerList BOOL,

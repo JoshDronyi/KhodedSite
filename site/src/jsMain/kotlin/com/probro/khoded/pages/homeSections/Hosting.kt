@@ -36,8 +36,7 @@ fun HostingSectionDisplay(data: Pages.Home_Section.Hosting) = with(data) {
         contentAlignment = Alignment.Center
     ) {
         BackingCard(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier,
             variant = SingleBorderBackingCardVaiant,
             firstSection = { HostingImage(data) },
             secondSection = { HostingText(data) }

@@ -38,7 +38,6 @@ fun WebDesignSectionDisplay(data: Pages.Home_Section.WebDesign) = with(data) {
     ) {
         BackingCard(
             modifier = Modifier
-                .fillMaxWidth()
                 .zIndex(2),
             variant = DoubleBorderBackingCardVaraint,
             firstSection = { WebDesignText(data) },
