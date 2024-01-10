@@ -35,9 +35,7 @@ fun ClientRequestForm(
 ) {
     var currentSection by remember { mutableStateOf(0) }
     Box(
-        modifier = modifier
-            .padding(20.px)
-            .background(Colors.BlanchedAlmond),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         //TODO: ANIMATE SECTION CHANGES
@@ -71,6 +69,8 @@ fun ClientRequestForm(
 val IntakeFormSectionStyle by ComponentStyle {
     base {
         Modifier
+            .fillMaxWidth()
+            .padding(20.px)
             .background(Colors.White)
             .borderRadius(r = 20.px)
             .border(
@@ -98,9 +98,7 @@ fun IntakeSectionDisplay(
 ) = with(section.uiModel) {
     println("In the section display.")
     Column(
-        modifier = IntakeFormSectionStyle.toModifier().then(modifier)
-            .fillMaxWidth(80.percent)
-            .padding(20.px),
+        modifier = IntakeFormSectionStyle.toModifier().then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {

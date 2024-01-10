@@ -38,24 +38,11 @@ fun ConsultationSectionDisplay(data: Pages.Home_Section.Consultation) = with(dat
         contentAlignment = Alignment.Center
     ) {
         BackingCard(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
                 .zIndex(2),
             variant = SingleBorderBackingCardVaiant,
             firstSection = { ConsultationText(data) },
             secondSection = { ConsultationSteps(data) }
-        )
-        Box(
-            modifier = Modifier
-                .border(
-                    width = 2.px,
-                    style = LineStyle.Solid,
-                    color = Colors.DarkGray
-                )
-                .borderRadius(r = 20.px)
-                .background(Colors.White)
-                .fillMaxWidth(75.percent)
-                .translateY(ty = 140.px)
-                .zIndex(1)
         )
     }
 }

@@ -37,7 +37,6 @@ fun GetStartedSectionDisplay(data: Pages.Home_Section.GET_STARTED) = with(data) 
     ) {
         BackingCard(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(all = 10.px),
             variant = SingleBorderBackingCardVaiant,
             firstSection = { GetStartedText(data) },

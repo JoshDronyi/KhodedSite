@@ -3,8 +3,11 @@ package com.probro.khoded.email
 import com.google.api.services.gmail.model.Message
 import com.probro.khoded.IntakeFormDTO
 import com.probro.khoded.local.KhodedDB
+import com.probro.khoded.local.KhodedDB.db
 import com.varabyte.kobweb.api.log.Logger
 import kotlinx.coroutines.supervisorScope
+import org.jetbrains.exposed.sql.transactions.TransactionManager.Companion.closeAndUnregister
+import org.jetbrains.exposed.sql.transactions.transactionManager
 import java.io.IOException
 import java.security.GeneralSecurityException
 
@@ -56,7 +59,15 @@ class MailClient(
             bodyText = intakeFormDTO.toString()
         )
         logger.info("Sent email $email")
-        KhodedDB.saveProjectRequest(intakeFormDTO, logger)
+        saveForm(intakeFormDTO)
+    }
+
+    private suspend fun saveForm(intakeFormDTO: IntakeFormDTO) {
+        db.transactionManager.apply {
+            val request = KhodedDB.saveProjectRequest(intakeFormDTO, logger)
+            println(request.await().toString())
+            closeAndUnregister(db)
+        }
     }
 }
 

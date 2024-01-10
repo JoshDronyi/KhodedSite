@@ -1,16 +1,20 @@
 package com.probro.khoded.components.composables
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.icons.fa.FaArrowRightLong
+import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
@@ -36,7 +40,7 @@ val NavItemStyle by ComponentStyle {
 val HeaderNavItemVariant by NavItemStyle.addVariant {
     base {
         Modifier
-            .padding(leftRight = 10.px, topBottom = 5.px)
+            .padding(20.px)
             .textAlign(TextAlign.Center)
             .border {
                 width(1.px)
@@ -69,10 +73,10 @@ val SideNavItemVariant by NavItemStyle.addVariant {
 @Composable
 fun NavigationItem(
     text: String,
-    sections: List<PageSection>? = null,
+    root: Navigator.PageRoot,
     modifier: Modifier = Modifier,
     navItemVariant: ComponentVariant? = null,
-    onNavItemSelect: (path: String) -> Unit,
+    onNavItemSelect: (section: PageSection) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -81,9 +85,16 @@ fun NavigationItem(
     ) {
         NavSectionTitle(
             navItemVariant = navItemVariant,
-            onNavItemSelect = onNavItemSelect,
-            slug = sections?.first()?.slug
-                ?: Pages.Home_Section.LandingData.slug,
+            onNavItemSelect = {
+                onNavItemSelect(
+                    when (root) {
+                        Navigator.PageRoot.Home -> Pages.Home_Section.LandingData
+                        Navigator.PageRoot.About -> Pages.About_Section.Landing
+                        Navigator.PageRoot.Services -> Pages.Services_Section.Landing
+                        Navigator.PageRoot.Contact -> Pages.Contact_Section.Landing
+                    }
+                )
+            },
             text = text
         )
     }
@@ -91,10 +102,9 @@ fun NavigationItem(
 
 @Composable
 private fun NavSectionTitle(
-    slug: String,
     text: String,
     navItemVariant: ComponentVariant? = null,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -103,7 +113,7 @@ private fun NavSectionTitle(
     ) {
         P(
             attrs = NavItemStyle.toModifier(navItemVariant)
-                .onClick { onNavItemSelect(slug) }
+                .onClick { onNavItemSelect() }
                 .toAttrs()
         ) {
             Text(text)
@@ -137,16 +147,28 @@ fun NavSubItem(
     section: PageSection,
     modifier: Modifier = Modifier,
     variant: ComponentVariant?,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(20.percent),
+            contentAlignment = Alignment.Center
+        ) {
+            FaArrowRightLong(
+                modifier = Modifier
+                    .color(Color.white),
+                size = IconSize.XXS
+            )
+        }
         P(
             attrs = NavSubItemStyle.toModifier(variant)
-                .onClick { onNavItemSelect(section.path) }
+                .textAlign(TextAlign.Start)
+                .onClick { onNavItemSelect(section) }
                 .toAttrs()
         ) {
             Text(section.title)

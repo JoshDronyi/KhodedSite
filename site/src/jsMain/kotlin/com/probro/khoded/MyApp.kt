@@ -34,9 +34,9 @@ val BaseButtonStyle by ComponentStyle {
             .fillMaxWidth()
             .width(Width.FitContent)
             .textAlign(TextAlign.Center)
-            .borderRadius(r = 16.px)
-            .padding(16.px)
-            .padding(leftRight = 10.px, topBottom = 5.px)
+            .borderRadius(r = 15.px)
+            .margin(top = 20.px)
+            .padding(leftRight = 15.px, topBottom = 10.px)
     }
 }
 

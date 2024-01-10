@@ -74,15 +74,22 @@ fun QuestionDisplay(
 
 
             QuestionType.PICK_MULTIPLE -> {
-                val selectedAnswers = remember { mutableListOf<String>() }
+                var answers = mutableListOf<String>()
+                val selectedAnswers = remember {
+                    mutableStateListOf((question.answer as? IntakeFormAnswer.MultiSelectionAnswer)?.answerList)
+                }
                 PickMultipleQuestionDisplay(
                     question = question,
-                    selectedAnswers = (question.answer as? IntakeFormAnswer.MultiSelectionAnswer)
-                        ?.answerList ?: listOf<String>(),
+                    selectedAnswers = selectedAnswers.map { nextAnswers: List<String>? ->
+                        nextAnswers?.joinToString(",").apply {
+                            this?.let { answers.add(it) }
+                        } ?: ""
+                    },
                 ) { selected ->
                     println("Picked Multiple, picks -> $selected \n from options ${question.options}")
-                    selectedAnswers.apply {
-                        if (selectedAnswers.contains(selected)) {
+                    answers.apply {
+                        toMutableList()
+                        if (this.contains(selected)) {
                             println("removing selected item $selected")
                             remove(selected)
                         } else {
@@ -90,7 +97,7 @@ fun QuestionDisplay(
                             add(selected)
                         }
                     }
-                    question.answer = IntakeFormAnswer.MultiSelectionAnswer(answerList = selectedAnswers)
+                    question.answer = IntakeFormAnswer.MultiSelectionAnswer(answerList = answers)
                     onQuestionAnswered()
                 }
             }
@@ -120,19 +127,16 @@ fun PickMultipleQuestionDisplay(
     modifier: Modifier = Modifier,
     onOptionsSelect: (selected: String) -> Unit
 ) = with(question) {
-    val selectedItems = remember { mutableStateListOf(selectedAnswers) }
-
     SimpleGrid(
         numColumns = numColumns(base = 2, md = 4),
         modifier = modifier
             .fillMaxWidth()
     ) {
         options?.forEach { option ->
-
-            println("Option $option is in selected ${selectedItems.contains(options)}}")
+            println("Option $option is in selected ${selectedAnswers.contains(option)}}")
             AnswerOption(
                 option = option,
-                isSelected = selectedItems.contains(options),
+                isSelected = selectedAnswers.contains(option),
                 questionType = QuestionType.PICK_MULTIPLE,
                 onOptionSelect = { selected ->
                     onOptionsSelect(selected)

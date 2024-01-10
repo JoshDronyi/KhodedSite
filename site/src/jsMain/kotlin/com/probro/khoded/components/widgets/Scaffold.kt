@@ -1,6 +1,8 @@
 package com.probro.khoded.components.widgets
 
 import androidx.compose.runtime.*
+import com.probro.khoded.utils.Navigator
+import com.probro.khoded.utils.PageSection
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ScrollBehavior
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -22,6 +24,7 @@ fun Scaffold(
     context: @Composable ColumnScope.() -> Unit
 ) {
     var showSideNav by remember { mutableStateOf(false) }
+    val navState by Navigator.pageState.collectAsState()
     Box(
         modifier = Modifier
             .height(100.vh)
@@ -43,8 +46,8 @@ fun Scaffold(
             onSideNavToggle = {
                 showSideNav = false
             }
-        ) { path ->
-            router.navigateTo(path)
+        ) { section ->
+            Navigator.navigateTo(section)
         }
         Column(
             modifier = modifier.height(100.vh)
@@ -61,16 +64,21 @@ fun Scaffold(
                     showSideNav = !showSideNav
                     println("Showside nav is now $showSideNav")
                 }
-            ) { path: String ->
-                router.navigateTo(path)
+            ) { path: PageSection ->
+                Navigator.navigateTo(path)
+                //router.navigateTo(path)
             }
             context()
             Footer(
                 modifier = Modifier.fillMaxWidth()
             ) { path ->
-                router.navigateTo(path)
+                Navigator.navigateTo(path)
+                // router.navigateTo(path)
             }
         }
+    }
+    LaunchedEffect(navState.currentSection) {
+        router.navigateTo(navState.currentSection.path)
     }
 }
 

@@ -49,7 +49,7 @@ kotlin {
             dependencies {
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
 
-                //Kotlin Mailer dependencies
+                //Kotlin Mailer dependencies (Jakarta)
                 implementation(libs.mailer.core)
                 implementation(libs.mailer.client)
 

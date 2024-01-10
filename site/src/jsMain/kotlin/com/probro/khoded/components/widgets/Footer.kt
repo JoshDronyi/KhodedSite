@@ -27,7 +27,7 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
-fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (path: String) -> Unit) {
+fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (section: PageSection) -> Unit) {
     SimpleGrid(
         numColumns = numColumns(
             base = 1,
@@ -45,7 +45,8 @@ fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (path: String) -> Uni
             NavigationDisplay(
                 modifier = Modifier
                     .fillMaxWidth(),
-                entry = it, onNavItemSelect
+                entry = it,
+                onNavItemSelect = onNavItemSelect
             )
         }
     }
@@ -55,7 +56,7 @@ fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (path: String) -> Uni
 fun NavigationDisplay(
     modifier: Modifier = Modifier,
     entry: Map.Entry<Navigator.PageRoot, List<PageSection>>,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -64,9 +65,11 @@ fun NavigationDisplay(
     ) {
         NavigationItem(
             text = entry.key.primaryText,
-            sections = entry.value,
+            root = entry.key,
             navItemVariant = FooterNavItemVariant,
-            onNavItemSelect = onNavItemSelect
+            onNavItemSelect = { section ->
+                onNavItemSelect(section)
+            }
         )
         FooterNavSubItems(
             items = entry.value,
@@ -80,7 +83,7 @@ fun NavigationDisplay(
 fun FooterNavSubItems(
     items: List<PageSection>,
     navSubItemVariant: ComponentVariant? = null,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(90.percent),
@@ -101,7 +104,7 @@ fun FooterNavSubItems(
 fun FooterSubItem(
     item: PageSection,
     navSubItemVariant: ComponentVariant? = null,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -116,7 +119,7 @@ fun FooterSubItem(
         )
         P(
             attrs = NavSubItemStyle.toModifier(navSubItemVariant)
-                .onClick { onNavItemSelect(item.path) }
+                .onClick { onNavItemSelect(item) }
                 .toAttrs()
         ) {
             Text(item.title)
