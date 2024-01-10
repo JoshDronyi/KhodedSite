@@ -1,11 +1,14 @@
 package com.probro.khoded.local
 
 import Answer
+import Answers
 import ClientMessage
 import ClientMessages
 import ProjectRequest
 import ProjectRequestAnswers
 import ProjectRequests
+import ProjectSections
+import Questions
 import com.probro.khoded.FormAnswerDTO
 import com.probro.khoded.IntakeFormDTO
 import com.probro.khoded.KhodedConfig
@@ -27,7 +30,7 @@ object KhodedDB {
     val db by lazy {
         val config = HikariConfig().apply {
             jdbcUrl = if (IS_PROD) KhodedConfig.prodUri else KhodedConfig.devUri
-            driverClassName = "org.postgresql.driver"
+            driverClassName = "org.postgresql.Driver"
             username = if (IS_PROD) KhodedConfig.prodUsername else KhodedConfig.devUsername
             password = if (IS_PROD) KhodedConfig.prodPassword else KhodedConfig.devPassword
             maximumPoolSize = 10
@@ -45,10 +48,14 @@ object KhodedDB {
         }
     }
 
-    private suspend fun setUpSchemaTables() = newSuspendedTransaction {
+
+    suspend fun setUpSchemaTables() = newSuspendedTransaction {
         SchemaUtils.create(ClientMessages)
         SchemaUtils.create(ProjectRequests)
         SchemaUtils.create(ProjectRequestAnswers)
+        SchemaUtils.create(Questions)
+        SchemaUtils.create(ProjectSections)
+        SchemaUtils.create(Answers)
     }
 
     suspend fun saveMessage(
@@ -72,7 +79,7 @@ object KhodedDB {
             this.requester = getRequester(intakeFormDTO)
             logger.info("setting answers")
             this.answers = SizedCollection(answers)
-            logger.info("SEtting requester budget")
+            logger.info("Setting requester budget")
             this.budget = Monetary.getDefaultAmountFactory()
                 .setCurrency(Monetary.getCurrency("U.S"))
                 .setNumber(0)
@@ -101,10 +108,9 @@ object KhodedDB {
 }
 
 
-fun FormAnswerDTO.toEntity(isAnswerList: Boolean = false): Answer {
+fun FormAnswerDTO.toEntity(): Answer {
     return Answer.new {
         this.questionText = questionText
         this.value = answerValue
-        this.isAnswerList = isAnswerList
     }
 }

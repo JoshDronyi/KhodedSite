@@ -42,7 +42,6 @@ object GmailQuickstart {
      * Application name.
      */
     private const val APPLICATION_NAME = "KhodedSite"
-
     /**
      * Global instance of the JSON factory.
      */
@@ -79,7 +78,6 @@ object GmailQuickstart {
 
             val credentials = getServiceCredentials(httpTransport = HTTP_TRANSPORT)
             logger.info("Got credentials of $credentials")
-            logger.info("attempting to build gmail service.")
             Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, HttpCredentialsAdapter(credentials))
                 .setApplicationName(APPLICATION_NAME)
                 .build()

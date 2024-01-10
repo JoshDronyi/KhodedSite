@@ -43,9 +43,7 @@ fun LandingSectionDisplay(data: Pages.Home_Section.LandingData) = with(data) {
     ) {
         BackingCard(
             modifier = Modifier
-                .id(id)
                 .padding(topBottom = 20.px, leftRight = 10.px)
-                .fillMaxWidth()
                 .height(Height.FitContent),
             variant = NoBorderBackingCardVariant,
             firstSection = { LandingText(data) },
@@ -81,12 +79,11 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
             modifier = Modifier.fillMaxWidth()
                 .padding(topBottom = 15.px),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             ButtonDisplay(
                 startButton,
                 BlueButtonVariant,
-                modifier = Modifier.margin(right = 10.px)
             )
             ButtonDisplay(learnMoreButton, BlueButtonVariant)
         }

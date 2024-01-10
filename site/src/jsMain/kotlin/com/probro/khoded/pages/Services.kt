@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
 @Page
@@ -48,6 +47,7 @@ fun Services(modifier: Modifier = Modifier.fillMaxSize()) {
                     }
 
                     Pages.Services_Section.GetStarted.id -> {
+
                         PricingServiceSlides()
                     }
 
@@ -57,6 +57,7 @@ fun Services(modifier: Modifier = Modifier.fillMaxSize()) {
         }
     }
 }
+
 
 @Composable
 fun PricingServiceSlides() {
@@ -71,7 +72,6 @@ fun PricingServiceSlides() {
                 Modifier
                     .id(Pages.Contact_Section.Landing.id)
                     .height(Height.FitContent)
-                    .fillMaxWidth(80.percent)
             ) {
                 intakeFormMode = IntakeFormMode.REVIEW
             }
@@ -114,7 +114,7 @@ fun getIntakeFormAnswers(): JsonObject {
             when (section.uiModel.id) {
                 SectionID.CONTACT_INFO -> {
                     if (section.uiModel.id.name == SectionID.CONTACT_INFO.name) {
-                        val organization: IntakeFormAnswer? = section.uiModel.questionList?.get(3)?.answer
+                        val organization: IntakeFormAnswer? = section.uiModel.questionList?.get(2)?.answer
                         this.organization = organization?.let {
                             when (it) {
                                 is IntakeFormAnswer.MultiSelectionAnswer -> it.answerList.joinToString(",")

@@ -65,19 +65,19 @@ val MainTextVariant by BaseTextStyle.addVariant {
             .textAlign(TextAlign.Start)
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Larger)
     }
     Breakpoint.SM {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(FontSize.XXLarge)
     }
     Breakpoint.MD {
-        Modifier.fontSize(36.px)
+        Modifier.fontSize(FontSize.XLarge)
     }
     Breakpoint.LG {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(FontSize.XXLarge)
     }
     Breakpoint.XL {
-        Modifier.fontSize(72.px)
+        Modifier.fontSize(36.px)
     }
 }
 val SubTextVariant by BaseTextStyle.addVariant {
@@ -218,6 +218,55 @@ val ConsultationImageVariant by ImageStyle.addVariant {
     }
     Breakpoint.SM
     Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
+}
+
+val AboutLandingTextVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .fontSize(48.px)
+            .textAlign(TextAlign.Start)
+            .fontWeight(FontWeight.Bolder)
+            .padding(leftRight = 15.px)
+            .textAlign(TextAlign.Start)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(36.px)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(48.px)
+    }
+}
+val AboutLandingSubTextVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .fontSize(FontSize.Large)
+            .padding(leftRight = 15.px)
+            .textAlign(TextAlign.Start)
+
+    }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
     Breakpoint.LG
     Breakpoint.XL
 }

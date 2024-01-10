@@ -23,10 +23,19 @@ import org.jetbrains.compose.web.css.px
 fun SideNavigation(
     modifier: Modifier = Modifier,
     onSideNavToggle: () -> Unit,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.borderBottom {
+            width(1.px)
+            color(Color.darkgray)
+            style(LineStyle.Solid)
+        }
+            .borderLeft {
+                width(3.px)
+                color(Color.darkgray)
+                style(LineStyle.Groove)
+            },
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -55,7 +64,10 @@ fun SideNavigation(
         Navigator.sections.forEach { section ->
             SideNavItem(
                 section = section,
-                onNavItemSelect = onNavItemSelect
+                onNavItemSelect = { selected ->
+                    onNavItemSelect(selected)
+                },
+                modifier = Modifier
             )
         }
     }
@@ -64,76 +76,79 @@ fun SideNavigation(
 @Composable
 fun SideNavItem(
     section: Map.Entry<Navigator.PageRoot, List<PageSection>>,
-    onNavItemSelect: (path: String) -> Unit
+    modifier: Modifier = Modifier,
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     var shouldShow: Boolean by remember { mutableStateOf(false) }
-    //TODO: FIGURE OUT THE BSCOLLAPSE TRIGGERING MECHANISM AND IMPLEMENT.
-    Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(10.px)
-            .borderBottom {
-                width(1.px)
-                color(Color.white)
-                style(LineStyle.Ridge)
-            },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val angleModifier = Modifier
-            .padding(leftRight = 15.px)
-            .color(Color.white)
+        Row(
+            modifier = modifier.fillMaxWidth()
+                .padding(topBottom = 15.px),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            val angleModifier = Modifier
+                .padding(leftRight = 15.px)
+                .color(Color.white)
 
+            if (shouldShow) {
+                FaAngleDown(
+                    modifier = angleModifier
+                        .onClick {
+                            println("Clicked down")
+                            shouldShow = false
+                        },
+                    size = IconSize.LG
+                )
+            } else {
+                FaAngleRight(
+                    modifier = angleModifier
+                        .onClick {
+                            println("Clicked right")
+                            shouldShow = true
+                        },
+                    size = IconSize.LG
+                )
+            }
+            NavigationItem(
+                text = section.key.primaryText,
+                root = section.key,
+                navItemVariant = SideNavItemVariant
+            ) { path ->
+                onNavItemSelect(path)
+            }
+        }
         if (shouldShow) {
-            FaAngleDown(
-                modifier = angleModifier
-                    .onClick {
-                        println("Clicked down")
-                        shouldShow = false
-                    },
-                size = IconSize.LG
-            )
-        } else {
-            FaAngleRight(
-                modifier = angleModifier
-                    .onClick {
-                        println("Clicked right")
-                        shouldShow = true
-                    },
-                size = IconSize.LG
+            SideNavSubItems(
+                items = section.value,
+                onNavItemSelect = onNavItemSelect
             )
         }
-        NavigationItem(
-            text = section.key.primaryText,
-            sections = section.value,
-            navItemVariant = SideNavItemVariant
-        ) { path ->
-            onNavItemSelect(path)
-        }
-    }
-    if (shouldShow) {
-        SideNavSubItems(
-            items = section.value,
-            onNavItemSelect = onNavItemSelect
-        )
     }
 }
 
 @Composable
 fun SideNavSubItems(
     items: List<PageSection>,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(left = 30.px),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
         items.drop(1).forEach {
             NavSubItem(
                 section = it,
                 variant = SideSubItemVariant,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(10.px),
                 onNavItemSelect = onNavItemSelect
             )
         }

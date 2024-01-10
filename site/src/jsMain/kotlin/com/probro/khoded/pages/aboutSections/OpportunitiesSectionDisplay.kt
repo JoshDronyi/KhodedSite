@@ -7,6 +7,7 @@ import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.*
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -27,18 +28,21 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Section.Opportunities) {
     Column(
-        modifier = baseModifier.fillMaxWidth(),
+        modifier = baseModifier.fillMaxWidth()
+            .padding(topBottom = 15.px),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
             attrs = BaseTextStyle.toModifier(MainTextVariant)
+                .textAlign(TextAlign.Center)
                 .toAttrs()
         ) {
             Text(mainText)
         }
         P(
             attrs = BaseTextStyle.toModifier(SubTextVariant)
+                .textAlign(TextAlign.Center)
                 .toAttrs()
         ) {
             Text(subText)

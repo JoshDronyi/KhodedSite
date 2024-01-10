@@ -9,10 +9,12 @@ import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.breakpoint.ResponsiveValues
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
 
@@ -23,7 +25,19 @@ val BackingCardStyle by ComponentStyle {
             .background(Color.white)
             .borderRadius(20.px)
             .width(Width.Inherit)
-//            .boxSizing(BoxSizing.BorderBox)
+    }
+    Breakpoint.ZERO
+    Breakpoint.SM {
+        Modifier.fillMaxWidth(85.percent)
+    }
+    Breakpoint.MD {
+        Modifier.fillMaxWidth(80.percent)
+    }
+    Breakpoint.LG {
+        Modifier.fillMaxWidth(75.percent)
+    }
+    Breakpoint.XL {
+        Modifier.fillMaxWidth(70.percent)
     }
 }
 

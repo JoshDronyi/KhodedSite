@@ -1,10 +1,13 @@
 package com.probro.khoded.components.widgets
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
-import com.probro.khoded.models.Routes
 import com.probro.khoded.utils.Navigator
+import com.probro.khoded.utils.PageSection
+import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -34,9 +37,10 @@ val HeaderStyle by ComponentStyle {
 fun Header(
     modifier: Modifier,
     onShouldShowClick: () -> Unit,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     val breakpoint = rememberBreakpoint()
+    val section by Navigator.pageState.collectAsState()
     Row(
         modifier = HeaderStyle.toModifier()
             .fillMaxWidth()
@@ -75,7 +79,10 @@ fun Header(
         }
 
         Box(
-            modifier = Modifier.onClick { onNavItemSelect(Routes.Home.SLUG) }
+            modifier = Modifier.onClick {
+                //Take user to the home page.
+                onNavItemSelect(Pages.Home_Section.LandingData)
+            }
                 .fillMaxWidth(
                     when (breakpoint) {
                         Breakpoint.ZERO -> 70.percent
@@ -97,7 +104,7 @@ fun Header(
 
         if (breakpoint > Breakpoint.MD) HeaderNavItemDisplay(
             modifier = Modifier
-                .fillMaxWidth(80.percent),
+                .fillMaxWidth(60.percent),
             onNavItemSelect = onNavItemSelect
         )
     }
@@ -106,7 +113,7 @@ fun Header(
 @Composable
 fun HeaderNavItemDisplay(
     modifier: Modifier,
-    onNavItemSelect: (path: String) -> Unit
+    onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -115,13 +122,14 @@ fun HeaderNavItemDisplay(
     ) {
         Navigator.sections.forEach {
             NavigationItem(
-                text = it.key.primaryText,
-                sections = null,
+                text = if (Navigator.pageState.value.currentSection.slug == it.value.first().slug)
+                    it.key.alternateText else it.key.primaryText,
+                root = it.key,
                 modifier = Modifier.fillMaxWidth(),
                 navItemVariant = HeaderNavItemVariant,
             ) { path ->
                 println("Clicked on ${it.key.primaryText}")
-                onNavItemSelect(it.value.first().slug)
+                onNavItemSelect(path)
             }
         }
     }

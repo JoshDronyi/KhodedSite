@@ -37,8 +37,7 @@ fun BrandingSectionDisplay(data: Pages.Home_Section.Branding) = with(data) {
         contentAlignment = Alignment.Center
     ) {
         BackingCard(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier,
             variant = SingleBorderBackingCardVaiant,
             firstSection = { BrandingText(data) },
             secondSection = { BrandingImage(data) }
