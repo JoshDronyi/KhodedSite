@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
@@ -38,7 +39,7 @@ fun GetStartedSectionDisplay(data: Pages.Home_Section.GET_STARTED) = with(data) 
         BackingCard(
             modifier = Modifier
                 .padding(all = 10.px),
-            variant = SingleBorderBackingCardVaiant,
+            variant = NoBorderBackingCardVariant,
             firstSection = { GetStartedText(data) },
             secondSection = { GetStartedImage(data) }
         )

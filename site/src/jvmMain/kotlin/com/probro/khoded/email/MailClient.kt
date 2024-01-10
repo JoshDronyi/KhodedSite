@@ -59,7 +59,8 @@ class MailClient(
             bodyText = intakeFormDTO.toString()
         )
         logger.info("Sent email $email")
-        saveForm(intakeFormDTO)
+        return@supervisorScope email?.id
+        //saveForm(intakeFormDTO)
     }
 
     private suspend fun saveForm(intakeFormDTO: IntakeFormDTO) {

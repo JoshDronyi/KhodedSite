@@ -39,7 +39,6 @@ fun QuestionDisplay(
     modifier: Modifier = Modifier,
     onQuestionAnswered: () -> Unit
 ) {
-    println("In question display, type is ${question.questionType} answer is ${question.answer}")
     Column(
         modifier = modifier
             .fillMaxWidth(),
@@ -57,7 +56,6 @@ fun QuestionDisplay(
         when (question.questionType) {
             QuestionType.A_B ->
                 ABQuestionDisplay(question) { answer ->
-                    println("Seleted A/B answeer -> $answer \n from options ${question.options}")
                     //TODO: ANSWER AN A_B QUESTION
                     question.answer = IntakeFormAnswer.TextBasedAnswer(answer)
                     onQuestionAnswered()
@@ -66,7 +64,6 @@ fun QuestionDisplay(
 
             QuestionType.PICK_ONE ->
                 PickOneQuestionDisplay(question) { answer ->
-                    println("Picked one, picks -> $answer \n from options ${question.options}")
                     //TODO: ANSWER PICK_ONE QUESTION
                     question.answer = IntakeFormAnswer.TextBasedAnswer(answer)
                     onQuestionAnswered()
@@ -74,51 +71,60 @@ fun QuestionDisplay(
 
 
             QuestionType.PICK_MULTIPLE -> {
-                var answers = mutableListOf<String>()
                 val selectedAnswers = remember {
-                    mutableStateListOf((question.answer as? IntakeFormAnswer.MultiSelectionAnswer)?.answerList)
+                    mutableStateOf(
+                        (question.answer as? IntakeFormAnswer.MultiSelectionAnswer)?.answerList
+                    )
                 }
                 PickMultipleQuestionDisplay(
                     question = question,
-                    selectedAnswers = selectedAnswers.map { nextAnswers: List<String>? ->
-                        nextAnswers?.joinToString(",").apply {
-                            this?.let { answers.add(it) }
-                        } ?: ""
-                    },
+                    selectedAnswers = selectedAnswers.value ?: listOf(),
                 ) { selected ->
+                    println("Selected Answers are ${selectedAnswers.value}")
                     println("Picked Multiple, picks -> $selected \n from options ${question.options}")
-                    answers.apply {
-                        toMutableList()
-                        if (this.contains(selected)) {
-                            println("removing selected item $selected")
-                            remove(selected)
-                        } else {
-                            println("adding selected item $selected")
-                            add(selected)
-                        }
-                    }
-                    question.answer = IntakeFormAnswer.MultiSelectionAnswer(answerList = answers)
+                    val newList = adjustSelectedAnswers(selectedAnswers.value, selected)
+                    println("NewList after adjustment: $newList")
+                    selectedAnswers.value = newList.answerList
+                    question.answer = newList
                     onQuestionAnswered()
                 }
             }
 
 
             QuestionType.OPEN_SHORT -> OpenQuestionDisplay(question) { answer ->
-                println("Short answer question changed: $answer \n from options ${question.options}")
-                //TODO: ANSWER OPEN_SHORT QUESTION
                 question.answer = IntakeFormAnswer.TextBasedAnswer(answer)
                 onQuestionAnswered()
             }
 
             QuestionType.OPEN_LONG -> OpenQuestionDisplay(question) { answer ->
-                println("Long answer question changed: $answer \n from options ${question.options}")
-                //TODO: ANSWER OPEN_lONG QUESTION
                 question.answer = IntakeFormAnswer.TextBasedAnswer(answer)
                 onQuestionAnswered()
             }
         }
     }
 }
+
+private fun adjustSelectedAnswers(
+    selectedAnswers: List<String>?,
+    selected: String
+) = selectedAnswers?.toMutableList()?.let {
+    println("Dealing with selected answers of $selectedAnswers")
+    IntakeFormAnswer.MultiSelectionAnswer(
+        answerList = if (it.contains(selected)) {
+            println("removing selected item $selected")
+            it.apply {
+                remove(selected)
+                println("List is now $it")
+            }
+        } else {
+            println("adding selected item $selected")
+            it.apply {
+                add(selected)
+                println("List is now $it")
+            }
+        }
+    )
+} ?: IntakeFormAnswer.MultiSelectionAnswer(answerList = listOf(selected))
 
 @Composable
 fun PickMultipleQuestionDisplay(
