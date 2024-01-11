@@ -148,9 +148,6 @@ val StoryTitleVariant by BaseTextStyle.addVariant {
     Breakpoint.LG {
         Modifier.fontSize(FontSize.XXLarge)
     }
-    Breakpoint.XL {
-        Modifier.fontSize(36.px)
-    }
 }
 
 val StoryParagraphVariant by BaseTextStyle.addVariant {
@@ -171,9 +168,6 @@ val StoryParagraphVariant by BaseTextStyle.addVariant {
     }
     Breakpoint.LG {
         Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(FontSize.XXLarge)
     }
 }
 

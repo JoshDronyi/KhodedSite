@@ -22,6 +22,7 @@ import com.varabyte.kobweb.core.rememberPageContext
 fun About(modifier: Modifier = Modifier.fillMaxSize()) {
     val ctx = rememberPageContext()
     Scaffold(
+        route = ctx.route,
         router = ctx.router,
         modifier = Modifier.fillMaxSize()
     ) {

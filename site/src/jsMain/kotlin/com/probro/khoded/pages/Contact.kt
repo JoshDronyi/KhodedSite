@@ -27,6 +27,7 @@ fun Contact() {
     val ctx = rememberPageContext()
     val scope = rememberCoroutineScope()
     Scaffold(
+        route = ctx.route,
         router = ctx.router
     ) {
         Box(

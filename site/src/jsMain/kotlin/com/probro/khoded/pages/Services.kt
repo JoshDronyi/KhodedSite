@@ -30,6 +30,7 @@ import org.jetbrains.compose.web.css.px
 fun Services(modifier: Modifier = Modifier.fillMaxSize()) {
     val ctx = rememberPageContext()
     Scaffold(
+        route = ctx.route,
         router = ctx.router,
     ) {
         Column(

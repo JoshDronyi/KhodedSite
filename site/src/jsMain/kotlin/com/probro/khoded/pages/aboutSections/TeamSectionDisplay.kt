@@ -35,14 +35,14 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        P(
-            attrs = BaseTextStyle.toModifier(MainTextVariant)
-                .textAlign(TextAlign.Center)
-                .margin(bottom = 15.px)
-                .toAttrs()
-        ) {
-            Text(mainText)
-        }
+//        P(
+//            attrs = BaseTextStyle.toModifier(MainTextVariant)
+//                .textAlign(TextAlign.Center)
+//                .margin(bottom = 15.px)
+//                .toAttrs()
+//        ) {
+//            Text(mainText)
+//        }
         teambios.forEach { bio ->
             TeamBioDisplay(bio)
         }

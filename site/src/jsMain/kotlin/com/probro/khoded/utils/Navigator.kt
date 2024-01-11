@@ -11,6 +11,7 @@ object Navigator {
         Pages.Home_Section.Hosting,
         Pages.Home_Section.Branding,
         Pages.Home_Section.Consultation,
+//        Pages.Home_Section.Testimonials,
         Pages.Home_Section.GET_STARTED,
     )
     private val aboutSection = listOf(
@@ -23,7 +24,7 @@ object Navigator {
     private val servicesSection = listOf(
         Pages.Services_Section.Landing,
         Pages.Services_Section.GetStarted,
-        Pages.Services_Section.ServiceBreakdown
+//        Pages.Services_Section.ServiceBreakdown
     )
     private val contactSection = listOf(
         Pages.Contact_Section.Landing,

@@ -142,7 +142,7 @@ object Pages {
             slug = Routes.About.SLUG,
             path = "${Routes.About.SLUG}${Routes.About.LANDING}"
         ) {
-            val mainText: String = "Meet Our team"
+            val mainText: String = "Meet Our Team"
             val subText: String = "Passionate Experts"
             val image: String = Images.AboutPage.mainLanding
         }
@@ -153,7 +153,7 @@ object Pages {
             slug = Routes.About.SLUG,
             path = "${Routes.About.SLUG}${Routes.About.TEAM}"
         ) {
-            val mainText = "Meet the Team"
+            val mainText = "Meet Our Team"
             val teambios: List<TeamBio> = listOf(
                 TeamBio(
                     name = "Esther Dronyi",

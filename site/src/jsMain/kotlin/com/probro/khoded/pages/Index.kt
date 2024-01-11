@@ -19,6 +19,7 @@ import org.jetbrains.compose.web.css.px
 fun Index() {
     val ctx = rememberPageContext()
     Scaffold(
+        route = ctx.route,
         router = ctx.router
     ) {
         HomePageSections()

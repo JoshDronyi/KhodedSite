@@ -42,29 +42,18 @@ fun IntakeFormReview(
         verticalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = Modifier,
+            modifier = Modifier.fillMaxWidth(80.percent)
+                .height(Height.MaxContent),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            FaCaretLeft(
-                modifier = Modifier.fillMaxWidth(10.percent)
-                    .color(Color.darkgray)
-                    .onClick {
-                        if ((currentSection - 1) >= 0) currentSection--
-                        else currentSection = 0
-                    },
-                size = IconSize.XL
-            )
+            LeftCaret {
+                if ((currentSection - 1) >= 0) currentSection--
+            }
             formSectionDisplay(currentSection, modifier = Modifier.fillMaxWidth())
-            FaCaretRight(
-                modifier = Modifier.fillMaxWidth(10.percent)
-                    .color(Color.darkgray)
-                    .onClick {
-                        if ((currentSection + 1) >= intakeForm.sections.size) currentSection = intakeForm.sections.size
-                        else currentSection++
-                    },
-                size = IconSize.XL
-            )
+            RightCaret {
+                if ((currentSection + 1) < (intakeForm.sections.size - 1)) currentSection++
+            }
         }
         ButtonDisplay(
             state = ButtonState(
@@ -78,12 +67,48 @@ fun IntakeFormReview(
 }
 
 @Composable
+private fun RightCaret(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxWidth(10.percent),
+        contentAlignment = Alignment.Center
+    ) {
+        FaCaretRight(
+            modifier = Modifier
+                .color(Color.darkgray)
+                .onClick {
+                    onClick()
+                },
+            size = IconSize.X9
+        )
+    }
+}
+
+@Composable
+private fun LeftCaret(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxWidth(10.percent),
+        contentAlignment = Alignment.Center
+    ) {
+        FaCaretLeft(
+            modifier = Modifier
+                .color(Color.black)
+                .onClick {
+                    onClick()
+                },
+            size = IconSize.X9
+        )
+    }
+}
+
+@Composable
 private fun formSectionDisplay(currentSection: Int, modifier: Modifier) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        intakeForm.sections.forEachIndexed { index, section ->
+        intakeForm.sections.filterNot {
+            it.uiModel.questionList.isNullOrEmpty()
+        }.forEachIndexed { index, section ->
             section.uiModel.questionList?.let {
                 IntakeFormSectionReview(
                     isVisible = currentSection == index,
@@ -100,7 +125,7 @@ fun IntakeFormSectionReview(isVisible: Boolean, section: Section, modifier: Modi
         Column(
             modifier = modifier
                 .height(Height.MinContent)
-                .fillMaxWidth(if (isVisible) 80.percent else 0.percent)
+                .fillMaxWidth(80.percent)
                 .padding(20.px)
                 .margin(topBottom = 20.px)
                 .border {
@@ -119,8 +144,7 @@ fun IntakeFormSectionReview(isVisible: Boolean, section: Section, modifier: Modi
                 .opacity(if (isVisible) 100.percent else 0.percent)
                 .transition(
                     CSSTransition("visibility", 100.ms),
-                    CSSTransition("opacity", 100.ms),
-                    CSSTransition("width", 100.ms),
+                    CSSTransition("opacity", 100.ms)
                 ),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
