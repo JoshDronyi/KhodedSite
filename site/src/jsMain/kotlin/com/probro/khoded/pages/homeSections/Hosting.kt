@@ -26,7 +26,7 @@ import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
-fun HostingSectionDisplay(data: Pages.Home_Section.Hosting) = with(data) {
+fun HostingSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
     Box(
         modifier = Modifier
             .id(id)
@@ -45,7 +45,7 @@ fun HostingSectionDisplay(data: Pages.Home_Section.Hosting) = with(data) {
 }
 
 @Composable
-fun HostingText(data: Pages.Home_Section.Hosting) = with(data) {
+fun HostingText(data: Pages.Home_Section.Design) = with(data) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,14 +83,14 @@ fun HostingText(data: Pages.Home_Section.Hosting) = with(data) {
 }
 
 @Composable
-fun HostingImage(data: Pages.Home_Section.Hosting) = with(data) {
+fun HostingImage(data: Pages.Home_Section.Design) = with(data) {
     Box(
         modifier = Modifier
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         ImageBox(
-            image = image,
+            image = mainImage,
             imageDesc = "Image depicting hosting",
             modifier = ImageStyle.toModifier()
         )

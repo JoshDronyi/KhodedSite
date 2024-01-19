@@ -55,7 +55,7 @@ fun Footer(modifier: Modifier = Modifier, onNavItemSelect: (section: PageSection
 @Composable
 fun NavigationDisplay(
     modifier: Modifier = Modifier,
-    entry: Map.Entry<Navigator.PageRoot, List<PageSection>>,
+    entry: Map.Entry<Navigator.KeySections, List<PageSection>>,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Column(

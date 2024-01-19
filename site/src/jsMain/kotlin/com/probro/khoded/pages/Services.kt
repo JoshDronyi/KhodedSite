@@ -40,7 +40,7 @@ fun Services(modifier: Modifier = Modifier.fillMaxSize()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Navigator.sections[Navigator.PageRoot.Services]?.forEach {
+            Navigator.sections[Navigator.KeySections.Services]?.forEach {
                 when (it.id) {
                     Pages.Services_Section.Landing.id -> {
                         ServicesLanding()

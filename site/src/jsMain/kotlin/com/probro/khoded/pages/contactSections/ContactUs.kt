@@ -80,8 +80,8 @@ fun ComposeMessageSection(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        message.apply {
-            MessageSubSection(name, email, message, organization, onMessageSend)
+        messaageUIModel.apply {
+            MessageSubSection(fullName, email, message, organization, onMessageSend)
         }
     }
 }

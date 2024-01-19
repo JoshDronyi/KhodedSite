@@ -35,8 +35,8 @@ fun HomePageSections(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LandingSectionDisplay(Pages.Home_Section.LandingData)
-        WebDesignSectionDisplay(Pages.Home_Section.WebDesign)
-        HostingSectionDisplay(Pages.Home_Section.Hosting)
+        WebDesignSectionDisplay(Pages.Home_Section.Services)
+        HostingSectionDisplay(Pages.Home_Section.Design)
         BrandingSectionDisplay(Pages.Home_Section.Branding)
         ConsultationSectionDisplay(Pages.Home_Section.Consultation)
 //        TestimonialSectionDisplay(Pages.Home_Section.Testimonials)

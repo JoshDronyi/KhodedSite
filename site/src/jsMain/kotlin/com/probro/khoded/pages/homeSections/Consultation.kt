@@ -57,7 +57,7 @@ fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
         horizontalAlignment = Alignment.Start
     ) {
         ImageBox(
-            image = image,
+            image = mainImage,
             imageDesc = "Depiction of scheduling a consultation",
             modifier = ImageStyle.toModifier(ConsultationImageVariant)
         )
@@ -75,7 +75,7 @@ fun ConsultationText(data: Pages.Home_Section.Consultation) = with(data) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ButtonDisplay(startButton, PinkButtonVariant)
+            ButtonDisplay(ctaButton, PinkButtonVariant)
         }
     }
 }

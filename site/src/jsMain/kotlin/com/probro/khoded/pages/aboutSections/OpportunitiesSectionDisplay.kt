@@ -26,7 +26,7 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
-fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Section.Opportunities) {
+fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.Story_Section.JoinOurTeam) {
     Column(
         modifier = baseModifier.fillMaxWidth()
             .padding(topBottom = 15.px),
@@ -62,7 +62,7 @@ fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.About_Secti
 }
 
 @Composable
-fun JobPositionDisplay(position: Pages.About_Section.JobPosition) = with(position) {
+fun JobPositionDisplay(position: Pages.Story_Section.JobPosition) = with(position) {
     Box(
         modifier = Modifier.fillMaxWidth()
             .padding(20.px)

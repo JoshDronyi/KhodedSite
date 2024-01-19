@@ -34,16 +34,16 @@ fun About(modifier: Modifier = Modifier.fillMaxSize()) {
         ) {
             val baseModifier = Modifier
                 .height(Height.FitContent)
-            Navigator.sections[Navigator.PageRoot.About]?.forEach { section ->
+            Navigator.sections[Navigator.KeySections.About]?.forEach { section ->
                 baseModifier.id(section.id)
                 when (section.id) {
-                    Routes.About.LANDING -> AboutLandingDisplay(baseModifier)
+                    Routes.Story.LANDING -> AboutLandingDisplay(baseModifier)
 
-                    Routes.About.TEAM -> TeamSectionDisplay(baseModifier)
+                    Routes.Story.FOUNDERS -> TeamSectionDisplay(baseModifier)
 
-                    Routes.About.STORY -> StorySectionDisplay(baseModifier)
-                    Routes.About.SEPARATOR -> SeparatorSectionDisplay(baseModifier)
-                    Routes.About.OPPORTUNITIES -> OpportunitiesSectionDisplay(baseModifier)
+                    Routes.Story.OUR_STORY -> StorySectionDisplay(baseModifier)
+                    Routes.Story.SEPARATOR -> SeparatorSectionDisplay(baseModifier)
+                    Routes.Story.JOIN_OUR_TEAM -> OpportunitiesSectionDisplay(baseModifier)
                 }
             }
         }

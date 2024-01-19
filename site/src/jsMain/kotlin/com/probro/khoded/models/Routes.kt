@@ -4,21 +4,16 @@ sealed class Routes {
     object Home {
         const val SLUG = "/"
         const val LANDING_ROUTE: String = "#homeLanding"
-        const val WEB_DESIGN: String = "#webDesign"
-        const val HOSTING: String = "#hosting"
-        const val BRANDING: String = "#branding"
+        const val OUR_SERVICES: String = "#ourServices"
+        const val DESIGN: String = "#design"
         const val CONSULTATION: String = "#consultation"
-        const val TESTIMONIALS: String = "#testimonials"
-        const val GET_STARTED: String = "#getStarted"
     }
 
-    object About {
-        const val SLUG = "/about"
-        const val LANDING: String = "#aboutLanding"
-        const val TEAM: String = "#team"
-        const val STORY: String = "#story"
-        const val SEPARATOR: String = "#separator"
-        const val OPPORTUNITIES: String = "#opportunities"
+    object Story {
+        const val SLUG = "/story"
+        const val FOUNDERS: String = "#founders"
+        const val OUR_STORY: String = "#ourStory"
+        const val JOIN_OUR_TEAM: String = "#joinOurTeam"
     }
 
     object Services {
@@ -32,7 +27,6 @@ sealed class Routes {
     object Contact {
         const val SLUG = "/contact"
         const val LANDING: String = "#contactLanding"
-        const val CONTACT_US: String = "#contactUs"
     }
 
     object Misc {

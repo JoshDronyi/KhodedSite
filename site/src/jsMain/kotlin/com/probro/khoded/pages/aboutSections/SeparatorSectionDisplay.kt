@@ -18,7 +18,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import org.jetbrains.compose.web.css.px
 
 @Composable
-fun SeparatorSectionDisplay(baseModifier: Modifier) = with(Pages.About_Section.Separator) {
+fun SeparatorSectionDisplay(baseModifier: Modifier) = with(Pages.Story_Section.Separator) {
     Row(
         modifier = baseModifier.fillMaxWidth()
             .height(Height.MinContent)

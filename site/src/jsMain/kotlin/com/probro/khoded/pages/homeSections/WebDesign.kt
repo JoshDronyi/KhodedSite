@@ -27,7 +27,7 @@ import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
-fun WebDesignSectionDisplay(data: Pages.Home_Section.WebDesign) = with(data) {
+fun WebDesignSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
     Box(
         modifier = Modifier
             .id(id)
@@ -54,7 +54,7 @@ fun WebDesignSectionDisplay(data: Pages.Home_Section.WebDesign) = with(data) {
 }
 
 @Composable
-fun WebDesignText(data: Pages.Home_Section.WebDesign) = with(data) {
+fun WebDesignText(data: Pages.Home_Section.Services) = with(data) {
     Column(
         modifier = Modifier.fillMaxWidth()
             .padding(leftRight = 16.px, topBottom = 20.px),
@@ -92,7 +92,7 @@ fun WebDesignImage() {
         verticalArrangement = Arrangement.Center
     ) {
         ImageBox(
-            image = Pages.Home_Section.WebDesign.image,
+            image = Pages.Home_Section.Services.mainImage,
             imageDesc = "Depiction of Web design.",
             modifier = ImageStyle.toModifier()
         )

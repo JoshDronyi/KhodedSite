@@ -27,7 +27,7 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
-fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section.Team) {
+fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section.OurFounders) {
     Column(
         modifier = modifier
             .fillMaxWidth(80.percent)
@@ -51,7 +51,7 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section
 
 @Composable
 fun TeamBioDisplay(
-    bio: Pages.About_Section.TeamBio,
+    bio: Pages.Story_Section.TeamBio,
     modifier: Modifier = Modifier
 ) = with(bio) {
     TeamSectionCard(

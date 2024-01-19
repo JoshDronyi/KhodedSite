@@ -7,34 +7,28 @@ object Navigator {
 
     private val homeSections: List<PageSection> = listOf(
         Pages.Home_Section.LandingData,
-        Pages.Home_Section.WebDesign,
-        Pages.Home_Section.Hosting,
-        Pages.Home_Section.Branding,
-        Pages.Home_Section.Consultation,
-        Pages.Home_Section.GET_STARTED,
+        Pages.Home_Section.Services,
+        Pages.Home_Section.Design,
+        Pages.Home_Section.Consultation
     )
-    private val aboutSection = listOf(
-        Pages.About_Section.Landing,
-        Pages.About_Section.Team,
-        Pages.About_Section.Story,
-        Pages.About_Section.Separator,
-        Pages.About_Section.Opportunities
-    )
-    private val servicesSection = listOf(
-        Pages.Services_Section.Landing,
-        Pages.Services_Section.GetStarted,
-        Pages.Services_Section.ServiceBreakdown
-    )
-    private val contactSection = listOf(
-        Pages.Contact_Section.Landing,
-        Pages.Contact_Section.ContactInfo,
+    private val storySections = listOf(
+        Pages.Story_Section.OurFounders,
+        Pages.Story_Section.OurStory,
+        Pages.Story_Section.JoinOurTeam
     )
 
-    val sections: Map<PageRoot, List<PageSection>> = mapOf(
-        PageRoot.Home to homeSections,
-        PageRoot.About to aboutSection,
-        PageRoot.Services to servicesSection,
-        PageRoot.Contact to contactSection,
+    private val contactSection = listOf(
+        Pages.Contact_Section.Landing
+    )
+
+    val sections: Map<KeySections, List<PageSection>> = mapOf(
+        KeySections.PageRoots.home to homeSections,
+        KeySections.PageRoots.story to storySections,
+        KeySections.PageRoots.contact to contactSection,
+        KeySections.TrafficStops.joinOurTeam to contactSection,
+        KeySections.TrafficStops.consultation to contactSection,
+        KeySections.TrafficStops.termsAndCondtions to contactSection,
+
     )
 
     val pageState = MutableStateFlow(NavigationState())
@@ -65,13 +59,27 @@ object Navigator {
         val previous: List<PageSection> = emptyList()
     )
 
-    enum class PageRoot(
+    sealed class KeySections(
         val primaryText: String,
-        val alternateText: String
     ) {
-        Home("Home", "Schedule A Consultation"),
-        About("About", "About"),
-        Services("Services", "Services"),
-        Contact("Contact", "Contact Us")
+        object PageRoots {
+            data class Home(val root: String = "Home") : KeySections(root)
+            data class STORY(val root: String = "Story") : KeySections(root)
+            class Contact(val root: String = "Contact") : KeySections(root)
+
+            val home by lazy { Home() }
+            val story by lazy { STORY() }
+            val contact by lazy { Contact() }
+        }
+
+        object TrafficStops {
+            data class CONSULTATION(val root: String = "About") : KeySections(root)
+            data class JOIN_OUR_TEAM(val root: String = "About") : KeySections(root)
+            data class TERMS_AND_CONDTIONS(val root: String = "About") : KeySections(root)
+
+            val consultation by lazy { CONSULTATION() }
+            val joinOurTeam by lazy { JOIN_OUR_TEAM() }
+            val termsAndCondtions by lazy { TERMS_AND_CONDTIONS() }
+        }
     }
 }

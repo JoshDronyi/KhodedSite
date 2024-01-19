@@ -73,7 +73,7 @@ val SideNavItemVariant by NavItemStyle.addVariant {
 @Composable
 fun NavigationItem(
     text: String,
-    root: Navigator.PageRoot,
+    root: Navigator.KeySections,
     modifier: Modifier = Modifier,
     navItemVariant: ComponentVariant? = null,
     onNavItemSelect: (section: PageSection) -> Unit,
@@ -88,10 +88,10 @@ fun NavigationItem(
             onNavItemSelect = {
                 onNavItemSelect(
                     when (root) {
-                        Navigator.PageRoot.Home -> Pages.Home_Section.LandingData
-                        Navigator.PageRoot.About -> Pages.About_Section.Landing
-                        Navigator.PageRoot.Services -> Pages.Services_Section.Landing
-                        Navigator.PageRoot.Contact -> Pages.Contact_Section.Landing
+                        Navigator.KeySections.Home -> Pages.Home_Section.LandingData
+                        Navigator.KeySections.About -> Pages.Story_Section.Landing
+                        Navigator.KeySections.Services -> Pages.Services_Section.Landing
+                        Navigator.KeySections.Contact -> Pages.Contact_Section.Landing
                     }
                 )
             },

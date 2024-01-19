@@ -82,7 +82,7 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             ButtonDisplay(
-                startButton,
+                ctaButton,
                 BlueButtonVariant,
             )
             ButtonDisplay(learnMoreButton, BlueButtonVariant)
