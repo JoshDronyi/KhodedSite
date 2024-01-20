@@ -2,7 +2,9 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
+import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.models.ButtonState
+import com.probro.khoded.models.Images
 import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.JobDescriptionVariant
@@ -48,6 +50,10 @@ fun OpportunitiesSectionDisplay(
         ) {
             Text(title)
         }
+        ImageBox(
+            image = Images.StoryPage.megaphone,
+            imageDesc = "Megaphone"
+        )
         SimpleGrid(
             numColumns = numColumns(base = 1, sm = 2, md = 3),
             modifier = Modifier
