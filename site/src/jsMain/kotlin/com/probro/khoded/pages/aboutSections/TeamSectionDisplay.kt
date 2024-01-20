@@ -30,6 +30,7 @@ import org.jetbrains.compose.web.dom.Text
 fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section.OurFounders) {
     Column(
         modifier = modifier
+            .id(id)
             .fillMaxWidth(80.percent)
             .height(Height.FitContent),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,11 +42,10 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section
                 .margin(bottom = 15.px)
                 .toAttrs()
         ) {
-            Text(mainText)
+            Text(title)
         }
-        teambios.forEach { bio ->
-            TeamBioDisplay(bio)
-        }
+        TeamBioDisplay(estherBio)
+        TeamBioDisplay(joshBio)
     }
 }
 

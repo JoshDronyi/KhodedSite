@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.serviceSections
 
 import androidx.compose.runtime.Composable
@@ -54,3 +55,4 @@ fun ServicesLanding(modifier: Modifier = Modifier) = with(Pages.Services_Section
         }
     }
 }
+*/

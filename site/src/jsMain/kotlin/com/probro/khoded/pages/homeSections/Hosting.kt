@@ -1,28 +1,20 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.SingleBorderBackingCardVaiant
 import com.probro.khoded.styles.*
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.P
-import org.jetbrains.compose.web.dom.Text
+import org.w3c.dom.Text
 
 
 @Composable
@@ -38,61 +30,8 @@ fun HostingSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
         BackingCard(
             modifier = Modifier,
             variant = SingleBorderBackingCardVaiant,
-            firstSection = { HostingImage(data) },
-            secondSection = { HostingText(data) }
-        )
-    }
-}
-
-@Composable
-fun HostingText(data: Pages.Home_Section.Design) = with(data) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(leftRight = 16.px, topBottom = 20.px),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
-    ) {
-        P(
-            attrs = BaseTextStyle.toModifier(TitleTextVariant)
-                .toAttrs()
-        ) {
-            Text(title)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(MainTextVariant)
-                .toAttrs()
-        ) {
-            Text(mainText)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(SubTextVariant)
-                .toAttrs()
-        ) {
-            Text(subText)
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(topBottom = 15.px),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ButtonDisplay(learnMoreButton, BlueButtonVariant)
-        }
-    }
-}
-
-@Composable
-fun HostingImage(data: Pages.Home_Section.Design) = with(data) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        ImageBox(
-            image = mainImage,
-            imageDesc = "Image depicting hosting",
-            modifier = ImageStyle.toModifier()
+            firstSection = { Text(data.mainText) },
+            secondSection = { Text(data.subText) }
         )
     }
 }

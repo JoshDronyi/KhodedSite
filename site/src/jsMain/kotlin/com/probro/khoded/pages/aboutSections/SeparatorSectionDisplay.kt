@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
@@ -34,4 +35,4 @@ fun SeparatorSectionDisplay(baseModifier: Modifier) = with(Pages.Story_Section.S
             )
         }
     }
-}
+}*/

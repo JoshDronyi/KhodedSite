@@ -2,13 +2,15 @@ package com.probro.khoded.pages
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.pages.contactSections.ContactUsSection
 import com.probro.khoded.utils.EmailData
 import com.probro.khoded.utils.MailClient
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -28,15 +30,17 @@ fun Contact() {
     val scope = rememberCoroutineScope()
     Scaffold(
         router = ctx.router
-    ) {
-        Box(
-            modifier = Modifier
-                .id(Pages.Contact_Section.ContactInfo.id)
+    ) { header, footer, modifier ->
+        Column(
+            modifier = modifier
+                .id(Pages.Contact_Section.Landing.id)
                 .height(Height.FitContent)
                 .fillMaxWidth()
                 .padding(20.px),
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
+            header(ContactPageHeaderVariant)
             ContactUsSection(
                 modifier = Modifier.fillMaxWidth()
             ) { name, email, organization, message ->
@@ -47,6 +51,7 @@ fun Contact() {
                     )
                 }
             }
+            footer()
         }
     }
 }

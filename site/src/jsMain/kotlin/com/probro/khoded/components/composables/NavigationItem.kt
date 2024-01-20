@@ -7,7 +7,6 @@ import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -74,30 +73,26 @@ val SideNavItemVariant by NavItemStyle.addVariant {
 fun NavigationItem(
     text: String,
     root: Navigator.KeySections,
-    modifier: Modifier = Modifier,
     navItemVariant: ComponentVariant? = null,
     onNavItemSelect: (section: PageSection) -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        NavSectionTitle(
-            navItemVariant = navItemVariant,
-            onNavItemSelect = {
-                onNavItemSelect(
-                    when (root) {
-                        Navigator.KeySections.Home -> Pages.Home_Section.LandingData
-                        Navigator.KeySections.About -> Pages.Story_Section.Landing
-                        Navigator.KeySections.Services -> Pages.Services_Section.Landing
-                        Navigator.KeySections.Contact -> Pages.Contact_Section.Landing
-                    }
-                )
-            },
-            text = text
-        )
-    }
+    NavSectionTitle(
+        navItemVariant = navItemVariant,
+        onNavItemSelect = {
+            onNavItemSelect(
+                when (root) {
+                    is Navigator.KeySections.PageRoots.Contact -> Pages.Contact_Section.Landing
+                    is Navigator.KeySections.PageRoots.Home -> Pages.Home_Section.LandingData
+                    is Navigator.KeySections.PageRoots.STORY -> Pages.Story_Section.OurStory
+                    is Navigator.KeySections.TrafficStops.CONSULTATION -> Pages.Home_Section.Consultation
+                    is Navigator.KeySections.TrafficStops.JOIN_OUR_TEAM -> Pages.Story_Section.JoinOurTeam
+                    is Navigator.KeySections.TrafficStops.TERMS_AND_CONDTIONS ->
+                        Pages.Misc.Sections.TermsAndConditions
+                }
+            )
+        },
+        text = text
+    )
 }
 
 @Composable

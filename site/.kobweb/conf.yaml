@@ -1,0 +1,18 @@
+site:
+  title: "Khoded: Where your vision takes center stage."
+
+server:
+  files:
+    dev:
+      contentRoot: "build/processedResources/js/main/public"
+      script: "build/dist/js/developmentExecutable/khoded.js"
+      api: "build/libs/khoded.jar"
+    prod:
+      script: "build/dist/js/productionExecutable/khoded.js"
+      siteRoot: ".kobweb/site"
+  cors:
+    hosts:
+      - name: "khoded.onrender.com"
+        schemes:
+          - "https"
+  port: 8080

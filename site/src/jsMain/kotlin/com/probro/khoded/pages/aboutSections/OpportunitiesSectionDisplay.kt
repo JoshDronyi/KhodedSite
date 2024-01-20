@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.homeSections.ButtonDisplay
-import com.probro.khoded.styles.*
+import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.JobDescriptionVariant
+import com.probro.khoded.styles.JobTitleVariant
+import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -26,9 +29,14 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
-fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.Story_Section.JoinOurTeam) {
+fun OpportunitiesSectionDisplay(
+    footer: @Composable () -> Unit,
+    baseModifier: Modifier
+) = with(Pages.Story_Section.JoinOurTeam) {
     Column(
-        modifier = baseModifier.fillMaxWidth()
+        modifier = baseModifier
+            .id(id)
+            .fillMaxWidth()
             .padding(topBottom = 15.px),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -38,14 +46,7 @@ fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.Story_Secti
                 .textAlign(TextAlign.Center)
                 .toAttrs()
         ) {
-            Text(mainText)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(SubTextVariant)
-                .textAlign(TextAlign.Center)
-                .toAttrs()
-        ) {
-            Text(subText)
+            Text(title)
         }
         SimpleGrid(
             numColumns = numColumns(base = 1, sm = 2, md = 3),
@@ -58,6 +59,7 @@ fun OpportunitiesSectionDisplay(baseModifier: Modifier) = with(Pages.Story_Secti
                 JobPositionDisplay(it)
             }
         }
+        footer()
     }
 }
 

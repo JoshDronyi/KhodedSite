@@ -1,5 +1,7 @@
 package com.probro.khoded.models
 
+import com.probro.khoded.utils.Navigator
+
 sealed class Routes {
     object Home {
         const val SLUG = "/"
@@ -30,7 +32,6 @@ sealed class Routes {
     }
 
     object Misc {
-        const val NAME = "Misc"
-        const val COMING_SOON: String = "comingSoon"
+        const val TERMS_AND_CONDTIONS = "#termsAndConditions"
     }
 }

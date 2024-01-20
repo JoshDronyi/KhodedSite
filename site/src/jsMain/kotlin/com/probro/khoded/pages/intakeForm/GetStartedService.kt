@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.serviceSections
 
 import androidx.compose.runtime.Composable
@@ -106,4 +107,4 @@ fun GetStartedImage() {
             modifier = ImageStyle.toModifier()
         )
     }
-}
+}*/

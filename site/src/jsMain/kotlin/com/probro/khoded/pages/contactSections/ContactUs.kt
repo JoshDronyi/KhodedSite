@@ -61,11 +61,7 @@ fun ContactUsSection(
             firstSection = {
                 ComposeMessageSection(onMessageSend = onMessageSend)
             },
-            secondSection = {
-                ContactInformationSection(
-                    Pages.Contact_Section.ContactInfo
-                )
-            }
+            secondSection = { ContactInformationSection() }
         )
     }
 }
@@ -249,9 +245,8 @@ fun ContactText(title: String, content: String, variant: ComponentVariant = Cont
 
 @Composable
 fun ContactInformationSection(
-    contactInfo: Pages.Contact_Section.ContactInfo,
     modifier: Modifier = Modifier
-) = with(contactInfo) {
+) = with(Pages.Contact_Section.Landing) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -271,11 +266,11 @@ fun ContactInformationSection(
             ) {
                 Text(title)
             }
-            uiModel.apply {
-                ContactText("Address", "$address\n$city, $zip")
+            contactInfoUIModel.apply {
+                ContactText("Address", address)
+                ContactText("Phone Number", phone)
+                ContactText("Email", email)
             }
-            ContactText("Phone Number", uiModel.phone)
-            ContactText("Email", uiModel.email)
         }
     }
 }

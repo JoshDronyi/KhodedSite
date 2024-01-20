@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
@@ -142,4 +143,4 @@ fun OurTeamImage(image: String) {
                 .borderRadius(0.px)
         )
     }
-}
+}*/

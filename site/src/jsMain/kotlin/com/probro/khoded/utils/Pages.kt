@@ -267,17 +267,17 @@ object Pages {
     }
 
     object Misc {
-        enum class Sections(
+        sealed class Sections(
             override val id: String,
             override val title: String,
             override val slug: String,
             override val path: String
         ) : PageSection {
-            ComingSoon(
-                title = "Coming soon", path = "#coming_soon", slug = "ComingSoon", id = "coming_soon"
-            ),
-            Testimonials(
-                title = "Testimonials", path = "#tesetimonials", slug = "Testimonial", id = "testimonials"
+            object TermsAndConditions : Sections(
+                id = Routes.Misc.TERMS_AND_CONDTIONS,
+                title = "TERMS AND CONDITIONS",
+                slug = Routes.Misc.TERMS_AND_CONDTIONS,
+                path = Routes.Misc.TERMS_AND_CONDTIONS
             )
         }
     }
