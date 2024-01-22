@@ -15,7 +15,10 @@ import com.varabyte.kobweb.navigation.Router
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.CSSSizeValue
+import org.jetbrains.compose.web.css.CSSUnit
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.vh
 
 @Composable
 fun Scaffold(
@@ -34,30 +37,10 @@ fun Scaffold(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        /*
-        SideNavigation(
-            modifier = Modifier
-                .fillMaxWidth(if (showSideNav) getWidthFromBreakpoint() else 0.percent)
-                .align(Alignment.TopStart)
-                .fillMaxHeight()
-                .zIndex(if (showSideNav) 2 else 0)
-                .opacity(if (showSideNav) 100.percent else 0.percent)
-                .background(Color.black)
-                .transition(
-                    CSSTransition("opacity", duration = 300.ms),
-                    CSSTransition("width", duration = 300.ms)
-                ),
-            onSideNavToggle = {
-                showSideNav = false
-            }
-        ) { section ->
-            Navigator.navigateTo(section)
-        }*/
         context(
             { variant ->
                 Header(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(topBottom = 20.px),
+                    modifier = Modifier.fillMaxWidth(),
                     variant = variant
                 ) { path: PageSection ->
                     Navigator.navigateTo(path)

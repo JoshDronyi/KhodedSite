@@ -76,8 +76,8 @@ object Pages {
                     " leaving a lasting impression wherever it ventures."
             val mainImage: String = Images.HomePage.consultation_MessageBubble
             val subImage: String = Images.HomePage.consultation_CheckMessage
-            val leftQuote: String = Images.HomePage.consultation_RightQuote
-            val rightQuote: String = Images.HomePage.consultation_LeftQuote
+            val leftQuote: String = Images.HomePage.consultation_LeftQuote
+            val rightQuote: String = Images.HomePage.consultation_RightQuote
             val consultationRequestUIModel = ConsultationRequestUIModel()
             val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
                 //TODO: Navigate to the  contact section.
@@ -85,9 +85,9 @@ object Pages {
         }
 
         data class ConsultationRequestUIModel(
-            val fullName: String = "Full Name",
-            val email: String = "Email",
-            val projectSynopsis: String = "Tell Us A Little About Your Project"
+            var fullName: String = "Full Name",
+            var email: String = "Email",
+            var projectSynopsis: String = "Tell Us A Little About Your Project"
         )
     }
 
@@ -249,11 +249,11 @@ object Pages {
         }
 
         data class MessaageUIModel(
-            val fullName: String = "Full Name",
-            val email: String = "Email",
-            val organization: String = "Organization",
-            val messageSubject: String = "What Do you need Help With",
-            val message: String = "Drop Us A Message"
+            var fullName: String = "Full Name",
+            var email: String = "Email",
+            var organization: String = "Organization",
+            var messageSubject: String = "What Do you need Help With",
+            var message: String = "Drop Us A Message"
         )
 
         data class ContactInfoUIModel(

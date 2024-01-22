@@ -30,6 +30,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
+import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
@@ -39,7 +40,6 @@ val BackgroundStyle by ComponentStyle {
     base {
         Modifier
             .fillMaxWidth()
-            .padding(topBottom = 20.px, leftRight = 10.px)
             .height(Height.FitContent)
     }
 }
@@ -54,6 +54,19 @@ val HomeLandingBackgroundVariant by BackgroundStyle.addVariant {
                     to = Colors.RebeccaPurple
                 )
             )
+    }
+}
+val ServicesBackgroundVariant by BackgroundStyle.addVariant {
+    base {
+        Modifier
+            .color(Color.white)
+    }
+}
+val DesignBackgroundVariant by BackgroundStyle.addVariant {
+    base {
+
+        Modifier
+            .color(Color.white)
     }
 }
 val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
@@ -84,7 +97,6 @@ fun LandingSectionDisplay(
         header(HomePageHeaderVariant)
         BackingCard(
             modifier = Modifier
-                .padding(topBottom = 20.px, leftRight = 10.px)
                 .height(Height.FitContent),
             variant = NoBorderBackingCardVariant,
             firstSection = { LandingText(data) },

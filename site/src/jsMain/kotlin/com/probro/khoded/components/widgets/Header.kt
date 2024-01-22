@@ -5,37 +5,37 @@ import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
-import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.silk.components.icons.fa.FaBars
-import com.varabyte.kobweb.silk.components.icons.fa.IconSize
+import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.modifiers.background
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
 val HeaderStyle by ComponentStyle {
     base {
         Modifier
-            .background(Color.black)
             .fillMaxWidth()
-            .fillMaxHeight()
-            .maxHeight(300.px)
-            .padding(40.px)
+            .height(Height.FitContent)
+            .padding(10.px)
     }
 }
 
 val HomePageHeaderVariant by HeaderStyle.addVariant {
-    base { Modifier }
+    base {
+        Modifier
+            .background(Colors.Black.copy(alpha = 70))
+    }
 }
 val StoryPageHeaderVariant by HeaderStyle.addVariant {
     base { Modifier }
@@ -57,25 +57,15 @@ fun Header(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
-//        SideNavButton(breakpoint, onShouldShowClick)
-        Box(
-            modifier = Modifier.onClick {
-                //Take user to the home page.
-                onNavItemSelect(Pages.Home_Section.LandingData)
-            }
-                .fillMaxWidth(),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            LogoDisplay(
-                image = Images.Logos.minimalLogo,
-                variant = HeaderLogoContainerVariant,
-                imageVariant = HeaderImageVariant,
-                textVariant = HeaderLogoTextVariant
-            )
-        }
+        LogoDisplay(
+            image = Images.Logos.minimalLogo,
+            variant = HeaderLogoContainerVariant,
+            imageVariant = HeaderImageVariant,
+            textVariant = HeaderLogoTextVariant,
+        )
         HeaderNavItemDisplay(
             modifier = Modifier
-                .fillMaxWidth(60.percent),
+                .fillMaxWidth(75.percent),
             onNavItemSelect = onNavItemSelect
         )
     }
@@ -128,15 +118,15 @@ fun HeaderNavItemDisplay(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         NavigationItem(
-            text = Navigator.KeySections.PageRoots.home.primaryText,
-            root = Navigator.KeySections.PageRoots.home,
+            text = Navigator.KeySections.TrafficStops.consultation.text,
+            root = Navigator.KeySections.TrafficStops.consultation,
             navItemVariant = HeaderNavItemVariant,
         ) { path ->
             println("Clicked on ${path.title}")
             onNavItemSelect(path)
         }
         NavigationItem(
-            text = Navigator.KeySections.PageRoots.story.primaryText,
+            text = Navigator.KeySections.PageRoots.story.text,
             root = Navigator.KeySections.PageRoots.story,
             navItemVariant = HeaderNavItemVariant,
         ) { path ->
@@ -144,7 +134,7 @@ fun HeaderNavItemDisplay(
             onNavItemSelect(path)
         }
         NavigationItem(
-            text = Navigator.KeySections.PageRoots.contact.primaryText,
+            text = Navigator.KeySections.PageRoots.contact.text,
             root = Navigator.KeySections.PageRoots.contact,
             navItemVariant = HeaderNavItemVariant,
         ) { path ->

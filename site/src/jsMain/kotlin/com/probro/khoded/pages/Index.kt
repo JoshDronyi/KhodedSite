@@ -3,9 +3,9 @@ package com.probro.khoded.pages
 import androidx.compose.runtime.Composable
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.pages.homeSections.ConsultationSectionDisplay
-import com.probro.khoded.pages.homeSections.HostingSectionDisplay
+import com.probro.khoded.pages.homeSections.DesignSectionDisplay
 import com.probro.khoded.pages.homeSections.LandingSectionDisplay
-import com.probro.khoded.pages.homeSections.WebDesignSectionDisplay
+import com.probro.khoded.pages.homeSections.ServicesSectionDisplay
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -38,8 +38,8 @@ fun HomePageSections(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LandingSectionDisplay(header, Pages.Home_Section.LandingData)
-        WebDesignSectionDisplay(Pages.Home_Section.Services)
-        HostingSectionDisplay(Pages.Home_Section.Design)
+        ServicesSectionDisplay(Pages.Home_Section.Services)
+        DesignSectionDisplay(Pages.Home_Section.Design)
         ConsultationSectionDisplay(footer, Pages.Home_Section.Consultation)
     }
 }

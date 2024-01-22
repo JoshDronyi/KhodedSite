@@ -115,7 +115,7 @@ fun SideNavItem(
                 )
             }
             NavigationItem(
-                text = section.key.primaryText,
+                text = section.key.root,
                 root = section.key,
                 navItemVariant = SideNavItemVariant
             ) { path ->

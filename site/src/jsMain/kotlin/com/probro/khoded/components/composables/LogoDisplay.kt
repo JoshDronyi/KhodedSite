@@ -2,7 +2,6 @@ package com.probro.khoded.components.composables
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -72,14 +71,13 @@ val HeaderLogoContainerVariant by LogoContainerStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
-            .height(Height.MaxContent)
     }
 }
 
 val HeaderImageVariant by LogoImageStyle.addVariant {
     base {
         Modifier
-            .fillMaxWidth(30.percent)
+            .fillMaxWidth(10.percent)
     }
     Breakpoint.MD {
         Modifier.letterSpacing(20.px)
