@@ -3,7 +3,6 @@ package com.probro.khoded.utils
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
-import com.probro.khoded.models.Testimonial
 
 interface PageSection {
     val id: String
@@ -22,58 +21,45 @@ object Pages {
             Routes.Home.SLUG,
             "${Routes.Home.SLUG}${Routes.Home.LANDING_ROUTE}"
         ) {
-            val mainText: String = "The right website will tell your story in the places and spaces you can't"
-            val subText: String = "Here you can provide a brief description about your project."
-            val image: String = Images.HomePage.mainLanding
-            val startButton: ButtonState = ButtonState(buttonText = "Start Now!") {
+            val mainText: String = "Psst, a GOOD site tells a brand’s story"
+            val subText: String = "Let Khoded handle all your web app, site redesign, web hosting, " +
+                    "and brand + SEO needs in one place."
+            val mainImage: String = Images.HomePage.landing_Rocket
+            val underlineImage: String = Images.Common.blueUnderline
+            val ctaButton: ButtonState = ButtonState(buttonText = "Start Now!") {
                 //TODO: Navigate to the schedule consultation section.
             }
-            val learnMoreButton: ButtonState = ButtonState(buttonText = "Learn More") {
-                //TODO: Navigate to the about page
-            }
         }
 
-        object WebDesign : Home_Section(
-            id = Routes.Home.WEB_DESIGN,
-            title = "Web Design",
+        object Services : Home_Section(
+            id = Routes.Home.OUR_SERVICES,
+            title = "Our Services",
             slug = Routes.Home.SLUG,
-            path = "${Routes.Home.SLUG}${Routes.Home.WEB_DESIGN}"
+            path = "${Routes.Home.SLUG}${Routes.Home.OUR_SERVICES}"
         ) {
-            val mainText: String = "Customized web design for your needs"
-            val subText: String = "Lorem ipsum bayyybyyyyyyyyy"
-            val image: String = Images.HomePage.webDesign
-            val learnMoreButton: ButtonState = ButtonState(buttonText = "Learn More") {
-                //TODO: Navigate to the about page
-            }
+            val mainImage: String = Images.HomePage.services_ChartMaker
+            val underlineImage: String = Images.Common.pinkUnderline
+            val khodedServices = listOf(
+                WebService("TAILORED WEB WIZARDRY", ""),
+                WebService("TURBO-SECURE HOSTING", ""),
+                WebService("ULTIMATE BRAND PLAYBOOK", "")
+            )
         }
 
-        object Hosting : Home_Section(
-            id = Routes.Home.HOSTING,
-            title = "Hosting",
+        object Design : Home_Section(
+            id = Routes.Home.DESIGN,
+            title = "Design",
             slug = Routes.Home.SLUG,
-            path = "${Routes.Home.SLUG}${Routes.Home.HOSTING}"
+            path = "${Routes.Home.SLUG}${Routes.Home.DESIGN}"
         ) {
-            val mainText: String = "Fast & Secure Web Hosting Services"
-            val subText: String = "Lorem ipsum bayyybyyyyyyyyy"
-            val image: String = Images.HomePage.hosting
-            val learnMoreButton: ButtonState = ButtonState(buttonText = "Learn More") {
-                //TODO: Navigate to the about page
-            }
-        }
-
-        object Branding : Home_Section(
-            id = Routes.Home.BRANDING,
-            title = "Branding",
-            slug = Routes.Home.SLUG,
-            path = "${Routes.Home.SLUG}${Routes.Home.BRANDING}"
-        ) {
-            val mainText: String = "Intentional & Strategic Brand Kits"
+            val mainText: String = "Code & design tailor-made just for your business..."
             val subText: String =
-                "LOOOOOOwwwRAAAAYYYYMMMMMMMMMM EEEEEPPPPPPPSOOOOOOOOOOOOUUUUUUUMMMMMMMMM BAAAAIIIIIIIIEEEEEEEYYYYBBUUUUUUHHHHHHYYYYYYYYYYYYYYY"
-            val image: String = Images.HomePage.branding
-            val tryItButton: ButtonState = ButtonState(buttonText = "Try it Now") {
-                //TODO: ASK WHERE THIS IS TO NAVIGATE TO .
-            }
+                "Khoded specializes in creating bespoke websites from the ground up, catering to a diverse clientele," +
+                        " and providing comprehensive branding kits and reliable web hosting solutions to enhance our" +
+                        " clients' online presence further."
+            val mainImage: String = Images.HomePage.design_Paperplane
+            val subImage: String = Images.HomePage.design_Computer
+            val underlineImage: String = Images.Common.blackUnderline
         }
 
         object Consultation : Home_Section(
@@ -82,101 +68,43 @@ object Pages {
             slug = Routes.Home.SLUG,
             path = "${Routes.Home.SLUG}${Routes.Home.CONSULTATION}"
         ) {
-            val mainText: String = "Schedule a FREE Consultation"
-            val subText: String = "lOREM iPSUM bayyyyybyyyyyyyyyyyyyyyyyyyy"
-            val image: String = Images.HomePage.consultation
-            val steps: List<Pair<String, String>> = listOf(
-                Pair("Step 1", "Fill out our client intake form + some lorem and include even ipsum"),
-                Pair(
-                    "Step 2", "Take our 30 minutes complimentary consultation to find out" +
-                            " which services work best for your needs.."
-                ),
-                Pair("Step 3", "Embark on the journey to your unique web tool")
-            )
-            val startButton: ButtonState = ButtonState(buttonText = "Start Now!") {
+            val mainText: String = "let’s chat about your \uFEFFproject!"
+            val subText: String = "Crafting the perfect website is like fashioning a tale that extends beyond the " +
+                    "confines of conventional storytelling. It's about creating an immersive experience that ensures" +
+                    " your narrative is heard, seen, and felt in places beyond your physical reach. The right website" +
+                    " becomes the storyteller you can't be in person, resonating in the vast digital landscape," +
+                    " leaving a lasting impression wherever it ventures."
+            val mainImage: String = Images.HomePage.consultation_MessageBubble
+            val subImage: String = Images.HomePage.consultation_CheckMessage
+            val leftQuote: String = Images.HomePage.consultation_LeftQuote
+            val rightQuote: String = Images.HomePage.consultation_RightQuote
+            val consultationRequestUIModel = ConsultationRequestUIModel()
+            val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
                 //TODO: Navigate to the  contact section.
             }
         }
 
-        object Testimonials : Home_Section(
-            id = Routes.Home.TESTIMONIALS,
-            title = "Testimonials",
-            slug = Routes.Home.SLUG,
-            path = "${Routes.Home.SLUG}${Routes.Home.TESTIMONIALS}"
-        ) {
-            val mainText: String = "What our clients say about us"
-
-            // val image: String = ""
-            val testimonialList: List<Testimonial> = listOf(
-                Testimonial(),
-                Testimonial(),
-                Testimonial()
-            )
-        }
-
-        object GET_STARTED : Home_Section(
-            id = Routes.Home.GET_STARTED,
-            title = "Get Started",
-            slug = Routes.Home.SLUG,
-            path = "${Routes.Home.SLUG}${Routes.Home.GET_STARTED}"
-        ) {
-            val mainText: String = "Start your web journey with Khoded today"
-            val subText: String = "Lorem Ipsum BAAAAIIIIEEEEYYYBBBBBBEEEEEEEEEE"
-            val image: String = Images.HomePage.getStarted
-            val startButton: ButtonState = ButtonState(buttonText = "Get Started") {
-                //TODO: Navigate to the  contact section.
-            }
-        }
+        data class ConsultationRequestUIModel(
+            var fullName: String = "Full Name",
+            var email: String = "Email",
+            var projectSynopsis: String = "Tell Us A Little About Your Project"
+        )
     }
 
 
-    sealed class About_Section(
+    sealed class Story_Section(
         override val id: String,
         override val title: String,
         override val slug: String,
         override val path: String
     ) : PageSection {
-        object Landing : About_Section(
-            id = Routes.About.LANDING,
-            title = "about",
-            slug = Routes.About.SLUG,
-            path = "${Routes.About.SLUG}${Routes.About.LANDING}"
-        ) {
-            val mainText: String = "Meet Our team"
-            val subText: String = "Passionate Experts"
-            val image: String = Images.AboutPage.mainLanding
-        }
 
-        object Team : About_Section(
-            id = Routes.About.TEAM,
-            title = "Team",
-            slug = Routes.About.SLUG,
-            path = "${Routes.About.SLUG}${Routes.About.TEAM}"
+        object OurStory : Story_Section(
+            id = Routes.Story.OUR_STORY,
+            title = "Our Story",
+            slug = Routes.Story.SLUG,
+            path = "${Routes.Story.SLUG}${Routes.Story.OUR_STORY}"
         ) {
-            val mainText = "Meet the Team"
-            val teambios: List<TeamBio> = listOf(
-                TeamBio(
-                    name = "Esther Dronyi",
-                    position = "Ceo/Co-Founder",
-                    image = Images.AboutPage.founderEsther,
-                    story = Constants.Strings.LOREM_IPSUM_PARAGRAPH //"She cool or whateva!"
-                ),
-                TeamBio(
-                    name = "Joshua Dronyi",
-                    position = "CTO/Co-Founder",
-                    image = Images.AboutPage.founderJosh,
-                    story = Constants.Strings.LOREM_IPSUM_PARAGRAPH //"He cool or whateva!"
-                )
-            )
-        }
-
-        object Story : About_Section(
-            id = Routes.About.STORY,
-            title = "Story",
-            slug = Routes.About.SLUG,
-            path = "${Routes.About.SLUG}${Routes.About.STORY}"
-        ) {
-            val mainText = "Our Story"
             val storySections: List<StorySection> = listOf(
                 StorySection(
                     title = "",
@@ -224,22 +152,36 @@ object Pages {
             )
         }
 
-        object Separator : About_Section(
-            id = Routes.About.SEPARATOR,
-            title = "LogoSpacer",
-            slug = Routes.About.SLUG,
-            path = "${Routes.About.SLUG}${Routes.About.SEPARATOR}"
-        )
 
-        object Opportunities : About_Section(
-            id = Routes.About.OPPORTUNITIES,
-            title = "New Opportunites",
-            slug = Routes.About.SLUG,
-            path = "${Routes.About.SLUG}${Routes.About.OPPORTUNITIES}"
+        object OurFounders : Story_Section(
+            id = Routes.Story.FOUNDERS,
+            title = "Our Founders",
+            slug = Routes.Story.SLUG,
+            path = "${Routes.Story.SLUG}${Routes.Story.FOUNDERS}"
+        ) {
+            val estherBio = TeamBio(
+                name = "Esther Dronyi",
+                position = "CEO/Co-Founder",
+                image = Images.StoryPage.founderEsther,
+                story = Constants.Strings.EstherFounderBio //"She cool or whateva!"
+            )
+            val joshBio = TeamBio(
+                name = "Joshua Dronyi",
+                position = "CTO/Co-Founder",
+                image = Images.StoryPage.founderJosh,
+                story = Constants.Strings.JoshFounderBio //"He cool or whateva!"
+            )
+        }
+
+
+        object JoinOurTeam : Story_Section(
+            id = Routes.Story.JOIN_OUR_TEAM,
+            title = "Join Our Team",
+            slug = Routes.Story.SLUG,
+            path = "${Routes.Story.SLUG}${Routes.Story.JOIN_OUR_TEAM}"
         ) {
 
-            val mainText: String = "New Opportunities"
-            val subText: String = "Join our skilled team."
+            val mainImage: String = ""
             val positions: List<JobPosition> = listOf(
                 JobPosition(
                     positionTitle = "UX/UI Developer",
@@ -286,107 +228,36 @@ object Pages {
         )
     }
 
-    sealed class Services_Section(
-        override val id: String,
-        override val title: String,
-        override val slug: String,
-        override val path: String
-    ) : PageSection {
-        object Landing : Services_Section(
-            id = Routes.Services.LANDING,
-            title = "Services",
-            slug = Routes.Services.SLUG,
-            path = "${Routes.Services.SLUG}${Routes.Services.LANDING}"
-        ) {
-            val mainText = "Services"
-            val subText = "Find the perfect plan"
-        }
-
-        object ServiceBreakdown : Services_Section(
-            id = Routes.Services.SERVICE_BREAKDOWN,
-            title = "Service Breakdown",
-            slug = Routes.Services.SLUG,
-            path = "${Routes.Services.SLUG}${Routes.Services.SERVICE_BREAKDOWN}"
-        ) {
-            val mainText: String = "Compare Features"
-        }
-
-        object FAQ : Services_Section(
-            id = Routes.Services.FAQ,
-            title = "FAQ",
-            slug = Routes.Services.SLUG,
-            path = "${Routes.Services.SLUG}${Routes.Services.FAQ}"
-        ) {
-            val mainText: String = "Frequently Asked Questions"
-            val image: String = Images.ServicePage.faq
-            val questionList: List<FAQQuestion> = emptyList()
-        }
-
-
-        object GetStarted : Services_Section(
-            id = Routes.Services.GET_STARTED,
-            title = "Get Started",
-            slug = Routes.Services.SLUG,
-            path = "${Routes.Services.SLUG}${Routes.Services.GET_STARTED}"
-        ) {
-            val mainText: String = "Get Started with Khoded today"
-            val subText: String = "Start optimizing your processes today"
-            val signUpButtonState: ButtonState = ButtonState(
-                buttonText = "Sign Up Now",
-                onButtonClick = {}
-            )
-            val image: String = Images.ServicePage.getStarted
-        }
-
-        data class FAQQuestion(
-            val question: String = "Are you the best?",
-            val explanation: String = "Short answer, yes. Long answer, yyyyyyyeeeeeeeeeessssssss"
-        )
-    }
 
     sealed class Contact_Section(
         override val id: String, override val title: String, override val slug: String, override val path: String
     ) : PageSection {
-        data class MessaageUIModel(
-            val name: String = "",
-            val email: String = "",
-            val organization: String = "",
-            val message: String = ""
-        )
-
         object Landing : Contact_Section(
             id = Routes.Contact.LANDING,
             title = "Contact Us",
             slug = Routes.Contact.SLUG,
             path = "${Routes.Contact.SLUG}${Routes.Contact.LANDING}"
         ) {
-            val message: MessaageUIModel = MessaageUIModel()
-            val thankYouMessage = "Thank you for your message ${message.name}! We will get back to you as soon as" +
-                    " possible to address this."
+            val messaageUIModel: MessaageUIModel = MessaageUIModel()
+            val contactInfoUIModel: ContactInfoUIModel = ContactInfoUIModel()
+            val mainText = "Ensure your brand story never ends up in the digital abyss."
+            val subText = "Hit us up to craft a site that's 404-proof"
+            val mainImage: String = Images.ContactPage.planet404
+            val ctaButton = ButtonState("") {
+
+            }
         }
 
-//        object IntakeForm : Contact_Section(
-//            id = Routes.Contact.INTAKE_FORM,
-//            title = "Client Request Form",
-//            slug = Routes.Contact.SLUG,
-//            path = "${Routes.Contact.SLUG}${Routes.Contact.INTAKE_FORM}"
-//        ) {
-//            //TODO: GET DATA CLASS FOR INTAKE FORM RESPONSES CALLED CLIENT REQUEST.
-//        }
-
-        object ContactInfo : Contact_Section(
-            id = Routes.Contact.CONTACT_US,
-            title = "Contact Information",
-            slug = Routes.Contact.SLUG,
-            path = "${Routes.Contact.SLUG}${Routes.Contact.CONTACT_US}"
-        ) {
-            val uiModel: ContactInfoUIModel = ContactInfoUIModel()
-        }
+        data class MessaageUIModel(
+            var fullName: String = "Full Name",
+            var email: String = "Email",
+            var organization: String = "Organization",
+            var messageSubject: String = "What Do you need Help With",
+            var message: String = "Drop Us A Message"
+        )
 
         data class ContactInfoUIModel(
-            val address: String = "2389 main St. STE 100",
-            val city: String = "Glastonbury, CT",
-            val zip: String = "06033",
+            val address: String = "2389 main St. STE 100 Glastonbury, CT,06033",
             val phone: String = "833-454-6333",
             val email: String = "admin@khoded.com"
         )
@@ -398,19 +269,21 @@ object Pages {
     }
 
     object Misc {
-        enum class Sections(
+        sealed class Sections(
             override val id: String,
             override val title: String,
             override val slug: String,
             override val path: String
         ) : PageSection {
-            ComingSoon(
-                title = "Coming soon", path = "#coming_soon", slug = "ComingSoon", id = "coming_soon"
-            ),
-            Testimonials(
-                title = "Testimonials", path = "#tesetimonials", slug = "Testimonial", id = "testimonials"
+            object TermsAndConditions : Sections(
+                id = Routes.Misc.TERMS_AND_CONDTIONS,
+                title = "TERMS AND CONDITIONS",
+                slug = Routes.Misc.TERMS_AND_CONDTIONS,
+                path = Routes.Misc.TERMS_AND_CONDTIONS
             )
         }
     }
 
 }
+
+typealias WebService = Pair<String, String>

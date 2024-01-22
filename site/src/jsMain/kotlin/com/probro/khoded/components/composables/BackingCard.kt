@@ -1,15 +1,14 @@
 package com.probro.khoded.components.composables
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.breakpoint.ResponsiveValues
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
@@ -21,23 +20,11 @@ import org.jetbrains.compose.web.css.px
 val BackingCardStyle by ComponentStyle {
     base {
         Modifier
-            .fillMaxWidth()
-            .background(Color.white)
+            .fillMaxWidth(80.percent)
             .borderRadius(20.px)
-            .width(Width.Inherit)
-    }
-    Breakpoint.ZERO
-    Breakpoint.SM {
-        Modifier.fillMaxWidth(85.percent)
-    }
-    Breakpoint.MD {
-        Modifier.fillMaxWidth(80.percent)
-    }
-    Breakpoint.LG {
-        Modifier.fillMaxWidth(75.percent)
-    }
-    Breakpoint.XL {
-        Modifier.fillMaxWidth(70.percent)
+            .padding(topBottom = 20.px, leftRight = 10.px)
+            .margin(topBottom = 20.px)
+            .color(Colors.Black)
     }
 }
 
@@ -47,7 +34,7 @@ val NoBorderBackingCardVariant by BackingCardStyle.addVariant {
     }
 }
 
-val SingleBorderBackingCardVaiant by BackingCardStyle.addVariant {
+val SingleBorderBackingCardVariant by BackingCardStyle.addVariant {
     base {
         Modifier
             .border {
@@ -58,16 +45,6 @@ val SingleBorderBackingCardVaiant by BackingCardStyle.addVariant {
     }
 }
 
-val DoubleBorderBackingCardVaraint by BackingCardStyle.addVariant {
-    base {
-        Modifier
-            .border {
-                width(2.px)
-                color(Color.darkgray)
-                style(LineStyle.Solid)
-            }
-    }
-}
 
 @Composable
 fun TwoPaneCard(

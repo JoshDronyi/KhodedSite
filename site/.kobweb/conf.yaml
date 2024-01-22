@@ -1,5 +1,5 @@
 site:
-  title: "Khoded"
+  title: "Khoded: Where your vision takes center stage."
 
 server:
   files:
@@ -10,5 +10,9 @@ server:
     prod:
       script: "build/dist/js/productionExecutable/khoded.js"
       siteRoot: ".kobweb/site"
-
+  cors:
+    hosts:
+      - name: "khoded.onrender.com"
+        schemes:
+          - "https"
   port: 8080

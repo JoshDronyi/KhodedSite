@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.Composable
@@ -90,3 +91,4 @@ fun BrandingImage(data: Pages.Home_Section.Branding) = with(data) {
         )
     }
 }
+*/

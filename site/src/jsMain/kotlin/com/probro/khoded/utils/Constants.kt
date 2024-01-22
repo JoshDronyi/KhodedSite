@@ -35,7 +35,23 @@ object Constants {
             "Brand Strength"
         )
 
+        val EstherFounderBio = "Hey there! I'm a soon-to-be grown-up adult who's absolutely in love with this wild" +
+                " adventure called life. My days are filled with a little bit of everything, but if I had to pick my" +
+                " top loves, it'd be traveling, spending quality time with the incredible people in my life, and " +
+                "cozying up under a blanket with a delicious drink and a captivating book, movie, or show - pure " +
+                "bliss, right?"
+        val JoshFounderBio =
+            "Hello world! I'm just a regular tech and music enthusiast who's all about my family and creating a path" +
+                    " for those behind me that is easier to walk than the one I had. In any and every way I can, I am" +
+                    " committed to making the journey a little smoother for my future family,  my loved ones, and the" +
+                    " next generation of developers and musicians alike\n"
+
         val LOREM_IPSUM_PARAGRAPH =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eleifend mi in nulla posuere. Ut aliquam purus sit amet luctus venenatis. Posuere ac ut consequat semper viverra nam libero justo. In nibh mauris cursus mattis molestie a. Lorem dolor sed viverra ipsum nunc aliquet bibendum enim. Mattis aliquam faucibus purus in massa tempor nec. Massa sapien faucibus et molestie ac feugiat. Etiam sit amet nisl purus. Id venenatis a condimentum vitae sapien."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et" +
+                    " dolore magna aliqua. Eleifend mi in nulla posuere. Ut aliquam purus sit amet luctus venenatis." +
+                    " Posuere ac ut consequat semper viverra nam libero justo. In nibh mauris cursus mattis molestie" +
+                    " a. Lorem dolor sed viverra ipsum nunc aliquet bibendum enim. Mattis aliquam faucibus purus in" +
+                    " massa tempor nec. Massa sapien faucibus et molestie ac feugiat. Etiam sit amet nisl purus. Id " +
+                    "venenatis a condimentum vitae sapien."
     }
 }

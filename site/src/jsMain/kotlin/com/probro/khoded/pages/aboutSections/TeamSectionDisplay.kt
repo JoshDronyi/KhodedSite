@@ -27,9 +27,10 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
-fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section.Team) {
+fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section.OurFounders) {
     Column(
         modifier = modifier
+            .id(id)
             .fillMaxWidth(80.percent)
             .height(Height.FitContent),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,17 +42,16 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section
                 .margin(bottom = 15.px)
                 .toAttrs()
         ) {
-            Text(mainText)
+            Text(title)
         }
-        teambios.forEach { bio ->
-            TeamBioDisplay(bio)
-        }
+        TeamBioDisplay(estherBio)
+        TeamBioDisplay(joshBio)
     }
 }
 
 @Composable
 fun TeamBioDisplay(
-    bio: Pages.About_Section.TeamBio,
+    bio: Pages.Story_Section.TeamBio,
     modifier: Modifier = Modifier
 ) = with(bio) {
     TeamSectionCard(

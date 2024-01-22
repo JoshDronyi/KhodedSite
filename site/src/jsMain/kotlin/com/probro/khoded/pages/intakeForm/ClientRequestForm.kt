@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.serviceSections
 
 import androidx.compose.runtime.*
@@ -205,4 +206,4 @@ fun SectionExplanation(
             Text(description)
         }
     }
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.serviceSections
 
 import androidx.compose.runtime.Composable
@@ -82,4 +83,4 @@ fun ClientRequestThanks(
 data class ClientRequestThanksUiModel(
     val thanksMessage: String,
     val thankssubMessage: String
-)
+)*/

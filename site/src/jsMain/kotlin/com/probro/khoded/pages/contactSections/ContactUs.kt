@@ -3,8 +3,10 @@ package com.probro.khoded.pages.contactSections
 import androidx.compose.runtime.*
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
+import com.probro.khoded.models.Images
 import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.MainTextVariant
@@ -54,6 +56,10 @@ fun ContactUsSection(
         ) {
             Text(Pages.Contact_Section.Landing.title)
         }
+        ImageBox(
+            image = Images.ContactPage.planet404,
+            imageDesc = "Planet 404"
+        )
         BackingCard(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -61,11 +67,7 @@ fun ContactUsSection(
             firstSection = {
                 ComposeMessageSection(onMessageSend = onMessageSend)
             },
-            secondSection = {
-                ContactInformationSection(
-                    Pages.Contact_Section.ContactInfo
-                )
-            }
+            secondSection = { ContactInformationSection() }
         )
     }
 }
@@ -80,8 +82,8 @@ fun ComposeMessageSection(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        message.apply {
-            MessageSubSection(name, email, message, organization, onMessageSend)
+        messaageUIModel.apply {
+            MessageSubSection(fullName, email, message, organization, onMessageSend)
         }
     }
 }
@@ -249,9 +251,8 @@ fun ContactText(title: String, content: String, variant: ComponentVariant = Cont
 
 @Composable
 fun ContactInformationSection(
-    contactInfo: Pages.Contact_Section.ContactInfo,
     modifier: Modifier = Modifier
-) = with(contactInfo) {
+) = with(Pages.Contact_Section.Landing) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -271,11 +272,11 @@ fun ContactInformationSection(
             ) {
                 Text(title)
             }
-            uiModel.apply {
-                ContactText("Address", "$address\n$city, $zip")
+            contactInfoUIModel.apply {
+                ContactText("Address", address)
+                ContactText("Phone Number", phone)
+                ContactText("Email", email)
             }
-            ContactText("Phone Number", uiModel.phone)
-            ContactText("Email", uiModel.email)
         }
     }
 }

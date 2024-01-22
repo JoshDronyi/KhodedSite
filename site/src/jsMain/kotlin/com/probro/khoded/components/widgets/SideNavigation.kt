@@ -75,7 +75,7 @@ fun SideNavigation(
 
 @Composable
 fun SideNavItem(
-    section: Map.Entry<Navigator.PageRoot, List<PageSection>>,
+    section: Map.Entry<Navigator.KeySections, List<PageSection>>,
     modifier: Modifier = Modifier,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
@@ -115,7 +115,7 @@ fun SideNavItem(
                 )
             }
             NavigationItem(
-                text = section.key.primaryText,
+                text = section.key.root,
                 root = section.key,
                 navItemVariant = SideNavItemVariant
             ) { path ->

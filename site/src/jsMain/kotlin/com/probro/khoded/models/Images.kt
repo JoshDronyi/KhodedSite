@@ -2,23 +2,30 @@ package com.probro.khoded.models
 
 object Images {
     object HomePage {
-        val mainLanding: String = "/home/landing.png"
-        val webDesign: String = "/home/webdesign.png"
-        val branding: String = "/home/branding.png"
-        val hosting: String = "/home/hosting.png"
-        val consultation: String = "/home/consultation.png"
-        val getStarted: String = "/home/getstarted.png"
+        val landing_Rocket: String = "/home/rocketScientist.png"
+        val services_ChartMaker: String = "/home/chartMaker.png"
+        val design_Paperplane: String = "/home/paperAirplane.png"
+        val design_Computer: String = "/home/computer.png"
+        val consultation_MessageBubble: String = "/home/messageBubbles.png"
+        val consultation_CheckMessage: String = "/home/checkMessage.png"
+        val consultation_LeftQuote: String = "/home/leftQuote.png"
+        val consultation_RightQuote: String = "/home/rightQuote.png"
     }
 
-    object AboutPage {
-        val mainLanding: String = "/about/landing.png"
-        val founderJosh: String = "/about/JoshFounderPic.png"
-        val founderEsther: String = "/about/EstherFounderPic.png"
+    object StoryPage {
+        val megaphone: String = "/story/megaphone.png"
+        val founderJosh: String = "/story/joshFounder.png"
+        val founderEsther: String = "/story/estherFounder.png"
     }
 
-    object ServicePage {
-        val faq: String = "/services/faq.png"
-        val getStarted: String = "/services/getStarted.png"
+    object ContactPage {
+        val planet404: String = "/contact/planet404.png"
+    }
+
+    object Common {
+        val blackUnderline: String = "/common/blackUnderline.png"
+        val blueUnderline: String = "/common/blueUnderline.png"
+        val pinkUnderline: String = "/common/pinkUnderline.png"
     }
 
     object Logos {
