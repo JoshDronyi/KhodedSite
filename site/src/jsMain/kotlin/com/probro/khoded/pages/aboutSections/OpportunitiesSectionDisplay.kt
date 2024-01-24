@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
@@ -149,8 +150,15 @@ fun JobPositionDisplay(position: Pages.Story_Section.JobPosition) = with(positio
                     buttonText = "Learn More",
                     onButtonClick = { }
                 ),
-                variant = BlueButtonVariant,
-            )
+                buttonVariant = BlueButtonVariant,
+            ) { text ->
+                P(
+                    attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+                        .toAttrs()
+                ) {
+                    Text(text)
+                }
+            }
         }
     }
 }

@@ -1,26 +1,36 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.PinkButtonVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.forms.InputSize
+import com.varabyte.kobweb.silk.components.forms.InputStyle
 import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.style.ComponentStyle
+import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
+import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 
 
@@ -51,8 +61,8 @@ fun ConsultationSectionDisplay(
                 modifier = Modifier
                     .fillMaxWidth(80.percent)
             )
+            QuoteSection(leftQuote, subText, rightQuote)
         }
-        QuoteSection(leftQuote, subText, rightQuote)
         footer()
     }
 }
@@ -132,6 +142,8 @@ fun QuoteSection(
     }
 }
 
+const val FREE_TEXT = "Free 30 Min"
+
 @Composable
 fun ConsultationTextSection(
     mainText: String,
@@ -142,22 +154,75 @@ fun ConsultationTextSection(
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
-        P(
-            attrs = BaseTextStyle.toModifier()
-                .toAttrs()
-        ) {
-            Text(mainText)
-        }
+        ConsultationTitle(mainText)
         MessagingSection(
             clientRequestUIModel,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1)
         )
         ButtonDisplay(
             state = ctaButton,
-            variant = PinkButtonVariant,
-            modifier = Modifier.fillMaxWidth()
-        )
+            buttonVariant = PinkButtonVariant,
+            modifier = Modifier
+                .width(Width.FitContent)
+                .padding(10.px)
+                .margin(topBottom = 40.px)
+        ) { text ->
+            val index = remember { text.indexOf(FREE_TEXT, ignoreCase = true) }
+            val before = remember { text.substring(0, index) }
+            val after = remember { text.substring(index + FREE_TEXT.length) }
+            P(
+                attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+                    .toAttrs()
+            ) {
+                Span {
+                    Text(before)
+                }
+                Span(
+                    attrs = Modifier.fontWeight(FontWeight.Bolder)
+                        .fontSize(FontSize.Large)
+                        .padding(leftRight = 5.px)
+                        .toAttrs()
+                ) {
+                    Text(FREE_TEXT.uppercase())
+                }
+                Span {
+                    Text(after)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ConsultationTitle(mainText: String) {
+    val splitIndex = remember { mainText.indexOf("about") }
+    val firstText = remember { mainText.substring(0, splitIndex) }
+    val secondText = remember { mainText.substring(splitIndex) }
+    P(
+        attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .toAttrs()
+    ) {
+        Span(
+            attrs = Modifier
+                .color(Color.purple)
+                .margin(right = 10.px)
+                .toAttrs()
+        ) {
+            Text(firstText)
+        }
+        Text(secondText)
+    }
+}
+
+val ContactInfoRowStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .margin(topBottom = 20.px)
     }
 }
 
@@ -165,46 +230,91 @@ fun ConsultationTextSection(
 fun MessagingSection(
     clientRequestUIModel: Pages.Home_Section.ConsultationRequestUIModel,
     modifier: Modifier = Modifier
-) {
+) = with(clientRequestUIModel) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        with(clientRequestUIModel) {
-            Row(
-                modifier = Modifier,
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+
+        Row(
+            modifier = ContactInfoRowStyle.toModifier(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextBox(
+                value = fullName,
+                modifier = Modifier.fillMaxWidth()
+                    .margin(right = 20.px)
             ) {
-                TextBox(fullName) {
-                    fullName = it
-                }
-                TextBox(email) {
-                    email = it
-                }
+                fullName = it
             }
-            TextInput(
-                text = projectSynopsis,
-                size = InputSize.LG,
-                onTextChanged = {
-                    projectSynopsis = it
-                },
-                modifier = Modifier
-            )
+            TextBox(
+                value = email,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                email = it
+            }
+        }
+        MessageArea(
+            value = projectSynopsis,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1)
+        ) {
+            println(it)
         }
     }
 }
 
+val TextAreaVariant by InputStyle.addVariant {
+    base {
+        Modifier
+            .background(Color.white)
+            .padding(20.px)
+            .color(Colors.Purple)
+            .fontSize(FontSize.XLarge)
+    }
+}
+val TextBoxVariant by InputStyle.addVariant {
+    base {
+        Modifier
+            .background(Color.white)
+            .padding(topBottom = 30.px)
+            .color(Colors.Purple)
+            .fontSize(FontSize.XLarge)
+            .textAlign(TextAlign.Center)
+    }
+}
+
 @Composable
-fun TextBox(
+fun MessageArea(
     value: String,
+    modifier: Modifier = Modifier,
     onValueChange: (newText: String) -> Unit
 ) {
     TextInput(
         text = value,
         onTextChanged = {
             onValueChange(it)
-        }
+        },
+        modifier = InputStyle.toModifier(TextAreaVariant)
+            .then(modifier)
+    )
+}
+
+@Composable
+fun TextBox(
+    value: String,
+    modifier: Modifier = Modifier,
+    onValueChange: (newText: String) -> Unit
+) {
+    TextInput(
+        text = value,
+        onTextChanged = {
+            onValueChange(it)
+        },
+        modifier = InputStyle.toModifier(TextBoxVariant)
+            .then(modifier)
     )
 }

@@ -2,7 +2,8 @@ package com.probro.khoded
 
 import androidx.compose.runtime.Composable
 import com.probro.khoded.models.Res
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.probro.khoded.styles.BaseTextStyle
+import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -14,6 +15,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorStyle
+import com.varabyte.kobweb.silk.components.style.hover
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
@@ -33,11 +35,17 @@ val BaseButtonStyle by ComponentStyle {
         Modifier
             .fillMaxWidth()
             .width(Width.FitContent)
-            .textAlign(TextAlign.Center)
-            .borderRadius(r = 15.px)
-            .boxShadow(
-                color = Colors.Transparent
-            )
+            .borderRadius(r = 20.px)
+            .padding(leftRight = 5.px, topBottom = 10.px)
+    }
+    hover {
+        Modifier
+            .padding(leftRight = 15.px, topBottom = 20.px)
+    }
+}
+val BaseButtonTextVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier.fontSize(FontSize.Medium)
     }
 }
 

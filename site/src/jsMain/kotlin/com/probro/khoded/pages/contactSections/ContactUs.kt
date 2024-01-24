@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.contactSections
 
 import androidx.compose.runtime.*
+import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
@@ -178,10 +179,17 @@ fun MessageSubSection(
                         )
                     }
                 ),
-                variant = BlueButtonVariant,
+                buttonVariant = BlueButtonVariant,
                 modifier = Modifier
                     .textAlign(TextAlign.Center)
-            )
+            ) {
+                P(
+                    attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+                        .toAttrs()
+                ) {
+                    Text(it)
+                }
+            }
         }
     }
 }

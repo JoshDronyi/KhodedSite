@@ -3,6 +3,7 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.probro.khoded.BaseButtonStyle
+import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
@@ -18,6 +19,7 @@ import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -33,7 +35,6 @@ import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -151,7 +152,14 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
             BlueButtonVariant,
             modifier = Modifier.fillMaxWidth(20.percent)
                 .textAlign(TextAlign.Center)
-        )
+        ){
+            P(
+                attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+                    .toAttrs()
+            ) {
+                Text(it)
+            }
+        }
     }
 }
 
@@ -229,13 +237,18 @@ fun LandingImage() {
 }
 
 @Composable
-fun ButtonDisplay(state: ButtonState, variant: ComponentVariant, modifier: Modifier = Modifier) = with(state) {
-    Button(
-        attrs = BaseButtonStyle.toModifier(variant)
+fun ButtonDisplay(
+    state: ButtonState,
+    buttonVariant: ComponentVariant? = null,
+    modifier: Modifier = Modifier,
+    clickableContent: @Composable (buttonText: String) -> Unit,
+) = with(state) {
+    Box(
+        modifier = BaseButtonStyle.toModifier(buttonVariant)
             .then(modifier)
-            .onClick { onButtonClick() }
-            .toAttrs(),
+            .onClick { onButtonClick() },
+        contentAlignment = Alignment.Center
     ) {
-        Text(buttonText)
+        clickableContent(buttonText)
     }
 }

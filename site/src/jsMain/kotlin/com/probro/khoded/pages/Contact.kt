@@ -2,6 +2,7 @@ package com.probro.khoded.pages
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
@@ -252,7 +253,14 @@ fun MessagingSection(
         ButtonDisplay(
             state = ctaButton,
             BlueButtonVariant
-        )
+        ) {
+            P(
+                attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+                    .toAttrs()
+            ) {
+                Text(it)
+            }
+        }
     }
 }
 
