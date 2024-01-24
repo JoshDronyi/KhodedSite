@@ -35,8 +35,9 @@ val BaseButtonStyle by ComponentStyle {
             .width(Width.FitContent)
             .textAlign(TextAlign.Center)
             .borderRadius(r = 15.px)
-            .margin(top = 20.px)
-            .padding(leftRight = 15.px, topBottom = 10.px)
+            .boxShadow(
+                color = Colors.Transparent
+            )
     }
 }
 

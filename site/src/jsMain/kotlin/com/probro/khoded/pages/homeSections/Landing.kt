@@ -1,25 +1,25 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import com.probro.khoded.BaseButtonStyle
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.widgets.HomePageHeaderVariant
 import com.probro.khoded.models.ButtonState
-import com.probro.khoded.models.SPACE_GROTESK
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.styles.MainTextVariant
-import com.probro.khoded.styles.SubTextVariant
 import com.probro.khoded.utils.Pages
-import com.stevdza.san.kotlinbs.components.BSButton
+import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -31,8 +31,11 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.P
+import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 
 
@@ -105,33 +108,105 @@ fun LandingSectionDisplay(
     }
 }
 
+val HomeTitleStyle by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .color(Color.white)
+            .textAlign(TextAlign.Start)
+            .fontSize(72.px)
+    }
+}
+
+val HomeSubTitleStyle by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fontSize(FontSize.XLarge)
+            .textAlign(TextAlign.Start)
+            .color(Color.white)
+            .margin(bottom = 20.px)
+    }
+}
+
+const val LENGTH_OF_TELLS = 5
+
 @Composable
 fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
+    val indexOfTells: Int = remember { mainText.indexOf("tells") }
+    val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
+    val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
+    val secondLine = remember { mainText.substring(startIndex = indexOfTells + LENGTH_OF_TELLS) }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(leftRight = 16.px, topBottom = 20.px),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
-        P(
-            attrs = BaseTextStyle.toModifier(MainTextVariant)
-                .fontFamily(SPACE_GROTESK)
-                .toAttrs()
-        ) {
-            Text(mainText)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(SubTextVariant)
-                .fontStyle(FontStyle.Italic)
-                .toAttrs()
-        ) {
-            Text(subText)
-        }
+        LandingTitle(firstLine, tells, secondLine)
+        LandingSubTitle()
         ButtonDisplay(
             ctaButton,
             BlueButtonVariant,
+            modifier = Modifier.fillMaxWidth(20.percent)
+                .textAlign(TextAlign.Center)
         )
+    }
+}
+
+@Composable
+private fun LandingSubTitle() = with(Pages.Home_Section.LandingData) {
+    P(
+        attrs = BaseTextStyle.toModifier(HomeSubTitleStyle)
+            .toAttrs()
+    ) {
+        Text(subText)
+    }
+}
+
+@Composable
+private fun LandingTitle(
+    firstLine: String,
+    tells: String,
+    secondLine: String
+) = with(Pages.Home_Section.LandingData) {
+    P(
+        attrs = BaseTextStyle.toModifier(HomeTitleStyle)
+            .toAttrs()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(firstLine)
+            Image(
+                src = underlineImage,
+                description = "Blue underline",
+                modifier = Modifier.fillMaxWidth(50.percent)
+//                    .margin(topBottom = 0.px)
+//                    .padding(topBottom = 0.px)
+                    .translateY(ty = (-20).px)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Row(
+                modifier = Modifier
+                    .translateY(ty = (-50).px),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Span(
+                    attrs = Modifier
+                        .color(Colors.DeepPink)
+                        .fontStyle(FontStyle.Italic)
+                        .margin(right = 20.px)
+                        .toAttrs()
+                ) {
+                    Text(tells)
+                }
+                Text(secondLine)
+            }
+        }
     }
 }
 
@@ -153,10 +228,12 @@ fun LandingImage() {
 
 @Composable
 fun ButtonDisplay(state: ButtonState, variant: ComponentVariant, modifier: Modifier = Modifier) = with(state) {
-    BSButton(
-        modifier = BaseButtonStyle.toModifier(variant)
-            .then(modifier),
-        text = buttonText,
-        onClick = onButtonClick
-    )
+    Button(
+        attrs = BaseButtonStyle.toModifier(variant)
+            .then(modifier)
+            .onClick { onButtonClick() }
+            .toAttrs(),
+    ) {
+        Text(buttonText)
+    }
 }

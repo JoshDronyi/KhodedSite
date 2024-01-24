@@ -20,10 +20,9 @@ import org.jetbrains.compose.web.css.px
 val BackingCardStyle by ComponentStyle {
     base {
         Modifier
-            .fillMaxWidth(80.percent)
+            .fillMaxWidth(90.percent)
             .borderRadius(20.px)
             .padding(topBottom = 20.px, leftRight = 10.px)
-            .margin(topBottom = 20.px)
             .color(Colors.Black)
     }
 }

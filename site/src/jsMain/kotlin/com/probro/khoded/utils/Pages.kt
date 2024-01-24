@@ -26,7 +26,7 @@ object Pages {
                     "and brand + SEO needs in one place."
             val mainImage: String = Images.HomePage.landing_Rocket
             val underlineImage: String = Images.Common.blueUnderline
-            val ctaButton: ButtonState = ButtonState(buttonText = "Start Now!") {
+            val ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
                 //TODO: Navigate to the schedule consultation section.
             }
         }
