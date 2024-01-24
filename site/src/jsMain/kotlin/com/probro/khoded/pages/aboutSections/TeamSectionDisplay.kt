@@ -16,10 +16,13 @@ import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -44,9 +47,108 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section
         ) {
             Text(title)
         }
-        TeamBioDisplay(estherBio)
-        TeamBioDisplay(joshBio)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            estherBio.apply {
+                FounderText(
+                    founderName = name,
+                    founderTitle = position,
+                    founderBio = story,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            FounderImages(
+                leftImage = estherBio.image,
+                rigtImage = joshBio.image,
+                modifier = Modifier.fillMaxWidth()
+            )
+            joshBio.apply {
+                FounderText(
+                    founderName = name,
+                    founderTitle = position,
+                    founderBio = story,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
     }
+}
+
+@Composable
+fun FounderImages(
+    leftImage: String,
+    rigtImage: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            src = leftImage,
+            description = "Animated picture of founder",
+            modifier = Modifier
+        )
+        Image(
+            src = rigtImage,
+            description = "Animated picture of founder",
+            modifier = Modifier
+        )
+
+    }
+}
+
+val FounderTextVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+    }
+}
+
+@Composable
+fun FounderText(
+    founderName: String,
+    founderTitle: String,
+    founderBio: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(80.percent),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            P(
+                attrs = BaseTextStyle.toModifier(FounderTextVariant)
+                    .toAttrs()
+            ) {
+                Text(founderName)
+            }
+            P(
+                attrs = BaseTextStyle.toModifier(FounderTextVariant)
+                    .toAttrs()
+            ) {
+                Text(founderTitle)
+            }
+        }
+        P(
+            attrs = BaseTextStyle.toModifier(FounderTextVariant)
+                .fillMaxWidth(80.percent)
+                .toAttrs()
+        ) {
+            Text(founderBio)
+        }
+
+    }
+
 }
 
 @Composable

@@ -1,23 +1,22 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.BaseButtonTextVariant
-import com.probro.khoded.BlueButtonVariant
-import com.probro.khoded.models.ButtonState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.probro.khoded.models.Images
 import com.probro.khoded.pages.homeSections.BackgroundStyle
-import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.JobDescriptionVariant
 import com.probro.khoded.styles.JobTitleVariant
-import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -32,7 +31,6 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
@@ -62,7 +60,8 @@ fun OpportunitiesSectionDisplay(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -77,16 +76,27 @@ fun OpportunitiesSectionDisplay(
     }
 }
 
+val PostingsTitleVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fontSize(FontSize.XXLarge)
+            .color(Color.white)
+            .fontWeight(FontWeight.Bold)
+            .textAlign(TextAlign.Start)
+    }
+}
+
 @Composable
 fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>) {
     Column(
-        modifier = Modifier,
+        modifier = Modifier
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        val fullyDisplayedItems by remember { mutableStateOf(mutableListOf<String>()) }
         P(
-            attrs = BaseTextStyle.toModifier(MainTextVariant)
-                .textAlign(TextAlign.Center)
+            attrs = BaseTextStyle.toModifier(PostingsTitleVariant)
                 .toAttrs()
         ) {
             Text(title)
@@ -99,7 +109,16 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
                 .padding(topBottom = 20.px, leftRight = 10.px),
         ) {
             positions.forEach {
-                JobPositionDisplay(it)
+                JobPositionDisplay(
+                    position = it,
+                    shouldShow = fullyDisplayedItems.contains(it.positionTitle)
+                ) { title ->
+                    if (fullyDisplayedItems.contains(title)) {
+                        fullyDisplayedItems.remove(title)
+                    } else {
+                        fullyDisplayedItems.add(title)
+                    }
+                }
             }
         }
     }
@@ -108,56 +127,48 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
 val JobPositionStyle by ComponentStyle {
     base {
         Modifier
-            .padding(topBottom = 10.px, leftRight = 15.px)
-            .border {
-                width(1.px)
-                color(Color.white)
-                style(LineStyle.Solid)
-            }
+            .padding(20.px)
+            .margin(20.px)
             .borderRadius(20.px)
-            .color(Color.white)
+            .background(Color.white)
+            .height(Height.FitContent)
+    }
+}
+
+val JobPositionContainerStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .padding(20.px)
+            .height(Height.Inherit)
     }
 }
 
 @Composable
-fun JobPositionDisplay(position: Pages.Story_Section.JobPosition) = with(position) {
-    Box(
-        modifier = Modifier.fillMaxWidth()
-            .padding(20.px)
-            .height(Height.FitContent),
-        contentAlignment = Alignment.Center
+fun JobPositionDisplay(
+    position: Pages.Story_Section.JobPosition,
+    shouldShow: Boolean,
+    onClick: (title: String) -> Unit
+) = with(position) {
+    Column(
+        modifier = JobPositionStyle.toModifier()
+            .fillMaxSize(90.percent),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = JobPositionStyle.toModifier()
-                .fillMaxSize(80.percent),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        P(
+            attrs = BaseTextStyle.toModifier(JobTitleVariant)
+                .onClick { onClick(positionTitle) }
+                .toAttrs()
         ) {
-            P(
-                attrs = BaseTextStyle.toModifier(JobTitleVariant)
-                    .toAttrs()
-            ) {
-                Text(positionTitle)
-            }
+            Text(positionTitle)
+        }
+        if (shouldShow) {
             P(
                 attrs = BaseTextStyle.toModifier(JobDescriptionVariant)
                     .toAttrs()
             ) {
                 Text(positionDesc)
-            }
-            ButtonDisplay(
-                state = ButtonState(
-                    buttonText = "Learn More",
-                    onButtonClick = { }
-                ),
-                buttonVariant = BlueButtonVariant,
-            ) { text ->
-                P(
-                    attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
-                        .toAttrs()
-                ) {
-                    Text(text)
-                }
             }
         }
     }

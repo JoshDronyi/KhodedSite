@@ -4,18 +4,20 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.components.widgets.StoryPageHeaderVariant
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
+import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
@@ -45,25 +47,23 @@ val StoryTitleVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .fontStyle(FontStyle.Italic)
-            .fontWeight(FontWeight.Normal)
+            .fontWeight(FontWeight.Thin)
             .textAlign(TextAlign.Start)
+            .fontSize(FontSize.Large)
 
     }
 
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Large)
-    }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Large)
     }
     Breakpoint.MD {
         Modifier.fontSize(FontSize.Larger)
     }
     Breakpoint.LG {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.XLarge)
     }
     Breakpoint.XL {
-        Modifier.fontSize(36.px)
+        Modifier.fontSize(FontSize.XXLarge)
     }
 }
 
@@ -71,14 +71,13 @@ val StoryParagraphVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .textAlign(TextAlign.Start)
-            .padding(15.px)
     }
 
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Medium)
+        Modifier.fontSize(FontSize.Small)
     }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.Larger)
+        Modifier.fontSize(FontSize.Medium)
     }
     Breakpoint.MD {
         Modifier.fontSize(FontSize.Large)
@@ -87,10 +86,17 @@ val StoryParagraphVariant by BaseTextStyle.addVariant {
         Modifier.fontSize(FontSize.Larger)
     }
     Breakpoint.XL {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.XLarge)
     }
 }
 
+val StoryPageTitleVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fontSize(FontSize.XXLarge)
+            .textAlign(TextAlign.Start)
+    }
+}
 
 @Composable
 fun StorySectionDisplay(
@@ -110,9 +116,7 @@ fun StorySectionDisplay(
             verticalArrangement = Arrangement.Center
         ) {
             P(
-                attrs = BaseTextStyle.toModifier(MainTextVariant)
-                    .fillMaxWidth()
-                    .textAlign(TextAlign.Center)
+                attrs = BaseTextStyle.toModifier(StoryPageTitleVariant)
                     .toAttrs()
             ) {
                 Text(title)
@@ -132,17 +136,40 @@ fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (storySection.title.isEmpty().not())
+            ParagraphTitle(storySection.title)
+        ParagraphContent(storySection.text)
+    }
+}
+
+@Composable
+fun ParagraphContent(text: String) {
+    P(
+        attrs = BaseTextStyle.toModifier(StoryParagraphVariant)
+            .toAttrs()
+    ) {
+        Text(text)
+    }
+}
+
+@Composable
+fun ParagraphTitle(title: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FaPlus(
+            modifier = Modifier
+                .color(Color.white)
+                .margin(right = 10.px),
+            size = IconSize.LG
+        )
         P(
             attrs = BaseTextStyle.toModifier(StoryTitleVariant)
                 .toAttrs()
         ) {
-            Text(storySection.title)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(StoryParagraphVariant)
-                .toAttrs()
-        ) {
-            Text(storySection.text)
+            Text(title)
         }
     }
 }
