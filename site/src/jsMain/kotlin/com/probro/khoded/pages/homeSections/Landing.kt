@@ -2,7 +2,6 @@ package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.probro.khoded.BaseButtonStyle
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
@@ -27,6 +26,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
@@ -152,7 +152,7 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
             BlueButtonVariant,
             modifier = Modifier.fillMaxWidth(20.percent)
                 .textAlign(TextAlign.Center)
-        ){
+        ) {
             P(
                 attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
                     .toAttrs()
@@ -244,7 +244,7 @@ fun ButtonDisplay(
     clickableContent: @Composable (buttonText: String) -> Unit,
 ) = with(state) {
     Box(
-        modifier = BaseButtonStyle.toModifier(buttonVariant)
+        modifier = ButtonStyle.toModifier(buttonVariant)
             .then(modifier)
             .onClick { onButtonClick() },
         contentAlignment = Alignment.Center

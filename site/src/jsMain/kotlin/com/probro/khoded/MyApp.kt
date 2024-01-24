@@ -4,18 +4,16 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.models.Res
 import com.probro.khoded.styles.BaseTextStyle
 import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.SilkApp
+import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.layout.Surface
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorStyle
-import com.varabyte.kobweb.silk.components.style.hover
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
@@ -30,26 +28,13 @@ fun MyApp(content: @Composable () -> Unit) {
     }
 }
 
-val BaseButtonStyle by ComponentStyle {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .width(Width.FitContent)
-            .borderRadius(r = 20.px)
-            .padding(leftRight = 5.px, topBottom = 10.px)
-    }
-    hover {
-        Modifier
-            .padding(leftRight = 15.px, topBottom = 20.px)
-    }
-}
 val BaseButtonTextVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fontSize(FontSize.Medium)
     }
 }
 
-val BlueButtonVariant by BaseButtonStyle.addVariant {
+val BlueButtonVariant by ButtonStyle.addVariant {
     base {
         Modifier.background(Res.BrandColors.KhodedBlue.rgb)
             .color(Colors.White)
@@ -63,7 +48,7 @@ val BlueButtonVariant by BaseButtonStyle.addVariant {
     Breakpoint.XL
 }
 
-val PinkButtonVariant by BaseButtonStyle.addVariant {
+val PinkButtonVariant by ButtonStyle.addVariant {
     base {
         Modifier.background(Res.BrandColors.KhodedPink.rgb)
             .color(Colors.White)
