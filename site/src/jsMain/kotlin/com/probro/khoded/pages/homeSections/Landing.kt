@@ -62,14 +62,16 @@ val HomeLandingBackgroundVariant by BackgroundStyle.addVariant {
 val ServicesBackgroundVariant by BackgroundStyle.addVariant {
     base {
         Modifier
+            .fillMaxWidth(80.percent)
             .color(Color.white)
     }
 }
 val DesignBackgroundVariant by BackgroundStyle.addVariant {
     base {
-
         Modifier
-            .color(Color.white)
+            .fillMaxWidth(80.percent)
+            .color(Colors.Black)
+            .margin(top = 100.px, bottom = 200.px)
     }
 }
 val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
@@ -108,7 +110,7 @@ fun LandingSectionDisplay(
     }
 }
 
-val HomeTitleStyle by BaseTextStyle.addVariant {
+val HomeTitleVariant by BaseTextStyle.addVariant {
     base {
         Modifier
             .color(Color.white)
@@ -170,7 +172,7 @@ private fun LandingTitle(
     secondLine: String
 ) = with(Pages.Home_Section.LandingData) {
     P(
-        attrs = BaseTextStyle.toModifier(HomeTitleStyle)
+        attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .toAttrs()
     ) {
         Column(

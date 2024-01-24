@@ -36,39 +36,48 @@ fun ConsultationSectionDisplay(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = Modifier,
-            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.fillMaxWidth()
+                .translateY(ty = (-200).px),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             Image(
                 src = mainImage,
                 description = "Message Bubbles",
-                modifier = Modifier.fillMaxWidth(60.percent)
+                modifier = Modifier.fillMaxWidth(40.percent)
                     .align(Alignment.Start)
             )
-            Row(
+            ConsultationDisplaySection(
                 modifier = Modifier
-                    .zIndex(2)
-                    .fillMaxWidth(80.percent),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ConsultationTextSection(
-                    mainText = mainText,
-                    clientRequestUIModel = consultationRequestUIModel,
-                    ctaButton = data.ctaButton,
-                    modifier = Modifier.fillMaxWidth()
-                        .fillMaxHeight()
-                )
-                Image(
-                    src = data.subImage,
-                    modifier = Modifier
-                        .fillMaxWidth(40.percent)
-                )
-            }
+                    .fillMaxWidth(80.percent)
+            )
         }
         QuoteSection(leftQuote, subText, rightQuote)
         footer()
+    }
+}
+
+@Composable
+fun ConsultationDisplaySection(
+    modifier: Modifier = Modifier
+) = with(Pages.Home_Section.Consultation) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ConsultationTextSection(
+            mainText = mainText,
+            clientRequestUIModel = consultationRequestUIModel,
+            ctaButton = ctaButton,
+            modifier = Modifier.fillMaxWidth()
+                .fillMaxHeight()
+        )
+        Image(
+            src = subImage,
+            modifier = Modifier
+                .fillMaxWidth(40.percent)
+        )
     }
 }
 

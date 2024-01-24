@@ -52,7 +52,7 @@ object Pages {
             slug = Routes.Home.SLUG,
             path = "${Routes.Home.SLUG}${Routes.Home.DESIGN}"
         ) {
-            val mainText: String = "Code & design tailor-made just for your business..."
+            val mainText: String = "Code & design \ntailor-made just for your business..."
             val subText: String =
                 "Khoded specializes in creating bespoke websites from the ground up, catering to a diverse clientele," +
                         " and providing comprehensive branding kits and reliable web hosting solutions to enhance our" +

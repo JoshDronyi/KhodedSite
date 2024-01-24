@@ -3,7 +3,10 @@ package com.probro.khoded.components.composables
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.modifiers.border
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
@@ -22,7 +25,6 @@ val BackingCardStyle by ComponentStyle {
         Modifier
             .fillMaxWidth(90.percent)
             .borderRadius(20.px)
-            .padding(topBottom = 20.px, leftRight = 10.px)
             .color(Colors.Black)
     }
 }
