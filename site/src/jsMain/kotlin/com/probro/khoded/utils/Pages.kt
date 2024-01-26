@@ -239,7 +239,13 @@ object Pages {
             slug = Routes.Contact.SLUG,
             path = "${Routes.Contact.SLUG}${Routes.Contact.LANDING}"
         ) {
-            val messaageUIModel: MessaageUIModel = MessaageUIModel()
+            val placeholderMsgUIModel: MessaageUIModel = MessaageUIModel(
+                fullName = "Full Name",
+                email = "Email",
+                organization = "Organization",
+                messageSubject = "What Do you need Help With",
+                message = "Drop Us A Message"
+            )
             val contactInfoUIModel: ContactInfoUIModel = ContactInfoUIModel()
             val mainText = "Ensure your brand story never ends up in the digital abyss."
             val subText = "Hit us up to craft a site that's 404-proof"
@@ -250,11 +256,11 @@ object Pages {
         }
 
         data class MessaageUIModel(
-            var fullName: String = "Full Name",
-            var email: String = "Email",
-            var organization: String = "Organization",
-            var messageSubject: String = "What Do you need Help With",
-            var message: String = "Drop Us A Message"
+            var fullName: String = "",
+            var email: String = "",
+            var organization: String = "",
+            var messageSubject: String = "",
+            var message: String = ""
         )
 
         data class ContactInfoUIModel(

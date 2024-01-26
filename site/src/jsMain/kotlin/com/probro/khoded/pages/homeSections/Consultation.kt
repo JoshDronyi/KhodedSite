@@ -1,10 +1,10 @@
 package com.probro.khoded.pages.homeSections
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.PinkButtonVariant
 import com.probro.khoded.models.ButtonState
+import com.probro.khoded.pages.sendMessage
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.FontSize
@@ -25,7 +25,12 @@ import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.components.style.toModifier
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -151,6 +156,10 @@ fun ConsultationTextSection(
     ctaButton: ButtonState,
     modifier: Modifier = Modifier
 ) {
+    var localName by remember { mutableStateOf(clientRequestUIModel.fullName) }
+    var localEmail by remember { mutableStateOf(clientRequestUIModel.email) }
+    var localMessage by remember { mutableStateOf(clientRequestUIModel.projectSynopsis) }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
@@ -159,12 +168,28 @@ fun ConsultationTextSection(
         ConsultationTitle(mainText)
         MessagingSection(
             clientRequestUIModel,
+            name = localName,
+            email = localEmail,
+            message = localMessage,
+            onNameChange = {
+                localName = it
+            },
+            onEmailChange = {
+                localEmail = it
+            },
+            onMessageChange = {
+                localMessage = it
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1)
         )
         ButtonDisplay(
-            state = ctaButton,
+            state = ctaButton.copy(
+                onButtonClick = {
+                    sendConsultationMessage(localName, localEmail, localMessage)
+                }
+            ),
             buttonVariant = PinkButtonVariant,
             modifier = Modifier
                 .width(Width.FitContent)
@@ -196,6 +221,21 @@ fun ConsultationTextSection(
         }
     }
 }
+
+val scope = CoroutineScope(Dispatchers.Default + CoroutineExceptionHandler { coroutineContext, throwable ->
+    println(throwable.message)
+})
+
+private fun sendConsultationMessage(name: String, email: String, message: String) = scope.launch {
+    sendMessage(
+        name = name,
+        email = email,
+        message = message,
+        subject = "Consultation Request",
+        organization = "N/A"
+    )
+}
+
 
 @Composable
 fun ConsultationTitle(mainText: String) {
@@ -229,6 +269,12 @@ val ContactInfoRowStyle by ComponentStyle {
 @Composable
 fun MessagingSection(
     clientRequestUIModel: Pages.Home_Section.ConsultationRequestUIModel,
+    name: String,
+    email: String,
+    message: String,
+    onNameChange: (newText: String) -> Unit,
+    onEmailChange: (newText: String) -> Unit,
+    onMessageChange: (newText: String) -> Unit,
     modifier: Modifier = Modifier
 ) = with(clientRequestUIModel) {
     Column(
@@ -243,26 +289,26 @@ fun MessagingSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextBox(
-                value = fullName,
+                value = name,
                 modifier = Modifier.fillMaxWidth()
                     .margin(right = 20.px)
             ) {
-                fullName = it
+                onNameChange(it)
             }
             TextBox(
                 value = email,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                email = it
+                onEmailChange(it)
             }
         }
         MessageArea(
-            value = projectSynopsis,
+            value = message,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1)
         ) {
-            println(it)
+            onMessageChange(it)
         }
     }
 }
@@ -306,11 +352,15 @@ fun MessageArea(
 @Composable
 fun TextBox(
     value: String,
+    placeholder: String = "",
+    placeholderColor: PlaceholderColor? = null,
     modifier: Modifier = Modifier,
     onValueChange: (newText: String) -> Unit
 ) {
     TextInput(
         text = value,
+        placeholder = placeholder,
+        placeholderColor = placeholderColor,
         onTextChanged = {
             onValueChange(it)
         },

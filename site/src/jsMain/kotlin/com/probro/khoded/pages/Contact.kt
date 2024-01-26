@@ -1,8 +1,9 @@
 package com.probro.khoded.pages
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
+import com.probro.khoded.EmailData
 import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.models.ButtonState
@@ -11,6 +12,7 @@ import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.pages.homeSections.MessageArea
 import com.probro.khoded.pages.homeSections.TextBox
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.utils.MailClient
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
 import com.varabyte.kobweb.compose.css.*
@@ -32,6 +34,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.toModifier
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
@@ -71,10 +74,14 @@ val ContactFooterBackgroundVariant by BackgroundStyle.addVariant {
 @Composable
 fun Contact() {
     val ctx = rememberPageContext()
+    val scope = rememberCoroutineScope()
     Scaffold(
         router = ctx.router
     ) { header, footer, modifier ->
         with(Pages.Contact_Section.Landing) {
+            var clientFilledData by remember {
+                mutableStateOf(Pages.Contact_Section.MessaageUIModel())
+            }
             Column(
                 modifier = modifier
                     .id(Pages.Contact_Section.Landing.id)
@@ -82,20 +89,68 @@ fun Contact() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                LandingSection(header)
-                FooterSection(
-                    data = messaageUIModel,
-                    footer = footer
+                LandingSection(
+                    header,
+                    clientFilledData = clientFilledData,
+                    onNameChange = {
+                        clientFilledData = clientFilledData.copy(
+                            fullName = it
+                        )
+                    },
+                    onEmailChange = {
+                        clientFilledData = clientFilledData.copy(
+                            email = it
+                        )
+                    },
+                    onSubjectChange = {
+                        clientFilledData = clientFilledData.copy(
+                            messageSubject = it
+                        )
+                    },
+                    onOrganizationChange = {
+                        clientFilledData = clientFilledData.copy(
+                            organization = it
+                        )
+                    },
                 )
+                FooterSection(
+                    data = placeholderMsgUIModel,
+                    footer = footer,
+                    onMessageSend = { message ->
+                        scope.launch {
+                            println("clientData was $clientFilledData")
+                            println("Message was $message")
+                            sendMessage(
+                                name = clientFilledData.fullName,
+                                email = clientFilledData.email,
+                                organization = clientFilledData.organization,
+                                subject = clientFilledData.messageSubject,
+                                message = message
+                            )
+                        }
+                    })
             }
         }
     }
+}
+
+suspend fun sendMessage(name: String, email: String, organization: String, subject: String, message: String) {
+    MailClient.sendEmail(
+        data = EmailData(
+            name = name,
+            email = email,
+            organization = organization,
+            subject = subject,
+            message = message
+        )
+    )
 }
 
 @Composable
 fun FooterSection(
     data: Pages.Contact_Section.MessaageUIModel,
     modifier: Modifier = Modifier,
+    onMessageSend: (message: String) -> Unit,
     footer: @Composable () -> Unit
 ) {
     Column(
@@ -106,7 +161,8 @@ fun FooterSection(
     ) {
         MessageDisplay(
             data = data,
-            modifier = modifier
+            modifier = modifier,
+            onMessageSend = onMessageSend
         )
         footer()
     }
@@ -114,7 +170,12 @@ fun FooterSection(
 
 @Composable
 fun LandingSection(
-    header: @Composable (variant: ComponentVariant?) -> Unit
+    header: @Composable (variant: ComponentVariant?) -> Unit,
+    clientFilledData: Pages.Contact_Section.MessaageUIModel,
+    onSubjectChange: (newText: String) -> Unit,
+    onOrganizationChange: (newText: String) -> Unit,
+    onNameChange: (newText: String) -> Unit,
+    onEmailChange: (newText: String) -> Unit
 ) = with(Pages.Contact_Section.Landing) {
     Column(
         modifier = BackgroundStyle.toModifier(ContactLandingBackgroundVariant),
@@ -128,9 +189,14 @@ fun LandingSection(
             horizontalArrangement = Arrangement.Center
         ) {
             ClientContactInfoDisplay(
-                mainText,
-                subText,
-                messaageUIModel,
+                mainText = mainText,
+                subText = subText,
+                placeholderData = placeholderMsgUIModel,
+                clientFilledData = clientFilledData,
+                onNameChange = onNameChange,
+                onEmailChange = onEmailChange,
+                onOrganizationChange = onOrganizationChange,
+                onSubjectChange = onSubjectChange
             )
             CompanyContactInfoSection(
                 image = mainImage,
@@ -153,8 +219,13 @@ val ClientInfoPromptVariant by BaseTextStyle.addVariant {
 fun ClientContactInfoDisplay(
     mainText: String,
     subText: String,
-    data: Pages.Contact_Section.MessaageUIModel
-) = with(data) {
+    placeholderData: Pages.Contact_Section.MessaageUIModel,
+    clientFilledData: Pages.Contact_Section.MessaageUIModel,
+    onSubjectChange: (newText: String) -> Unit,
+    onOrganizationChange: (newText: String) -> Unit,
+    onNameChange: (newText: String) -> Unit,
+    onEmailChange: (newText: String) -> Unit
+) = with(placeholderData) {
     Box(
         modifier = ContactSectionContainerStyle.toModifier(ClientInfoContainerVariant),
         contentAlignment = Alignment.Center
@@ -163,7 +234,14 @@ fun ClientContactInfoDisplay(
             modifier = Modifier.fillMaxWidth(80.percent)
         ) {
             ClientInfoTitle(mainText, subText)
-            ClientInfoInputDisplay(data)
+            ClientInfoInputDisplay(
+                placeholderData = placeholderData,
+                clientFilledData = clientFilledData,
+                onOrganizationChange = onOrganizationChange,
+                onSubjectChange = onSubjectChange,
+                onNameChange = onNameChange,
+                onEmailChange = onEmailChange
+            )
         }
     }
 }
@@ -177,6 +255,7 @@ fun ClientInfoTitle(mainText: String, subText: String) {
         Span(
             attrs = Modifier
                 .color(Colors.Purple)
+                .margin(right = 10.px)
                 .toAttrs()
         ) {
             Text(mainText)
@@ -209,9 +288,14 @@ val ClientInfoTextAreaVariant by ClientInfoTextBoxStyle.addVariant {
 
 @Composable
 fun ClientInfoInputDisplay(
-    data: Pages.Contact_Section.MessaageUIModel
+    placeholderData: Pages.Contact_Section.MessaageUIModel,
+    clientFilledData: Pages.Contact_Section.MessaageUIModel,
+    onNameChange: (newText: String) -> Unit,
+    onEmailChange: (newText: String) -> Unit,
+    onOrganizationChange: (newText: String) -> Unit,
+    onSubjectChange: (newText: String) -> Unit,
 ) =
-    with(data) {
+    with(placeholderData) {
         Column(
             modifier = Modifier.fillMaxWidth()
                 .fillMaxHeight()
@@ -220,28 +304,32 @@ fun ClientInfoInputDisplay(
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             TextBox(
-                value = fullName,
+                value = clientFilledData.fullName,
+                placeholder = fullName,
                 modifier = ClientInfoTextBoxStyle.toModifier()
             ) {
-                fullName = it
+                onNameChange(it)
             }
             TextBox(
-                value = email,
+                value = clientFilledData.email,
+                placeholder = email,
                 modifier = ClientInfoTextBoxStyle.toModifier()
             ) {
-                email = it
+                onEmailChange(it)
             }
             TextBox(
-                value = organization,
+                value = clientFilledData.organization,
+                placeholder = organization,
                 modifier = ClientInfoTextBoxStyle.toModifier()
             ) {
-                organization = it
+                onOrganizationChange(it)
             }
             TextBox(
-                value = messageSubject,
+                value = clientFilledData.messageSubject,
+                placeholder = messageSubject,
                 modifier = ClientInfoTextBoxStyle.toModifier()
             ) {
-                messageSubject = it
+                onSubjectChange(it)
             }
         }
     }
@@ -321,6 +409,7 @@ fun ContactInfoDisplay(contactInfoUIModel: Pages.Contact_Section.ContactInfoUIMo
 fun MessageDisplay(
     data: Pages.Contact_Section.MessaageUIModel,
     modifier: Modifier = Modifier,
+    onMessageSend: (message: String) -> Unit
 ) = with(data) {
     Row(
         modifier = ContactPageRowStyle.toModifier(MessagingSectionVariant)
@@ -330,10 +419,9 @@ fun MessageDisplay(
     ) {
         InputDisplays(
             message = message,
-            ctaButton = ctaButton
-        ) { newText ->
-            message = newText
-        }
+            ctaButton = ctaButton,
+            onMessageSend = onMessageSend
+        )
         SpacerSection()
     }
 }
@@ -365,12 +453,13 @@ val MessagingSectionVariant by ContactPageRowStyle.addVariant {
 fun InputDisplays(
     message: String,
     ctaButton: ButtonState,
-    onTextChange: (newText: String) -> Unit
+    onMessageSend: (message: String) -> Unit
 ) {
     Box(
         modifier = ContactSectionContainerStyle.toModifier(MessagingSectionContainerVariant),
         contentAlignment = Alignment.Center
     ) {
+        var mutableMessage by remember { mutableStateOf(message) }
         Column(
             modifier = Modifier
                 .fillMaxWidth(80.percent)
@@ -379,13 +468,17 @@ fun InputDisplays(
             horizontalAlignment = Alignment.Start
         ) {
             MessageArea(
-                value = message,
+                value = mutableMessage,
                 modifier = ClientInfoTextBoxStyle.toModifier(ClientInfoTextAreaVariant)
             ) { newText ->
-                onTextChange(newText)
+                mutableMessage = newText
             }
             ButtonDisplay(
-                state = ctaButton,
+                state = ctaButton.copy(
+                    onButtonClick = {
+                        onMessageSend(mutableMessage)
+                    }
+                ),
                 BlueButtonVariant,
                 modifier = Modifier.width(Width.FitContent)
                     .margin(topBottom = 10.px)
