@@ -165,7 +165,7 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section
                         founderBio = story,
                         alignment = Alignment.End,
                         modifier = Modifier
-                            .width(Width.MaxContent)
+                            .fillMaxWidth(80.percent)
                     )
                 }
                 FounderImages(
@@ -175,12 +175,10 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section
                 )
                 joshBio.apply {
                     FounderText(
-                        founderName = name,
-                        founderTitle = position,
-                        founderBio = story,
+                        founderName = name, founderTitle = position, founderBio = story,
                         alignment = Alignment.Start,
                         modifier = Modifier
-                            .width(Width.MaxContent)
+                            .fillMaxWidth(80.percent)
                     )
                 }
             }
@@ -216,12 +214,13 @@ fun FounderText(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Column(
-            modifier = FounderBacking.toModifier(IntroSectionBacking),
+            modifier = FounderBacking.toModifier(IntroSectionBacking)
+                .fillMaxWidth(80.percent),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = alignment
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             P(
                 attrs = FounderTextStyle.toModifier(FounderNameVariant)
@@ -237,13 +236,13 @@ fun FounderText(
             }
         }
         Column(
-            modifier = FounderBacking.toModifier(BioSectionBacking),
-            horizontalAlignment = alignment,
+            modifier = FounderBacking.toModifier(BioSectionBacking)
+                .fillMaxWidth(80.percent),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             P(
                 attrs = FounderTextStyle.toModifier(FounderBioVariant)
-                    .fillMaxWidth(80.percent)
                     .toAttrs()
             ) {
                 Text(founderBio)
