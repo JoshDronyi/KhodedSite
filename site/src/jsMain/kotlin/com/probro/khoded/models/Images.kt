@@ -16,6 +16,7 @@ object Images {
         val megaphone: String = "/story/megaphone.png"
         val founderJosh: String = "/story/joshFounder.png"
         val founderEsther: String = "/story/estherFounder.png"
+        val jointFounderImage:String = "/story/jointFoundersImage.png"
     }
 
     object ContactPage {

@@ -26,7 +26,7 @@ object Pages {
                     "and brand + SEO needs in one place."
             val mainImage: String = Images.HomePage.landing_Rocket
             val underlineImage: String = Images.Common.blueUnderline
-            val ctaButton: ButtonState = ButtonState(buttonText = "Start Now!") {
+            val ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
                 //TODO: Navigate to the schedule consultation section.
             }
         }
@@ -52,7 +52,7 @@ object Pages {
             slug = Routes.Home.SLUG,
             path = "${Routes.Home.SLUG}${Routes.Home.DESIGN}"
         ) {
-            val mainText: String = "Code & design tailor-made just for your business..."
+            val mainText: String = "Code & design \ntailor-made just for your business..."
             val subText: String =
                 "Khoded specializes in creating bespoke websites from the ground up, catering to a diverse clientele," +
                         " and providing comprehensive branding kits and reliable web hosting solutions to enhance our" +
@@ -159,6 +159,7 @@ object Pages {
             slug = Routes.Story.SLUG,
             path = "${Routes.Story.SLUG}${Routes.Story.FOUNDERS}"
         ) {
+            val jointFoundersImage = Images.StoryPage.jointFounderImage
             val estherBio = TeamBio(
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",

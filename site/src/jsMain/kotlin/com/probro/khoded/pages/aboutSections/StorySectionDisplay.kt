@@ -4,18 +4,24 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.components.widgets.StoryPageHeaderVariant
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.MainTextVariant
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
+import com.varabyte.kobweb.silk.components.icons.fa.IconSize
+import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
@@ -38,32 +44,37 @@ val StoryBackgroundVariant by BackgroundStyle.addVariant {
                     to = Colors.RebeccaPurple
                 )
             )
+            .padding(bottom = 15.px)
     }
 }
 
 val StoryTitleVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
-            .fontStyle(FontStyle.Italic)
-            .fontWeight(FontWeight.Normal)
+            .fontWeight(FontWeight.ExtraBold)
             .textAlign(TextAlign.Start)
+            .fontSize(FontSize.Medium)
 
     }
 
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Large)
-    }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Small)
     }
     Breakpoint.MD {
-        Modifier.fontSize(FontSize.Larger)
+        Modifier.fontSize(FontSize.Medium)
     }
     Breakpoint.LG {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Large)
     }
     Breakpoint.XL {
-        Modifier.fontSize(36.px)
+        Modifier.fontSize(FontSize.Larger)
+    }
+}
+val StoryParagraphStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .margin(bottom = 20.px)
     }
 }
 
@@ -71,26 +82,26 @@ val StoryParagraphVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .textAlign(TextAlign.Start)
-            .padding(15.px)
     }
 
-    Breakpoint.ZERO {
+    Breakpoint.MD {
         Modifier.fontSize(FontSize.Medium)
     }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.MD {
+    Breakpoint.LG {
         Modifier.fontSize(FontSize.Large)
     }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.Larger)
-    }
     Breakpoint.XL {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Larger)
     }
 }
 
+val StoryPageTitleVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fontSize(48.px)
+            .textAlign(TextAlign.Start)
+    }
+}
 
 @Composable
 fun StorySectionDisplay(
@@ -110,9 +121,7 @@ fun StorySectionDisplay(
             verticalArrangement = Arrangement.Center
         ) {
             P(
-                attrs = BaseTextStyle.toModifier(MainTextVariant)
-                    .fillMaxWidth()
-                    .textAlign(TextAlign.Center)
+                attrs = BaseTextStyle.toModifier(StoryPageTitleVariant)
                     .toAttrs()
             ) {
                 Text(title)
@@ -124,25 +133,48 @@ fun StorySectionDisplay(
     }
 }
 
+
 @Composable
 fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = StoryParagraphStyle.toModifier(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (storySection.title.isEmpty().not())
+            ParagraphTitle(storySection.title)
+        ParagraphContent(storySection.text)
+    }
+}
+
+@Composable
+fun ParagraphContent(text: String) {
+    P(
+        attrs = BaseTextStyle.toModifier(StoryParagraphVariant)
+            .toAttrs()
+    ) {
+        Text(text)
+    }
+}
+
+@Composable
+fun ParagraphTitle(title: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FaPlus(
+            modifier = Modifier
+                .color(Color.white)
+                .margin(right = 10.px),
+            size = IconSize.LG
+        )
         P(
             attrs = BaseTextStyle.toModifier(StoryTitleVariant)
                 .toAttrs()
         ) {
-            Text(storySection.title)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(StoryParagraphVariant)
-                .toAttrs()
-        ) {
-            Text(storySection.text)
+            Text(title)
         }
     }
 }
