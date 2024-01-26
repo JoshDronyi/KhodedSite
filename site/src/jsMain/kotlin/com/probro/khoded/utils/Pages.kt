@@ -244,7 +244,7 @@ object Pages {
             val mainText = "Ensure your brand story never ends up in the digital abyss."
             val subText = "Hit us up to craft a site that's 404-proof"
             val mainImage: String = Images.ContactPage.planet404
-            val ctaButton = ButtonState("") {
+            val ctaButton = ButtonState("Get Khoded") {
 
             }
         }

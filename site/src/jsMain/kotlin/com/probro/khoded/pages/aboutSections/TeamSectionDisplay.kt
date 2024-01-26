@@ -163,7 +163,6 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section
                         founderName = name,
                         founderTitle = position,
                         founderBio = story,
-                        alignment = Alignment.End,
                         modifier = Modifier
                             .fillMaxWidth(80.percent)
                     )
@@ -175,8 +174,9 @@ fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section
                 )
                 joshBio.apply {
                     FounderText(
-                        founderName = name, founderTitle = position, founderBio = story,
-                        alignment = Alignment.Start,
+                        founderName = name,
+                        founderTitle = position,
+                        founderBio = story,
                         modifier = Modifier
                             .fillMaxWidth(80.percent)
                     )
@@ -208,7 +208,6 @@ fun FounderText(
     founderName: String,
     founderTitle: String,
     founderBio: String,
-    alignment: Alignment.Horizontal,
     modifier: Modifier = Modifier
 ) {
     Column(

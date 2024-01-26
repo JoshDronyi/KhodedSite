@@ -11,10 +11,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.background
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.height
-import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
@@ -41,7 +38,10 @@ val StoryPageHeaderVariant by HeaderStyle.addVariant {
     base { Modifier }
 }
 val ContactPageHeaderVariant by HeaderStyle.addVariant {
-    base { Modifier }
+    base {
+        Modifier
+            .backgroundColor(Colors.Transparent)
+    }
 }
 
 
