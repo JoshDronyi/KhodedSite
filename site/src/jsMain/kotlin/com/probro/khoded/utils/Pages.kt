@@ -159,6 +159,7 @@ object Pages {
             slug = Routes.Story.SLUG,
             path = "${Routes.Story.SLUG}${Routes.Story.FOUNDERS}"
         ) {
+            val jointFoundersImage = Images.StoryPage.jointFounderImage
             val estherBio = TeamBio(
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",

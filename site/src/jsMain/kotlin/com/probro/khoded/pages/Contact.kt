@@ -12,19 +12,18 @@ import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.pages.homeSections.TextBox
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundImage
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.id
-import com.varabyte.kobweb.compose.ui.modifiers.textAlign
+import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
@@ -50,47 +49,82 @@ fun Contact() {
             Column(
                 modifier = modifier
                     .id(Pages.Contact_Section.Landing.id),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                LandingSection(header)
-                MessageDisplay(
-                    message = messaageUIModel.message,
-                    ctaButton = ctaButton,
+                LandingSection(
+                    header,
+                    modifier = Modifier.fillMaxSize()
+                )
+                FooterSection(
+                    data = messaageUIModel,
+                    modifier = Modifier.fillMaxSize(),
                     footer = footer
-                ) { newText ->
-                    messaageUIModel.message = newText
-                }
+                )
             }
         }
     }
 }
 
 @Composable
-fun LandingSection(header: @Composable (variant: ComponentVariant?) -> Unit) =
-    with(Pages.Contact_Section.Landing) {
-        Column(
-            modifier = BackgroundStyle.toModifier(ClientContactBackgroundVariant)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+fun FooterSection(
+    data: Pages.Contact_Section.MessaageUIModel,
+    modifier: Modifier = Modifier,
+    footer: @Composable () -> Unit
+) {
+    with(data) {
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
         ) {
-            header(ContactPageHeaderVariant)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(80.percent),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+            MessageDisplay(
+                message = message,
+                ctaButton = ctaButton,
+                footer = footer,
+                modifier = Modifier.fillMaxSize()
+            ) { newText ->
+                message = newText
+            }
+            Box(modifier = Modifier.fillMaxSize())
+        }
+    }
+}
+
+@Composable
+fun LandingSection(
+    header: @Composable (variant: ComponentVariant?) -> Unit,
+    modifier: Modifier = Modifier
+) =
+    with(Pages.Contact_Section.Landing) {
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = BackgroundStyle.toModifier(ClientContactBackgroundVariant)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MainContactDisplay(
-                    mainText,
-                    messaageUIModel,
-                    Modifier
-                )
-                ContactInfoSection(
-                    image = mainImage,
-                    contactInfoUIModel = contactInfoUIModel
-                )
+                header(ContactPageHeaderVariant)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(80.percent)
+                        .fillMaxHeight(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    MainContactDisplay(
+                        mainText,
+                        messaageUIModel,
+                        Modifier
+                    )
+                    ContactInfoSection(
+                        image = mainImage,
+                        contactInfoUIModel = contactInfoUIModel,
+                        Modifier
+                    )
+                }
             }
         }
     }
@@ -134,54 +168,66 @@ fun ClientContactSection(
 fun MainContactDisplay(
     mainText: String,
     data: Pages.Contact_Section.MessaageUIModel,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) = with(data) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = modifier
     ) {
-        P(
-            attrs = BaseTextStyle.toModifier()
-                .toAttrs()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(mainText)
-        }
-        TextBox(fullName) {
-            fullName = it
-        }
-        TextBox(email) {
-            email = it
-        }
-        TextBox(organization) {
-            organization = it
-        }
-        TextInput(
-            size = InputSize.LG,
-            text = messageSubject,
-            onTextChanged = {
-                messageSubject = it
+            P(
+                attrs = BaseTextStyle.toModifier()
+                    .toAttrs()
+            ) {
+                Text(mainText)
             }
-        )
+            TextBox(fullName) {
+                fullName = it
+            }
+            TextBox(email) {
+                email = it
+            }
+            TextBox(organization) {
+                organization = it
+            }
+            TextInput(
+                size = InputSize.LG,
+                text = messageSubject,
+                onTextChanged = {
+                    messageSubject = it
+                }
+            )
+        }
     }
 }
 
 @Composable
 fun ContactInfoSection(
     image: String,
-    contactInfoUIModel: Pages.Contact_Section.ContactInfoUIModel
+    contactInfoUIModel: Pages.Contact_Section.ContactInfoUIModel,
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
     ) {
-        Image(
-            src = image,
-            description = "Planet 404",
-            modifier = Modifier
-        )
-        ContactInfoDisplay(contactInfoUIModel)
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                src = image,
+                description = "Planet 404",
+                modifier = Modifier
+            )
+            ContactInfoDisplay(contactInfoUIModel)
+        }
     }
 }
 
@@ -221,15 +267,21 @@ fun MessageDisplay(
     ctaButton: ButtonState,
     message: String,
     footer: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     onTextChange: (newText: String) -> Unit,
 ) {
-    Column(
-        modifier = BackgroundStyle.toModifier(MessagingSectionVariant),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
     ) {
-        MessagingSection(message, onTextChange, ctaButton)
-        footer()
+        Column(
+            modifier = BackgroundStyle.toModifier(MessagingSectionVariant),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            MessagingSection(message, onTextChange, ctaButton)
+            footer()
+        }
     }
 }
 

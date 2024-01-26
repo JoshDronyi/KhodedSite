@@ -62,3 +62,10 @@ val PinkButtonVariant by ButtonStyle.addVariant {
     Breakpoint.LG
     Breakpoint.XL
 }
+
+val ReadMoreVariant by ButtonStyle.addVariant {
+    base {
+        Modifier
+            .backgroundColor(Colors.Transparent)
+    }
+}
