@@ -22,6 +22,7 @@ class MailClient(
         senderName: String,
         senderOrganization: String,
         senderEmail: String,
+        subject: String,
         message: String,
         onSuccess: (message: String) -> Unit
     ) = supervisorScope {
@@ -30,9 +31,12 @@ class MailClient(
             logger.info("Using the simple mail implementation")
             val email: Message? = khodedMailer.sendEmail(
                 toEmailAddress = "admin@khoded.com",
-                messageSubject = "${MailSubjects.CLIENT_CONTACT.value} - " +
-                        "$senderName ($senderEmail) from $senderOrganization",
-                bodyText = message
+                messageSubject = "${MailSubjects.CLIENT_CONTACT.value} - $subject",
+                bodyText = StringBuilder()
+                    .append("From $senderOrganization representative $senderName ($senderEmail)")
+                    .appendLine()
+                    .append(message)
+                    .toString()
             )
             email?.let {
                 onSuccess("Sent email: $email")

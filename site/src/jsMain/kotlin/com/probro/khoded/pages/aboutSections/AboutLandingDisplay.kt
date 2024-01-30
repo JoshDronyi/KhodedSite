@@ -1,3 +1,4 @@
+/*
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 @Composable
-fun AboutLandingDisplay(modifier: Modifier = Modifier) = with(Pages.About_Section.Landing) {
+fun AboutLandingDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section.Landing) {
     val breakpoint = rememberBreakpoint()
     when (breakpoint) {
         Breakpoint.ZERO, Breakpoint.SM, Breakpoint.MD -> {
@@ -48,7 +49,7 @@ fun AboutLandingDisplay(modifier: Modifier = Modifier) = with(Pages.About_Sectio
 }
 
 @Composable
-private fun CompactLandingDisplay(breakpoint: Breakpoint, data: Pages.About_Section.Landing, modifier: Modifier) =
+private fun CompactLandingDisplay(breakpoint: Breakpoint, data: Pages.Story_Section.Landing, modifier: Modifier) =
     with(data) {
         Box(
             modifier = modifier,
@@ -64,7 +65,7 @@ private fun CompactLandingDisplay(breakpoint: Breakpoint, data: Pages.About_Sect
     }
 
 @Composable
-private fun LargeLandingDisplay(breakpoint: Breakpoint, data: Pages.About_Section.Landing, modifier: Modifier) =
+private fun LargeLandingDisplay(breakpoint: Breakpoint, data: Pages.Story_Section.Landing, modifier: Modifier) =
     with(data) {
         Box(
             modifier = modifier
@@ -142,4 +143,4 @@ fun OurTeamImage(image: String) {
                 .borderRadius(0.px)
         )
     }
-}
+}*/

@@ -20,8 +20,8 @@ val BaseTextStyle by ComponentStyle {
             .margin(0.px)
             .textAlign(TextAlign.Center)
             .textOverflow(TextOverflow.Ellipsis)
+            .overflow(Overflow.Hidden)
             .overflowWrap(OverflowWrap.Anywhere)
-            .width(Width.Inherit)
             .fillMaxWidth()
 
     }
@@ -127,67 +127,20 @@ val TeamBioParagraphVaraiant by BaseTextStyle.addVariant {
     }
 }
 
-val StoryTitleVariant by BaseTextStyle.addVariant {
-    base {
-        Modifier.fillMaxWidth()
-            .fontStyle(FontStyle.Italic)
-            .fontWeight(FontWeight.Normal)
-            .textAlign(TextAlign.Start)
-
-    }
-
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Large)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(36.px)
-    }
-}
-
-val StoryParagraphVariant by BaseTextStyle.addVariant {
-    base {
-        Modifier.fillMaxWidth()
-            .textAlign(TextAlign.Start)
-            .padding(15.px)
-    }
-
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Medium)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Large)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-}
-
 val JobTitleVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
-            .fontSize(FontSize.Larger)
+            .fontSize(FontSize.Large)
             .fontWeight(FontWeight.Bold)
+            .height(Height.FitContent)
+            .margin(10.px)
     }
 }
 val JobDescriptionVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .fontSize(FontSize.Large)
+            .height(Height.FitContent)
     }
 }
 

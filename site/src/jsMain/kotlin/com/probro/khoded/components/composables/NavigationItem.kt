@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -18,9 +20,9 @@ import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
@@ -29,10 +31,9 @@ import org.jetbrains.compose.web.dom.Text
 val NavItemStyle by ComponentStyle {
     base {
         Modifier
-            .background(Color.black)
-            .color(Color.white)
             .padding(0.px)
             .margin(0.px)
+            .color(Color.white)
             .textAlign(TextAlign.Center)
     }
 }
@@ -40,26 +41,37 @@ val NavItemStyle by ComponentStyle {
 val HeaderNavItemVariant by NavItemStyle.addVariant {
     base {
         Modifier
-            .padding(20.px)
-            .textAlign(TextAlign.Center)
-            .border {
-                width(1.px)
-                style(LineStyle.Solid)
-                color(Color.white)
-            }
-            .borderRadius(20.px)
+            .width(Width.MinContent)
+            .fontSize(FontSize.Medium)
+            .margin(right = 10.px)
+    }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Medium)
     }
 }
 val FooterNavItemVariant by NavItemStyle.addVariant {
     base {
-        Modifier.fillMaxWidth(80.percent)
-            .padding(topBottom = 15.px)
-            .border {
-                width(1.px)
-                color(Color.white)
-                style(LineStyle.Ridge)
-            }
-            .borderRadius(20.px)
+        Modifier
+            .fillMaxWidth()
+            .padding(leftRight = 20.px, topBottom = 5.px)
+            .height(Height.Inherit)
+            .fontSize(FontSize.Large)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Larger)
     }
 }
 val SideNavItemVariant by NavItemStyle.addVariant {
@@ -73,31 +85,27 @@ val SideNavItemVariant by NavItemStyle.addVariant {
 @Composable
 fun NavigationItem(
     text: String,
-    root: Navigator.PageRoot,
-    modifier: Modifier = Modifier,
+    root: Navigator.KeySections,
     navItemVariant: ComponentVariant? = null,
     onNavItemSelect: (section: PageSection) -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        NavSectionTitle(
-            navItemVariant = navItemVariant,
-            onNavItemSelect = {
-                onNavItemSelect(
-                    when (root) {
-                        Navigator.PageRoot.Home -> Pages.Home_Section.LandingData
-                        Navigator.PageRoot.About -> Pages.About_Section.Landing
-                        Navigator.PageRoot.Services -> Pages.Services_Section.Landing
-                        Navigator.PageRoot.Contact -> Pages.Contact_Section.Landing
-                    }
-                )
-            },
-            text = text
-        )
-    }
+    NavSectionTitle(
+        navItemVariant = navItemVariant,
+        onNavItemSelect = {
+            onNavItemSelect(
+                when (root) {
+                    is Navigator.KeySections.PageRoots.Contact -> Pages.Contact_Section.Landing
+                    is Navigator.KeySections.PageRoots.Home -> Pages.Home_Section.LandingData
+                    is Navigator.KeySections.PageRoots.STORY -> Pages.Story_Section.OurStory
+                    is Navigator.KeySections.TrafficStops.CONSULTATION -> Pages.Home_Section.Consultation
+                    is Navigator.KeySections.TrafficStops.JOIN_OUR_TEAM -> Pages.Story_Section.JoinOurTeam
+                    is Navigator.KeySections.TrafficStops.TERMS_AND_CONDTIONS ->
+                        Pages.Misc.Sections.TermsAndConditions
+                }
+            )
+        },
+        text = text
+    )
 }
 
 @Composable
