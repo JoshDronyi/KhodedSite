@@ -1,9 +1,0 @@
-2024-01-10 12:43:08.963 [main] DEBUG ktor.application - Java Home: C:\Users\joshu\.jdks
-2024-01-10 12:43:08.967 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@c387f44: [file:/C:/Users/joshu/ProBroProjects/Tests/Khoded/site/.kobweb/server/server.jar!/ch]
-2024-01-10 12:43:08.976 [main] INFO  ktor.application - No ktor.deployment.watch patterns match classpath entries, automatic reload is not active
-2024-01-10 12:43:09.029 [main] INFO  ktor.application - API jar found and will be loaded: "build\libs\khoded.jar"
-2024-01-10 12:43:09.589 [main] INFO  ktor.application - Loaded and initialized server API jar in 8ms.
-2024-01-10 12:43:09.656 [main] INFO  ktor.application - Initializing Kobweb streams.
-2024-01-10 12:43:09.776 [main] INFO  ktor.application - Application started in 1.007 seconds.
-2024-01-10 12:43:10.337 [main] INFO  ktor.application - Responding at http://127.0.0.1:8080
-2024-01-10 12:47:17.824 [eventLoopGroupProxy-4-4] DEBUG ktor.application - Client connected and is requesting kobweb status events.
