@@ -3,6 +3,7 @@ package com.probro.khoded.utils
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
+import com.probro.khoded.pages.aboutSections.Founders
 
 interface PageSection {
     val id: String
@@ -164,13 +165,15 @@ object Pages {
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",
                 image = Images.StoryPage.founderEsther,
-                story = Constants.Strings.EstherFounderBio //"She cool or whateva!"
+                story = Constants.Strings.EstherFounderBio, //"She cool or whateva!"
+                founderType = Founders.CEO
             )
             val joshBio = TeamBio(
                 name = "Joshua Dronyi",
                 position = "CTO/Co-Founder",
                 image = Images.StoryPage.founderJosh,
-                story = Constants.Strings.JoshFounderBio //"He cool or whateva!"
+                story = Constants.Strings.JoshFounderBio, //"He cool or whateva!"
+                founderType = Founders.CTO
             )
         }
 
@@ -215,7 +218,8 @@ object Pages {
             val name: String,
             val position: String,
             val image: String,
-            val story: String
+            val story: String,
+            val founderType: Founders
         )
 
         data class JobPosition(
