@@ -3,6 +3,8 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.PinkButtonVariant
+import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.sendMessage
 import com.probro.khoded.styles.BaseTextStyle
@@ -25,6 +27,7 @@ import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.components.style.toModifier
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -51,8 +54,7 @@ fun ConsultationSectionDisplay(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
-                .translateY(ty = (-200).px),
+            modifier = ConsultationSectionStyle.toModifier(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -72,28 +74,52 @@ fun ConsultationSectionDisplay(
     }
 }
 
+val ConsultationSectionStyle by ComponentStyle {
+    base {
+        Modifier.fillMaxWidth()
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .translateY(ty = (-50).px)
+    }
+    Breakpoint.SM {
+        Modifier
+            .translateY(ty = (-100).px)
+    }
+    Breakpoint.MD {
+        Modifier
+            .translateY(ty = (-150).px)
+    }
+    Breakpoint.LG {
+        Modifier
+            .translateY(ty = (-200).px)
+    }
+}
+
 @Composable
 fun ConsultationDisplaySection(
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Consultation) {
-    Row(
+    BackingCard(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ConsultationTextSection(
-            mainText = mainText,
-            clientRequestUIModel = consultationRequestUIModel,
-            ctaButton = ctaButton,
-            modifier = Modifier.fillMaxWidth()
-                .fillMaxHeight()
-        )
-        Image(
-            src = subImage,
-            modifier = Modifier
-                .fillMaxWidth(40.percent)
-        )
-    }
+        variant = NoBorderBackingCardVariant,
+        firstSection = {
+            ConsultationTextSection(
+                mainText = mainText,
+                clientRequestUIModel = consultationRequestUIModel,
+                ctaButton = ctaButton,
+                modifier = Modifier.fillMaxWidth()
+                    .fillMaxHeight()
+            )
+        },
+        secondSection = {
+            Image(
+                src = subImage,
+                modifier = Modifier
+                    .fillMaxWidth(40.percent)
+            )
+        }
+    )
 }
 
 @Composable
@@ -307,6 +333,7 @@ fun MessagingSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1)
+                .minHeight(400.px)
         ) {
             onMessageChange(it)
         }

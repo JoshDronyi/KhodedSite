@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -17,6 +20,7 @@ import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
@@ -37,13 +41,37 @@ val NavItemStyle by ComponentStyle {
 val HeaderNavItemVariant by NavItemStyle.addVariant {
     base {
         Modifier
-            .textAlign(TextAlign.Center)
+            .width(Width.MinContent)
+            .fontSize(FontSize.Medium)
+            .margin(right = 10.px)
+    }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Medium)
     }
 }
 val FooterNavItemVariant by NavItemStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
+            .padding(leftRight = 20.px, topBottom = 5.px)
+            .height(Height.Inherit)
+            .fontSize(FontSize.Large)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Larger)
     }
 }
 val SideNavItemVariant by NavItemStyle.addVariant {

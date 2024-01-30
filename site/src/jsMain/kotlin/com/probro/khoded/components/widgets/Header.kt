@@ -7,6 +7,7 @@ import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -15,7 +16,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import org.jetbrains.compose.web.css.CSSSizeValue
+import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
@@ -32,6 +37,7 @@ val HomePageHeaderVariant by HeaderStyle.addVariant {
     base {
         Modifier
             .background(Colors.Black.copy(alpha = 70))
+            .fillMaxWidth()
     }
 }
 val StoryPageHeaderVariant by HeaderStyle.addVariant {
@@ -51,23 +57,37 @@ fun Header(
     variant: ComponentVariant? = null,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
-    Row(
-        modifier = HeaderStyle.toModifier(variant)
-            .then(modifier),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
+    val breakpoint = rememberBreakpoint()
+    Box(
+        modifier = HeaderStyle.toModifier(variant),
+        contentAlignment = Alignment.Center
     ) {
-        LogoDisplay(
-            image = Images.Logos.minimalLogo,
-            variant = HeaderLogoContainerVariant,
-            imageVariant = HeaderImageVariant,
-            textVariant = HeaderLogoTextVariant,
-        )
-        HeaderNavItemDisplay(
-            modifier = Modifier
-                .fillMaxWidth(75.percent),
-            onNavItemSelect = onNavItemSelect
-        )
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LogoDisplay(
+                image = Images.Logos.minimalLogo,
+                variant = HeaderLogoContainerVariant,
+                imageVariant = HeaderImageVariant,
+                textVariant = HeaderLogoTextVariant,
+            )
+            HeaderNavItemDisplay(
+                modifier = Modifier
+                    .fillMaxWidth(getWidthFromBreakpoint(breakpoint)),
+                onNavItemSelect = onNavItemSelect
+            )
+        }
+    }
+}
+
+private fun getWidthFromBreakpoint(breakpoint: Breakpoint): CSSSizeValue<CSSUnit.percent> {
+    return when (breakpoint) {
+        Breakpoint.ZERO, Breakpoint.SM -> 90.percent
+        Breakpoint.MD -> 70.percent
+        Breakpoint.LG -> 60.percent
+        Breakpoint.XL -> 50.percent
     }
 }
 
@@ -115,7 +135,7 @@ fun HeaderNavItemDisplay(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.End
     ) {
         NavigationItem(
             text = Navigator.KeySections.TrafficStops.consultation.text,

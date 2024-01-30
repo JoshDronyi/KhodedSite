@@ -10,9 +10,9 @@ import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.JobDescriptionVariant
 import com.probro.khoded.styles.JobTitleVariant
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
@@ -61,7 +61,8 @@ fun OpportunitiesSectionDisplay(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth(85.percent)
+                .padding(bottom = 40.px),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -69,7 +70,11 @@ fun OpportunitiesSectionDisplay(
             Image(
                 src = Images.StoryPage.megaphone,
                 description = "Megaphone",
-                modifier = Modifier.fillMaxWidth(20.percent)
+                modifier = Modifier.fillMaxWidth(30.percent)
+                    .align(Alignment.Top)
+                    .translateY(ty = (-50).px)
+                    .objectFit(ObjectFit.Contain)
+
             )
         }
         footer()
@@ -79,10 +84,11 @@ fun OpportunitiesSectionDisplay(
 val PostingsTitleVariant by BaseTextStyle.addVariant {
     base {
         Modifier
-            .fontSize(FontSize.XXLarge)
+            .fontSize(48.px)
             .color(Color.white)
             .fontWeight(FontWeight.Bold)
             .textAlign(TextAlign.Start)
+            .padding(leftRight = 15.px)
     }
 }
 
@@ -97,6 +103,7 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
         val fullyDisplayedItems by remember { mutableStateOf(mutableListOf<String>()) }
         P(
             attrs = BaseTextStyle.toModifier(PostingsTitleVariant)
+                .fillMaxWidth()
                 .toAttrs()
         ) {
             Text(title)
@@ -127,8 +134,8 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
 val JobPositionStyle by ComponentStyle {
     base {
         Modifier
-            .padding(20.px)
-            .margin(20.px)
+            .padding(topBottom = 40.px)
+//            .margin(20.px)
             .borderRadius(20.px)
             .background(Color.white)
             .height(Height.FitContent)
@@ -152,7 +159,7 @@ fun JobPositionDisplay(
 ) = with(position) {
     Column(
         modifier = JobPositionStyle.toModifier()
-            .fillMaxSize(90.percent),
+            .fillMaxSize(80.percent),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

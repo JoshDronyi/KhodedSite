@@ -20,6 +20,7 @@ val BaseTextStyle by ComponentStyle {
             .margin(0.px)
             .textAlign(TextAlign.Center)
             .textOverflow(TextOverflow.Ellipsis)
+            .overflow(Overflow.Hidden)
             .overflowWrap(OverflowWrap.Anywhere)
             .fillMaxWidth()
 

@@ -32,7 +32,7 @@ object Images {
     object Logos {
         const val fullTransparent = "/logos/khodedlogo.svg"
         const val circleLogo = "/logos/KhodedCircleLogo.png"
-        const val minimalLogo = "/logos/KhodedMinimalLogo.png"
+        const val minimalLogo = "/logos/minimalLogo.png"
     }
 
 }

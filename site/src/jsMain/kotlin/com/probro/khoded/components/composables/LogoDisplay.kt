@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -16,10 +17,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
@@ -36,57 +34,60 @@ val LogoImageStyle by ComponentStyle {
             .fillMaxHeight(75.percent)
             .objectFit(ObjectFit.Fill)
     }
-    Breakpoint.ZERO { Modifier.fillMaxWidth(20.percent) }
-    Breakpoint.SM { Modifier.fillMaxWidth(20.percent) }
-    Breakpoint.MD { Modifier.fillMaxWidth(20.percent) }
-    Breakpoint.LG { Modifier.fillMaxWidth(20.percent) }
-    Breakpoint.XL { Modifier.fillMaxWidth(20.percent) }
+//    Breakpoint.ZERO { Modifier.fillMaxWidth(20.percent) }
+//    Breakpoint.SM { Modifier.fillMaxWidth(20.percent) }
+//    Breakpoint.MD { Modifier.fillMaxWidth(20.percent) }
+//    Breakpoint.LG { Modifier.fillMaxWidth(20.percent) }
+//    Breakpoint.XL { Modifier.fillMaxWidth(20.percent) }
 }
 
 val LogoTextStyle by ComponentStyle {
     base {
         Modifier
             .textAlign(TextAlign.Start)
-            .translate(tx = (-10).px)
             .padding(leftRight = 0.px)
             .margin(leftRight = 0.px)
             .color(Color.white)
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XLarge)
+        Modifier.fontSize(FontSize.XSmall)
     }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Small)
     }
     Breakpoint.MD {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(FontSize.Medium)
     }
     Breakpoint.LG {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Large)
     }
-    Breakpoint.XL
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.Larger)
+    }
 }
 
 val HeaderLogoContainerVariant by LogoContainerStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
+            .width(Width.FitContent)
     }
 }
 
 val HeaderImageVariant by LogoImageStyle.addVariant {
     base {
         Modifier
-            .fillMaxWidth(10.percent)
-    }
-    Breakpoint.MD {
-        Modifier.letterSpacing(20.px)
+            .maxHeight(3.vh)
+            .width(Width.FitContent)
+            .objectFit(ObjectFit.Contain)
     }
 }
 
 val HeaderLogoTextVariant by LogoTextStyle.addVariant {
     base {
         Modifier
+            .fillMaxWidth()
+            .margin(leftRight = 10.px)
     }
 }
 val FooterLogoContainerVariant by LogoContainerStyle.addVariant {

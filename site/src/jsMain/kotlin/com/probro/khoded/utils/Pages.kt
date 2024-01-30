@@ -40,9 +40,9 @@ object Pages {
             val mainImage: String = Images.HomePage.services_ChartMaker
             val underlineImage: String = Images.Common.pinkUnderline
             val khodedServices = listOf(
-                WebService("TAILORED WEB WIZARDRY", ""),
-                WebService("TURBO-SECURE HOSTING", ""),
-                WebService("ULTIMATE BRAND PLAYBOOK", "")
+                WebService("TAILORED WEB WIZARDRY", "We some wizards on the web"),
+                WebService("TURBO-SECURE HOSTING", "Got that jawn toight!!"),
+                WebService("ULTIMATE BRAND PLAYBOOK", " Hut hut.....Hike!!")
             )
         }
 
