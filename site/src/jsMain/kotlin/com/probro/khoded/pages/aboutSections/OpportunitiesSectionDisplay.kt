@@ -1,19 +1,13 @@
 package com.probro.khoded.pages.aboutSections
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.JobDescriptionVariant
 import com.probro.khoded.styles.JobTitleVariant
 import com.probro.khoded.utils.Pages
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -29,10 +23,10 @@ import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
@@ -61,7 +55,7 @@ fun OpportunitiesSectionDisplay(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(85.percent)
+                .fillMaxWidth(getWidthFromBreakpoint())
                 .padding(bottom = 40.px),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -78,6 +72,15 @@ fun OpportunitiesSectionDisplay(
             )
         }
         footer()
+    }
+}
+
+@Composable
+private fun getWidthFromBreakpoint(): CSSNumericValue<out CSSUnitLengthOrPercentage> {
+    return when (rememberBreakpoint()) {
+        Breakpoint.ZERO, Breakpoint.SM -> 100.percent
+        Breakpoint.MD -> 90.percent
+        Breakpoint.LG, Breakpoint.XL -> 80.percent
     }
 }
 
@@ -100,7 +103,6 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val fullyDisplayedItems by remember { mutableStateOf(mutableListOf<String>()) }
         P(
             attrs = BaseTextStyle.toModifier(PostingsTitleVariant)
                 .fillMaxWidth()
@@ -111,20 +113,15 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
         SimpleGrid(
             numColumns = numColumns(base = 1, sm = 2, md = 3),
             modifier = Modifier
-                .height(Height.MinContent)
+                .height(Height.FitContent)
                 .fillMaxWidth()
                 .padding(topBottom = 20.px, leftRight = 10.px),
         ) {
             positions.forEach {
                 JobPositionDisplay(
                     position = it,
-                    shouldShow = fullyDisplayedItems.contains(it.positionTitle)
                 ) { title ->
-                    if (fullyDisplayedItems.contains(title)) {
-                        fullyDisplayedItems.remove(title)
-                    } else {
-                        fullyDisplayedItems.add(title)
-                    }
+                    println("Clicked on $title")
                 }
             }
         }
@@ -134,11 +131,14 @@ fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>)
 val JobPositionStyle by ComponentStyle {
     base {
         Modifier
-            .padding(topBottom = 40.px)
-//            .margin(20.px)
             .borderRadius(20.px)
             .background(Color.white)
-            .height(Height.FitContent)
+            .color(Color.black)
+            .textOverflow(TextOverflow.Ellipsis)
+            .overflowWrap(OverflowWrap.Anywhere)
+            .minHeight(Height.FitContent)
+            .padding(10.px)
+            .margin(10.px)
     }
 }
 
@@ -154,18 +154,22 @@ val JobPositionContainerStyle by ComponentStyle {
 @Composable
 fun JobPositionDisplay(
     position: Pages.Story_Section.JobPosition,
-    shouldShow: Boolean,
     onClick: (title: String) -> Unit
 ) = with(position) {
+    var shouldShow by remember { mutableStateOf(false) }
     Column(
         modifier = JobPositionStyle.toModifier()
-            .fillMaxSize(80.percent),
+            .fillMaxWidth(80.percent)
+            .fillMaxHeight(90.percent),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
             attrs = BaseTextStyle.toModifier(JobTitleVariant)
-                .onClick { onClick(positionTitle) }
+                .onClick {
+                    shouldShow = !shouldShow
+                    onClick(positionTitle)
+                }
                 .toAttrs()
         ) {
             Text(positionTitle)

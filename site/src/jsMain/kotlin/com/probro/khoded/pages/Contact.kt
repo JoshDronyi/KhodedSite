@@ -4,6 +4,8 @@ import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.EmailData
+import com.probro.khoded.components.composables.BackingCard
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.models.ButtonState
@@ -33,7 +35,9 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -183,26 +187,28 @@ fun LandingSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         header(ContactPageHeaderVariant)
-        Row(
+        BackingCard(
             modifier = ContactPageRowStyle.toModifier(LandingSectionVariant),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            ClientContactInfoDisplay(
-                mainText = mainText,
-                subText = subText,
-                placeholderData = placeholderMsgUIModel,
-                clientFilledData = clientFilledData,
-                onNameChange = onNameChange,
-                onEmailChange = onEmailChange,
-                onOrganizationChange = onOrganizationChange,
-                onSubjectChange = onSubjectChange
-            )
-            CompanyContactInfoSection(
-                image = mainImage,
-                contactInfoUIModel = contactInfoUIModel,
-            )
-        }
+            variant = NoBorderBackingCardVariant,
+            firstSection = {
+                ClientContactInfoDisplay(
+                    mainText = mainText,
+                    subText = subText,
+                    placeholderData = placeholderMsgUIModel,
+                    clientFilledData = clientFilledData,
+                    onNameChange = onNameChange,
+                    onEmailChange = onEmailChange,
+                    onOrganizationChange = onOrganizationChange,
+                    onSubjectChange = onSubjectChange
+                )
+            },
+            secondSection = {
+                CompanyContactInfoSection(
+                    image = mainImage,
+                    contactInfoUIModel = contactInfoUIModel,
+                )
+            }
+        )
     }
 }
 
@@ -212,6 +218,18 @@ val ClientInfoPromptVariant by BaseTextStyle.addVariant {
             .fontSize(48.px)
             .textAlign(TextAlign.Start)
             .fontWeight(FontWeight.Bold)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(48.px)
     }
 }
 
@@ -411,6 +429,7 @@ fun MessageDisplay(
     modifier: Modifier = Modifier,
     onMessageSend: (message: String) -> Unit
 ) = with(data) {
+    val breakpoint = rememberBreakpoint()
     Row(
         modifier = ContactPageRowStyle.toModifier(MessagingSectionVariant)
             .then(modifier),
@@ -422,7 +441,7 @@ fun MessageDisplay(
             ctaButton = ctaButton,
             onMessageSend = onMessageSend
         )
-        SpacerSection()
+        if (breakpoint >= Breakpoint.MD) SpacerSection()
     }
 }
 
