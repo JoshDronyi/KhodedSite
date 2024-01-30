@@ -1,9 +1,9 @@
 package com.probro.khoded.utils
 
+import com.probro.khoded.EmailData
 import com.varabyte.kobweb.browser.api
 import kotlinx.browser.window
 import kotlinx.coroutines.supervisorScope
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.JsonObject
 
@@ -41,11 +41,3 @@ object MailClient {
         }
     }
 }
-
-@Serializable
-data class EmailData(
-    val name: String,
-    val email: String,
-    val organization: String,
-    val message: String
-)

@@ -1,12 +1,12 @@
 package com.probro.khoded.pages.aboutSections
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import com.probro.khoded.components.widgets.StoryPageHeaderVariant
+import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
 import com.probro.khoded.pages.homeSections.BackgroundStyle
-import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
@@ -48,58 +48,11 @@ val StoryBackgroundVariant by BackgroundStyle.addVariant {
     }
 }
 
-val StoryTitleVariant by BaseTextStyle.addVariant {
-    base {
-        Modifier.fillMaxWidth()
-            .fontWeight(FontWeight.ExtraBold)
-            .textAlign(TextAlign.Start)
-            .fontSize(FontSize.Medium)
-
-    }
-
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.Small)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Medium)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.Large)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(FontSize.Larger)
-    }
-}
 val StoryParagraphStyle by ComponentStyle {
     base {
         Modifier
             .fillMaxWidth()
             .margin(bottom = 20.px)
-    }
-}
-
-val StoryParagraphVariant by BaseTextStyle.addVariant {
-    base {
-        Modifier.fillMaxWidth()
-            .textAlign(TextAlign.Start)
-    }
-
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Medium)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.Large)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(FontSize.Larger)
-    }
-}
-
-val StoryPageTitleVariant by BaseTextStyle.addVariant {
-    base {
-        Modifier
-            .fontSize(48.px)
-            .textAlign(TextAlign.Start)
     }
 }
 
@@ -116,12 +69,14 @@ fun StorySectionDisplay(
         header(StoryPageHeaderVariant)
         Column(
             modifier = Modifier
-                .fillMaxWidth(80.percent),
+                .fillMaxWidth(80.percent)
+                .padding(topBottom = 20.px),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             P(
-                attrs = BaseTextStyle.toModifier(StoryPageTitleVariant)
+                attrs = StoryTextStyle.toModifier(StoryPageTitleVariant)
+                    .fillMaxWidth()
                     .toAttrs()
             ) {
                 Text(title)
@@ -141,16 +96,20 @@ fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var shouldShow by remember { mutableStateOf(true) }
         if (storySection.title.isEmpty().not())
-            ParagraphTitle(storySection.title)
-        ParagraphContent(storySection.text)
+            ParagraphTitle(storySection.title) {
+                shouldShow = !shouldShow
+            }
+        if (shouldShow)
+            ParagraphContent(storySection.text)
     }
 }
 
 @Composable
 fun ParagraphContent(text: String) {
     P(
-        attrs = BaseTextStyle.toModifier(StoryParagraphVariant)
+        attrs = StoryTextStyle.toModifier(StoryParagraphTextVariant)
             .toAttrs()
     ) {
         Text(text)
@@ -158,9 +117,13 @@ fun ParagraphContent(text: String) {
 }
 
 @Composable
-fun ParagraphTitle(title: String) {
+fun ParagraphTitle(
+    title: String,
+    onClick: () -> Unit
+) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .onClick { onClick() },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -171,10 +134,100 @@ fun ParagraphTitle(title: String) {
             size = IconSize.LG
         )
         P(
-            attrs = BaseTextStyle.toModifier(StoryTitleVariant)
+            attrs = StoryTextStyle.toModifier(StoryTitleTextVariant)
                 .toAttrs()
         ) {
             Text(title)
         }
+    }
+}
+
+val StoryTextStyle by ComponentStyle {
+    base {
+        Modifier.fillMaxWidth()
+            .fontFamily(FONT_FAMILY)
+            .textAlign(TextAlign.Start)
+            .fontSize(FontSize.Medium)
+            .padding(0.px)
+            .margin(0.px)
+
+    }
+
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+}
+
+val StoryTitleTextVariant by StoryTextStyle.addVariant {
+    base {
+        Modifier
+            .cursor(Cursor.Pointer)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Larger)
+    }
+}
+
+val StoryParagraphTextVariant by StoryTextStyle.addVariant {
+    base {
+        Modifier.fillMaxWidth()
+            .textAlign(TextAlign.Start)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Smaller)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Medium)
+    }
+
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.Larger)
+    }
+
+}
+
+val StoryPageTitleVariant by StoryTextStyle.addVariant {
+    base {
+        Modifier
+            .textAlign(TextAlign.Start)
+    }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(36.px)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(48.px)
     }
 }

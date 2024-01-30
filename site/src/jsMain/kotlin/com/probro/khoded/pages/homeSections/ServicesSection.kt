@@ -1,10 +1,14 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.WebService
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -17,7 +21,10 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
+import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.components.style.hover
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
@@ -29,27 +36,29 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
-    Row(
+    BackingCard(
         modifier = BackgroundStyle.toModifier(ServicesBackgroundVariant)
             .id(id),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ImageBox(
-            image = data.mainImage,
-            imageDesc = "Man sitting on laptop",
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        ServicesDisplay(
-            title = title,
-            services = khodedServices,
-            underLineImage = underlineImage,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        )
-    }
+        variant = NoBorderBackingCardVariant,
+        firstSection = {
+            ImageBox(
+                image = data.mainImage,
+                imageDesc = "Man sitting on laptop",
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        },
+        secondSection = {
+            ServicesDisplay(
+                title = title,
+                services = khodedServices,
+                underLineImage = underlineImage,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            )
+        }
+    )
 }
 
 
@@ -82,7 +91,9 @@ fun ServicesDisplay(
 @Composable
 fun ServicesTitle(title: String, underLineImage: String) {
     Column(
-        modifier = Modifier,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.px),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -96,10 +107,24 @@ fun ServicesTitle(title: String, underLineImage: String) {
         }
         Image(
             src = underLineImage,
-            modifier = Modifier
-                .fillMaxWidth(30.percent)
-                .translateY(ty = (-20).px)
+            modifier = ImageStyle.toModifier(PinkUnderLineVaraint)
         )
+    }
+}
+
+val PinkUnderLineVaraint by ImageStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth(30.percent)
+    }
+    Breakpoint.ZERO {
+        Modifier
+    }
+    Breakpoint.SM {
+        Modifier
+    }
+    Breakpoint.MD {
+        Modifier
     }
 }
 
@@ -107,13 +132,7 @@ fun ServicesTitle(title: String, underLineImage: String) {
 fun WebServiceDisplay(service: Pair<String, String>) {
     var isShown by remember { mutableStateOf(false) }
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .borderBottom {
-                width(4.px)
-                style(LineStyle.Solid)
-                color(Color.purple)
-            },
+        modifier = ServiceSectionStyle.toModifier(),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -121,12 +140,31 @@ fun WebServiceDisplay(service: Pair<String, String>) {
             service = service.first,
             modifier = Modifier
                 .fillMaxWidth()
-        ) {
-            isShown = !isShown
-        }
+                .onClick {
+                    isShown = !isShown
+                    println("isShown was $isShown")
+                }
+        )
         if (isShown) {
             ServiceDescriptionDisplay(service.second)
         }
+    }
+}
+
+val ServiceSectionStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .borderBottom {
+                width(4.px)
+                style(LineStyle.Solid)
+                color(Color.purple)
+            }
+            .padding(leftRight = 5.px, topBottom = 15.px)
+    }
+    hover {
+        Modifier
+            .cursor(Cursor.Pointer)
     }
 }
 
@@ -147,8 +185,7 @@ val ServiceDescriptionVariant by BaseTextStyle.addVariant {
 @Composable
 fun ServiceTitleDisplay(
     service: String,
-    modifier: Modifier = Modifier,
-    onIconClick: () -> Unit
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -157,8 +194,7 @@ fun ServiceTitleDisplay(
     ) {
         FaPlus(
             modifier = Modifier
-                .color(Color.black)
-                .onClick { onIconClick() },
+                .color(Color.black),
             size = IconSize.SM
         )
         P(

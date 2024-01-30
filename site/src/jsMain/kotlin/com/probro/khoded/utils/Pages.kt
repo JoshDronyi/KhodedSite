@@ -3,6 +3,7 @@ package com.probro.khoded.utils
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
+import com.probro.khoded.pages.aboutSections.Founders
 
 interface PageSection {
     val id: String
@@ -40,9 +41,9 @@ object Pages {
             val mainImage: String = Images.HomePage.services_ChartMaker
             val underlineImage: String = Images.Common.pinkUnderline
             val khodedServices = listOf(
-                WebService("TAILORED WEB WIZARDRY", ""),
-                WebService("TURBO-SECURE HOSTING", ""),
-                WebService("ULTIMATE BRAND PLAYBOOK", "")
+                WebService("TAILORED WEB WIZARDRY", "We some wizards on the web"),
+                WebService("TURBO-SECURE HOSTING", "Got that jawn toight!!"),
+                WebService("ULTIMATE BRAND PLAYBOOK", " Hut hut.....Hike!!")
             )
         }
 
@@ -164,13 +165,15 @@ object Pages {
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",
                 image = Images.StoryPage.founderEsther,
-                story = Constants.Strings.EstherFounderBio //"She cool or whateva!"
+                story = Constants.Strings.EstherFounderBio, //"She cool or whateva!"
+                founderType = Founders.CEO
             )
             val joshBio = TeamBio(
                 name = "Joshua Dronyi",
                 position = "CTO/Co-Founder",
                 image = Images.StoryPage.founderJosh,
-                story = Constants.Strings.JoshFounderBio //"He cool or whateva!"
+                story = Constants.Strings.JoshFounderBio, //"He cool or whateva!"
+                founderType = Founders.CTO
             )
         }
 
@@ -215,7 +218,8 @@ object Pages {
             val name: String,
             val position: String,
             val image: String,
-            val story: String
+            val story: String,
+            val founderType: Founders
         )
 
         data class JobPosition(
@@ -239,22 +243,28 @@ object Pages {
             slug = Routes.Contact.SLUG,
             path = "${Routes.Contact.SLUG}${Routes.Contact.LANDING}"
         ) {
-            val messaageUIModel: MessaageUIModel = MessaageUIModel()
+            val placeholderMsgUIModel: MessaageUIModel = MessaageUIModel(
+                fullName = "Full Name",
+                email = "Email",
+                organization = "Organization",
+                messageSubject = "What Do you need Help With",
+                message = "Drop Us A Message"
+            )
             val contactInfoUIModel: ContactInfoUIModel = ContactInfoUIModel()
             val mainText = "Ensure your brand story never ends up in the digital abyss."
             val subText = "Hit us up to craft a site that's 404-proof"
             val mainImage: String = Images.ContactPage.planet404
-            val ctaButton = ButtonState("") {
+            val ctaButton = ButtonState("Get Khoded") {
 
             }
         }
 
         data class MessaageUIModel(
-            var fullName: String = "Full Name",
-            var email: String = "Email",
-            var organization: String = "Organization",
-            var messageSubject: String = "What Do you need Help With",
-            var message: String = "Drop Us A Message"
+            var fullName: String = "",
+            var email: String = "",
+            var organization: String = "",
+            var messageSubject: String = "",
+            var message: String = ""
         )
 
         data class ContactInfoUIModel(

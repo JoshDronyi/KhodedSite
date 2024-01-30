@@ -20,6 +20,7 @@ val BaseTextStyle by ComponentStyle {
             .margin(0.px)
             .textAlign(TextAlign.Center)
             .textOverflow(TextOverflow.Ellipsis)
+            .overflow(Overflow.Hidden)
             .overflowWrap(OverflowWrap.Anywhere)
             .fillMaxWidth()
 
@@ -129,14 +130,17 @@ val TeamBioParagraphVaraiant by BaseTextStyle.addVariant {
 val JobTitleVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
-            .fontSize(FontSize.Larger)
+            .fontSize(FontSize.Large)
             .fontWeight(FontWeight.Bold)
+            .height(Height.FitContent)
+            .margin(10.px)
     }
 }
 val JobDescriptionVariant by BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .fontSize(FontSize.Large)
+            .height(Height.FitContent)
     }
 }
 

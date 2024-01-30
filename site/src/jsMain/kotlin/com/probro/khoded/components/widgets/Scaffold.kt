@@ -31,6 +31,7 @@ fun Scaffold(
     ) -> Unit
 ) {
     val navState by Navigator.pageState.collectAsState()
+    val breakpoint = rememberBreakpoint()
     Box(
         modifier = Modifier
             .height(100.vh)
@@ -40,7 +41,12 @@ fun Scaffold(
         context(
             { variant ->
                 Header(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(
+                        when (breakpoint) {
+                            Breakpoint.ZERO, Breakpoint.SM -> 100.percent
+                            Breakpoint.MD, Breakpoint.LG, Breakpoint.XL -> 90.percent
+                        }
+                    ),
                     variant = variant
                 ) { path: PageSection ->
                     Navigator.navigateTo(path)
@@ -61,13 +67,5 @@ fun Scaffold(
     }
     LaunchedEffect(navState.currentSection) {
         router.navigateTo(navState.currentSection.path)
-    }
-}
-
-@Composable
-private fun getWidthFromBreakpoint(): CSSSizeValue<CSSUnit.percent> {
-    return when (rememberBreakpoint()) {
-        Breakpoint.ZERO, Breakpoint.SM, Breakpoint.MD -> 90.percent
-        Breakpoint.LG, Breakpoint.XL -> 50.percent
     }
 }

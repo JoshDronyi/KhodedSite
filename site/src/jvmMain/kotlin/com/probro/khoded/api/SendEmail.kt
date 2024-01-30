@@ -52,11 +52,12 @@ suspend fun sendEmail(ctx: ApiContext) = messagingScope.launch {
                 client.sendMessage(
                     senderName = name,
                     senderOrganization = organization ?: "",
+                    subject = subject ?: "",
                     senderEmail = email,
                     message = message
                 ) { successMessage ->
                     ctx.logger.info("Sending success response")
-                    ctx.res.status = MessagingResponse.MessageSent.statusCode
+                    ctx.res.status = 200
                     ctx.res.setBodyText(successMessage)
                 }
             } catch (ex: Exception) {

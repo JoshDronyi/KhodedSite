@@ -2,6 +2,7 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.Composable
 import com.probro.khoded.ReadMoreVariant
+import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.composables.TeamSectionCard
@@ -25,11 +26,9 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
@@ -40,35 +39,63 @@ val TeamSectionBackgroundVariant by BackgroundStyle.addVariant {
             .padding(topBottom = 20.px, leftRight = 10.px)
     }
 }
+val FounderTextStyle by ComponentStyle {
+    base {
+        Modifier
+            .padding(0.px)
+            .margin(0.px)
+            .color(Colors.White)
+            .fontFamily("Roboto")
+            .fontSize(FontSize.Medium)
+            .textOverflow(TextOverflow.Ellipsis)
+            .overflow(Overflow.Clip)
+            .overflowWrap(OverflowWrap.Anywhere)
+    }
+}
 
-val FounderTitleVariant by BaseTextStyle.addVariant {
+val FounderTitleVariant by FounderTextStyle.addVariant {
     base {
         Modifier
             .fontSize(48.px)
             .textAlign(TextAlign.Start)
-            .padding(leftRight = 20.px)
+            .padding(topBottom = 20.px)
             .color(Color.white)
     }
-}
-
-val FounderTextStyle by ComponentStyle {
-    base {
+    Breakpoint.ZERO {
         Modifier
-            .color(Colors.White)
-            .fontFamily("Roboto")
-            .fontSize(FontSize.Medium)
-            .overflow(Overflow.Hidden)
-            .overflowWrap(OverflowWrap.Anywhere)
-            .textOverflow(TextOverflow.Ellipsis)
-            .fillMaxHeight()
+    }
+    Breakpoint.SM {
+        Modifier
+    }
+    Breakpoint.MD {
+        Modifier
+    }
+    Breakpoint.LG {
+        Modifier
     }
 }
-
 
 val FounderNameVariant by FounderTextStyle.addVariant {
     base {
         Modifier
             .fontSize(FontSize.Medium)
+            .padding(topBottom = 10.px)
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .fontSize(FontSize.Smaller)
+    }
+    Breakpoint.SM {
+        Modifier
+            .fontSize(FontSize.Small)
+    }
+    Breakpoint.MD {
+        Modifier
+            .fontSize(FontSize.Medium)
+    }
+    Breakpoint.LG {
+        Modifier
+            .fontSize(FontSize.Large)
     }
 }
 val FounderPositionVariant by FounderTextStyle.addVariant {
@@ -77,131 +104,201 @@ val FounderPositionVariant by FounderTextStyle.addVariant {
             .fontSize(FontSize.Medium)
 
     }
+
+    Breakpoint.ZERO {
+        Modifier
+            .fontSize(FontSize.XSmall)
+    }
+    Breakpoint.SM {
+        Modifier
+            .fontSize(FontSize.Smaller)
+    }
+    Breakpoint.MD {
+        Modifier
+            .fontSize(FontSize.Small)
+    }
+    Breakpoint.LG {
+        Modifier
+            .fontSize(FontSize.Medium)
+    }
 }
 val FounderBioVariant by FounderTextStyle.addVariant {
     base {
         Modifier
             .fontSize(FontSize.Small)
     }
+
+    Breakpoint.ZERO {
+        Modifier
+            .fontSize(FontSize.XSmall)
+    }
+    Breakpoint.SM {
+        Modifier
+            .fontSize(FontSize.Smaller)
+    }
+    Breakpoint.MD {
+        Modifier
+            .fontSize(FontSize.Small)
+    }
+    Breakpoint.LG {
+        Modifier
+            .fontSize(FontSize.Medium)
+    }
 }
 
 val FounderImageVariant by ImageStyle.addVariant {
     base {
         Modifier
-            .fillMaxWidth()
-            .objectFit(ObjectFit.Fill)
+            .fillMaxWidth(60.percent)
+            .height(70.vh)
+            .objectFit(ObjectFit.Contain)
+    }
+
+    Breakpoint.ZERO {
+        Modifier
+    }
+    Breakpoint.SM {
+        Modifier
+    }
+    Breakpoint.MD {
+        Modifier
+    }
+    Breakpoint.LG {
+        Modifier
     }
 }
 val FounderBacking by ComponentStyle {
     base {
         Modifier
-            .fillMaxWidth(60.percent)
-            .padding(15.px)
+            .width(Width.FitContent)
+            .height(Height.FitContent)
+            .padding(leftRight = 10.px, topBottom = 20.px)
     }
 }
 val ImageSectionBacking by FounderBacking.addVariant {
     base {
         Modifier
-            .borderLeft {
-                width(2.px)
-                style(LineStyle.Solid)
-                color(Colors.White)
-            }
+            .padding(leftRight = 20.px)
+    }
+}
+
+val CeoBackingSectionVariant by FounderBacking.addVariant {
+    base {
+        Modifier
+            .backgroundColor(Colors.RebeccaPurple)
+            .borderRadius(
+                topLeft = 0.px,
+                bottomLeft = 0.px,
+                topRight = 20.px,
+                bottomRight = 20.px,
+            )
+            .maxHeight(200.px)
             .borderRight {
                 width(2.px)
                 style(LineStyle.Solid)
                 color(Colors.White)
             }
-            .padding(20.px)
     }
 }
-val IntroSectionBacking by FounderBacking.addVariant {
-    base {
-        Modifier
-            .backgroundColor(Colors.MediumPurple)
-            .height(Height.MaxContent)
-            .borderRadius(20.px)
-            .margin(topBottom = 10.px)
-    }
-}
-val BioSectionBacking by FounderBacking.addVariant {
+
+val CtoBioSectionVariant by FounderBacking.addVariant {
     base {
         Modifier
             .backgroundColor(Colors.RebeccaPurple)
-            .borderRadius(20.px)
+            .borderRadius(
+                topLeft = 20.px,
+                bottomLeft = 20.px,
+                topRight = 0.px,
+                bottomRight = 0.px,
+            )
             .maxHeight(200.px)
+            .borderLeft {
+                width(2.px)
+                style(LineStyle.Solid)
+                color(Colors.White)
+            }
     }
 }
 
 
 @Composable
-fun TeamSectionDisplay(modifier: Modifier = Modifier) = with(Pages.Story_Section.OurFounders) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
+fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
+    Column(
+        modifier = BackgroundStyle.toModifier(TeamSectionBackgroundVariant)
+            .id(id),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
-        Column(
-            modifier = BackgroundStyle.toModifier(TeamSectionBackgroundVariant)
-                .id(id),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        P(
+            attrs = FounderTextStyle.toModifier(FounderTitleVariant)
+                .fillMaxWidth(80.percent)
+                .toAttrs()
         ) {
-            P(
-                attrs = BaseTextStyle.toModifier(FounderTitleVariant)
-                    .toAttrs()
-            ) {
-                Text(title)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                estherBio.apply {
-                    FounderText(
-                        founderName = name,
-                        founderTitle = position,
-                        founderBio = story,
-                        alignment = Alignment.End,
-                        modifier = Modifier
-                            .width(Width.MaxContent)
-                    )
-                }
-                FounderImages(
-                    image = jointFoundersImage,
-                    modifier = FounderBacking.toModifier(ImageSectionBacking)
-                        .fillMaxWidth()
-                )
-                joshBio.apply {
-                    FounderText(
-                        founderName = name,
-                        founderTitle = position,
-                        founderBio = story,
-                        alignment = Alignment.Start,
-                        modifier = Modifier
-                            .width(Width.MaxContent)
-                    )
-                }
-            }
+            Text(title)
         }
+        BackingCard(
+            modifier = Modifier
+                .fillMaxWidth(),
+            variant = NoBorderBackingCardVariant,
+            firstSection = {
+                estherBio.apply {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        FounderText(
+                            founderName = name,
+                            founderTitle = position,
+                            founderBio = story,
+                            founder = founderType,
+                        )
+                        Image(
+                            src = image,
+                            description = "Animated picture of founder",
+                            modifier = ImageStyle.toModifier(FounderImageVariant)
+                                .fillMaxWidth(40.percent)
+                        )
+                    }
+                }
+            },
+            secondSection = {
+                joshBio.apply {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Image(
+                            src = image,
+                            description = "Animated picture of founder",
+                            modifier = ImageStyle.toModifier(FounderImageVariant)
+                                .fillMaxWidth(40.percent)
+                        )
+                        FounderText(
+                            founderName = name,
+                            founderTitle = position,
+                            founderBio = story,
+                            founder = founderType,
+                        )
+                    }
+                }
+            }
+        )
     }
 }
 
-@Composable
-fun FounderImages(
-    image: String,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            src = image,
-            description = "Animated picture of founder",
-            modifier = ImageStyle.toModifier(FounderImageVariant)
-        )
+enum class Founders {
+    CEO, CTO
+}
+
+
+val FounderTextContainer by FounderBacking.addVariant {
+    base {
+        Modifier
+            .width(Width.FitContent)
     }
 }
 
@@ -210,60 +307,95 @@ fun FounderText(
     founderName: String,
     founderTitle: String,
     founderBio: String,
-    alignment: Alignment.Horizontal,
-    modifier: Modifier = Modifier
+    founder: Founders,
 ) {
+    val mod = FounderBacking.toModifier(FounderTextContainer)
+        .fillMaxWidth()
+        .height(Height.Inherit)
     Column(
-        modifier = modifier,
+        modifier = when (founder) {
+            Founders.CEO ->
+                mod
+                    .borderRight {
+                        width(2.px)
+                        style(LineStyle.Solid)
+                        color(Colors.White)
+                    }
+
+            Founders.CTO ->
+                mod
+                    .borderLeft {
+                        width(2.px)
+                        style(LineStyle.Solid)
+                        color(Colors.White)
+                    }
+        },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        FounderNameAndPosition(founderName, founderTitle)
+        FounderBioSection(founder, founderBio)
+    }
+}
+
+@Composable
+fun FounderBioSection(founder: Founders, founderBio: String) {
+    Column(
+        modifier = FounderBacking.toModifier(
+            when (founder) {
+                Founders.CEO -> CeoBackingSectionVariant
+                Founders.CTO -> CtoBioSectionVariant
+            }
+        )
+            .fillMaxWidth(80.percent),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            modifier = FounderBacking.toModifier(IntroSectionBacking),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = alignment
+        P(
+            attrs = FounderTextStyle.toModifier(FounderBioVariant)
+                .toAttrs()
+        ) {
+            Text(founderBio.uppercase())
+        }
+        ButtonDisplay(
+            state = ButtonState(
+                buttonText = "Read More",
+                onButtonClick = {
+                    println("LEAVE THEM WANTING MOOOOOOOREEE!!!")
+                }
+            ),
+            buttonVariant = ReadMoreVariant,
+            modifier = Modifier.padding(topBottom = 10.px)
         ) {
             P(
-                attrs = FounderTextStyle.toModifier(FounderNameVariant)
+                attrs = BaseTextStyle.toModifier(ReadMoreTextVariant)
                     .toAttrs()
             ) {
-                Text(founderName)
-            }
-            P(
-                attrs = FounderTextStyle.toModifier(FounderPositionVariant)
-                    .toAttrs()
-            ) {
-                Text(founderTitle)
+                Text(it)
             }
         }
-        Column(
-            modifier = FounderBacking.toModifier(BioSectionBacking),
-            horizontalAlignment = alignment,
-            verticalArrangement = Arrangement.Center
-        ) {
-            P(
-                attrs = FounderTextStyle.toModifier(FounderBioVariant)
-                    .fillMaxWidth(80.percent)
-                    .toAttrs()
-            ) {
-                Text(founderBio)
-            }
-            ButtonDisplay(
-                state = ButtonState(
-                    buttonText = "Read More",
-                    onButtonClick = {
+    }
+}
 
-                    }
-                ),
-                buttonVariant = ReadMoreVariant
-            ) {
-                P(
-                    attrs = BaseTextStyle.toModifier(ReadMoreTextVariant)
-                        .toAttrs()
-                ) {
-                    Text(it)
-                }
-            }
+@Composable
+fun FounderNameAndPosition(founderName: String, founderTitle: String) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .margin(topBottom = 15.px),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        P(
+            attrs = FounderTextStyle.toModifier(FounderNameVariant)
+                .toAttrs()
+        ) {
+            Text(founderName.uppercase())
+        }
+        P(
+            attrs = FounderTextStyle.toModifier(FounderPositionVariant)
+                .toAttrs()
+        ) {
+            Text(founderTitle.uppercase())
         }
     }
 }
