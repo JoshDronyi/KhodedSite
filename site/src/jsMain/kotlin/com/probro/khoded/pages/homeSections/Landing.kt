@@ -220,6 +220,9 @@ val LandingTitleStyle by ComponentStyle {
     Breakpoint.LG {
         Modifier.fontSize(48.px)
     }
+    Breakpoint.LG {
+        Modifier.fontSize(72.px)
+    }
 }
 val firstLineVariant by LandingTitleStyle.addVariant {
     base {
