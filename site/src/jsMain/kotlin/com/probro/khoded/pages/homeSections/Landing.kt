@@ -1,7 +1,6 @@
 package com.probro.khoded.pages.homeSections
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
@@ -10,7 +9,10 @@ import com.probro.khoded.components.widgets.HomePageHeaderVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.fallInAnimation
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
@@ -23,6 +25,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
@@ -30,9 +33,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -92,18 +93,23 @@ fun LandingSectionDisplay(
     header: @Composable (variant: ComponentVariant?) -> Unit,
     data: Pages.Home_Section.LandingData
 ) = with(data) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant)
             .id(id),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        IsOnScreenObservable(id) {
+            sectionPosition = it
+            println("New Position for $id is $it")
+        }
         header(HomePageHeaderVariant)
         BackingCard(
             modifier = Modifier
                 .height(Height.FitContent),
             variant = NoBorderBackingCardVariant,
-            firstSection = { LandingText(data) },
+            firstSection = { LandingText(sectionPosition) },
             secondSection = { LandingImage() }
         )
     }
@@ -123,6 +129,12 @@ val HomeTitleVariant by BaseTextStyle.addVariant {
     }
     Breakpoint.MD {
         Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(72.px)
     }
 }
 
@@ -151,7 +163,7 @@ val HomeSubTitleStyle by BaseTextStyle.addVariant {
 const val LENGTH_OF_TELLS = 5
 
 @Composable
-fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
+fun LandingText(position: SectionPosition) = with(Pages.Home_Section.LandingData) {
     val indexOfTells: Int = remember { mainText.indexOf("tells") }
     val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
     val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
@@ -163,7 +175,12 @@ fun LandingText(data: Pages.Home_Section.LandingData) = with(data) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        LandingTitle(firstLine, tells, secondLine)
+        LandingTitle(
+            firstLine = firstLine,
+            tells = tells,
+            secondLine = secondLine,
+            position = position
+        )
         LandingSubTitle()
         ButtonDisplay(
             ctaButton,
@@ -251,18 +268,29 @@ val SecondLineVariant by LandingTitleStyle.addVariant {
 private fun LandingTitle(
     firstLine: String,
     tells: String,
-    secondLine: String
+    secondLine: String,
+    position: SectionPosition
 ) = with(Pages.Home_Section.LandingData) {
+    val LandingTitleID = "landingTitle"
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .fillMaxWidth()
+            .animation(
+                fallInAnimation.toAnimation(
+                    duration = 600.ms,
+                    timingFunction = AnimationTimingFunction.EaseIn,
+                    direction = if (position == SectionPosition.ON_SCREEN) AnimationDirection.Normal
+                    else AnimationDirection.Reverse
+                )
+            )
             .toAttrs()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .id(LandingTitleID),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Span(
                 attrs = LandingTitleStyle.toModifier(firstLineVariant)

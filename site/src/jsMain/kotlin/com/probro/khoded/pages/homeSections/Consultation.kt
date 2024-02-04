@@ -8,7 +8,7 @@ import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.sendMessage
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -22,6 +22,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.forms.InputStyle
 import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
@@ -47,12 +48,17 @@ fun ConsultationSectionDisplay(
     footer: @Composable () -> Unit,
     data: Pages.Home_Section.Consultation
 ) = with(data) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant)
             .id(id),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        IsOnScreenObservable(id) {
+            sectionPosition = it
+            println("New Position for $id is $it")
+        }
         Column(
             modifier = ConsultationSectionStyle.toModifier(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,6 +71,7 @@ fun ConsultationSectionDisplay(
                     .align(Alignment.Start)
             )
             ConsultationDisplaySection(
+                sectionPosition = sectionPosition,
                 modifier = Modifier
                     .fillMaxWidth(80.percent)
             )
@@ -98,6 +105,7 @@ val ConsultationSectionStyle by ComponentStyle {
 
 @Composable
 fun ConsultationDisplaySection(
+    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Consultation) {
     BackingCard(
@@ -268,8 +276,15 @@ fun ConsultationTitle(mainText: String) {
     val splitIndex = remember { mainText.indexOf("about") }
     val firstText = remember { mainText.substring(0, splitIndex) }
     val secondText = remember { mainText.substring(splitIndex) }
+    var isFocused by remember { mutableStateOf(false) }
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .animation(
+                if (isFocused) fallInAnimation.toAnimation()
+                else flyUpAnimation.toAnimation()
+            )
+            .onFocusIn { isFocused = true }
+            .onFocusOut { isFocused = false }
             .toAttrs()
     ) {
         Span(
