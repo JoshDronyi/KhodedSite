@@ -1,6 +1,8 @@
 package com.probro.khoded.components.composables
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import com.probro.khoded.utils.fallInAnimation
+import com.probro.khoded.utils.flyUpAnimation
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -11,6 +13,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
@@ -164,14 +167,31 @@ fun LogoDisplay(
     Row(
         modifier = LogoContainerStyle.toModifier(variant),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.Start,
     ) {
+        var isFocused by remember { mutableStateOf(true) }
         Image(
             src = image,
             modifier = LogoImageStyle.toModifier(imageVariant)
         )
         P(
             attrs = LogoTextStyle.toModifier(textVariant)
+                .position(Position.Relative)
+                .animation(
+                    if (isFocused) {
+                        fallInAnimation.toAnimation(
+                            duration = 600.ms,
+                            timingFunction = AnimationTimingFunction.EaseInOut,
+                        )
+                    } else {
+                        flyUpAnimation.toAnimation(
+                            duration = 600.ms,
+                            timingFunction = AnimationTimingFunction.EaseInOut
+                        )
+                    }
+                )
+                .onFocusIn { isFocused = true }
+                .onFocusOut { isFocused = false }
                 .toAttrs()
         ) {
             Text("KHODED")

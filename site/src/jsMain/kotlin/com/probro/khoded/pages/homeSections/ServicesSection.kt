@@ -6,8 +6,7 @@ import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.utils.Pages
-import com.probro.khoded.utils.WebService
+import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -18,6 +17,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
@@ -26,16 +26,14 @@ import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.hover
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
 
 @Composable
 fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     BackingCard(
         modifier = BackgroundStyle.toModifier(ServicesBackgroundVariant)
             .id(id),
@@ -49,16 +47,22 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
             )
         },
         secondSection = {
+            IsOnScreenObservable(id) {
+                sectionPosition = it
+                println("New Position for $id is $it")
+            }
             ServicesDisplay(
                 title = title,
                 services = khodedServices,
                 underLineImage = underlineImage,
+                sectionPosition = sectionPosition,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
             )
         }
     )
+
 }
 
 
@@ -67,6 +71,7 @@ fun ServicesDisplay(
     title: String,
     services: List<WebService>,
     underLineImage: String,
+    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -74,7 +79,7 @@ fun ServicesDisplay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ServicesTitle(title, underLineImage)
+        ServicesTitle(title, underLineImage, sectionPosition)
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -89,7 +94,8 @@ fun ServicesDisplay(
 }
 
 @Composable
-fun ServicesTitle(title: String, underLineImage: String) {
+fun ServicesTitle(title: String, underLineImage: String, sectionPosition: SectionPosition) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,6 +107,14 @@ fun ServicesTitle(title: String, underLineImage: String) {
             attrs = BaseTextStyle.toModifier(HomeTitleVariant)
                 .color(Colors.Black)
                 .textAlign(TextAlign.Center)
+                .animation(
+                    fallInAnimation.toAnimation(
+                        duration = 600.ms,
+                        timingFunction = AnimationTimingFunction.EaseIn,
+                        direction = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationDirection.Normal
+                        else AnimationDirection.Reverse
+                    )
+                )
                 .toAttrs()
         ) {
             Text(title)

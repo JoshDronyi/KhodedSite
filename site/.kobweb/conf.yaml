@@ -12,7 +12,7 @@ server:
       siteRoot: ".kobweb/site"
   cors:
     hosts:
-      - name: "khoded-site.onrender.com"
+      - name: "khoded.onrender.com"
         schemes:
           - "https"
   port: 8080
