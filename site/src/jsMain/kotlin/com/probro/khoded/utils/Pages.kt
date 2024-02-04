@@ -165,14 +165,14 @@ object Pages {
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",
                 image = Images.StoryPage.founderEsther,
-                story = Constants.Strings.EstherFounderBio, //"She cool or whateva!"
+                story = Strings.EstherFounderBio, //"She cool or whateva!"
                 founderType = Founders.CEO
             )
             val joshBio = TeamBio(
                 name = "Joshua Dronyi",
                 position = "CTO/Co-Founder",
                 image = Images.StoryPage.founderJosh,
-                story = Constants.Strings.JoshFounderBio, //"He cool or whateva!"
+                story = Strings.JoshFounderBio, //"He cool or whateva!"
                 founderType = Founders.CTO
             )
         }

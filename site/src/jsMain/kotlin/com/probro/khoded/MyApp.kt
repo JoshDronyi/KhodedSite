@@ -1,7 +1,7 @@
 package com.probro.khoded
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.models.Res
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -36,7 +36,7 @@ val BaseButtonTextVariant by BaseTextStyle.addVariant {
 
 val BlueButtonVariant by ButtonStyle.addVariant {
     base {
-        Modifier.background(Res.BrandColors.KhodedBlue.rgb)
+        Modifier.background(KhodedColors.POWDER_BLUE.rgb)
             .color(Colors.White)
     }
     Breakpoint.ZERO {
@@ -50,7 +50,7 @@ val BlueButtonVariant by ButtonStyle.addVariant {
 
 val PinkButtonVariant by ButtonStyle.addVariant {
     base {
-        Modifier.background(Res.BrandColors.KhodedPink.rgb)
+        Modifier.background(KhodedColors.PURPLE.rgb)
             .color(Colors.White)
     }
 

@@ -1,12 +1,11 @@
 package com.probro.khoded.pages.homeSections
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -16,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
@@ -32,6 +32,7 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     BackingCard(
         modifier = BackgroundStyle.toModifier(DesignBackgroundVariant)
             .id(id),
@@ -48,12 +49,16 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
         },
         secondSection = {
             DesignImageSection(
-//                firstImage = mainImage,
+                sectionPosition = sectionPosition,
                 secondImage = subImage,
                 modifier = DesignImageStyle.toModifier()
             )
         }
     )
+    IsOnScreenObservable(id) {
+        sectionPosition = it
+        println("New Position for $id is $it")
+    }
 }
 
 val DesignImageStyle by ComponentStyle {
@@ -163,6 +168,7 @@ const val LENGTH_OF_JUST = 4
 
 @Composable
 fun DesignHeading(upperText: String) {
+    var isFocused by remember { mutableStateOf(false) }
     val justIndex = remember { upperText.indexOf("just") }
     val firstText = remember { upperText.substring(0, justIndex) }
     val just = remember { upperText.substring(justIndex, justIndex + LENGTH_OF_JUST) }
@@ -170,6 +176,12 @@ fun DesignHeading(upperText: String) {
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .color(Color.black)
+            .animation(
+                if (isFocused) fallInAnimation.toAnimation()
+                else flyUpAnimation.toAnimation()
+            )
+            .onFocusIn { isFocused = true }
+            .onFocusOut { isFocused = false }
             .toAttrs()
     ) {
         Text(value = firstText)
@@ -186,6 +198,7 @@ fun DesignHeading(upperText: String) {
 
 @Composable
 fun DesignImageSection(
+    sectionPosition: SectionPosition,
     secondImage: String,
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Design) {

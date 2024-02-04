@@ -1,6 +1,6 @@
 package com.probro.khoded.styles
 
-import com.probro.khoded.models.Res
+import com.probro.khoded.models.BaseTheme
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.border
@@ -13,7 +13,7 @@ import org.jetbrains.compose.web.css.px
 val ServiceTabStyle by ComponentStyle {
     base {
         Modifier.margin(24.px).padding(8.px)
-            .background(color = Res.Themes.baseTheme.secondaryColor.rgb)
-            .border(width = 4.px, style = LineStyle.Groove, color = Res.Themes.baseTheme.primaryColor.rgb)
+            .background(color = BaseTheme.secondaryColor.rgb)
+            .border(width = 4.px, style = LineStyle.Groove, color = BaseTheme.primaryColor.rgb)
     }
 }
