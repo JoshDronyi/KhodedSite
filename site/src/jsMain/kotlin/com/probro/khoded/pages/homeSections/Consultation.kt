@@ -35,9 +35,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -116,6 +114,7 @@ fun ConsultationDisplaySection(
                 mainText = mainText,
                 clientRequestUIModel = consultationRequestUIModel,
                 ctaButton = ctaButton,
+                sectionPosition = sectionPosition,
                 modifier = Modifier.fillMaxWidth()
                     .fillMaxHeight()
             )
@@ -188,6 +187,7 @@ fun ConsultationTextSection(
     mainText: String,
     clientRequestUIModel: Pages.Home_Section.ConsultationRequestUIModel,
     ctaButton: ButtonState,
+    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     var localName by remember { mutableStateOf(clientRequestUIModel.fullName) }
@@ -199,7 +199,7 @@ fun ConsultationTextSection(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        ConsultationTitle(mainText)
+        ConsultationTitle(mainText, sectionPosition)
         MessagingSection(
             clientRequestUIModel,
             name = localName,
@@ -272,19 +272,24 @@ private fun sendConsultationMessage(name: String, email: String, message: String
 
 
 @Composable
-fun ConsultationTitle(mainText: String) {
+fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
     val splitIndex = remember { mainText.indexOf("about") }
     val firstText = remember { mainText.substring(0, splitIndex) }
     val secondText = remember { mainText.substring(splitIndex) }
-    var isFocused by remember { mutableStateOf(false) }
+
+    println("Consultation title.... ${sectionPosition.name}")
+
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .position(Position.Relative)
             .animation(
-                if (isFocused) fallInAnimation.toAnimation()
+                if (sectionPosition == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
+                    duration = 600.ms,
+                    timingFunction = AnimationTimingFunction.Ease,
+                    direction = AnimationDirection.Normal
+                )
                 else flyUpAnimation.toAnimation()
             )
-            .onFocusIn { isFocused = true }
-            .onFocusOut { isFocused = false }
             .toAttrs()
     ) {
         Span(

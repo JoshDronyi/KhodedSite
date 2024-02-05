@@ -9,10 +9,7 @@ import com.probro.khoded.components.widgets.HomePageHeaderVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.utils.IsOnScreenObservable
-import com.probro.khoded.utils.Pages
-import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.fallInAnimation
+import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
@@ -272,15 +269,19 @@ private fun LandingTitle(
     position: SectionPosition
 ) = with(Pages.Home_Section.LandingData) {
     val LandingTitleID = "landingTitle"
+    println("Landing title.... ${position.name}")
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .fillMaxWidth()
+            .position(Position.Relative)
             .animation(
-                fallInAnimation.toAnimation(
+                if (position == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
                     duration = 600.ms,
-                    timingFunction = AnimationTimingFunction.EaseIn,
-                    direction = if (position == SectionPosition.ON_SCREEN) AnimationDirection.Normal
-                    else AnimationDirection.Reverse
+                    timingFunction = AnimationTimingFunction.EaseIn
+                )
+                else flyUpAnimation.toAnimation(
+                    duration = 600.ms,
+                    timingFunction = AnimationTimingFunction.Ease
                 )
             )
             .toAttrs()

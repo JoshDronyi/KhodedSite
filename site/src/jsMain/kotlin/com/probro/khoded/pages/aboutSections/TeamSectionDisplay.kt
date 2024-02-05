@@ -1,6 +1,6 @@
 package com.probro.khoded.pages.aboutSections
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import com.probro.khoded.ReadMoreVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
@@ -12,7 +12,10 @@ import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.styles.TeamBioParagraphVaraiant
+import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.fallInAnimation
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -23,6 +26,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
@@ -223,15 +227,29 @@ val CtoBioSectionVariant by FounderBacking.addVariant {
 
 @Composable
 fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
+    var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = BackgroundStyle.toModifier(TeamSectionBackgroundVariant)
             .id(id),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        IsOnScreenObservable(id) {
+            state = it
+        }
         P(
             attrs = FounderTextStyle.toModifier(FounderTitleVariant)
                 .fillMaxWidth(80.percent)
+                .position(Position.Relative)
+                .animation(
+                    fallInAnimation.toAnimation(
+                        duration = 600.ms,
+                        timingFunction = AnimationTimingFunction.Ease,
+                        direction = AnimationDirection.Normal,
+                        playState = if (state == SectionPosition.ON_SCREEN) AnimationPlayState.Running
+                        else AnimationPlayState.Paused
+                    )
+                )
                 .toAttrs()
         ) {
             Text(title)

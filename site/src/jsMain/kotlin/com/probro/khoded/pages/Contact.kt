@@ -14,8 +14,7 @@ import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.pages.homeSections.MessageArea
 import com.probro.khoded.pages.homeSections.TextBox
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.MailClient
-import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
@@ -31,6 +30,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
@@ -39,9 +39,7 @@ import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.vh
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -187,14 +185,20 @@ fun LandingSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         header(ContactPageHeaderVariant)
+        var state by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
         BackingCard(
-            modifier = ContactPageRowStyle.toModifier(LandingSectionVariant),
+            modifier = ContactPageRowStyle.toModifier(LandingSectionVariant)
+                .id(id),
             variant = NoBorderBackingCardVariant,
             firstSection = {
+                IsOnScreenObservable(id) {
+                    state = it
+                }
                 ClientContactInfoDisplay(
                     mainText = mainText,
                     subText = subText,
                     placeholderData = placeholderMsgUIModel,
+                    sectionPosition = state,
                     clientFilledData = clientFilledData,
                     onNameChange = onNameChange,
                     onEmailChange = onEmailChange,
@@ -237,6 +241,7 @@ val ClientInfoPromptVariant by BaseTextStyle.addVariant {
 fun ClientContactInfoDisplay(
     mainText: String,
     subText: String,
+    sectionPosition: SectionPosition,
     placeholderData: Pages.Contact_Section.MessaageUIModel,
     clientFilledData: Pages.Contact_Section.MessaageUIModel,
     onSubjectChange: (newText: String) -> Unit,
@@ -251,7 +256,7 @@ fun ClientContactInfoDisplay(
         Column(
             modifier = Modifier.fillMaxWidth(80.percent)
         ) {
-            ClientInfoTitle(mainText, subText)
+            ClientInfoTitle(mainText, subText, sectionPosition)
             ClientInfoInputDisplay(
                 placeholderData = placeholderData,
                 clientFilledData = clientFilledData,
@@ -265,9 +270,23 @@ fun ClientContactInfoDisplay(
 }
 
 @Composable
-fun ClientInfoTitle(mainText: String, subText: String) {
+fun ClientInfoTitle(
+    mainText: String,
+    subText: String,
+    sectionPosition: SectionPosition
+) {
     P(
         attrs = BaseTextStyle.toModifier(ClientInfoPromptVariant)
+            .position(Position.Relative)
+            .animation(
+                fallInAnimation.toAnimation(
+                    duration = 600.ms,
+                    timingFunction = AnimationTimingFunction.Ease,
+                    direction = AnimationDirection.Normal,
+                    playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
+                    else AnimationPlayState.Paused
+                )
+            )
             .toAttrs()
     ) {
         Span(

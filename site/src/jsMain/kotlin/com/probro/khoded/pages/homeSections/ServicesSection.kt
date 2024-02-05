@@ -95,7 +95,6 @@ fun ServicesDisplay(
 
 @Composable
 fun ServicesTitle(title: String, underLineImage: String, sectionPosition: SectionPosition) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,16 +102,19 @@ fun ServicesTitle(title: String, underLineImage: String, sectionPosition: Sectio
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        println("Services title.... ${sectionPosition.name}")
         P(
             attrs = BaseTextStyle.toModifier(HomeTitleVariant)
                 .color(Colors.Black)
                 .textAlign(TextAlign.Center)
+                .position(Position.Relative)
                 .animation(
                     fallInAnimation.toAnimation(
                         duration = 600.ms,
                         timingFunction = AnimationTimingFunction.EaseIn,
-                        direction = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationDirection.Normal
-                        else AnimationDirection.Reverse
+                        direction = AnimationDirection.Normal,
+                        playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
+                        else AnimationPlayState.Paused
                     )
                 )
                 .toAttrs()

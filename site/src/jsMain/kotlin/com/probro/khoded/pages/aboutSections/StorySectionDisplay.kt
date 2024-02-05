@@ -4,7 +4,10 @@ import androidx.compose.runtime.*
 import com.probro.khoded.components.widgets.StoryPageHeaderVariant
 import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
 import com.probro.khoded.pages.homeSections.BackgroundStyle
+import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.fallInAnimation
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.Height
@@ -19,6 +22,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
@@ -26,9 +30,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
@@ -60,6 +62,7 @@ val StoryParagraphStyle by ComponentStyle {
 fun StorySectionDisplay(
     header: @Composable (variant: ComponentVariant?) -> Unit
 ) = with(Pages.Story_Section.OurStory) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
     Column(
         modifier = BackgroundStyle.toModifier(StoryBackgroundVariant)
             .id(id),
@@ -74,9 +77,22 @@ fun StorySectionDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            IsOnScreenObservable(sectionID = id) {
+                sectionPosition = it
+            }
             P(
                 attrs = StoryTextStyle.toModifier(StoryPageTitleVariant)
                     .fillMaxWidth()
+                    .position(Position.Relative)
+                    .animation(
+                        fallInAnimation.toAnimation(
+                            duration = 600.ms,
+                            timingFunction = AnimationTimingFunction.Ease,
+                            direction = AnimationDirection.Normal,
+                            playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
+                            else AnimationPlayState.Paused
+                        )
+                    )
                     .toAttrs()
             ) {
                 Text(title)

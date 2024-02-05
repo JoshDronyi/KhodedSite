@@ -3,6 +3,7 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.utils.*
@@ -21,10 +22,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -43,13 +41,13 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
                 underlineImage = underlineImage,
                 lowerText = subText,
                 image = mainImage,
+                sectionPosition = sectionPosition,
                 modifier = Modifier
                     .fillMaxWidth()
             )
         },
         secondSection = {
             DesignImageSection(
-                sectionPosition = sectionPosition,
                 secondImage = subImage,
                 modifier = DesignImageStyle.toModifier()
             )
@@ -84,6 +82,7 @@ fun DesignTextSection(
     underlineImage: String,
     lowerText: String,
     image: String,
+    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -101,7 +100,7 @@ fun DesignTextSection(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            DesignHeading(upperText)
+            DesignHeading(upperText, sectionPosition)
             Image(
                 src = underlineImage,
                 modifier = ImageStyle.toModifier(BlackUnderlineVariant)
@@ -167,27 +166,37 @@ fun DesignSubText(lowerText: String) {
 const val LENGTH_OF_JUST = 4
 
 @Composable
-fun DesignHeading(upperText: String) {
-    var isFocused by remember { mutableStateOf(false) }
+fun DesignHeading(
+    upperText: String,
+    sectionPosition: SectionPosition,
+) {
     val justIndex = remember { upperText.indexOf("just") }
     val firstText = remember { upperText.substring(0, justIndex) }
     val just = remember { upperText.substring(justIndex, justIndex + LENGTH_OF_JUST) }
     val secondText = remember { upperText.substring(justIndex + LENGTH_OF_JUST) }
+    println("Design title.... ${sectionPosition.name}")
+
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .color(Color.black)
+            .position(Position.Relative)
             .animation(
-                if (isFocused) fallInAnimation.toAnimation()
-                else flyUpAnimation.toAnimation()
+                if (sectionPosition == SectionPosition.ON_SCREEN)
+                    fallInAnimation.toAnimation(
+                        duration = 600.ms,
+                        timingFunction = AnimationTimingFunction.Ease
+                    )
+                else flyUpAnimation.toAnimation(
+                    duration = 600.ms,
+                    timingFunction = AnimationTimingFunction.Ease
+                )
             )
-            .onFocusIn { isFocused = true }
-            .onFocusOut { isFocused = false }
             .toAttrs()
     ) {
         Text(value = firstText)
         Span(
             attrs = Modifier
-                .color(Color.mediumblue)
+                .color(KhodedColors.LIGHT_BLUE.rgb)
                 .toAttrs()
         ) {
             Text(just)
@@ -198,7 +207,6 @@ fun DesignHeading(upperText: String) {
 
 @Composable
 fun DesignImageSection(
-    sectionPosition: SectionPosition,
     secondImage: String,
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Design) {
