@@ -78,7 +78,9 @@ fun Contact() {
     val ctx = rememberPageContext()
     val scope = rememberCoroutineScope()
     Scaffold(
-        router = ctx.router
+        onNavigate = {
+            ctx.router.navigateTo(it)
+        }
     ) { header, footer, modifier ->
         with(Pages.Contact_Section.Landing) {
             var clientFilledData by remember {

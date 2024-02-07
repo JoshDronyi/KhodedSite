@@ -33,7 +33,6 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     BackingCard(
         modifier = BackgroundStyle.toModifier(ServicesBackgroundVariant)
             .id(id),
@@ -47,15 +46,10 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
             )
         },
         secondSection = {
-            IsOnScreenObservable(id) {
-                sectionPosition = it
-                println("New Position for $id is $it")
-            }
             ServicesDisplay(
                 title = title,
                 services = khodedServices,
                 underLineImage = underlineImage,
-                sectionPosition = sectionPosition,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
@@ -71,7 +65,6 @@ fun ServicesDisplay(
     title: String,
     services: List<WebService>,
     underLineImage: String,
-    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -79,7 +72,7 @@ fun ServicesDisplay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ServicesTitle(title, underLineImage, sectionPosition)
+        ServicesTitle(title, underLineImage)
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -94,7 +87,8 @@ fun ServicesDisplay(
 }
 
 @Composable
-fun ServicesTitle(title: String, underLineImage: String, sectionPosition: SectionPosition) {
+fun ServicesTitle(title: String, underLineImage: String) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,6 +99,7 @@ fun ServicesTitle(title: String, underLineImage: String, sectionPosition: Sectio
         println("Services title.... ${sectionPosition.name}")
         P(
             attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+                .id(TitleIDs.servicesTitleID)
                 .color(Colors.Black)
                 .textAlign(TextAlign.Center)
                 .position(Position.Relative)
@@ -125,6 +120,11 @@ fun ServicesTitle(title: String, underLineImage: String, sectionPosition: Sectio
             src = underLineImage,
             modifier = ImageStyle.toModifier(PinkUnderLineVaraint)
         )
+    }
+
+    IsOnScreenObservable(TitleIDs.servicesTitleID) {
+        sectionPosition = it
+        println("New Position for ${Pages.Home_Section.Services.id} is $it")
     }
 }
 

@@ -2,11 +2,9 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.ReadMoreVariant
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.ImageBox
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
-import com.probro.khoded.components.composables.TeamSectionCard
+import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.ButtonState
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.BaseTextStyle
@@ -39,8 +37,9 @@ import org.jetbrains.compose.web.dom.Text
 val TeamSectionBackgroundVariant by BackgroundStyle.addVariant {
     base {
         Modifier
-            .background(Colors.Purple)
+            .background(Colors.RebeccaPurple)
             .padding(topBottom = 20.px, leftRight = 10.px)
+            .height(Height.FitContent)
     }
 }
 val FounderTextStyle by ComponentStyle {
@@ -176,7 +175,7 @@ val FounderBacking by ComponentStyle {
         Modifier
             .width(Width.FitContent)
             .height(Height.FitContent)
-            .padding(leftRight = 10.px, topBottom = 20.px)
+            .padding(10.px)
     }
 }
 val ImageSectionBacking by FounderBacking.addVariant {
@@ -189,7 +188,7 @@ val ImageSectionBacking by FounderBacking.addVariant {
 val CeoBackingSectionVariant by FounderBacking.addVariant {
     base {
         Modifier
-            .backgroundColor(Colors.RebeccaPurple)
+            .backgroundColor(Colors.MediumPurple)
             .borderRadius(
                 topLeft = 0.px,
                 bottomLeft = 0.px,
@@ -208,7 +207,7 @@ val CeoBackingSectionVariant by FounderBacking.addVariant {
 val CtoBioSectionVariant by FounderBacking.addVariant {
     base {
         Modifier
-            .backgroundColor(Colors.RebeccaPurple)
+            .backgroundColor(KhodedColors.PURPLE.rgb)
             .borderRadius(
                 topLeft = 20.px,
                 bottomLeft = 20.px,
@@ -228,19 +227,66 @@ val CtoBioSectionVariant by FounderBacking.addVariant {
 @Composable
 fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
     var state by remember { mutableStateOf(SectionPosition.IDLE) }
-    Column(
+    var popUpText by remember { mutableStateOf("") }
+    var image by remember { mutableStateOf("") }
+    var isShowing by remember { mutableStateOf(false) }
+    Box(
         modifier = BackgroundStyle.toModifier(TeamSectionBackgroundVariant)
             .id(id),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        contentAlignment = Alignment.Center
     ) {
         IsOnScreenObservable(id) {
             state = it
         }
+        FounderContentSection(
+            state = state,
+            modifier = Modifier
+                .zIndex(1)
+                .fillMaxWidth(80.percent)
+        ) { bio, founder ->
+            popUpText = bio
+            isShowing = true
+            image = founder
+        }
+
+        PopUpScreen(
+            popUpUIModel = PopUpScreenUIModel(
+                promptText = popUpText,
+                isShowing = isShowing,
+                image = image,
+                buttonState = ButtonState(
+                    buttonText = "Ok, I see you fam.",
+                    onButtonClick = {
+                        // TODO:  Close the pop up button
+                        isShowing = false
+                    }
+                )
+            ),
+            variant = PopUpBioScreenVariant,
+            textVariant = PopUpTextVariant,
+            modifier = Modifier
+                .fillMaxWidth(40.percent)
+                .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
+                .zIndex(if (isShowing) 3 else 1)
+        )
+    }
+}
+
+@Composable
+fun FounderContentSection(
+    state: SectionPosition,
+    modifier: Modifier = Modifier,
+    onFounderBioClicked: (bio: String, image: String) -> Unit
+) = with(Pages.Story_Section.OurFounders) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
         P(
             attrs = FounderTextStyle.toModifier(FounderTitleVariant)
-                .fillMaxWidth(80.percent)
                 .position(Position.Relative)
+                .align(Alignment.Start)
                 .animation(
                     fallInAnimation.toAnimation(
                         duration = 600.ms,
@@ -264,13 +310,16 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
                         modifier = Modifier
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.Start
                     ) {
                         FounderText(
                             founderName = name,
                             founderTitle = position,
                             founderBio = story,
                             founder = founderType,
+                            onFounderBioClicked = {
+                                onFounderBioClicked(it, image)
+                            }
                         )
                         Image(
                             src = image,
@@ -287,7 +336,7 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
                         modifier = Modifier
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.Start
+                        horizontalArrangement = Arrangement.End
                     ) {
                         Image(
                             src = image,
@@ -300,6 +349,9 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
                             founderTitle = position,
                             founderBio = story,
                             founder = founderType,
+                            onFounderBioClicked = {
+                                onFounderBioClicked(it, image)
+                            }
                         )
                     }
                 }
@@ -326,6 +378,7 @@ fun FounderText(
     founderTitle: String,
     founderBio: String,
     founder: Founders,
+    onFounderBioClicked: (bio: String) -> Unit
 ) {
     val mod = FounderBacking.toModifier(FounderTextContainer)
         .fillMaxWidth()
@@ -352,12 +405,16 @@ fun FounderText(
         verticalArrangement = Arrangement.Top
     ) {
         FounderNameAndPosition(founderName, founderTitle)
-        FounderBioSection(founder, founderBio)
+        FounderBioSection(founder, founderBio, onFounderBioClicked)
     }
 }
 
 @Composable
-fun FounderBioSection(founder: Founders, founderBio: String) {
+fun FounderBioSection(
+    founder: Founders,
+    founderBio: String,
+    onFounderBioClicked: (bio: String) -> Unit
+) {
     Column(
         modifier = FounderBacking.toModifier(
             when (founder) {
@@ -367,10 +424,11 @@ fun FounderBioSection(founder: Founders, founderBio: String) {
         )
             .fillMaxWidth(80.percent),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Bottom
     ) {
         P(
             attrs = FounderTextStyle.toModifier(FounderBioVariant)
+                .weight(1)
                 .toAttrs()
         ) {
             Text(founderBio.uppercase())
@@ -379,11 +437,12 @@ fun FounderBioSection(founder: Founders, founderBio: String) {
             state = ButtonState(
                 buttonText = "Read More",
                 onButtonClick = {
-                    println("LEAVE THEM WANTING MOOOOOOOREEE!!!")
+                    onFounderBioClicked(founderBio)
                 }
             ),
             buttonVariant = ReadMoreVariant,
             modifier = Modifier.padding(topBottom = 10.px)
+                .margin(top = 10.px)
         ) {
             P(
                 attrs = BaseTextStyle.toModifier(ReadMoreTextVariant)

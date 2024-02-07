@@ -4,26 +4,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.probro.khoded.models.Routes
 import com.probro.khoded.utils.Navigator
-import com.probro.khoded.utils.PageSection
+import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.ScrollBehavior
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.navigation.Router
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
-import org.jetbrains.compose.web.css.CSSSizeValue
-import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.vh
 
 @Composable
 fun Scaffold(
-    router: Router,
     modifier: Modifier = Modifier,
+    onNavigate: (path: String) -> Unit,
     context: @Composable (
         header: @Composable (variant: ComponentVariant?) -> Unit,
         footer: @Composable () -> Unit,
@@ -48,15 +46,17 @@ fun Scaffold(
                         }
                     ),
                     variant = variant
-                ) { path: PageSection ->
-                    Navigator.navigateTo(path)
+                ) {
+                    onNavigate(it.path)
+//                    Navigator.navigateTo(path)
                 }
             },
             {
                 Footer(
                     modifier = Modifier.fillMaxWidth()
-                ) { path ->
-                    Navigator.navigateTo(path)
+                ) {
+                    onNavigate(it.path)
+//                    Navigator.navigateTo(path)
                 }
             },
             modifier.height(100.vh)
@@ -66,6 +66,14 @@ fun Scaffold(
         )
     }
     LaunchedEffect(navState.currentSection) {
-        router.navigateTo(navState.currentSection.path)
+        when (navState.currentSection?.path) {
+            Pages.Home_Section.LandingData.path -> onNavigate(Routes.Home.SLUG)
+            Pages.Story_Section.OurStory.path -> onNavigate(Routes.Story.SLUG)
+            Pages.Contact_Section.Landing.path -> onNavigate(Routes.Contact.SLUG)
+            else -> navState.currentSection?.path?.let {
+                onNavigate(it)
+//                router.navigateTo(it)
+            }
+        }
     }
 }

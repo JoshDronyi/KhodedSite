@@ -2,6 +2,7 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.components.widgets.StoryPageHeaderVariant
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.utils.IsOnScreenObservable
@@ -42,7 +43,7 @@ val StoryBackgroundVariant by BackgroundStyle.addVariant {
             .backgroundImage(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
-                    from = Colors.MediumPurple,
+                    from = KhodedColors.PURPLE.rgb,
                     to = Colors.RebeccaPurple
                 )
             )
@@ -112,12 +113,12 @@ fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var shouldShow by remember { mutableStateOf(true) }
+        var shouldShow by remember { mutableStateOf(false) }
         if (storySection.title.isEmpty().not())
             ParagraphTitle(storySection.title) {
                 shouldShow = !shouldShow
             }
-        if (shouldShow)
+        if (shouldShow || storySection.title.isEmpty())
             ParagraphContent(storySection.text)
     }
 }
@@ -126,6 +127,7 @@ fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
 fun ParagraphContent(text: String) {
     P(
         attrs = StoryTextStyle.toModifier(StoryParagraphTextVariant)
+            .fillMaxWidth(95.percent)
             .toAttrs()
     ) {
         Text(text)
@@ -206,6 +208,7 @@ val StoryParagraphTextVariant by StoryTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .textAlign(TextAlign.Start)
+            .padding(topBottom = 10.px)
     }
     Breakpoint.ZERO {
         Modifier.fontSize(FontSize.Smaller)

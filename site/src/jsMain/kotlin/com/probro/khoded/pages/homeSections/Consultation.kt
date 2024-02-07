@@ -53,10 +53,6 @@ fun ConsultationSectionDisplay(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IsOnScreenObservable(id) {
-            sectionPosition = it
-            println("New Position for $id is $it")
-        }
         Column(
             modifier = ConsultationSectionStyle.toModifier(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -278,9 +274,11 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
     val secondText = remember { mainText.substring(splitIndex) }
 
     println("Consultation title.... ${sectionPosition.name}")
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
 
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .id(TitleIDs.consultationTitleID)
             .position(Position.Relative)
             .animation(
                 if (sectionPosition == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
@@ -302,6 +300,10 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
         }
         Text(secondText)
     }
+    IsOnScreenObservable(TitleIDs.consultationTitleID) {
+        sectionPosition = it
+        println("New Position for ${Pages.Home_Section.Consultation.id} is $it")
+    }
 }
 
 val ContactInfoRowStyle by ComponentStyle {
@@ -311,6 +313,7 @@ val ContactInfoRowStyle by ComponentStyle {
             .margin(topBottom = 20.px)
     }
 }
+
 
 @Composable
 fun MessagingSection(

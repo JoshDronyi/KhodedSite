@@ -20,7 +20,9 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 fun Index() {
     val ctx = rememberPageContext()
     Scaffold(
-        router = ctx.router
+        onNavigate = {
+            ctx.router.navigateTo(it)
+        }
     ) { header, footer, modifier ->
         HomePageSections(header, footer, modifier)
     }

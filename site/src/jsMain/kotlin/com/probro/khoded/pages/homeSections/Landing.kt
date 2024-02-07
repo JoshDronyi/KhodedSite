@@ -7,6 +7,7 @@ import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.widgets.HomePageHeaderVariant
 import com.probro.khoded.models.ButtonState
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.utils.*
@@ -50,7 +51,7 @@ val HomeLandingBackgroundVariant by BackgroundStyle.addVariant {
             .backgroundImage(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
-                    from = Colors.MediumPurple,
+                    from = KhodedColors.PURPLE.rgb,
                     to = Colors.RebeccaPurple
                 )
             )
@@ -78,7 +79,7 @@ val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
                     from = Colors.SkyBlue,
-                    to = Colors.MediumPurple
+                    to = KhodedColors.PURPLE.rgb
                 )
             )
     }
@@ -90,23 +91,21 @@ fun LandingSectionDisplay(
     header: @Composable (variant: ComponentVariant?) -> Unit,
     data: Pages.Home_Section.LandingData
 ) = with(data) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+    data.ctaButton.copy(onButtonClick = {
+        Navigator.navigateTo(Pages.Home_Section.Consultation)
+    })
     Column(
         modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant)
             .id(id),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        IsOnScreenObservable(id) {
-            sectionPosition = it
-            println("New Position for $id is $it")
-        }
         header(HomePageHeaderVariant)
         BackingCard(
             modifier = Modifier
                 .height(Height.FitContent),
             variant = NoBorderBackingCardVariant,
-            firstSection = { LandingText(sectionPosition) },
+            firstSection = { LandingText() },
             secondSection = { LandingImage() }
         )
     }
@@ -160,7 +159,7 @@ val HomeSubTitleStyle by BaseTextStyle.addVariant {
 const val LENGTH_OF_TELLS = 5
 
 @Composable
-fun LandingText(position: SectionPosition) = with(Pages.Home_Section.LandingData) {
+fun LandingText() = with(Pages.Home_Section.LandingData) {
     val indexOfTells: Int = remember { mainText.indexOf("tells") }
     val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
     val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
@@ -175,8 +174,7 @@ fun LandingText(position: SectionPosition) = with(Pages.Home_Section.LandingData
         LandingTitle(
             firstLine = firstLine,
             tells = tells,
-            secondLine = secondLine,
-            position = position
+            secondLine = secondLine
         )
         LandingSubTitle()
         ButtonDisplay(
@@ -265,17 +263,16 @@ val SecondLineVariant by LandingTitleStyle.addVariant {
 private fun LandingTitle(
     firstLine: String,
     tells: String,
-    secondLine: String,
-    position: SectionPosition
+    secondLine: String
 ) = with(Pages.Home_Section.LandingData) {
-    val LandingTitleID = "landingTitle"
-    println("Landing title.... ${position.name}")
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .id(TitleIDs.landingTitleID)
             .fillMaxWidth()
             .position(Position.Relative)
             .animation(
-                if (position == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
+                if (sectionPosition == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
                     duration = 600.ms,
                     timingFunction = AnimationTimingFunction.EaseIn
                 )
@@ -288,8 +285,7 @@ private fun LandingTitle(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .id(LandingTitleID),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -328,6 +324,11 @@ private fun LandingTitle(
                 }
             }
         }
+    }
+
+    IsOnScreenObservable(id) {
+        sectionPosition = it
+        println("New Position for $id is $it")
     }
 }
 

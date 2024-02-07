@@ -30,7 +30,6 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     BackingCard(
         modifier = BackgroundStyle.toModifier(DesignBackgroundVariant)
             .id(id),
@@ -41,7 +40,6 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
                 underlineImage = underlineImage,
                 lowerText = subText,
                 image = mainImage,
-                sectionPosition = sectionPosition,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -53,10 +51,6 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
             )
         }
     )
-    IsOnScreenObservable(id) {
-        sectionPosition = it
-        println("New Position for $id is $it")
-    }
 }
 
 val DesignImageStyle by ComponentStyle {
@@ -82,7 +76,6 @@ fun DesignTextSection(
     underlineImage: String,
     lowerText: String,
     image: String,
-    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -100,7 +93,7 @@ fun DesignTextSection(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            DesignHeading(upperText, sectionPosition)
+            DesignHeading(upperText)
             Image(
                 src = underlineImage,
                 modifier = ImageStyle.toModifier(BlackUnderlineVariant)
@@ -167,17 +160,17 @@ const val LENGTH_OF_JUST = 4
 
 @Composable
 fun DesignHeading(
-    upperText: String,
-    sectionPosition: SectionPosition,
+    upperText: String
 ) {
     val justIndex = remember { upperText.indexOf("just") }
     val firstText = remember { upperText.substring(0, justIndex) }
     val just = remember { upperText.substring(justIndex, justIndex + LENGTH_OF_JUST) }
     val secondText = remember { upperText.substring(justIndex + LENGTH_OF_JUST) }
-    println("Design title.... ${sectionPosition.name}")
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
 
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .id(TitleIDs.designTitleID)
             .color(Color.black)
             .position(Position.Relative)
             .animation(
@@ -202,6 +195,11 @@ fun DesignHeading(
             Text(just)
         }
         Text(value = secondText)
+    }
+
+    IsOnScreenObservable(TitleIDs.designTitleID) {
+        sectionPosition = it
+        println("New Position for ${Pages.Home_Section.Design.id} is $it")
     }
 }
 

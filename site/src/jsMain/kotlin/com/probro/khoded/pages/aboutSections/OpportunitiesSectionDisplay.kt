@@ -2,6 +2,7 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.models.Images
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.JobDescriptionVariant
@@ -40,8 +41,8 @@ val OpportunitiesBackgroundVariant by BackgroundStyle.addVariant {
             .backgroundImage(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
-                    from = Colors.Purple,
-                    to = Colors.MediumPurple
+                    from = Colors.RebeccaPurple,
+                    to = KhodedColors.PURPLE.rgb,
                 )
             )
     }

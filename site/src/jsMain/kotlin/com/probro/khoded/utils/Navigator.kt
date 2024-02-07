@@ -36,9 +36,14 @@ object Navigator {
         if (section != pageState.value.currentSection) {
             pageState.update {
                 val temp = it.currentSection
-                it.copy(currentSection = section, previous = it.previous.apply {
-                    toMutableList().add(temp)
-                })
+                it.copy(
+                    currentSection = section,
+                    previous = it.previous.apply {
+                        if (temp != null) {
+                            toMutableList().add(temp)
+                        }
+                    }
+                )
             }
         }
     }
@@ -55,7 +60,7 @@ object Navigator {
     }
 
     data class NavigationState(
-        val currentSection: PageSection = Pages.Home_Section.LandingData,
+        val currentSection: PageSection? = null,
         val previous: List<PageSection> = emptyList()
     )
 
@@ -74,7 +79,7 @@ object Navigator {
         }
 
         object TrafficStops {
-            data class CONSULTATION(val page: String = "About", val text: String = "Schedule a Consultation") :
+            data class CONSULTATION(val page: String = "Index", val text: String = "Schedule a Consultation") :
                 KeySections(page, text)
 
             data class JOIN_OUR_TEAM(val page: String = "Story", val text: String = "Join Our Team") :

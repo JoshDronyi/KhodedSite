@@ -18,11 +18,13 @@ import com.varabyte.kobweb.core.rememberPageContext
 fun Story(modifier: Modifier = Modifier.fillMaxSize()) {
     val ctx = rememberPageContext()
     Scaffold(
-        router = ctx.router,
-        modifier = modifier
-    ) { header, footer, modifier ->
+        modifier = modifier,
+        onNavigate = {
+            ctx.router.navigateTo(it)
+        }
+    ) { header, footer, jawn ->
         Column(
-            modifier = modifier,
+            modifier = jawn,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
