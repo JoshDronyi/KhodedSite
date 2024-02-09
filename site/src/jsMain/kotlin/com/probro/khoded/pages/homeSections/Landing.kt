@@ -23,6 +23,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
@@ -30,10 +31,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.ms
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -234,8 +232,8 @@ val LandingTitleStyle by ComponentStyle {
     Breakpoint.LG {
         Modifier.fontSize(FontSize.XXLarge)
     }
-    Breakpoint.LG {
-        Modifier.fontSize(48.px)
+    Breakpoint.XL {
+        Modifier.fontSize(72.px)
     }
 }
 val firstLineVariant by LandingTitleStyle.addVariant {
@@ -271,25 +269,13 @@ private fun LandingTitle(
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .id(TitleIDs.landingTitleID)
-            .fillMaxWidth().translateY(
-                ty = when (sectionPosition) {
-                    SectionPosition.ABOVE -> (-100).px
-                    SectionPosition.ON_SCREEN -> 0.px
-                    SectionPosition.BELOW -> (-100).px
-                    SectionPosition.IDLE -> 0.px
-                }
-            )
-            .opacity(
-                when (sectionPosition) {
-                    SectionPosition.ABOVE -> 0.percent
-                    SectionPosition.ON_SCREEN -> 100.percent
-                    SectionPosition.BELOW -> 0.percent
-                    SectionPosition.IDLE -> 100.percent
-                }
-            )
-            .transition(
-                CSSTransition(property = "translate", duration = 600.ms),
-                CSSTransition(property = "opacity", duration = 600.ms)
+            .fillMaxWidth()
+            .position(Position.Relative)
+            .animation(
+                fallInAnimation.toAnimation(
+                    duration = 600.ms,
+                    timingFunction = AnimationTimingFunction.Ease
+                )
             )
             .toAttrs()
     ) {
