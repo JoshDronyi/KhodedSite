@@ -7,6 +7,7 @@ import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.utils.*
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -17,7 +18,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
@@ -33,7 +33,6 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     BackingCard(
         modifier = BackgroundStyle.toModifier(ServicesBackgroundVariant)
             .id(id),
@@ -47,15 +46,10 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
             )
         },
         secondSection = {
-            IsOnScreenObservable(id) {
-                sectionPosition = it
-                println("New Position for $id is $it")
-            }
             ServicesDisplay(
                 title = title,
                 services = khodedServices,
                 underLineImage = underlineImage,
-                sectionPosition = sectionPosition,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
@@ -71,7 +65,6 @@ fun ServicesDisplay(
     title: String,
     services: List<WebService>,
     underLineImage: String,
-    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -79,7 +72,7 @@ fun ServicesDisplay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ServicesTitle(title, underLineImage, sectionPosition)
+        ServicesTitle(title, underLineImage)
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -94,8 +87,8 @@ fun ServicesDisplay(
 }
 
 @Composable
-fun ServicesTitle(title: String, underLineImage: String, sectionPosition: SectionPosition) {
-
+fun ServicesTitle(title: String, underLineImage: String) {
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,15 +98,28 @@ fun ServicesTitle(title: String, underLineImage: String, sectionPosition: Sectio
     ) {
         P(
             attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+                .id(TitleIDs.servicesTitleID)
                 .color(Colors.Black)
                 .textAlign(TextAlign.Center)
-                .animation(
-                    fallInAnimation.toAnimation(
-                        duration = 600.ms,
-                        timingFunction = AnimationTimingFunction.EaseIn,
-                        direction = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationDirection.Normal
-                        else AnimationDirection.Reverse
-                    )
+                .translateY(
+                    ty = when (sectionPosition) {
+                        SectionPosition.ABOVE -> (-100).px
+                        SectionPosition.ON_SCREEN -> 0.px
+                        SectionPosition.BELOW -> (-100).px
+                        SectionPosition.IDLE -> 0.px
+                    }
+                )
+                .opacity(
+                    when (sectionPosition) {
+                        SectionPosition.ABOVE -> 0.percent
+                        SectionPosition.ON_SCREEN -> 100.percent
+                        SectionPosition.BELOW -> 0.percent
+                        SectionPosition.IDLE -> 100.percent
+                    }
+                )
+                .transition(
+                    CSSTransition(property = "translate", duration = 600.ms),
+                    CSSTransition(property = "opacity", duration = 600.ms)
                 )
                 .toAttrs()
         ) {
@@ -123,6 +129,13 @@ fun ServicesTitle(title: String, underLineImage: String, sectionPosition: Sectio
             src = underLineImage,
             modifier = ImageStyle.toModifier(PinkUnderLineVaraint)
         )
+    }
+
+    IsOnScreenObservable(
+        sectionID = TitleIDs.servicesTitleID,
+    ) {
+        sectionPosition = it
+        println("New Position for ${Pages.Home_Section.Services.id} is $it")
     }
 }
 

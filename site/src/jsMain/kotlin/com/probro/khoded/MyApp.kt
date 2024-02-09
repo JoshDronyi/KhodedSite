@@ -14,6 +14,7 @@ import com.varabyte.kobweb.silk.components.layout.Surface
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorStyle
+import com.varabyte.kobweb.silk.components.style.hover
 import com.varabyte.kobweb.silk.components.style.toModifier
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
@@ -36,7 +37,7 @@ val BaseButtonTextVariant by BaseTextStyle.addVariant {
 
 val BlueButtonVariant by ButtonStyle.addVariant {
     base {
-        Modifier.background(KhodedColors.POWDER_BLUE.rgb)
+        Modifier.background(KhodedColors.BLUE.rgb)
             .color(Colors.White)
     }
     Breakpoint.ZERO {
@@ -62,10 +63,32 @@ val PinkButtonVariant by ButtonStyle.addVariant {
     Breakpoint.LG
     Breakpoint.XL
 }
+val PopUpCTAVariant by ButtonStyle.addVariant {
+    base {
+        Modifier.background(Colors.White.copy(alpha = 40))
+    }
+
+    hover {
+        Modifier.background(Colors.White.copy(alpha = 80))
+    }
+
+    Breakpoint.ZERO {
+        Modifier.padding(leftRight = 10.px, topBottom = 5.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
+}
 
 val ReadMoreVariant by ButtonStyle.addVariant {
     base {
         Modifier
-            .backgroundColor(Colors.Transparent)
+            .backgroundColor(Colors.Black.copy(alpha = 30))
+    }
+
+    hover {
+        Modifier
+            .background(Colors.Black.copy(alpha = 60))
     }
 }

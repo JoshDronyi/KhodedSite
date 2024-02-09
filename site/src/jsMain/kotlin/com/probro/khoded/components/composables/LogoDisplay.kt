@@ -1,8 +1,9 @@
 package com.probro.khoded.components.composables
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.probro.khoded.utils.fallInAnimation
-import com.probro.khoded.utils.flyUpAnimation
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -20,9 +21,13 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
+import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
+import kotlin.time.Duration.Companion.seconds
 
 val LogoContainerStyle by ComponentStyle {
     base {
@@ -53,19 +58,16 @@ val LogoTextStyle by ComponentStyle {
             .color(Color.white)
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XSmall)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.Small)
-    }
-    Breakpoint.MD {
         Modifier.fontSize(FontSize.Medium)
     }
-    Breakpoint.LG {
+    Breakpoint.SM {
         Modifier.fontSize(FontSize.Large)
     }
-    Breakpoint.XL {
+    Breakpoint.MD {
         Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XLarge)
     }
 }
 
@@ -169,32 +171,48 @@ fun LogoDisplay(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
-        var isFocused by remember { mutableStateOf(true) }
         Image(
             src = image,
             modifier = LogoImageStyle.toModifier(imageVariant)
         )
         P(
             attrs = LogoTextStyle.toModifier(textVariant)
-                .position(Position.Relative)
-                .animation(
-                    if (isFocused) {
-                        fallInAnimation.toAnimation(
-                            duration = 600.ms,
-                            timingFunction = AnimationTimingFunction.EaseInOut,
-                        )
-                    } else {
-                        flyUpAnimation.toAnimation(
-                            duration = 600.ms,
-                            timingFunction = AnimationTimingFunction.EaseInOut
-                        )
-                    }
-                )
-                .onFocusIn { isFocused = true }
-                .onFocusOut { isFocused = false }
                 .toAttrs()
         ) {
-            Text("KHODED")
+            "KHODED".forEachIndexed { index, letter ->
+                val state by playState.collectAsState(AnimationPlayState.Running)
+                Span(
+                    attrs = Modifier
+                        .position(Position.Relative)
+                        .animation(
+                            fallInAnimation.toAnimation(
+                                duration = 600.ms,
+                                timingFunction = AnimationTimingFunction.Ease,
+                                delay = (index * 100).ms,
+                                direction = AnimationDirection.Normal,
+                                playState = state
+                            )
+                        )
+                        .toAttrs()
+                ) {
+                    Text("$letter")
+                }
+            }
         }
+    }
+}
+
+var running = true
+var shouldRun = false
+
+val playState = flow<AnimationPlayState> {
+    while (shouldRun) {
+        delay(3.seconds)
+        if (running) {
+            AnimationPlayState.Paused
+        } else {
+            AnimationPlayState.Running
+        }
+        running = !running
     }
 }
