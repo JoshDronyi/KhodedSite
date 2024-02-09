@@ -1,11 +1,9 @@
 package com.probro.khoded.models
 
-import com.probro.khoded.utils.Navigator
-
 sealed class Routes {
     object Home {
         const val SLUG = "/"
-        const val LANDING_ROUTE: String = "#homeLanding"
+        const val LANDING_ROUTE: String = "#index"
         const val OUR_SERVICES: String = "#ourServices"
         const val DESIGN: String = "#design"
         const val CONSULTATION: String = "#consultation"

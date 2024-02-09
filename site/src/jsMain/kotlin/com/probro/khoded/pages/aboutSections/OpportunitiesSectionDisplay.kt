@@ -10,7 +10,7 @@ import com.probro.khoded.styles.JobTitleVariant
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.fallInAnimation
+import com.probro.khoded.utils.TitleIDs
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
@@ -22,7 +22,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
@@ -52,16 +51,12 @@ val OpportunitiesBackgroundVariant by BackgroundStyle.addVariant {
 fun OpportunitiesSectionDisplay(
     footer: @Composable () -> Unit
 ) = with(Pages.Story_Section.JoinOurTeam) {
-    var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = BackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
             .id(id),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IsOnScreenObservable(id) {
-            state = it
-        }
         Row(
             modifier = Modifier
                 .fillMaxWidth(getWidthFromBreakpoint())
@@ -69,7 +64,7 @@ fun OpportunitiesSectionDisplay(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            JobPostings(title, positions, state)
+            JobPostings(title, positions)
             Image(
                 src = Images.StoryPage.megaphone,
                 description = "Megaphone",
@@ -106,27 +101,43 @@ val PostingsTitleVariant by BaseTextStyle.addVariant {
 
 @Composable
 fun JobPostings(
-    title: String, positions: List<Pages.Story_Section.JobPosition>,
-    state: SectionPosition
+    title: String, positions: List<Pages.Story_Section.JobPosition>
 ) {
+    var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        IsOnScreenObservable(
+            sectionID = TitleIDs.opportunitiesTitle
+        ) {
+            state = it
+        }
         P(
             attrs = BaseTextStyle.toModifier(PostingsTitleVariant)
+                .id(TitleIDs.opportunitiesTitle)
                 .fillMaxWidth()
-                .position(Position.Relative)
-                .animation(
-                    fallInAnimation.toAnimation(
-                        duration = 600.ms,
-                        timingFunction = AnimationTimingFunction.Ease,
-                        direction = AnimationDirection.Normal,
-                        playState = if (state == SectionPosition.ON_SCREEN) AnimationPlayState.Running
-                        else AnimationPlayState.Paused
-                    )
+                .translateY(
+                    ty = when (state) {
+                        SectionPosition.ABOVE -> (-100).px
+                        SectionPosition.ON_SCREEN -> 0.px
+                        SectionPosition.BELOW -> (-100).px
+                        SectionPosition.IDLE -> 0.px
+                    }
+                )
+                .opacity(
+                    when (state) {
+                        SectionPosition.ABOVE -> 0.percent
+                        SectionPosition.ON_SCREEN -> 100.percent
+                        SectionPosition.BELOW -> 0.percent
+                        SectionPosition.IDLE -> 100.percent
+                    }
+                )
+                .transition(
+                    CSSTransition(property = "translate", duration = 600.ms),
+                    CSSTransition(property = "opacity", duration = 600.ms)
                 )
                 .toAttrs()
         ) {

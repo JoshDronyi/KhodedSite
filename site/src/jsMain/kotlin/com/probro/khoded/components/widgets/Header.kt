@@ -6,6 +6,7 @@ import com.probro.khoded.models.Images
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -15,11 +16,8 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
+import com.varabyte.kobweb.silk.components.style.*
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -33,6 +31,10 @@ val HeaderStyle by ComponentStyle {
             .fillMaxWidth()
             .height(Height.FitContent)
             .padding(10.px)
+    }
+    hover{
+        Modifier
+            .cursor(Cursor.Pointer)
     }
 }
 
@@ -73,7 +75,7 @@ fun Header(
             Span(
                 attrs = Modifier
                     .onClick {
-                        Navigator.navigateTo(Pages.Home_Section.LandingData)
+                        onNavItemSelect(Pages.Home_Section.LandingData)
                     }
                     .toAttrs()
             ) {

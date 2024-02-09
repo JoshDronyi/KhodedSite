@@ -7,6 +7,7 @@ import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.utils.*
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -17,7 +18,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
@@ -96,21 +96,30 @@ fun ServicesTitle(title: String, underLineImage: String) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        println("Services title.... ${sectionPosition.name}")
         P(
             attrs = BaseTextStyle.toModifier(HomeTitleVariant)
                 .id(TitleIDs.servicesTitleID)
                 .color(Colors.Black)
                 .textAlign(TextAlign.Center)
-                .position(Position.Relative)
-                .animation(
-                    fallInAnimation.toAnimation(
-                        duration = 600.ms,
-                        timingFunction = AnimationTimingFunction.EaseIn,
-                        direction = AnimationDirection.Normal,
-                        playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
-                        else AnimationPlayState.Paused
-                    )
+                .translateY(
+                    ty = when (sectionPosition) {
+                        SectionPosition.ABOVE -> (-100).px
+                        SectionPosition.ON_SCREEN -> 0.px
+                        SectionPosition.BELOW -> (-100).px
+                        SectionPosition.IDLE -> 0.px
+                    }
+                )
+                .opacity(
+                    when (sectionPosition) {
+                        SectionPosition.ABOVE -> 0.percent
+                        SectionPosition.ON_SCREEN -> 100.percent
+                        SectionPosition.BELOW -> 0.percent
+                        SectionPosition.IDLE -> 100.percent
+                    }
+                )
+                .transition(
+                    CSSTransition(property = "translate", duration = 600.ms),
+                    CSSTransition(property = "opacity", duration = 600.ms)
                 )
                 .toAttrs()
         ) {
@@ -122,7 +131,9 @@ fun ServicesTitle(title: String, underLineImage: String) {
         )
     }
 
-    IsOnScreenObservable(TitleIDs.servicesTitleID) {
+    IsOnScreenObservable(
+        sectionID = TitleIDs.servicesTitleID,
+    ) {
         sectionPosition = it
         println("New Position for ${Pages.Home_Section.Services.id} is $it")
     }

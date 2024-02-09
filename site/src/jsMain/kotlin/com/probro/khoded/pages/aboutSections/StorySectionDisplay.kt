@@ -78,7 +78,9 @@ fun StorySectionDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            IsOnScreenObservable(sectionID = id) {
+            IsOnScreenObservable(
+                sectionID = id,
+            ) {
                 sectionPosition = it
             }
             P(
@@ -88,12 +90,29 @@ fun StorySectionDisplay(
                     .animation(
                         fallInAnimation.toAnimation(
                             duration = 600.ms,
-                            timingFunction = AnimationTimingFunction.Ease,
-                            direction = AnimationDirection.Normal,
-                            playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
-                            else AnimationPlayState.Paused
+                            timingFunction = AnimationTimingFunction.Ease
                         )
                     )
+//                    .translateY(
+//                        ty = when (sectionPosition) {
+//                            SectionPosition.ABOVE -> (-100).px
+//                            SectionPosition.ON_SCREEN -> 0.px
+//                            SectionPosition.BELOW -> (-100).px
+//                            SectionPosition.IDLE -> 0.px
+//                        }
+//                    )
+//                    .opacity(
+//                        when (sectionPosition) {
+//                            SectionPosition.ABOVE -> 0.percent
+//                            SectionPosition.ON_SCREEN -> 100.percent
+//                            SectionPosition.BELOW -> 0.percent
+//                            SectionPosition.IDLE -> 100.percent
+//                        }
+//                    )
+//                    .transition(
+//                        CSSTransition(property = "translate", duration = 600.ms),
+//                        CSSTransition(property = "opacity", duration = 600.ms)
+//                    )
                     .toAttrs()
             ) {
                 Text(title)
@@ -113,7 +132,7 @@ fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var shouldShow by remember { mutableStateOf(false) }
+        var shouldShow by remember { mutableStateOf(true) }
         if (storySection.title.isEmpty().not())
             ParagraphTitle(storySection.title) {
                 shouldShow = !shouldShow

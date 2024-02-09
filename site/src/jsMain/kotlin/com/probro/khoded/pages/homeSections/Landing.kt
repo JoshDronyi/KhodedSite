@@ -23,7 +23,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
@@ -31,7 +30,10 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.ms
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -221,19 +223,19 @@ val LandingTitleStyle by ComponentStyle {
     }
 
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.XLarge)
     }
     Breakpoint.SM {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(FontSize.XXLarge)
     }
     Breakpoint.MD {
         Modifier.fontSize(FontSize.XXLarge)
     }
     Breakpoint.LG {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(FontSize.XXLarge)
     }
     Breakpoint.LG {
-        Modifier.fontSize(72.px)
+        Modifier.fontSize(48.px)
     }
 }
 val firstLineVariant by LandingTitleStyle.addVariant {
@@ -269,17 +271,25 @@ private fun LandingTitle(
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .id(TitleIDs.landingTitleID)
-            .fillMaxWidth()
-            .position(Position.Relative)
-            .animation(
-                if (sectionPosition == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
-                    duration = 600.ms,
-                    timingFunction = AnimationTimingFunction.EaseIn
-                )
-                else flyUpAnimation.toAnimation(
-                    duration = 600.ms,
-                    timingFunction = AnimationTimingFunction.Ease
-                )
+            .fillMaxWidth().translateY(
+                ty = when (sectionPosition) {
+                    SectionPosition.ABOVE -> (-100).px
+                    SectionPosition.ON_SCREEN -> 0.px
+                    SectionPosition.BELOW -> (-100).px
+                    SectionPosition.IDLE -> 0.px
+                }
+            )
+            .opacity(
+                when (sectionPosition) {
+                    SectionPosition.ABOVE -> 0.percent
+                    SectionPosition.ON_SCREEN -> 100.percent
+                    SectionPosition.BELOW -> 0.percent
+                    SectionPosition.IDLE -> 100.percent
+                }
+            )
+            .transition(
+                CSSTransition(property = "translate", duration = 600.ms),
+                CSSTransition(property = "opacity", duration = 600.ms)
             )
             .toAttrs()
     ) {
@@ -326,7 +336,9 @@ private fun LandingTitle(
         }
     }
 
-    IsOnScreenObservable(id) {
+    IsOnScreenObservable(
+        sectionID = id
+    ) {
         sectionPosition = it
         println("New Position for $id is $it")
     }

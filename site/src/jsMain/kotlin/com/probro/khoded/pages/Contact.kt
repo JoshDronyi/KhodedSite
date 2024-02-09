@@ -193,7 +193,9 @@ fun LandingSection(
                 .id(id),
             variant = NoBorderBackingCardVariant,
             firstSection = {
-                IsOnScreenObservable(id) {
+                IsOnScreenObservable(
+                    sectionID = id,
+                ) {
                     state = it
                 }
                 ClientContactInfoDisplay(

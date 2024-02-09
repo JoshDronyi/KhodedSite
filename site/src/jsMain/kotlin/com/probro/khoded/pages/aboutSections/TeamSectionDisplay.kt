@@ -13,7 +13,7 @@ import com.probro.khoded.styles.TeamBioParagraphVaraiant
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.fallInAnimation
+import com.probro.khoded.utils.TitleIDs
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -24,7 +24,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
@@ -226,7 +225,6 @@ val CtoBioSectionVariant by FounderBacking.addVariant {
 
 @Composable
 fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
-    var state by remember { mutableStateOf(SectionPosition.IDLE) }
     var popUpText by remember { mutableStateOf("") }
     var image by remember { mutableStateOf("") }
     var isShowing by remember { mutableStateOf(false) }
@@ -235,11 +233,7 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
             .id(id),
         contentAlignment = Alignment.Center
     ) {
-        IsOnScreenObservable(id) {
-            state = it
-        }
         FounderContentSection(
-            state = state,
             modifier = Modifier
                 .zIndex(1)
                 .fillMaxWidth(80.percent)
@@ -274,27 +268,44 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
 
 @Composable
 fun FounderContentSection(
-    state: SectionPosition,
     modifier: Modifier = Modifier,
     onFounderBioClicked: (bio: String, image: String) -> Unit
 ) = with(Pages.Story_Section.OurFounders) {
+
+    var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        IsOnScreenObservable(
+            sectionID = TitleIDs.founderTitle,
+        ) {
+            state = it
+        }
         P(
             attrs = FounderTextStyle.toModifier(FounderTitleVariant)
-                .position(Position.Relative)
+                .id(TitleIDs.founderTitle)
                 .align(Alignment.Start)
-                .animation(
-                    fallInAnimation.toAnimation(
-                        duration = 600.ms,
-                        timingFunction = AnimationTimingFunction.Ease,
-                        direction = AnimationDirection.Normal,
-                        playState = if (state == SectionPosition.ON_SCREEN) AnimationPlayState.Running
-                        else AnimationPlayState.Paused
-                    )
+                .translateY(
+                    ty = when (state) {
+                        SectionPosition.ABOVE -> (-100).px
+                        SectionPosition.ON_SCREEN -> 0.px
+                        SectionPosition.BELOW -> (-100).px
+                        SectionPosition.IDLE -> 0.px
+                    }
+                )
+                .opacity(
+                    when (state) {
+                        SectionPosition.ABOVE -> 0.percent
+                        SectionPosition.ON_SCREEN -> 100.percent
+                        SectionPosition.BELOW -> 0.percent
+                        SectionPosition.IDLE -> 100.percent
+                    }
+                )
+                .transition(
+                    CSSTransition(property = "translate", duration = 600.ms),
+                    CSSTransition(property = "opacity", duration = 600.ms)
                 )
                 .toAttrs()
         ) {

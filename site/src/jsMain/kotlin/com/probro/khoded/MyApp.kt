@@ -37,7 +37,7 @@ val BaseButtonTextVariant by BaseTextStyle.addVariant {
 
 val BlueButtonVariant by ButtonStyle.addVariant {
     base {
-        Modifier.background(KhodedColors.LIGHT_BLUE.rgb)
+        Modifier.background(KhodedColors.BLUE.rgb)
             .color(Colors.White)
     }
     Breakpoint.ZERO {

@@ -8,11 +8,11 @@ import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.sendMessage
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.*
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.TextAlign
-import com.varabyte.kobweb.compose.css.Width
+import com.probro.khoded.utils.IsOnScreenObservable
+import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.TitleIDs
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.forms.InputStyle
 import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
@@ -272,6 +271,7 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
     val splitIndex = remember { mainText.indexOf("about") }
     val firstText = remember { mainText.substring(0, splitIndex) }
     val secondText = remember { mainText.substring(splitIndex) }
+    var scrollOffset by remember { mutableIntStateOf(0) }
 
     println("Consultation title.... ${sectionPosition.name}")
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
@@ -280,13 +280,25 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
             .id(TitleIDs.consultationTitleID)
             .position(Position.Relative)
-            .animation(
-                if (sectionPosition == SectionPosition.ON_SCREEN) fallInAnimation.toAnimation(
-                    duration = 600.ms,
-                    timingFunction = AnimationTimingFunction.Ease,
-                    direction = AnimationDirection.Normal
-                )
-                else flyUpAnimation.toAnimation()
+            .translateY(
+                ty = when (sectionPosition) {
+                    SectionPosition.ABOVE -> (-100).px
+                    SectionPosition.ON_SCREEN -> 0.px
+                    SectionPosition.BELOW -> (-100).px
+                    SectionPosition.IDLE -> 0.px
+                }
+            )
+            .opacity(
+                when (sectionPosition) {
+                    SectionPosition.ABOVE -> 0.percent
+                    SectionPosition.ON_SCREEN -> 100.percent
+                    SectionPosition.BELOW -> 0.percent
+                    SectionPosition.IDLE -> 100.percent
+                }
+            )
+            .transition(
+                CSSTransition(property = "translate", duration = 600.ms),
+                CSSTransition(property = "opacity", duration = 600.ms)
             )
             .toAttrs()
     ) {
@@ -300,7 +312,9 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
         }
         Text(secondText)
     }
-    IsOnScreenObservable(TitleIDs.consultationTitleID) {
+    IsOnScreenObservable(
+        sectionID = TitleIDs.consultationTitleID,
+    ) {
         sectionPosition = it
         println("New Position for ${Pages.Home_Section.Consultation.id} is $it")
     }

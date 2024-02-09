@@ -5,4 +5,8 @@ object TitleIDs {
     const val designTitleID = "#designTitle"
     const val servicesTitleID = "#servicesTitle"
     const val landingTitleID = "#landingTitle"
+
+    const val storyTitle = "#storyTitle"
+    const val founderTitle = "#founderTitle"
+    const val opportunitiesTitle = "#opportunitiesTitle"
 }
