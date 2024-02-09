@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.events.EventListener
+import kotlin.math.absoluteValue
 
 enum class SectionPosition {
     ABOVE, ON_SCREEN, BELOW, IDLE
@@ -16,20 +17,24 @@ fun IsOnScreenObservable(
 ) {
     var sectionPosition: SectionPosition? by remember { mutableStateOf(null) }
     var isListening by remember { mutableStateOf(false) }
-    val halfwayPoint = (window.screenY + window.innerHeight) / 2
-    val screenBottom = window.screenY + window.innerHeight
+    println("InnerHeight: ${window.innerHeight}")
 
     val scrollListener = EventListener { event ->
         val section = document.getElementById(sectionID)
         val bounds = section?.getBoundingClientRect()
+
+        val topDistance: Int = getScreenTop().absoluteValue.toInt()
+            .minus(bounds?.top?.absoluteValue?.toInt() ?: 0)
+        val bottomDistance: Int = getScreenBottom().absoluteValue.toInt()
+            .minus(bounds?.bottom?.absoluteValue?.toInt() ?: 0)
+
         if (event.type.equals("scroll", ignoreCase = true)) {
-            val theTop = bounds?.top?.toInt() ?: 0
-            val sectionHalfway: Int = bounds?.bottom?.div(2)?.toInt() ?: 0
-            sectionPosition = when {
-                theTop < window.screenY -> SectionPosition.ABOVE
-                theTop >= window.screenY && theTop < screenBottom -> SectionPosition.ON_SCREEN
-                sectionHalfway >= halfwayPoint -> SectionPosition.BELOW
-                else -> SectionPosition.IDLE
+            sectionPosition = bounds?.let {
+                isOnScreen(
+                    sectionID = sectionID,
+                    topDistance = topDistance,
+                    bottomDistance = bottomDistance
+                )
             }
         } else {
             println("Not a scroll event. EventType: ${event.type}")
@@ -40,7 +45,9 @@ fun IsOnScreenObservable(
         sectionPosition?.let { onSectionPositionChange(it) }
         with(document) {
             when (sectionPosition) {
-                SectionPosition.ABOVE, SectionPosition.BELOW, SectionPosition.ON_SCREEN, null ->
+                SectionPosition.ABOVE, SectionPosition.BELOW,
+                SectionPosition.ON_SCREEN,
+                null ->
                     if (isListening.not()) {
                         addEventListener("scroll", scrollListener)
                         isListening = !isListening
@@ -53,4 +60,29 @@ fun IsOnScreenObservable(
             }
         }
     }
+}
+
+private fun isOnScreen(sectionID: String, topDistance: Int, bottomDistance: Int): SectionPosition {
+    var screenMid = (getScreenTop() + getScreenBottom()) / 2
+
+    val boundsMid = (topDistance + bottomDistance) / 2
+    println("$sectionID: ScreenMid: $screenMid, boundsMid: $boundsMid")
+
+    return when {
+        boundsMid < getScreenTop() -> SectionPosition.ABOVE
+        boundsMid >= getScreenTop() && boundsMid < getScreenBottom() ||
+                boundsMid <= getScreenBottom() && boundsMid < getScreenTop() -> SectionPosition.ON_SCREEN
+
+        boundsMid > getScreenBottom() -> SectionPosition.BELOW
+        else -> SectionPosition.IDLE
+    }
+}
+
+
+private fun getScreenTop(): Double {
+    return window.screenY + window.pageYOffset
+}
+
+private fun getScreenBottom(): Double {
+    return getScreenTop() + window.innerHeight
 }

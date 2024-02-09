@@ -2,11 +2,15 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.models.Images
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.JobDescriptionVariant
 import com.probro.khoded.styles.JobTitleVariant
+import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.TitleIDs
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
@@ -36,8 +40,8 @@ val OpportunitiesBackgroundVariant by BackgroundStyle.addVariant {
             .backgroundImage(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
-                    from = Colors.Purple,
-                    to = Colors.MediumPurple
+                    from = Colors.RebeccaPurple,
+                    to = KhodedColors.PURPLE.rgb,
                 )
             )
     }
@@ -96,16 +100,45 @@ val PostingsTitleVariant by BaseTextStyle.addVariant {
 }
 
 @Composable
-fun JobPostings(title: String, positions: List<Pages.Story_Section.JobPosition>) {
+fun JobPostings(
+    title: String, positions: List<Pages.Story_Section.JobPosition>
+) {
+    var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        IsOnScreenObservable(
+            sectionID = TitleIDs.opportunitiesTitle
+        ) {
+            state = it
+        }
         P(
             attrs = BaseTextStyle.toModifier(PostingsTitleVariant)
+                .id(TitleIDs.opportunitiesTitle)
                 .fillMaxWidth()
+                .translateY(
+                    ty = when (state) {
+                        SectionPosition.ABOVE -> (-100).px
+                        SectionPosition.ON_SCREEN -> 0.px
+                        SectionPosition.BELOW -> (-100).px
+                        SectionPosition.IDLE -> 0.px
+                    }
+                )
+                .opacity(
+                    when (state) {
+                        SectionPosition.ABOVE -> 0.percent
+                        SectionPosition.ON_SCREEN -> 100.percent
+                        SectionPosition.BELOW -> 0.percent
+                        SectionPosition.IDLE -> 100.percent
+                    }
+                )
+                .transition(
+                    CSSTransition(property = "translate", duration = 600.ms),
+                    CSSTransition(property = "opacity", duration = 600.ms)
+                )
                 .toAttrs()
         ) {
             Text(title)

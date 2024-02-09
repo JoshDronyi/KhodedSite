@@ -8,11 +8,11 @@ import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.sendMessage
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.*
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.TextAlign
-import com.varabyte.kobweb.compose.css.Width
+import com.probro.khoded.utils.IsOnScreenObservable
+import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.TitleIDs
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.forms.InputStyle
 import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
@@ -35,9 +34,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -55,10 +52,6 @@ fun ConsultationSectionDisplay(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IsOnScreenObservable(id) {
-            sectionPosition = it
-            println("New Position for $id is $it")
-        }
         Column(
             modifier = ConsultationSectionStyle.toModifier(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -116,6 +109,7 @@ fun ConsultationDisplaySection(
                 mainText = mainText,
                 clientRequestUIModel = consultationRequestUIModel,
                 ctaButton = ctaButton,
+                sectionPosition = sectionPosition,
                 modifier = Modifier.fillMaxWidth()
                     .fillMaxHeight()
             )
@@ -188,6 +182,7 @@ fun ConsultationTextSection(
     mainText: String,
     clientRequestUIModel: Pages.Home_Section.ConsultationRequestUIModel,
     ctaButton: ButtonState,
+    sectionPosition: SectionPosition,
     modifier: Modifier = Modifier
 ) {
     var localName by remember { mutableStateOf(clientRequestUIModel.fullName) }
@@ -199,7 +194,7 @@ fun ConsultationTextSection(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        ConsultationTitle(mainText)
+        ConsultationTitle(mainText, sectionPosition)
         MessagingSection(
             clientRequestUIModel,
             name = localName,
@@ -272,19 +267,39 @@ private fun sendConsultationMessage(name: String, email: String, message: String
 
 
 @Composable
-fun ConsultationTitle(mainText: String) {
+fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
     val splitIndex = remember { mainText.indexOf("about") }
     val firstText = remember { mainText.substring(0, splitIndex) }
     val secondText = remember { mainText.substring(splitIndex) }
-    var isFocused by remember { mutableStateOf(false) }
+    var scrollOffset by remember { mutableIntStateOf(0) }
+
+    println("Consultation title.... ${sectionPosition.name}")
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
-            .animation(
-                if (isFocused) fallInAnimation.toAnimation()
-                else flyUpAnimation.toAnimation()
+            .id(TitleIDs.consultationTitleID)
+            .position(Position.Relative)
+            .translateY(
+                ty = when (sectionPosition) {
+                    SectionPosition.ABOVE -> (-100).px
+                    SectionPosition.ON_SCREEN -> 0.px
+                    SectionPosition.BELOW -> (-100).px
+                    SectionPosition.IDLE -> 0.px
+                }
             )
-            .onFocusIn { isFocused = true }
-            .onFocusOut { isFocused = false }
+            .opacity(
+                when (sectionPosition) {
+                    SectionPosition.ABOVE -> 0.percent
+                    SectionPosition.ON_SCREEN -> 100.percent
+                    SectionPosition.BELOW -> 0.percent
+                    SectionPosition.IDLE -> 100.percent
+                }
+            )
+            .transition(
+                CSSTransition(property = "translate", duration = 600.ms),
+                CSSTransition(property = "opacity", duration = 600.ms)
+            )
             .toAttrs()
     ) {
         Span(
@@ -297,6 +312,12 @@ fun ConsultationTitle(mainText: String) {
         }
         Text(secondText)
     }
+    IsOnScreenObservable(
+        sectionID = TitleIDs.consultationTitleID,
+    ) {
+        sectionPosition = it
+        println("New Position for ${Pages.Home_Section.Consultation.id} is $it")
+    }
 }
 
 val ContactInfoRowStyle by ComponentStyle {
@@ -306,6 +327,7 @@ val ContactInfoRowStyle by ComponentStyle {
             .margin(topBottom = 20.px)
     }
 }
+
 
 @Composable
 fun MessagingSection(

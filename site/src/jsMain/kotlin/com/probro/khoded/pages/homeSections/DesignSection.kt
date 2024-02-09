@@ -3,9 +3,14 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.utils.*
+import com.probro.khoded.utils.IsOnScreenObservable
+import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.SectionPosition
+import com.probro.khoded.utils.TitleIDs
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -15,16 +20,12 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.Color
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -32,7 +33,6 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     BackingCard(
         modifier = BackgroundStyle.toModifier(DesignBackgroundVariant)
             .id(id),
@@ -49,16 +49,11 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
         },
         secondSection = {
             DesignImageSection(
-                sectionPosition = sectionPosition,
                 secondImage = subImage,
                 modifier = DesignImageStyle.toModifier()
             )
         }
     )
-    IsOnScreenObservable(id) {
-        sectionPosition = it
-        println("New Position for $id is $it")
-    }
 }
 
 val DesignImageStyle by ComponentStyle {
@@ -167,38 +162,63 @@ fun DesignSubText(lowerText: String) {
 const val LENGTH_OF_JUST = 4
 
 @Composable
-fun DesignHeading(upperText: String) {
-    var isFocused by remember { mutableStateOf(false) }
+fun DesignHeading(
+    upperText: String
+) {
     val justIndex = remember { upperText.indexOf("just") }
     val firstText = remember { upperText.substring(0, justIndex) }
     val just = remember { upperText.substring(justIndex, justIndex + LENGTH_OF_JUST) }
     val secondText = remember { upperText.substring(justIndex + LENGTH_OF_JUST) }
+
+    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     P(
         attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+            .id(TitleIDs.designTitleID)
             .color(Color.black)
-            .animation(
-                if (isFocused) fallInAnimation.toAnimation()
-                else flyUpAnimation.toAnimation()
+            .position(Position.Relative)
+            .translateY(
+                ty = when (sectionPosition) {
+                    SectionPosition.ABOVE -> (-100).px
+                    SectionPosition.ON_SCREEN -> 0.px
+                    SectionPosition.BELOW -> (-100).px
+                    SectionPosition.IDLE -> 0.px
+                }
             )
-            .onFocusIn { isFocused = true }
-            .onFocusOut { isFocused = false }
+            .opacity(
+                when (sectionPosition) {
+                    SectionPosition.ABOVE -> 0.percent
+                    SectionPosition.ON_SCREEN -> 100.percent
+                    SectionPosition.BELOW -> 0.percent
+                    SectionPosition.IDLE -> 100.percent
+                }
+            )
+            .transition(
+                CSSTransition(property = "translate", duration = 600.ms),
+                CSSTransition(property = "opacity", duration = 600.ms)
+            )
             .toAttrs()
     ) {
         Text(value = firstText)
         Span(
             attrs = Modifier
-                .color(Color.mediumblue)
+                .color(KhodedColors.LIGHT_BLUE.rgb)
                 .toAttrs()
         ) {
             Text(just)
         }
         Text(value = secondText)
     }
+
+    IsOnScreenObservable(
+        sectionID = TitleIDs.designTitleID,
+    ) {
+        sectionPosition = it
+        println("New Position for ${Pages.Home_Section.Design.id} is $it")
+    }
 }
 
 @Composable
 fun DesignImageSection(
-    sectionPosition: SectionPosition,
     secondImage: String,
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Design) {
