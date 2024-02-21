@@ -3,10 +3,13 @@ package com.probro.khoded
 import androidx.compose.runtime.Composable
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
-import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.style.KobwebComposeStyleSheet.attr
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.SilkApp
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
@@ -31,8 +34,23 @@ fun MyApp(content: @Composable () -> Unit) {
 
 val BaseButtonTextVariant by BaseTextStyle.addVariant {
     base {
-        Modifier.fontSize(FontSize.Medium)
+        Modifier
+            .fontSize(FontSize.Medium)
+            .overflowWrap(OverflowWrap.Anywhere)
+            .overflow(Overflow.Visible)
+            .styleModifier {
+                attr("text-wrap", "balance")
+            }
+//            .wordBreak(WordBreak.BreakAll)
+            .height(Height.FitContent)
     }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.XSmall)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }
 
 val BlueButtonVariant by ButtonStyle.addVariant {
@@ -65,11 +83,11 @@ val PinkButtonVariant by ButtonStyle.addVariant {
 }
 val PopUpCTAVariant by ButtonStyle.addVariant {
     base {
-        Modifier.background(Colors.White.copy(alpha = 40))
+        Modifier.background(Colors.Black.copy(alpha = 40))
     }
 
     hover {
-        Modifier.background(Colors.White.copy(alpha = 80))
+        Modifier.background(Colors.Black.copy(alpha = 80))
     }
 
     Breakpoint.ZERO {

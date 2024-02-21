@@ -3,13 +3,12 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.widgets.HomePageHeaderVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.LandingImageVariant
 import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
@@ -48,6 +47,7 @@ val BackgroundStyle by ComponentStyle {
 val HomeLandingBackgroundVariant by BackgroundStyle.addVariant {
     base {
         Modifier
+            .padding(bottom = 40.px)
             .backgroundImage(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
@@ -61,6 +61,7 @@ val ServicesBackgroundVariant by BackgroundStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(80.percent)
+            .padding(topBottom = 40.px)
             .color(Color.white)
     }
 }
@@ -94,6 +95,7 @@ fun LandingSectionDisplay(
     data.ctaButton.copy(onButtonClick = {
         Navigator.navigateTo(Pages.Home_Section.Consultation)
     })
+
     Column(
         modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant)
             .id(id),
@@ -101,27 +103,47 @@ fun LandingSectionDisplay(
         verticalArrangement = Arrangement.Top
     ) {
         header(HomePageHeaderVariant)
-        BackingCard(
+        Box(
             modifier = Modifier
-                .height(Height.FitContent),
-            variant = NoBorderBackingCardVariant,
-            firstSection = { LandingText() },
-            secondSection = { LandingImage() }
-        )
+                .fillMaxWidth(80.percent),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                src = mainImage,
+                description = "Landing section image.",
+                modifier = ImageStyle.toModifier(LandingImageVariant)
+            )
+            LandingText(
+                modifier = LandingTextStyle.toModifier()
+                    .align(Alignment.TopStart)
+            )
+        }
     }
 }
 
-val HomeTitleVariant by BaseTextStyle.addVariant {
+val LandingTextStyle by ComponentStyle {
     base {
         Modifier
+            .fillMaxWidth(50.percent)
+            .fillMaxHeight()
+            .margin(bottom = 40.px)
+    }
+}
+
+val HomeTitleTextStyle by ComponentStyle {
+    base {
+        Modifier
+            .fontFamily("Times New Roman")
+            .padding(0.px)
+            .margin(0.px)
             .color(Color.white)
             .textAlign(TextAlign.Start)
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Medium)
     }
     Breakpoint.SM {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(FontSize.XLarge)
     }
     Breakpoint.MD {
         Modifier.fontSize(FontSize.XXLarge)
@@ -134,47 +156,112 @@ val HomeTitleVariant by BaseTextStyle.addVariant {
     }
 }
 
-val HomeSubTitleStyle by BaseTextStyle.addVariant {
+val ServicesTitleVariant by HomeTitleTextStyle.addVariant {
     base {
         Modifier
-            .textAlign(TextAlign.Start)
-            .color(Color.white)
-            .margin(bottom = 40.px)
-//            .padding(topBottom = 15.px, leftRight = 30.px)
+            .color(Colors.Black)
+            .textAlign(TextAlign.Center)
+    }
+    Breakpoint.ZERO{
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(72.px)
+    }
+    Breakpoint.XL
+}
+val DesignTitleVariant by HomeTitleTextStyle.addVariant {
+    base {
+        Modifier
+            .color(Color.black)
+    }
+
+    Breakpoint.ZERO{
+        Modifier.fontSize(FontSize.XXLarge)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.MD
+    Breakpoint.LG {
+        Modifier.fontSize(60.px)
+    }
+    Breakpoint.XL
+}
+val ConsultationTitleVariant by HomeTitleTextStyle.addVariant {
+    base {
+        Modifier
+    }
+}
+val DesignSubTitleVariant by HomeTitleTextStyle.addVariant {
+    base {
+        Modifier
+            .color(Color.black)
+            .margin(topBottom = 40.px)
     }
     Breakpoint.ZERO {
         Modifier
-            .fontSize(FontSize.Small)
-//            .padding(leftRight = 10.px)
+            .fontSize(FontSize.XSmall)
     }
     Breakpoint.SM {
         Modifier
             .fontSize(FontSize.Medium)
     }
     Breakpoint.MD {
-        Modifier.fontSize(FontSize.Large)
+        Modifier.fontSize(FontSize.Larger)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+}
+
+val HomeSubTitleVariant by HomeTitleTextStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth(80.percent)
+            .textAlign(TextAlign.Start)
+            .color(Color.white)
+            .margin(topBottom = 30.px)
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .fontSize(FontSize.XXSmall)
+            .translateY(ty = 20.px)
+            .fillMaxWidth(60.percent)
+    }
+    Breakpoint.SM {
+        Modifier
+            .fontSize(FontSize.XSmall)
+            .margin(topBottom = 10.px)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Medium)
+            .margin(topBottom = 20.px)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XLarge)
     }
 }
 
 const val LENGTH_OF_TELLS = 5
 
 @Composable
-fun LandingText() = with(Pages.Home_Section.LandingData) {
-    val indexOfTells: Int = remember { mainText.indexOf("tells") }
-    val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
-    val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
-    val secondLine = remember { mainText.substring(startIndex = indexOfTells + LENGTH_OF_TELLS) }
+fun LandingText(
+    modifier: Modifier = Modifier
+) = with(Pages.Home_Section.LandingData) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(leftRight = 16.px, topBottom = 20.px),
-        verticalArrangement = Arrangement.Center,
+        modifier = modifier,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.Start
     ) {
         LandingTitle(
-            firstLine = firstLine,
-            tells = tells,
-            secondLine = secondLine
+            mainText
         )
         LandingSubTitle()
         ButtonDisplay(
@@ -197,7 +284,7 @@ fun LandingText() = with(Pages.Home_Section.LandingData) {
 @Composable
 private fun LandingSubTitle() = with(Pages.Home_Section.LandingData) {
     P(
-        attrs = BaseTextStyle.toModifier(HomeSubTitleStyle)
+        attrs = HomeTitleTextStyle.toModifier(HomeSubTitleVariant)
             .toAttrs()
     ) {
         Text(subText)
@@ -214,35 +301,26 @@ val BlueUnderLineVariant by ImageStyle.addVariant {
     }
 }
 
-val LandingTitleStyle by ComponentStyle {
-    base {
-        Modifier
-            .textAlign(TextAlign.Center)
-    }
-
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XLarge)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(72.px)
-    }
-}
-val firstLineVariant by LandingTitleStyle.addVariant {
+val firstLineVariant by HomeTitleTextStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
+            .textAlign(TextAlign.Center)
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .translateY(ty = 70.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL {
+        Modifier
+            .translate(tx = 40.px, ty = 20.px)
+            .fontSize(60.px)
     }
 }
-val PinkTextVariant by LandingTitleStyle.addVariant {
+val PinkTextVariant by HomeTitleTextStyle.addVariant {
     base {
         Modifier
             .minWidth(Width.MaxContent)
@@ -250,27 +328,55 @@ val PinkTextVariant by LandingTitleStyle.addVariant {
             .fontStyle(FontStyle.Italic)
             .textAlign(TextAlign.End)
     }
+    Breakpoint.ZERO {
+        Modifier
+            .translateY(ty = 70.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL {
+        Modifier
+            .translate(tx = 40.px, ty = 20.px)
+//            .fontSize(60.px)
+    }
 }
-val SecondLineVariant by LandingTitleStyle.addVariant {
+val SecondLineVariant by HomeTitleTextStyle.addVariant {
     base {
         Modifier
-            .fillMaxWidth()
+            .width(Width.FitContent)
             .textAlign(TextAlign.Start)
+            .margin(left = 10.px)
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .translateY(ty = 70.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL {
+        Modifier
+            .translate(tx = 40.px, ty = 20.px)
+            .fontSize(60.px)
     }
 }
 
 @Composable
 private fun LandingTitle(
-    firstLine: String,
-    tells: String,
-    secondLine: String
+    mainText: String,
+    modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.LandingData) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+
+    val indexOfTells: Int = remember { mainText.indexOf("tells") }
+    val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
+    val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
+    val secondLine = remember { mainText.substring(startIndex = indexOfTells + LENGTH_OF_TELLS) }
+
     P(
-        attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+        attrs = modifier
             .id(TitleIDs.landingTitleID)
-            .fillMaxWidth()
-            .position(Position.Relative)
             .animation(
                 fallInAnimation.toAnimation(
                     duration = 600.ms,
@@ -280,40 +386,31 @@ private fun LandingTitle(
             .toAttrs()
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = LandingTextColumnStyle.toModifier(),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center,
         ) {
             Span(
-                attrs = LandingTitleStyle.toModifier(firstLineVariant)
-                    .fillMaxWidth()
+                attrs = HomeTitleTextStyle.toModifier(firstLineVariant)
                     .toAttrs()
             ) {
                 Text(firstLine.trim())
             }
-            Image(
-                src = underlineImage,
-                description = "Blue underline",
-                modifier = ImageStyle.toModifier(BlueUnderLineVariant)
-                    .align(Alignment.CenterHorizontally)
-            )
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Span(
-                    attrs = LandingTitleStyle.toModifier(PinkTextVariant)
+                    attrs = HomeTitleTextStyle.toModifier(PinkTextVariant)
                         .toAttrs()
                 ) {
                     Text(tells.trim())
                 }
                 Span(
-                    attrs = LandingTitleStyle.toModifier(SecondLineVariant)
-                        .margin(left = 10.px)
-                        .width(Width.FitContent)
+                    attrs = HomeTitleTextStyle.toModifier(SecondLineVariant)
                         .toAttrs()
                 ) {
                     Text(secondLine.trim())
@@ -330,21 +427,33 @@ private fun LandingTitle(
     }
 }
 
-@Composable
-fun LandingImage() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            src = Pages.Home_Section.LandingData.mainImage,
-            description = "Landing section image.",
-            modifier = ImageStyle.toModifier()
-        )
+val LandingTextColumnStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+    }
+    Breakpoint.ZERO{
+        Modifier
+            .translateY(ty = (-5).px)
+    }
+    Breakpoint.SM {
+        Modifier
+            .translateY(ty = (-40).px)
+    }
+    Breakpoint.MD {
+        Modifier
+            .translateY(ty = (-30).px)
+    }
+    Breakpoint.LG{
+        Modifier
+            .translateY(ty = (-10).px)
+    }
+    Breakpoint.XL {
+        Modifier
+            .translateY(ty = 25.px)
     }
 }
+
 
 @Composable
 fun ButtonDisplay(
