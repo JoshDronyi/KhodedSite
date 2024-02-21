@@ -58,8 +58,7 @@ object Pages {
                 "Khoded specializes in creating bespoke websites from the ground up, catering to a diverse clientele," +
                         " and providing comprehensive branding kits and reliable web hosting solutions to enhance our" +
                         " clients' online presence further."
-            val mainImage: String = Images.HomePage.design_Paperplane
-            val subImage: String = Images.HomePage.design_Computer
+            val mainImage: String = Images.HomePage.design_Paperplane_Computer
             val underlineImage: String = Images.Common.blackUnderline
         }
 
@@ -75,10 +74,11 @@ object Pages {
                     " your narrative is heard, seen, and felt in places beyond your physical reach. The right website" +
                     " becomes the storyteller you can't be in person, resonating in the vast digital landscape," +
                     " leaving a lasting impression wherever it ventures."
-            val mainImage: String = Images.HomePage.consultation_MessageBubble
-            val subImage: String = Images.HomePage.consultation_CheckMessage
-            val leftQuote: String = Images.HomePage.consultation_LeftQuote
-            val rightQuote: String = Images.HomePage.consultation_RightQuote
+            val mainImage: String =
+                Images.HomePage.consultation_CheckMessage
+            // Images.HomePage.consultation_MessageBubble_And_Squiggle
+            //            val subImage: String =
+            val quotes: String = Images.HomePage.consultation_Quotes
             val consultationRequestUIModel = ConsultationRequestUIModel()
             val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
                 //TODO: Navigate to the  contact section.

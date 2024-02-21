@@ -30,6 +30,10 @@ object Strings {
         "Brand Strength"
     )
 
+
+    val consultationThanksMessage =
+        "Thanks for considering Khoded for your project. We shall get back to you as soon as possible."
+
     val EstherFounderBio = "Hey there! I'm a soon-to-be grown-up adult who's absolutely in love with this wild" +
             " adventure called life. My days are filled with a little bit of everything, but if I had to pick my" +
             " top loves, it'd be traveling, spending quality time with the incredible people in my life, and " +

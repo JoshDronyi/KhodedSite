@@ -4,13 +4,13 @@ import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
 import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -25,7 +25,10 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.ms
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -42,14 +45,13 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
                 upperText = mainText,
                 underlineImage = underlineImage,
                 lowerText = subText,
-                image = mainImage,
                 modifier = Modifier
                     .fillMaxWidth()
             )
         },
         secondSection = {
             DesignImageSection(
-                secondImage = subImage,
+                secondImage = mainImage,
                 modifier = DesignImageStyle.toModifier()
             )
         }
@@ -59,7 +61,7 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
 val DesignImageStyle by ComponentStyle {
     base {
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     }
     Breakpoint.ZERO {
         Modifier
@@ -78,7 +80,6 @@ fun DesignTextSection(
     upperText: String,
     underlineImage: String,
     lowerText: String,
-    image: String,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -103,11 +104,6 @@ fun DesignTextSection(
             )
             DesignSubText(lowerText)
         }
-        Image(
-            src = image,
-            modifier = ImageStyle.toModifier(PlaneImageVariant)
-                .align(Alignment.TopEnd)
-        )
     }
 }
 
@@ -151,8 +147,7 @@ val PlaneImageVariant by ImageStyle.addVariant {
 @Composable
 fun DesignSubText(lowerText: String) {
     P(
-        attrs = BaseTextStyle.toModifier(HomeSubTitleStyle)
-            .color(Color.black)
+        attrs = HomeTitleTextStyle.toModifier(DesignSubTitleVariant)
             .toAttrs()
     ) {
         Text(value = lowerText)
@@ -172,10 +167,8 @@ fun DesignHeading(
 
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     P(
-        attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+        attrs = HomeTitleTextStyle.toModifier(DesignTitleVariant)
             .id(TitleIDs.designTitleID)
-            .color(Color.black)
-            .position(Position.Relative)
             .translateY(
                 ty = when (sectionPosition) {
                     SectionPosition.ABOVE -> (-100).px
@@ -236,7 +229,8 @@ fun DesignImageSection(
 val ComputerPicVariant by ImageStyle.addVariant {
     base {
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .objectFit(ObjectFit.Fill)
             .zIndex(1)
     }
 }

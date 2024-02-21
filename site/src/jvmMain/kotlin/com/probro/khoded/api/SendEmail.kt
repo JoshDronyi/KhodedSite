@@ -1,6 +1,7 @@
 package com.probro.khoded.api
 
 import com.probro.khoded.EmailData
+import com.probro.khoded.MailResponse
 import com.probro.khoded.email.MailClient
 import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
@@ -11,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 val messagingScope: CoroutineScope = CoroutineScope(
@@ -48,24 +50,37 @@ suspend fun sendEmail(ctx: ApiContext) = messagingScope.launch {
             ctx.logger.info(
                 "Sending to mailing client."
             )
-            try {
-                client.sendMessage(
-                    senderName = name,
-                    senderOrganization = organization ?: "",
-                    subject = subject ?: "",
-                    senderEmail = email,
-                    message = message
-                ) { successMessage ->
-                    ctx.logger.info("Sending success response")
-                    ctx.res.status = 200
-                    ctx.res.setBodyText(successMessage)
+            val mailResponse = client.sendMessage(
+                senderName = name,
+                senderOrganization = organization ?: "",
+                subject = subject ?: "",
+                senderEmail = email,
+                message = message
+            )
+            when (mailResponse) {
+                is MailResponse.Error -> {
+                    with(ctx) {
+                        logger.apply {
+                            info("Issue trying to build and send email: ${mailResponse.exceptionMesaage}")
+                            info("Sending response stacktrace: ${mailResponse.stackTrace}")
+                        }
+                        res.apply {
+                            status = 500
+                            setBodyText(json.encodeToString(mailResponse))
+                        }
+                    }
+
                 }
-            } catch (ex: Exception) {
-                ctx.logger.info("Issue trying to build and send email: ${ex.localizedMessage}")
-                ctx.logger.info("Sending response")
-                ex.printStackTrace()
-                ctx.res.status = 500
-                ctx.res.setBodyText(ex.localizedMessage)
+
+                is MailResponse.Success -> {
+                    with(ctx) {
+                        logger.info("Sending success response")
+                        res.apply {
+                            status = 200
+                            setBodyText(json.encodeToString(mailResponse))
+                        }
+                    }
+                }
             }
         }
     }

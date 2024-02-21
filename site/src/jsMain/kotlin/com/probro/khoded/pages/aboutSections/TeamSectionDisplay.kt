@@ -259,7 +259,6 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
             variant = PopUpBioScreenVariant,
             textVariant = PopUpTextVariant,
             modifier = Modifier
-                .fillMaxWidth(40.percent)
                 .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
                 .zIndex(if (isShowing) 3 else 1)
         )

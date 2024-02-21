@@ -1,7 +1,6 @@
 package com.probro.khoded.components.composables
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.PinkButtonVariant
 import com.probro.khoded.PopUpCTAVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.KhodedColors
@@ -56,7 +55,27 @@ val PopUpScreenStyle by ComponentStyle {
     base {
         Modifier
             .height(Height.FitContent)
+            .borderRadius(20.px)
             .padding(10.px)
+    }
+}
+val PopUpImageStyle by ComponentStyle {
+    base {
+        Modifier
+    }
+}
+val BioImageVariant by PopUpImageStyle.addVariant {
+    base {
+        Modifier
+    }
+    Breakpoint.ZERO {
+        Modifier.maxHeight(20.vh)
+    }
+    Breakpoint.SM {
+        Modifier.maxHeight(30.vh)
+    }
+    Breakpoint.MD {
+        Modifier.maxHeight(40.vh)
     }
 }
 
@@ -70,7 +89,21 @@ val PopUpBioScreenVariant by PopUpScreenStyle.addVariant {
                 style(LineStyle.Solid)
                 color(KhodedColors.POWDER_BLUE.rgb)
             }
-            .borderRadius(20.px)
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .fillMaxWidth(90.percent)
+    }
+    Breakpoint.SM {
+        Modifier.fillMaxWidth(80.percent)
+    }
+    Breakpoint.MD {
+        Modifier
+            .fillMaxWidth(75.percent)
+    }
+    Breakpoint.LG {
+        Modifier
+            .fillMaxWidth(50.percent)
     }
 }
 val PopUpTextVariant by PopUpTextStyle.addVariant {
@@ -78,6 +111,46 @@ val PopUpTextVariant by PopUpTextStyle.addVariant {
         Modifier
             .color(KhodedColors.POWDER_BLUE.rgb)
             .margin(right = 10.px)
+    }
+}
+
+val ConsultationPopUpVariant by PopUpScreenStyle.addVariant {
+    base {
+        Modifier
+            .background(KhodedColors.LIGHT_BLUE.rgb)
+            .padding(10.px)
+            .border {
+                width(2.px)
+                color(KhodedColors.PURPLE.rgb)
+                style(LineStyle.Groove)
+            }
+    }
+    Breakpoint.ZERO {
+        Modifier.fillMaxWidth(90.percent)
+    }
+    Breakpoint.SM {
+        Modifier.fillMaxWidth(80.percent)
+    }
+    Breakpoint.MD {
+        Modifier.fillMaxWidth(50.percent)
+    }
+}
+
+val ConsultationPopUpTextVariant by PopUpTextStyle.addVariant {
+    base {
+        Modifier
+            .color(KhodedColors.PURPLE.rgb)
+    }
+}
+
+val ContactPopUpTextVariant by PopUpTextStyle.addVariant {
+    base {
+        Modifier
+    }
+}
+val ContactPopUpVariant by PopUpScreenStyle.addVariant {
+    base {
+        Modifier
     }
 }
 
@@ -119,8 +192,7 @@ fun PopUpScreen(
                 Image(
                     src = it,
                     description = "Animated image of founder.",
-                    modifier = Modifier
-                        .height(40.vh)
+                    modifier = PopUpImageStyle.toModifier(BioImageVariant)
                 )
             }
         }

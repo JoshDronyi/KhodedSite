@@ -16,6 +16,7 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 
 @Composable
@@ -48,15 +49,14 @@ fun Scaffold(
                     variant = variant
                 ) {
                     onNavigate(it.path)
-//                    Navigator.navigateTo(path)
                 }
             },
             {
                 Footer(
                     modifier = Modifier.fillMaxWidth()
+                        .margin(top = 40.px, bottom = 10.px)
                 ) {
                     onNavigate(it.path)
-//                    Navigator.navigateTo(path)
                 }
             },
             modifier.height(100.vh)
@@ -72,7 +72,6 @@ fun Scaffold(
             Pages.Contact_Section.Landing.path -> onNavigate(Routes.Contact.SLUG)
             else -> navState.currentSection?.path?.let {
                 onNavigate(it)
-//                router.navigateTo(it)
             }
         }
     }

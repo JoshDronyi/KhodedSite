@@ -3,15 +3,14 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.PinkButtonVariant
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
+import com.probro.khoded.components.composables.ConsultationPopUpTextVariant
+import com.probro.khoded.components.composables.ConsultationPopUpVariant
+import com.probro.khoded.components.composables.PopUpScreen
+import com.probro.khoded.components.composables.PopUpScreenUIModel
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.sendMessage
 import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.utils.IsOnScreenObservable
-import com.probro.khoded.utils.Pages
-import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.TitleIDs
+import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -34,7 +33,10 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.ms
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -45,10 +47,8 @@ fun ConsultationSectionDisplay(
     footer: @Composable () -> Unit,
     data: Pages.Home_Section.Consultation
 ) = with(data) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
-        modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant)
-            .id(id),
+        modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -57,18 +57,12 @@ fun ConsultationSectionDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Image(
-                src = mainImage,
-                description = "Message Bubbles",
-                modifier = Modifier.fillMaxWidth(40.percent)
-                    .align(Alignment.Start)
-            )
             ConsultationDisplaySection(
-                sectionPosition = sectionPosition,
+                mainImage = mainImage,
                 modifier = Modifier
-                    .fillMaxWidth(80.percent)
+                    .id(id)
             )
-            QuoteSection(leftQuote, subText, rightQuote)
+            QuoteSection(quotes, subText)
         }
         footer()
     }
@@ -78,9 +72,16 @@ val ConsultationSectionStyle by ComponentStyle {
     base {
         Modifier.fillMaxWidth()
     }
+}
+
+val ConsultationImageStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxSize()
+    }
     Breakpoint.ZERO {
         Modifier
-            .translateY(ty = (-50).px)
+            .translateY(ty = (-100).px)
     }
     Breakpoint.SM {
         Modifier
@@ -98,92 +99,122 @@ val ConsultationSectionStyle by ComponentStyle {
 
 @Composable
 fun ConsultationDisplaySection(
-    sectionPosition: SectionPosition,
+    mainImage: String,
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Consultation) {
-    BackingCard(
-        modifier = modifier,
-        variant = NoBorderBackingCardVariant,
-        firstSection = {
-            ConsultationTextSection(
-                mainText = mainText,
-                clientRequestUIModel = consultationRequestUIModel,
-                ctaButton = ctaButton,
-                sectionPosition = sectionPosition,
-                modifier = Modifier.fillMaxWidth()
-                    .fillMaxHeight()
-            )
-        },
-        secondSection = {
-            Image(
-                src = subImage,
-                modifier = Modifier
-                    .fillMaxWidth(40.percent)
-            )
+    Box(
+        modifier = modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomStart
+    ) {
+        var isShowing by remember { mutableStateOf(false) }
+        Image(
+            src = mainImage,
+            description = "Message Bubbles",
+            modifier = ConsultationImageStyle.toModifier()
+        )
+
+        ConsultationTextSection(
+            mainText = mainText,
+            clientRequestUIModel = consultationRequestUIModel,
+            ctaButton = ctaButton,
+            modifier = ConsultationRequestStyle.toModifier()
+                .align(Alignment.BottomStart)
+        ) { response ->
+            isShowing = true
         }
-    )
+
+        PopUpScreen(
+            popUpUIModel = PopUpScreenUIModel(
+                promptText = Strings.consultationThanksMessage,
+                buttonState = ButtonState(
+                    buttonText = "See you soon.",
+                    onButtonClick = {
+                        isShowing = false
+                    }
+                ),
+                isShowing = isShowing
+            ),
+            variant = ConsultationPopUpVariant,
+            textVariant = ConsultationPopUpTextVariant,
+            modifier = Modifier
+                .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
+                .opacity(if (isShowing) 100.percent else 0.percent)
+        )
+    }
+}
+
+val ConsultationRequestStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth(70.percent)
+            .fillMaxHeight()
+            .padding(topBottom = 10.px, leftRight = 20.px)
+    }
+    Breakpoint.ZERO {
+        Modifier
+    }
+    Breakpoint.SM
+    Breakpoint.MD {
+        Modifier.fillMaxWidth(70.percent)
+    }
+    Breakpoint.LG {
+        Modifier
+            .fillMaxWidth(60.percent)
+    }
+    Breakpoint.XL
 }
 
 @Composable
 fun QuoteSection(
-    leftQuote: String,
+    quotes: String,
     subText: String,
-    rightQuote: String,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Box(
         modifier = modifier
-            .fillMaxWidth(80.percent)
-            .margin(topBottom = 50.px),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth(80.percent),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
+        Image(
+            src = quotes,
+            description = "Quotes",
             modifier = Modifier
-                .fillMaxWidth(10.percent)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.TopStart
-        ) {
-            Image(
-                src = leftQuote,
-                description = "Open Quote",
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
+                .fillMaxWidth()
+        )
         P(
             attrs = BaseTextStyle.toModifier()
-                .fillMaxWidth()
+                .fillMaxWidth(80.percent)
                 .color(Color.white)
                 .toAttrs()
         ) {
             Text(subText)
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(10.percent),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Image(
-                src = rightQuote,
-                description = "Close Quote",
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
         }
     }
 }
 
 const val FREE_TEXT = "Free 30 Min"
 
+val MessagingSectionStyle by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(60.percent)
+    }
+    Breakpoint.ZERO
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
+}
+
 @Composable
 fun ConsultationTextSection(
     mainText: String,
     clientRequestUIModel: Pages.Home_Section.ConsultationRequestUIModel,
     ctaButton: ButtonState,
-    sectionPosition: SectionPosition,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMessageSent: (response: String) -> Unit,
 ) {
     var localName by remember { mutableStateOf(clientRequestUIModel.fullName) }
     var localEmail by remember { mutableStateOf(clientRequestUIModel.email) }
@@ -191,39 +222,30 @@ fun ConsultationTextSection(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.Start
     ) {
-        ConsultationTitle(mainText, sectionPosition)
+        ConsultationTitle(mainText)
         MessagingSection(
             clientRequestUIModel,
             name = localName,
             email = localEmail,
             message = localMessage,
-            onNameChange = {
-                localName = it
-            },
-            onEmailChange = {
-                localEmail = it
-            },
-            onMessageChange = {
-                localMessage = it
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1)
+            onNameChange = { localName = it },
+            onEmailChange = { localEmail = it },
+            onMessageChange = { localMessage = it },
+            modifier = MessagingSectionStyle.toModifier()
         )
         ButtonDisplay(
             state = ctaButton.copy(
                 onButtonClick = {
-                    sendConsultationMessage(localName, localEmail, localMessage)
+                    sendConsultationMessage(localName, localEmail, localMessage) { response ->
+                        onMessageSent(response)
+                    }
                 }
             ),
             buttonVariant = PinkButtonVariant,
-            modifier = Modifier
-                .width(Width.FitContent)
-                .padding(10.px)
-                .margin(topBottom = 40.px)
+            modifier = ConsultationButtonDisplay.toModifier()
         ) { text ->
             val index = remember { text.indexOf(FREE_TEXT, ignoreCase = true) }
             val before = remember { text.substring(0, index) }
@@ -232,56 +254,94 @@ fun ConsultationTextSection(
                 attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
                     .toAttrs()
             ) {
-                Span {
-                    Text(before)
-                }
-                Span(
-                    attrs = Modifier.fontWeight(FontWeight.Bolder)
-                        .fontSize(FontSize.Large)
-                        .padding(leftRight = 5.px)
-                        .toAttrs()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(FREE_TEXT.uppercase())
-                }
-                Span {
-                    Text(after)
+                    Span {
+                        Text(before)
+                    }
+                    Span(
+                        attrs = BaseTextStyle.toModifier(FreeTextVariant)
+                            .toAttrs()
+                    ) {
+                        Text(FREE_TEXT.uppercase())
+                    }
+                    Span {
+                        Text(after)
+                    }
                 }
             }
         }
     }
 }
 
-val scope = CoroutineScope(Dispatchers.Default + CoroutineExceptionHandler { coroutineContext, throwable ->
+val ConsultationButtonDisplay by ComponentStyle {
+    base {
+        Modifier
+            .width(Width.FitContent)
+            .padding(leftRight = 10.px, topBottom = 5.px)
+            .margin(topBottom = 10.px)
+    }
+}
+
+val FreeTextVariant by BaseTextStyle.addVariant {
+    base {
+        Modifier
+            .fontWeight(FontWeight.Bolder)
+            .fontSize(FontSize.Large)
+            .padding(leftRight = 5.px)
+    }
+    Breakpoint.ZERO {
+        Modifier
+            .fontSize(FontSize.Small)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
+}
+
+
+val scope = CoroutineScope(Dispatchers.Default + CoroutineExceptionHandler { _, throwable ->
     println(throwable.message)
 })
 
-private fun sendConsultationMessage(name: String, email: String, message: String) = scope.launch {
-    sendMessage(
+private fun sendConsultationMessage(
+    name: String,
+    email: String,
+    message: String,
+    onMessageSent: (response: String) -> Unit
+) = scope.launch {
+    val msgResponse = sendMessage(
         name = name,
         email = email,
         message = message,
         subject = "Consultation Request",
         organization = "N/A"
     )
+    onMessageSent(msgResponse)
 }
 
 
 @Composable
-fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
+fun ConsultationTitle(mainText: String) {
     val splitIndex = remember { mainText.indexOf("about") }
     val firstText = remember { mainText.substring(0, splitIndex) }
     val secondText = remember { mainText.substring(splitIndex) }
-    var scrollOffset by remember { mutableIntStateOf(0) }
 
-    println("Consultation title.... ${sectionPosition.name}")
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+    var position by remember { mutableStateOf(SectionPosition.IDLE) }
+    println("Consultation title.... ${position.name}")
 
     P(
-        attrs = BaseTextStyle.toModifier(HomeTitleVariant)
+        attrs = HomeTitleTextStyle.toModifier(ConsultationTitleVariant)
             .id(TitleIDs.consultationTitleID)
-            .position(Position.Relative)
             .translateY(
-                ty = when (sectionPosition) {
+                ty = when (position) {
                     SectionPosition.ABOVE -> (-100).px
                     SectionPosition.ON_SCREEN -> 0.px
                     SectionPosition.BELOW -> (-100).px
@@ -289,7 +349,7 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
                 }
             )
             .opacity(
-                when (sectionPosition) {
+                when (position) {
                     SectionPosition.ABOVE -> 0.percent
                     SectionPosition.ON_SCREEN -> 100.percent
                     SectionPosition.BELOW -> 0.percent
@@ -315,7 +375,7 @@ fun ConsultationTitle(mainText: String, sectionPosition: SectionPosition) {
     IsOnScreenObservable(
         sectionID = TitleIDs.consultationTitleID,
     ) {
-        sectionPosition = it
+        position = it
         println("New Position for ${Pages.Home_Section.Consultation.id} is $it")
     }
 }
@@ -324,8 +384,16 @@ val ContactInfoRowStyle by ComponentStyle {
     base {
         Modifier
             .fillMaxWidth()
-            .margin(topBottom = 20.px)
+            .margin(topBottom = 5.px)
     }
+    Breakpoint.ZERO {
+        Modifier
+            .margin(topBottom = 5.px)
+    }
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL
 }
 
 
@@ -345,7 +413,6 @@ fun MessagingSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Row(
             modifier = ContactInfoRowStyle.toModifier(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -353,14 +420,14 @@ fun MessagingSection(
         ) {
             TextBox(
                 value = name,
-                modifier = Modifier.fillMaxWidth()
-                    .margin(right = 20.px)
+                modifier = ConsultationTextBox.toModifier()
+                    .margin(right = 10.px)
             ) {
                 onNameChange(it)
             }
             TextBox(
                 value = email,
-                modifier = Modifier.fillMaxWidth()
+                modifier = ConsultationTextBox.toModifier()
             ) {
                 onEmailChange(it)
             }
@@ -370,12 +437,19 @@ fun MessagingSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1)
-                .minHeight(400.px)
         ) {
             onMessageChange(it)
         }
     }
 }
+
+val ConsultationTextBox by ComponentStyle {
+    base {
+        Modifier
+            .fillMaxWidth()
+    }
+}
+
 
 val TextAreaVariant by InputStyle.addVariant {
     base {
@@ -385,15 +459,54 @@ val TextAreaVariant by InputStyle.addVariant {
             .color(Colors.Purple)
             .fontSize(FontSize.XLarge)
     }
+    Breakpoint.ZERO {
+        Modifier
+            .padding(5.px)
+            .fontSize(FontSize.XXSmall)
+    }
+    Breakpoint.SM {
+        Modifier
+            .fontSize(FontSize.XSmall)
+    }
+    Breakpoint.MD {
+        Modifier
+            .fontSize(FontSize.Medium)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.Larger)
+    }
 }
 val TextBoxVariant by InputStyle.addVariant {
     base {
         Modifier
             .background(Color.white)
-            .padding(topBottom = 30.px)
+            .padding(topBottom = 15.px)
             .color(Colors.Purple)
             .fontSize(FontSize.XLarge)
             .textAlign(TextAlign.Center)
+    }
+
+    Breakpoint.ZERO {
+        Modifier
+            .padding(5.px)
+            .fontSize(FontSize.XXSmall)
+    }
+    Breakpoint.SM {
+        Modifier
+            .fontSize(FontSize.XSmall)
+    }
+    Breakpoint.MD {
+        Modifier
+            .fontSize(FontSize.Medium)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.Larger)
     }
 }
 
