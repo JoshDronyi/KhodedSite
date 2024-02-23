@@ -16,18 +16,18 @@ object Pages {
     sealed class Home_Section(
         override val id: String, override val title: String, override val slug: String, override val path: String
     ) : PageSection {
-        object LandingData : Home_Section(
-            Routes.Home.LANDING_ROUTE,
-            "Home",
-            Routes.Home.SLUG,
-            "${Routes.Home.SLUG}${Routes.Home.LANDING_ROUTE}"
+        object Landing : Home_Section(
+            id = Routes.Home.LANDING_ROUTE,
+            title = "Home",
+            slug = Routes.Home.SLUG,
+            path = "${Routes.Home.SLUG}${Routes.Home.LANDING_ROUTE}"
         ) {
             val mainText: String = "Psst, a GOOD site tells a brand’s story"
             val subText: String = "Let Khoded handle all your web app, site redesign, web hosting, " +
                     "and brand + SEO needs in one place."
             val mainImage: String = Images.HomePage.landing_Rocket
             val underlineImage: String = Images.Common.blueUnderline
-            val ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
+            var ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
                 //TODO: Navigate to the schedule consultation section.
             }
         }
@@ -76,6 +76,7 @@ object Pages {
                     " leaving a lasting impression wherever it ventures."
             val mainImage: String =
                 Images.HomePage.consultation_CheckMessage
+
             // Images.HomePage.consultation_MessageBubble_And_Squiggle
             //            val subImage: String =
             val quotes: String = Images.HomePage.consultation_Quotes

@@ -89,20 +89,22 @@ val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
 
 @Composable
 fun LandingSectionDisplay(
-    header: @Composable (variant: ComponentVariant?) -> Unit,
-    data: Pages.Home_Section.LandingData
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
+    data: Pages.Home_Section.Landing
 ) = with(data) {
-    data.ctaButton.copy(onButtonClick = {
-        Navigator.navigateTo(Pages.Home_Section.Consultation)
-    })
-
+    data.apply {
+        ctaButton = ctaButton.copy(onButtonClick = {
+            println("Doing the navigation.")
+            Navigator.navigateTo(Pages.Home_Section.Consultation)
+        })
+    }
     Column(
         modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant)
             .id(id),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        header(HomePageHeaderVariant)
+        header(HomePageHeaderVariant, null)
         Box(
             modifier = Modifier
                 .fillMaxWidth(80.percent),
@@ -162,7 +164,7 @@ val ServicesTitleVariant by HomeTitleTextStyle.addVariant {
             .color(Colors.Black)
             .textAlign(TextAlign.Center)
     }
-    Breakpoint.ZERO{
+    Breakpoint.ZERO {
         Modifier.fontSize(FontSize.Larger)
     }
     Breakpoint.SM {
@@ -182,7 +184,7 @@ val DesignTitleVariant by HomeTitleTextStyle.addVariant {
             .color(Color.black)
     }
 
-    Breakpoint.ZERO{
+    Breakpoint.ZERO {
         Modifier.fontSize(FontSize.XXLarge)
     }
     Breakpoint.SM {
@@ -254,7 +256,7 @@ const val LENGTH_OF_TELLS = 5
 @Composable
 fun LandingText(
     modifier: Modifier = Modifier
-) = with(Pages.Home_Section.LandingData) {
+) = with(Pages.Home_Section.Landing) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -268,7 +270,7 @@ fun LandingText(
             ctaButton,
             BlueButtonVariant,
             modifier = Modifier
-                .width(Width.MaxContent)
+                .fillMaxWidth(40.percent)
                 .textAlign(TextAlign.Center)
         ) {
             P(
@@ -282,7 +284,7 @@ fun LandingText(
 }
 
 @Composable
-private fun LandingSubTitle() = with(Pages.Home_Section.LandingData) {
+private fun LandingSubTitle() = with(Pages.Home_Section.Landing) {
     P(
         attrs = HomeTitleTextStyle.toModifier(HomeSubTitleVariant)
             .toAttrs()
@@ -366,7 +368,7 @@ val SecondLineVariant by HomeTitleTextStyle.addVariant {
 private fun LandingTitle(
     mainText: String,
     modifier: Modifier = Modifier
-) = with(Pages.Home_Section.LandingData) {
+) = with(Pages.Home_Section.Landing) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
 
     val indexOfTells: Int = remember { mainText.indexOf("tells") }
@@ -432,7 +434,7 @@ val LandingTextColumnStyle by ComponentStyle {
         Modifier
             .fillMaxWidth()
     }
-    Breakpoint.ZERO{
+    Breakpoint.ZERO {
         Modifier
             .translateY(ty = (-5).px)
     }
@@ -444,7 +446,7 @@ val LandingTextColumnStyle by ComponentStyle {
         Modifier
             .translateY(ty = (-30).px)
     }
-    Breakpoint.LG{
+    Breakpoint.LG {
         Modifier
             .translateY(ty = (-10).px)
     }

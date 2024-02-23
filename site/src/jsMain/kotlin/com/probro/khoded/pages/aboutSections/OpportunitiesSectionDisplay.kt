@@ -5,6 +5,7 @@ import com.probro.khoded.models.Images
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.styles.BaseTextStyle
+import com.probro.khoded.styles.ImageStyle
 import com.probro.khoded.styles.JobDescriptionVariant
 import com.probro.khoded.styles.JobTitleVariant
 import com.probro.khoded.utils.IsOnScreenObservable
@@ -15,8 +16,8 @@ import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -26,6 +27,7 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
+import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
@@ -37,6 +39,7 @@ import org.jetbrains.compose.web.dom.Text
 val OpportunitiesBackgroundVariant by BackgroundStyle.addVariant {
     base {
         Modifier
+            .padding(topBottom = 40.px)
             .backgroundImage(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottom,
@@ -47,35 +50,46 @@ val OpportunitiesBackgroundVariant by BackgroundStyle.addVariant {
     }
 }
 
+val OpportuinitesImageVariant by ImageStyle.addVariant {
+    base {
+        Modifier
+            .fillMaxWidth(30.percent)
+            .translateY(ty = (-100).px)
+            .objectFit(ObjectFit.Contain)
+    }
+}
+
 @Composable
 fun OpportunitiesSectionDisplay(
-    footer: @Composable () -> Unit
+    footer: @Composable (variant: ComponentVariant?) -> Unit
 ) = with(Pages.Story_Section.JoinOurTeam) {
-    Column(
+    Box(
         modifier = BackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
             .id(id),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
-        Row(
+        Image(
+            src = Images.StoryPage.megaphone,
+            description = "Megaphone",
+            modifier = ImageStyle.toModifier(OpportuinitesImageVariant)
+                .align(Alignment.TopEnd)
+        )
+        Column(
             modifier = Modifier
-                .fillMaxWidth(getWidthFromBreakpoint())
-                .padding(bottom = 40.px),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .zIndex(1),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            JobPostings(title, positions)
-            Image(
-                src = Images.StoryPage.megaphone,
-                description = "Megaphone",
-                modifier = Modifier.fillMaxWidth(30.percent)
-                    .align(Alignment.Top)
-                    .translateY(ty = (-50).px)
-                    .objectFit(ObjectFit.Contain)
-
+            JobPostings(
+                title = title,
+                positions = positions,
+                modifier = Modifier
+                    .fillMaxWidth(getWidthFromBreakpoint())
+                    .padding(bottom = 40.px)
             )
+            footer(null)
         }
-        footer()
     }
 }
 
@@ -101,12 +115,13 @@ val PostingsTitleVariant by BaseTextStyle.addVariant {
 
 @Composable
 fun JobPostings(
-    title: String, positions: List<Pages.Story_Section.JobPosition>
+    title: String,
+    positions: List<Pages.Story_Section.JobPosition>,
+    modifier: Modifier = Modifier
 ) {
     var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

@@ -33,7 +33,6 @@ val NavItemStyle by ComponentStyle {
         Modifier
             .padding(0.px)
             .margin(0.px)
-            .color(Color.white)
             .textAlign(TextAlign.Center)
     }
 }
@@ -95,7 +94,7 @@ fun NavigationItem(
             onNavItemSelect(
                 when (root) {
                     is Navigator.KeySections.PageRoots.Contact -> Pages.Contact_Section.Landing
-                    is Navigator.KeySections.PageRoots.Home -> Pages.Home_Section.LandingData
+                    is Navigator.KeySections.PageRoots.Home -> Pages.Home_Section.Landing
                     is Navigator.KeySections.PageRoots.STORY -> Pages.Story_Section.OurStory
                     is Navigator.KeySections.TrafficStops.CONSULTATION -> Pages.Home_Section.Consultation
                     is Navigator.KeySections.TrafficStops.JOIN_OUR_TEAM -> Pages.Story_Section.JoinOurTeam

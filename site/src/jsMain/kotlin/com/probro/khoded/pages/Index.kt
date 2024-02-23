@@ -15,13 +15,13 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 
-@Page("/index")
+@Page("/")
 @Composable
 fun Index() {
     val ctx = rememberPageContext()
     Scaffold(
-        onNavigate = {
-            ctx.router.navigateTo(it)
+        onNavigate = { path ->
+            ctx.router.navigateTo(path)
         }
     ) { header, footer, modifier ->
         HomePageSections(header, footer, modifier)
@@ -30,8 +30,8 @@ fun Index() {
 
 @Composable
 fun HomePageSections(
-    header: @Composable (variant: ComponentVariant?) -> Unit,
-    footer: @Composable () -> Unit,
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
+    footer: @Composable (variant: ComponentVariant?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -39,7 +39,7 @@ fun HomePageSections(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LandingSectionDisplay(header, Pages.Home_Section.LandingData)
+        LandingSectionDisplay(header, Pages.Home_Section.Landing)
         ServicesSectionDisplay(Pages.Home_Section.Services)
         DesignSectionDisplay(Pages.Home_Section.Design)
         ConsultationSectionDisplay(footer, Pages.Home_Section.Consultation)

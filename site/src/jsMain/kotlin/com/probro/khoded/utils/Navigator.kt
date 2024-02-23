@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.update
 object Navigator {
 
     private val homeSections: List<PageSection> = listOf(
-        Pages.Home_Section.LandingData,
+        Pages.Home_Section.Landing,
         Pages.Home_Section.Services,
         Pages.Home_Section.Design,
         Pages.Home_Section.Consultation
