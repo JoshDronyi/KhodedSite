@@ -49,7 +49,8 @@ fun ConsultationSectionDisplay(
     data: Pages.Home_Section.Consultation
 ) = with(data) {
     Column(
-        modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant),
+        modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant)
+            .id(id),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -60,8 +61,6 @@ fun ConsultationSectionDisplay(
         ) {
             ConsultationDisplaySection(
                 mainImage = mainImage,
-                modifier = Modifier
-                    .id(id)
             )
             QuoteSection(quotes, subText)
         }

@@ -90,12 +90,13 @@ val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
 @Composable
 fun LandingSectionDisplay(
     header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
+    onNavigate: (page: PageSection) -> Unit,
     data: Pages.Home_Section.Landing
 ) = with(data) {
     data.apply {
         ctaButton = ctaButton.copy(onButtonClick = {
             println("Doing the navigation.")
-            Navigator.navigateTo(Pages.Home_Section.Consultation)
+            onNavigate(Pages.Home_Section.Consultation)
         })
     }
     Column(
