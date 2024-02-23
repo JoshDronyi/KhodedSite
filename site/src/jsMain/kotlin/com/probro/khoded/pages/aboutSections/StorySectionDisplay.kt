@@ -58,7 +58,7 @@ val StoryParagraphStyle by ComponentStyle {
 
 @Composable
 fun StorySectionDisplay(
-    header: @Composable (variant: ComponentVariant?) -> Unit
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit
 ) = with(Pages.Story_Section.OurStory) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
     Column(
@@ -67,7 +67,7 @@ fun StorySectionDisplay(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        header(StoryPageHeaderVariant)
+        header(StoryPageHeaderVariant, null)
         Column(
             modifier = Modifier
                 .fillMaxWidth(80.percent)

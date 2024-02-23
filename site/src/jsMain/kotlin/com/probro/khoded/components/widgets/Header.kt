@@ -3,6 +3,7 @@ package com.probro.khoded.components.widgets
 import androidx.compose.runtime.Composable
 import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
@@ -32,7 +33,7 @@ val HeaderStyle by ComponentStyle {
             .height(Height.FitContent)
             .padding(10.px)
     }
-    hover{
+    hover {
         Modifier
             .cursor(Cursor.Pointer)
     }
@@ -41,16 +42,18 @@ val HeaderStyle by ComponentStyle {
 val HomePageHeaderVariant by HeaderStyle.addVariant {
     base {
         Modifier
+            .color(Colors.White)
             .background(Colors.Black.copy(alpha = 70))
             .fillMaxWidth()
     }
 }
 val StoryPageHeaderVariant by HeaderStyle.addVariant {
-    base { Modifier }
+    base { Modifier.color(Colors.White) }
 }
 val ContactPageHeaderVariant by HeaderStyle.addVariant {
     base {
         Modifier
+            .color(KhodedColors.PURPLE.rgb)
             .backgroundColor(Colors.Transparent)
     }
 }
@@ -60,6 +63,7 @@ val ContactPageHeaderVariant by HeaderStyle.addVariant {
 fun Header(
     modifier: Modifier,
     variant: ComponentVariant? = null,
+    textVariant: ComponentVariant? = HeaderLogoTextVariant,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     val breakpoint = rememberBreakpoint()
@@ -75,7 +79,7 @@ fun Header(
             Span(
                 attrs = Modifier
                     .onClick {
-                        onNavItemSelect(Pages.Home_Section.LandingData)
+                        onNavItemSelect(Pages.Home_Section.Landing)
                     }
                     .toAttrs()
             ) {
@@ -83,7 +87,7 @@ fun Header(
                     image = Images.Logos.minimalLogo,
                     variant = HeaderLogoContainerVariant,
                     imageVariant = HeaderImageVariant,
-                    textVariant = HeaderLogoTextVariant,
+                    textVariant = textVariant,
                 )
             }
             HeaderNavItemDisplay(

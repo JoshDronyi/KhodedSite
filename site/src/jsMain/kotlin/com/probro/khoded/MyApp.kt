@@ -3,10 +3,12 @@ package com.probro.khoded
 import androidx.compose.runtime.Composable
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseTextStyle
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.OverflowWrap
 import com.varabyte.kobweb.compose.style.KobwebComposeStyleSheet.attr
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.styleModifier
@@ -47,10 +49,18 @@ val BaseButtonTextVariant by BaseTextStyle.addVariant {
     Breakpoint.ZERO {
         Modifier.fontSize(FontSize.XSmall)
     }
-    Breakpoint.SM
-    Breakpoint.MD
-    Breakpoint.LG
-    Breakpoint.XL
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Smaller)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(FontSize.Larger)
+    }
 }
 
 val BlueButtonVariant by ButtonStyle.addVariant {

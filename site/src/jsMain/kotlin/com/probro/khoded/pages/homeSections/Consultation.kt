@@ -25,6 +25,7 @@ import com.varabyte.kobweb.silk.components.forms.InputStyle
 import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
+import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.PlaceholderColor
@@ -44,7 +45,7 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun ConsultationSectionDisplay(
-    footer: @Composable () -> Unit,
+    footer: @Composable (variant: ComponentVariant?) -> Unit,
     data: Pages.Home_Section.Consultation
 ) = with(data) {
     Column(
@@ -64,7 +65,7 @@ fun ConsultationSectionDisplay(
             )
             QuoteSection(quotes, subText)
         }
-        footer()
+        footer(null)
     }
 }
 
@@ -414,7 +415,8 @@ fun MessagingSection(
         verticalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = ContactInfoRowStyle.toModifier(),
+            modifier = ContactInfoRowStyle.toModifier()
+                .weight(1),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -436,7 +438,7 @@ fun MessagingSection(
             value = message,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1)
+                .weight(3)
         ) {
             onMessageChange(it)
         }

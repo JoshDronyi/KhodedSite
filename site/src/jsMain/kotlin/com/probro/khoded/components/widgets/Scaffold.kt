@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.probro.khoded.components.composables.HeaderLogoTextVariant
 import com.probro.khoded.models.Routes
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
@@ -24,8 +25,8 @@ fun Scaffold(
     modifier: Modifier = Modifier,
     onNavigate: (path: String) -> Unit,
     context: @Composable (
-        header: @Composable (variant: ComponentVariant?) -> Unit,
-        footer: @Composable () -> Unit,
+        header: @Composable (variant: ComponentVariant?, textVariant:ComponentVariant?) -> Unit,
+        footer: @Composable (variant: ComponentVariant?) -> Unit,
         modifier: Modifier,
     ) -> Unit
 ) {
@@ -38,7 +39,7 @@ fun Scaffold(
         contentAlignment = Alignment.Center
     ) {
         context(
-            { variant ->
+            { variant, textVariant ->
                 Header(
                     modifier = Modifier.fillMaxWidth(
                         when (breakpoint) {
@@ -46,15 +47,17 @@ fun Scaffold(
                             Breakpoint.MD, Breakpoint.LG, Breakpoint.XL -> 90.percent
                         }
                     ),
-                    variant = variant
+                    variant = variant,
+                    textVariant = textVariant ?: HeaderLogoTextVariant
                 ) {
                     onNavigate(it.path)
                 }
             },
-            {
+            { variant ->
                 Footer(
                     modifier = Modifier.fillMaxWidth()
-                        .margin(top = 40.px, bottom = 10.px)
+                        .margin(top = 40.px, bottom = 10.px),
+                    variant = variant
                 ) {
                     onNavigate(it.path)
                 }
@@ -67,10 +70,11 @@ fun Scaffold(
     }
     LaunchedEffect(navState.currentSection) {
         when (navState.currentSection?.path) {
-            Pages.Home_Section.LandingData.path -> onNavigate(Routes.Home.SLUG)
+            Pages.Home_Section.Landing.path -> onNavigate(Routes.Home.SLUG)
             Pages.Story_Section.OurStory.path -> onNavigate(Routes.Story.SLUG)
             Pages.Contact_Section.Landing.path -> onNavigate(Routes.Contact.SLUG)
             else -> navState.currentSection?.path?.let {
+                println("Navigating to $it")
                 onNavigate(it)
             }
         }

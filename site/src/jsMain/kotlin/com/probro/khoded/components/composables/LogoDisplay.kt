@@ -3,6 +3,7 @@ package com.probro.khoded.components.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.utils.fallInAnimation
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.ObjectFit
@@ -93,6 +94,13 @@ val HeaderLogoTextVariant by LogoTextStyle.addVariant {
         Modifier
             .fillMaxWidth()
             .margin(leftRight = 10.px)
+    }
+}
+
+val DarkLogoTextVariant by LogoTextStyle.addVariant {
+    base {
+        Modifier
+            .color(KhodedColors.PURPLE.rgb)
     }
 }
 val FooterLogoContainerVariant by LogoContainerStyle.addVariant {

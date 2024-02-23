@@ -6,6 +6,7 @@ import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.EmailData
 import com.probro.khoded.MailResponse
 import com.probro.khoded.components.composables.*
+import com.probro.khoded.components.widgets.ContactFooterVariant
 import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.models.ButtonState
@@ -192,7 +193,7 @@ fun FooterSection(
     data: Pages.Contact_Section.MessaageUIModel,
     modifier: Modifier = Modifier,
     onMessageSend: (message: String) -> Unit,
-    footer: @Composable () -> Unit
+    footer: @Composable (variant: ComponentVariant?) -> Unit
 ) {
     Column(
         modifier = BackgroundStyle.toModifier(ContactFooterBackgroundVariant)
@@ -205,13 +206,13 @@ fun FooterSection(
             modifier = modifier,
             onMessageSend = onMessageSend
         )
-        footer()
+        footer(ContactFooterVariant)
     }
 }
 
 @Composable
 fun LandingSection(
-    header: @Composable (variant: ComponentVariant?) -> Unit,
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
     clientFilledData: Pages.Contact_Section.MessaageUIModel,
     onSubjectChange: (newText: String) -> Unit,
     onOrganizationChange: (newText: String) -> Unit,
@@ -223,7 +224,7 @@ fun LandingSection(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        header(ContactPageHeaderVariant)
+        header(ContactPageHeaderVariant, DarkLogoTextVariant)
         var state by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
         BackingCard(
             modifier = ContactPageRowStyle.toModifier(LandingSectionVariant)
@@ -324,8 +325,8 @@ fun ClientInfoTitle(
                     duration = 600.ms,
                     timingFunction = AnimationTimingFunction.Ease,
                     direction = AnimationDirection.Normal,
-                    playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
-                    else AnimationPlayState.Paused
+//                    playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
+//                    else AnimationPlayState.Paused
                 )
             )
             .toAttrs()

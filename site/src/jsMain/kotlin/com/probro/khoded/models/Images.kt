@@ -14,7 +14,7 @@ object Images {
         const val megaphone: String = "/story/megaphone.png"
         const val founderJosh: String = "/story/joshFounder.png"
         const val founderEsther: String = "/story/estherFounder.png"
-        const val jointFounderImage: String = "/story/jointFoundersImage.png"
+        const val jointFounderImage: String = "/story/foundersJoint.svg"
     }
 
     object ContactPage {
