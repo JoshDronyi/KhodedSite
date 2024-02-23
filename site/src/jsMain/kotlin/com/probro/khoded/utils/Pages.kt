@@ -16,18 +16,18 @@ object Pages {
     sealed class Home_Section(
         override val id: String, override val title: String, override val slug: String, override val path: String
     ) : PageSection {
-        object LandingData : Home_Section(
-            Routes.Home.LANDING_ROUTE,
-            "Home",
-            Routes.Home.SLUG,
-            "${Routes.Home.SLUG}${Routes.Home.LANDING_ROUTE}"
+        object Landing : Home_Section(
+            id = Routes.Home.LANDING_ROUTE,
+            title = "Home",
+            slug = Routes.Home.SLUG,
+            path = "${Routes.Home.SLUG}${Routes.Home.LANDING_ROUTE}"
         ) {
             val mainText: String = "Psst, a GOOD site tells a brand’s story"
             val subText: String = "Let Khoded handle all your web app, site redesign, web hosting, " +
                     "and brand + SEO needs in one place."
             val mainImage: String = Images.HomePage.landing_Rocket
             val underlineImage: String = Images.Common.blueUnderline
-            val ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
+            var ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
                 //TODO: Navigate to the schedule consultation section.
             }
         }
@@ -58,8 +58,7 @@ object Pages {
                 "Khoded specializes in creating bespoke websites from the ground up, catering to a diverse clientele," +
                         " and providing comprehensive branding kits and reliable web hosting solutions to enhance our" +
                         " clients' online presence further."
-            val mainImage: String = Images.HomePage.design_Paperplane
-            val subImage: String = Images.HomePage.design_Computer
+            val mainImage: String = Images.HomePage.design_Paperplane_Computer
             val underlineImage: String = Images.Common.blackUnderline
         }
 
@@ -75,10 +74,12 @@ object Pages {
                     " your narrative is heard, seen, and felt in places beyond your physical reach. The right website" +
                     " becomes the storyteller you can't be in person, resonating in the vast digital landscape," +
                     " leaving a lasting impression wherever it ventures."
-            val mainImage: String = Images.HomePage.consultation_MessageBubble
-            val subImage: String = Images.HomePage.consultation_CheckMessage
-            val leftQuote: String = Images.HomePage.consultation_LeftQuote
-            val rightQuote: String = Images.HomePage.consultation_RightQuote
+            val mainImage: String =
+                Images.HomePage.consultation_CheckMessage
+
+            // Images.HomePage.consultation_MessageBubble_And_Squiggle
+            //            val subImage: String =
+            val quotes: String = Images.HomePage.consultation_Quotes
             val consultationRequestUIModel = ConsultationRequestUIModel()
             val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
                 //TODO: Navigate to the  contact section.

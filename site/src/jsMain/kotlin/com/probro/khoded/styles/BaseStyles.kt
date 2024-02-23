@@ -11,6 +11,7 @@ import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.unaryMinus
 
 val BaseTextStyle by ComponentStyle {
     base {
@@ -158,6 +159,19 @@ val ImageStyle by ComponentStyle {
             .fillMaxWidth()
             .borderRadius(20.px)
             .objectFit(ObjectFit.Fill)
+    }
+}
+val LandingImageVariant by ImageStyle.addVariant{
+    base {
+        Modifier.fillMaxWidth(90.percent)
+    }
+    Breakpoint.ZERO
+    Breakpoint.SM
+    Breakpoint.MD
+    Breakpoint.LG
+    Breakpoint.XL{
+        Modifier
+            .translateX(tx = 50.px)
     }
 }
 

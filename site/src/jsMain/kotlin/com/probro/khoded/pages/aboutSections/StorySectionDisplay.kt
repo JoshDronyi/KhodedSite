@@ -5,10 +5,7 @@ import com.probro.khoded.components.widgets.StoryPageHeaderVariant
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
 import com.probro.khoded.pages.homeSections.BackgroundStyle
-import com.probro.khoded.utils.IsOnScreenObservable
-import com.probro.khoded.utils.Pages
-import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.fallInAnimation
+import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.Height
@@ -61,7 +58,7 @@ val StoryParagraphStyle by ComponentStyle {
 
 @Composable
 fun StorySectionDisplay(
-    header: @Composable (variant: ComponentVariant?) -> Unit
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit
 ) = with(Pages.Story_Section.OurStory) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
     Column(
@@ -70,7 +67,7 @@ fun StorySectionDisplay(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        header(StoryPageHeaderVariant)
+        header(StoryPageHeaderVariant, null)
         Column(
             modifier = Modifier
                 .fillMaxWidth(80.percent)
@@ -79,12 +76,13 @@ fun StorySectionDisplay(
             verticalArrangement = Arrangement.Center
         ) {
             IsOnScreenObservable(
-                sectionID = id,
+                sectionID = TitleIDs.storyTitle,
             ) {
                 sectionPosition = it
             }
             P(
                 attrs = StoryTextStyle.toModifier(StoryPageTitleVariant)
+                    .id(TitleIDs.storyTitle)
                     .fillMaxWidth()
                     .position(Position.Relative)
                     .animation(
@@ -93,26 +91,6 @@ fun StorySectionDisplay(
                             timingFunction = AnimationTimingFunction.Ease
                         )
                     )
-//                    .translateY(
-//                        ty = when (sectionPosition) {
-//                            SectionPosition.ABOVE -> (-100).px
-//                            SectionPosition.ON_SCREEN -> 0.px
-//                            SectionPosition.BELOW -> (-100).px
-//                            SectionPosition.IDLE -> 0.px
-//                        }
-//                    )
-//                    .opacity(
-//                        when (sectionPosition) {
-//                            SectionPosition.ABOVE -> 0.percent
-//                            SectionPosition.ON_SCREEN -> 100.percent
-//                            SectionPosition.BELOW -> 0.percent
-//                            SectionPosition.IDLE -> 100.percent
-//                        }
-//                    )
-//                    .transition(
-//                        CSSTransition(property = "translate", duration = 600.ms),
-//                        CSSTransition(property = "opacity", duration = 600.ms)
-//                    )
                     .toAttrs()
             ) {
                 Text(title)

@@ -18,13 +18,15 @@ import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.layout.SimpleGrid
+import com.varabyte.kobweb.silk.components.layout.SimpleGridStyle
+import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
@@ -151,7 +153,7 @@ val FounderBioVariant by FounderTextStyle.addVariant {
 val FounderImageVariant by ImageStyle.addVariant {
     base {
         Modifier
-            .fillMaxWidth(60.percent)
+            .fillMaxWidth()
             .height(70.vh)
             .objectFit(ObjectFit.Contain)
     }
@@ -259,10 +261,15 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
             variant = PopUpBioScreenVariant,
             textVariant = PopUpTextVariant,
             modifier = Modifier
-                .fillMaxWidth(40.percent)
                 .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
                 .zIndex(if (isShowing) 3 else 1)
         )
+    }
+}
+
+val FoundersGridVariant by SimpleGridStyle.addVariant {
+    base {
+        Modifier
     }
 }
 
@@ -271,103 +278,82 @@ fun FounderContentSection(
     modifier: Modifier = Modifier,
     onFounderBioClicked: (bio: String, image: String) -> Unit
 ) = with(Pages.Story_Section.OurFounders) {
-
     var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        FoundersTitle(
+            state,
+            modifier = Modifier
+                .id(TitleIDs.founderTitle)
+                .align(Alignment.Start)
+        )
+        SimpleGrid(
+            numColumns = numColumns(base = 1, md = 3),
+            modifier = Modifier
+                .fillMaxWidth(),
+            variant = FoundersGridVariant
+        ) {
+            FounderText(
+                estherBio,
+                onFounderBioClicked = {
+                    onFounderBioClicked(it, estherBio.image)
+                }
+            )
+            Image(
+                src = jointFoundersImage,
+                description = "Animated image of Esther and Josh.",
+                modifier = ImageStyle.toModifier(FounderImageVariant)
+                    .align(Alignment.CenterHorizontally)
+            )
+            FounderText(
+                teamBio = joshBio,
+                onFounderBioClicked = {
+                    onFounderBioClicked(it, joshBio.image)
+                }
+            )
+        }
         IsOnScreenObservable(
             sectionID = TitleIDs.founderTitle,
         ) {
             state = it
         }
-        P(
-            attrs = FounderTextStyle.toModifier(FounderTitleVariant)
-                .id(TitleIDs.founderTitle)
-                .align(Alignment.Start)
-                .translateY(
-                    ty = when (state) {
-                        SectionPosition.ABOVE -> (-100).px
-                        SectionPosition.ON_SCREEN -> 0.px
-                        SectionPosition.BELOW -> (-100).px
-                        SectionPosition.IDLE -> 0.px
-                    }
-                )
-                .opacity(
-                    when (state) {
-                        SectionPosition.ABOVE -> 0.percent
-                        SectionPosition.ON_SCREEN -> 100.percent
-                        SectionPosition.BELOW -> 0.percent
-                        SectionPosition.IDLE -> 100.percent
-                    }
-                )
-                .transition(
-                    CSSTransition(property = "translate", duration = 600.ms),
-                    CSSTransition(property = "opacity", duration = 600.ms)
-                )
-                .toAttrs()
-        ) {
-            Text(title)
-        }
-        BackingCard(
-            modifier = Modifier
-                .fillMaxWidth(),
-            variant = NoBorderBackingCardVariant,
-            firstSection = {
-                estherBio.apply {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        FounderText(
-                            founderName = name,
-                            founderTitle = position,
-                            founderBio = story,
-                            founder = founderType,
-                            onFounderBioClicked = {
-                                onFounderBioClicked(it, image)
-                            }
-                        )
-                        Image(
-                            src = image,
-                            description = "Animated picture of founder",
-                            modifier = ImageStyle.toModifier(FounderImageVariant)
-                                .fillMaxWidth(40.percent)
-                        )
-                    }
+    }
+}
+
+@Composable
+fun FoundersTitle(
+    state: SectionPosition,
+    modifier: Modifier = Modifier
+) = with(Pages.Story_Section.OurFounders) {
+    P(
+        attrs = FounderTextStyle.toModifier(FounderTitleVariant)
+            .then(modifier)
+            .translateY(
+                ty = when (state) {
+                    SectionPosition.ABOVE -> (-100).px
+                    SectionPosition.ON_SCREEN -> 0.px
+                    SectionPosition.BELOW -> (-100).px
+                    SectionPosition.IDLE -> 0.px
                 }
-            },
-            secondSection = {
-                joshBio.apply {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Image(
-                            src = image,
-                            description = "Animated picture of founder",
-                            modifier = ImageStyle.toModifier(FounderImageVariant)
-                                .fillMaxWidth(40.percent)
-                        )
-                        FounderText(
-                            founderName = name,
-                            founderTitle = position,
-                            founderBio = story,
-                            founder = founderType,
-                            onFounderBioClicked = {
-                                onFounderBioClicked(it, image)
-                            }
-                        )
-                    }
+            )
+            .opacity(
+                when (state) {
+                    SectionPosition.ABOVE -> 0.percent
+                    SectionPosition.ON_SCREEN -> 100.percent
+                    SectionPosition.BELOW -> 0.percent
+                    SectionPosition.IDLE -> 100.percent
                 }
-            }
-        )
+            )
+            .transition(
+                CSSTransition(property = "translate", duration = 600.ms),
+                CSSTransition(property = "opacity", duration = 600.ms)
+            )
+            .toAttrs()
+    ) {
+        Text(title)
     }
 }
 
@@ -385,38 +371,19 @@ val FounderTextContainer by FounderBacking.addVariant {
 
 @Composable
 fun FounderText(
-    founderName: String,
-    founderTitle: String,
-    founderBio: String,
-    founder: Founders,
+    teamBio: Pages.Story_Section.TeamBio,
     onFounderBioClicked: (bio: String) -> Unit
-) {
+) = with(teamBio) {
     val mod = FounderBacking.toModifier(FounderTextContainer)
         .fillMaxWidth()
         .height(Height.Inherit)
     Column(
-        modifier = when (founder) {
-            Founders.CEO ->
-                mod
-                    .borderRight {
-                        width(2.px)
-                        style(LineStyle.Solid)
-                        color(Colors.White)
-                    }
-
-            Founders.CTO ->
-                mod
-                    .borderLeft {
-                        width(2.px)
-                        style(LineStyle.Solid)
-                        color(Colors.White)
-                    }
-        },
+        modifier = mod,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        FounderNameAndPosition(founderName, founderTitle)
-        FounderBioSection(founder, founderBio, onFounderBioClicked)
+        FounderNameAndPosition(name, position)
+        FounderBioSection(founderType, story, onFounderBioClicked)
     }
 }
 

@@ -6,6 +6,7 @@ import com.probro.khoded.pages.homeSections.ConsultationSectionDisplay
 import com.probro.khoded.pages.homeSections.DesignSectionDisplay
 import com.probro.khoded.pages.homeSections.LandingSectionDisplay
 import com.probro.khoded.pages.homeSections.ServicesSectionDisplay
+import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -20,26 +21,33 @@ import com.varabyte.kobweb.silk.components.style.ComponentVariant
 fun Index() {
     val ctx = rememberPageContext()
     Scaffold(
-        onNavigate = {
-            ctx.router.navigateTo(it)
+        onNavigate = { path ->
+            ctx.router.navigateTo(path)
         }
     ) { header, footer, modifier ->
-        HomePageSections(header, footer, modifier)
+        HomePageSections(header, footer, modifier) { page ->
+            ctx.router.navigateTo(page.path)
+        }
     }
 }
 
 @Composable
 fun HomePageSections(
-    header: @Composable (variant: ComponentVariant?) -> Unit,
-    footer: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
+    footer: @Composable (variant: ComponentVariant?) -> Unit,
+    modifier: Modifier = Modifier,
+    onNavigate: (page: PageSection) -> Unit
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LandingSectionDisplay(header, Pages.Home_Section.LandingData)
+        LandingSectionDisplay(
+            header = header,
+            data = Pages.Home_Section.Landing,
+            onNavigate = onNavigate
+        )
         ServicesSectionDisplay(Pages.Home_Section.Services)
         DesignSectionDisplay(Pages.Home_Section.Design)
         ConsultationSectionDisplay(footer, Pages.Home_Section.Consultation)

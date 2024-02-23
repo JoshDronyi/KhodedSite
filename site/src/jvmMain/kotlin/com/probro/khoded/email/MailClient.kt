@@ -2,6 +2,7 @@ package com.probro.khoded.email
 
 import com.google.api.services.gmail.model.Message
 import com.probro.khoded.IntakeFormDTO
+import com.probro.khoded.MailResponse
 import com.probro.khoded.local.KhodedDB
 import com.probro.khoded.local.KhodedDB.db
 import com.varabyte.kobweb.api.log.Logger
@@ -23,9 +24,8 @@ class MailClient(
         senderOrganization: String,
         senderEmail: String,
         subject: String,
-        message: String,
-        onSuccess: (message: String) -> Unit
-    ) = supervisorScope {
+        message: String
+    ): MailResponse = supervisorScope {
         logger.info("Attempting to use the mailer to send email.")
         try {
             logger.info("Using the simple mail implementation")
@@ -39,19 +39,39 @@ class MailClient(
                     .toString()
             )
             email?.let {
-                onSuccess("Sent email: $email")
-            } ?: logger.error("Sorry, unable to send message.")
+                logger.info("Sent email: $email")
+                return@supervisorScope MailResponse.Success(email.toString())
+            } ?: run {
+                val unkKnownErrorMsg = "Sorry, unable to send message."
+                logger.error(unkKnownErrorMsg)
+                return@supervisorScope MailResponse.Error(
+                    exceptionMesaage = unkKnownErrorMsg,
+                    stackTrace = "UKnown error"
+                )
+            }
         } catch (ex: IOException) {
             //TODO: HANDLE IO EXCEPTION ACCORDINGLY
             logger.error("IO EXCEPTION: ${ex.message}\n STACKTACE: ${ex.stackTrace}")
             ex.printStackTrace()
+            return@supervisorScope MailResponse.Error(
+                exceptionMesaage = ex.message ?: ex.localizedMessage ?: "Unknown eror",
+                stackTrace = ex.stackTrace.toString()
+            )
         } catch (ex: GeneralSecurityException) {
             //TODO: HANDLE SECURITY EXCEPTION ACCORDINGLY
             logger.error("General security exception: ${ex.message}\n STACKTACE: ${ex.stackTrace}")
             ex.printStackTrace()
+            return@supervisorScope MailResponse.Error(
+                exceptionMesaage = ex.message ?: ex.localizedMessage ?: "Unknown eror",
+                stackTrace = ex.stackTrace.toString()
+            )
         } catch (ex: Exception) {
             logger.error("There was an unknown error: ${ex.message}")
             ex.printStackTrace()
+            return@supervisorScope MailResponse.Error(
+                exceptionMesaage = ex.message ?: ex.localizedMessage ?: "Unknown eror",
+                stackTrace = ex.stackTrace.toString()
+            )
         }
     }
 

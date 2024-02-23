@@ -4,8 +4,9 @@ import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.EmailData
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
+import com.probro.khoded.MailResponse
+import com.probro.khoded.components.composables.*
+import com.probro.khoded.components.widgets.ContactFooterVariant
 import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.models.ButtonState
@@ -86,60 +87,88 @@ fun Contact() {
             var clientFilledData by remember {
                 mutableStateOf(Pages.Contact_Section.MessaageUIModel())
             }
-            Column(
-                modifier = modifier
-                    .id(Pages.Contact_Section.Landing.id)
-                    .height(Height.FitContent),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier,
+                contentAlignment = Alignment.Center
             ) {
-                LandingSection(
-                    header,
-                    clientFilledData = clientFilledData,
-                    onNameChange = {
-                        clientFilledData = clientFilledData.copy(
-                            fullName = it
-                        )
-                    },
-                    onEmailChange = {
-                        clientFilledData = clientFilledData.copy(
-                            email = it
-                        )
-                    },
-                    onSubjectChange = {
-                        clientFilledData = clientFilledData.copy(
-                            messageSubject = it
-                        )
-                    },
-                    onOrganizationChange = {
-                        clientFilledData = clientFilledData.copy(
-                            organization = it
-                        )
-                    },
-                )
-                FooterSection(
-                    data = placeholderMsgUIModel,
-                    footer = footer,
-                    onMessageSend = { message ->
-                        scope.launch {
-                            println("clientData was $clientFilledData")
-                            println("Message was $message")
-                            sendMessage(
-                                name = clientFilledData.fullName,
-                                email = clientFilledData.email,
-                                organization = clientFilledData.organization,
-                                subject = clientFilledData.messageSubject,
-                                message = message
+                var popUpText by remember { mutableStateOf("") }
+                var isShowing by remember { mutableStateOf(false) }
+
+                Column(
+                    modifier = modifier
+                        .id(Pages.Contact_Section.Landing.id)
+                        .height(Height.FitContent),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    LandingSection(
+                        header,
+                        clientFilledData = clientFilledData,
+                        onNameChange = {
+                            clientFilledData = clientFilledData.copy(
+                                fullName = it
                             )
-                        }
-                    })
+                        },
+                        onEmailChange = {
+                            clientFilledData = clientFilledData.copy(
+                                email = it
+                            )
+                        },
+                        onSubjectChange = {
+                            clientFilledData = clientFilledData.copy(
+                                messageSubject = it
+                            )
+                        },
+                        onOrganizationChange = {
+                            clientFilledData = clientFilledData.copy(
+                                organization = it
+                            )
+                        },
+                    )
+                    FooterSection(
+                        data = placeholderMsgUIModel,
+                        footer = footer,
+                        onMessageSend = { message ->
+                            scope.launch {
+                                println("clientData was $clientFilledData")
+                                println("Message was $message")
+                                popUpText = sendMessage(
+                                    name = clientFilledData.fullName,
+                                    email = clientFilledData.email,
+                                    organization = clientFilledData.organization,
+                                    subject = clientFilledData.messageSubject,
+                                    message = message
+                                )
+                                isShowing = true
+                            }
+                        })
+                }
+
+                PopUpScreen(
+                    popUpUIModel = PopUpScreenUIModel(
+                        promptText = popUpText,
+                        isShowing = isShowing,
+                        buttonState = ButtonState(
+                            buttonText = "Ok",
+                            onButtonClick = {
+                                isShowing = false
+                            }
+                        )
+
+                    ),
+                    variant = ContactPopUpVariant,
+                    textVariant = ContactPopUpTextVariant,
+                    modifier = Modifier
+                        .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
+                        .opacity(if (isShowing) 100.percent else 0.percent)
+                )
             }
         }
     }
 }
 
-suspend fun sendMessage(name: String, email: String, organization: String, subject: String, message: String) {
-    MailClient.sendEmail(
+suspend fun sendMessage(name: String, email: String, organization: String, subject: String, message: String): String {
+    val mailResponse = MailClient.sendEmail(
         data = EmailData(
             name = name,
             email = email,
@@ -148,6 +177,15 @@ suspend fun sendMessage(name: String, email: String, organization: String, subje
             message = message
         )
     )
+    return when (mailResponse) {
+        is MailResponse.Error -> {
+            "Exception: ${mailResponse.exceptionMesaage} \n ${mailResponse.stackTrace}"
+        }
+
+        is MailResponse.Success -> {
+            Strings.consultationThanksMessage
+        }
+    }
 }
 
 @Composable
@@ -155,7 +193,7 @@ fun FooterSection(
     data: Pages.Contact_Section.MessaageUIModel,
     modifier: Modifier = Modifier,
     onMessageSend: (message: String) -> Unit,
-    footer: @Composable () -> Unit
+    footer: @Composable (variant: ComponentVariant?) -> Unit
 ) {
     Column(
         modifier = BackgroundStyle.toModifier(ContactFooterBackgroundVariant)
@@ -168,13 +206,13 @@ fun FooterSection(
             modifier = modifier,
             onMessageSend = onMessageSend
         )
-        footer()
+        footer(ContactFooterVariant)
     }
 }
 
 @Composable
 fun LandingSection(
-    header: @Composable (variant: ComponentVariant?) -> Unit,
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
     clientFilledData: Pages.Contact_Section.MessaageUIModel,
     onSubjectChange: (newText: String) -> Unit,
     onOrganizationChange: (newText: String) -> Unit,
@@ -186,7 +224,7 @@ fun LandingSection(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        header(ContactPageHeaderVariant)
+        header(ContactPageHeaderVariant, DarkLogoTextVariant)
         var state by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
         BackingCard(
             modifier = ContactPageRowStyle.toModifier(LandingSectionVariant)
@@ -287,8 +325,8 @@ fun ClientInfoTitle(
                     duration = 600.ms,
                     timingFunction = AnimationTimingFunction.Ease,
                     direction = AnimationDirection.Normal,
-                    playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
-                    else AnimationPlayState.Paused
+//                    playState = if (sectionPosition == SectionPosition.ON_SCREEN) AnimationPlayState.Running
+//                    else AnimationPlayState.Paused
                 )
             )
             .toAttrs()
