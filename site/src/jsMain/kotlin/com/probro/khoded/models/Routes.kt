@@ -6,7 +6,7 @@ sealed class Routes {
         const val LANDING_ROUTE: String = "#landing"
         const val OUR_SERVICES: String = "#ourServices"
         const val DESIGN: String = "#design"
-        const val CONSULTATION: String = "index.html#consultation"
+        const val CONSULTATION: String = "#consultation"
     }
 
     object Story {
