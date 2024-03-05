@@ -29,7 +29,7 @@ RUN apt-get update \
     && chmod 500 nsolid_setup_deb.sh \
     && ./nsolid_setup_deb.sh 21 \
     && apt-get install nodejs -y \
-    && npm install -g npm@10.2.5 \
+    && npm install -g npm@10.5.0 \
     && npm init -y \
     && npx playwright install --with-deps chromium
 
