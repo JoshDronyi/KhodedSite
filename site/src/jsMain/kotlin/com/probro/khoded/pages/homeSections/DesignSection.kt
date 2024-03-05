@@ -229,7 +229,7 @@ fun DesignImageSection(
 val ComputerPicVariant by ImageStyle.addVariant {
     base {
         Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .objectFit(ObjectFit.Fill)
             .zIndex(1)
     }

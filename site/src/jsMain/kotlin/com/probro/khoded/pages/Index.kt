@@ -16,7 +16,7 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 
-@Page("/index")
+@Page
 @Composable
 fun Index() {
     val ctx = rememberPageContext()

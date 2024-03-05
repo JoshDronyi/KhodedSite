@@ -2,19 +2,19 @@ package com.probro.khoded.models
 
 object Images {
     object HomePage {
-        const val landing_Rocket: String = "/home/rocketManSquiggle.svg"
-        const val services_ChartMaker: String = "/home/laptopDudeSquiggle.svg"
-        const val design_Paperplane_Computer: String = "/home/laptopPlane.svg"
-        const val consultation_MessageBubble_And_Squiggle: String = "/home/textBubblesAndSquiggle.svg"
-        const val consultation_CheckMessage: String = "/home/phoneTextBubble.svg"
-        const val consultation_Quotes: String = "/home/quotes.svg"
+        const val landing_Rocket: String = "/home/rocketManSquiggle.png"
+        const val services_ChartMaker: String = "/home/laptopDudeSquiggle.png"
+        const val design_Paperplane_Computer: String = "/home/laptopPlane.png"
+        const val consultation_MessageBubble_And_Squiggle: String = "/home/textBubblesAndSquiggle.png"
+        const val consultation_CheckMessage: String = "/home/phoneTextBubble.png"
+        const val consultation_Quotes: String = "/home/quotes.svg.png"
     }
 
     object StoryPage {
         const val megaphone: String = "/story/megaphone.png"
         const val founderJosh: String = "/story/joshFounder.png"
         const val founderEsther: String = "/story/estherFounder.png"
-        const val jointFounderImage: String = "/story/foundersJoint.svg"
+        const val jointFounderImage: String = "/story/foundersJoint.png"
     }
 
     object ContactPage {
@@ -28,8 +28,8 @@ object Images {
     }
 
     object Logos {
-        const val fullTransparent = "/logos/khodedlogo.svg"
-        const val circleLogo = "/logos/KhodedCircleLogo.png"
+        const val fullTransparent = "/logos/khodedlogo.svg.png"
+        const val circleLogo = "/logos/KhodedCircleLogo.svg.png"
         const val minimalLogo = "/logos/minimalLogo.png"
     }
 
