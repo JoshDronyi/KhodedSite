@@ -110,6 +110,7 @@ fun NavigationItem(
 @Composable
 private fun NavSectionTitle(
     text: String,
+    linkPath: String? = null,
     navItemVariant: ComponentVariant? = null,
     onNavItemSelect: () -> Unit
 ) {

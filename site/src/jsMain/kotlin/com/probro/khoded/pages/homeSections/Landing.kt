@@ -100,15 +100,15 @@ fun LandingSectionDisplay(
         })
     }
     Column(
-        modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant)
-            .id(id),
+        modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         header(HomePageHeaderVariant, null)
         Box(
             modifier = Modifier
-                .fillMaxWidth(80.percent),
+                .fillMaxWidth(80.percent)
+                .id(id),
             contentAlignment = Alignment.Center
         ) {
             Image(

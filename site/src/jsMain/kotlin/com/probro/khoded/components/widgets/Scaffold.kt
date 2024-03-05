@@ -25,7 +25,7 @@ fun Scaffold(
     modifier: Modifier = Modifier,
     onNavigate: (path: String) -> Unit,
     context: @Composable (
-        header: @Composable (variant: ComponentVariant?, textVariant:ComponentVariant?) -> Unit,
+        header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
         footer: @Composable (variant: ComponentVariant?) -> Unit,
         modifier: Modifier,
     ) -> Unit
@@ -50,7 +50,13 @@ fun Scaffold(
                     variant = variant,
                     textVariant = textVariant ?: HeaderLogoTextVariant
                 ) {
-                    onNavigate(it.path)
+                    with(it) {
+                        onNavigate(path)
+//                        if (navState.currentSection?.slug == slug) {
+////                            val id = path.substring(path.indexOf("/"))
+//                            onNavigate(path)
+//                        } else onNavigate(slug)
+                    }
                 }
             },
             { variant ->
