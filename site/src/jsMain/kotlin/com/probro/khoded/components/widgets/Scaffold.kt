@@ -16,6 +16,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import kotlinx.browser.document
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
@@ -24,7 +25,7 @@ import org.jetbrains.compose.web.css.vh
 fun Scaffold(
     modifier: Modifier = Modifier,
     onNavigate: (path: String) -> Unit,
-    context: @Composable (
+    content: @Composable (
         header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
         footer: @Composable (variant: ComponentVariant?) -> Unit,
         modifier: Modifier,
@@ -38,7 +39,7 @@ fun Scaffold(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        context(
+        content(
             { variant, textVariant ->
                 Header(
                     modifier = Modifier.fillMaxWidth(
@@ -52,10 +53,7 @@ fun Scaffold(
                 ) {
                     with(it) {
                         onNavigate(path)
-//                        if (navState.currentSection?.slug == slug) {
-////                            val id = path.substring(path.indexOf("/"))
-//                            onNavigate(path)
-//                        } else onNavigate(slug)
+                        focusOnSectionWithId(path)
                     }
                 }
             },
@@ -65,7 +63,9 @@ fun Scaffold(
                         .margin(top = 40.px, bottom = 10.px),
                     variant = variant
                 ) {
-                    onNavigate(it.path)
+                    it.path.let {
+                        onNavigate(it)
+                    }
                 }
             },
             modifier.height(100.vh)
@@ -82,7 +82,18 @@ fun Scaffold(
             else -> navState.currentSection?.path?.let {
                 println("Navigating to $it")
                 onNavigate(it)
+                focusOnSectionWithId(it)
             }
         }
+    }
+}
+
+fun focusOnSectionWithId(path: String) {
+    if (path.contains("#")) {
+        val id = path.indexOf("#").let {
+            path.substring(it)
+        }
+        val elementRef = document.getElementById(id)
+        elementRef?.scrollIntoView()
     }
 }

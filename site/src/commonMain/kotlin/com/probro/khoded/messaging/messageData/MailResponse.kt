@@ -1,11 +1,12 @@
-package com.probro.khoded
+package com.probro.khoded.messaging.messageData
 
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed class MailResponse {
     @Serializable
     data class Success(
-        val response: String
+        val messageSent: Boolean
     ) : MailResponse()
 
     @Serializable

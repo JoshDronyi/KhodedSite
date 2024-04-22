@@ -5,7 +5,7 @@ import androidx.compose.runtime.*
 import com.probro.khoded.*
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.pages.serviceSections.*
-import com.probro.khoded.utils.MailClient
+import com.probro.khoded.utils.messaging.MailClient
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.json

@@ -155,11 +155,19 @@ val ContactPopUpVariant by PopUpScreenStyle.addVariant {
 }
 
 data class PopUpScreenUIModel(
-    val promptText: String,
+    var promptText: String,
     val image: String? = null,
     val buttonState: ButtonState,
+    var messagingState: MessagingStage = MessagingStage.IDLE,
     var isShowing: Boolean = false
 )
+
+enum class MessagingStage {
+    IDLE,
+    SENDING,
+    SENT,
+    ERROR
+}
 
 @Composable
 fun PopUpScreen(
@@ -169,7 +177,6 @@ fun PopUpScreen(
     modifier: Modifier = Modifier
 ) = with(popUpUIModel) {
     println("${popUpUIModel.promptText}")
-
     Column(
         modifier = PopUpScreenStyle.toModifier(variant)
             .then(modifier),

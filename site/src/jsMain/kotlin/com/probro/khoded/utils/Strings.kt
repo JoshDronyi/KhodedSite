@@ -1,6 +1,11 @@
 package com.probro.khoded.utils
 
 object Strings {
+    val emailPrompt: String = "Email"
+    val namePrompt: String = "Full Name"
+    val projectPrompt: String = "Tell Us A Little About Your Project"
+
+
     val visionStatement: String =
         "Our vision at Brand Crafters is to be the driving force behind business transformations, where each brand " +
                 "we touch becomes a symbol of authenticity, innovation, and connection. We envision a future where " +
@@ -52,4 +57,7 @@ object Strings {
                 " a. Lorem dolor sed viverra ipsum nunc aliquet bibendum enim. Mattis aliquam faucibus purus in" +
                 " massa tempor nec. Massa sapien faucibus et molestie ac feugiat. Etiam sit amet nisl purus. Id " +
                 "venenatis a condimentum vitae sapien."
+
+
+    val EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
 }
