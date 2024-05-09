@@ -83,9 +83,9 @@ fun ComposeMessageSection(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        placeholderMsgUIModel.apply {
-            MessageSubSection(fullName, email, message, organization, onMessageSend)
-        }
+//        placeholderMsgUIModel.apply {
+//            MessageSubSection(fullName, email, message, organization, onMessageSend)
+//        }
     }
 }
 

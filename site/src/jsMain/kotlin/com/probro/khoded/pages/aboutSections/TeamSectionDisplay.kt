@@ -2,7 +2,12 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.ReadMoreVariant
-import com.probro.khoded.components.composables.*
+import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.composables.NoBorderBackingCardVariant
+import com.probro.khoded.components.composables.TeamSectionCard
+import com.probro.khoded.components.composables.popupscreen.FounderPopUpTextVariant
+import com.probro.khoded.components.composables.popupscreen.FounderPopUpVariant
+import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.pages.homeSections.BackgroundStyle
@@ -14,6 +19,7 @@ import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
+import com.probro.khoded.utils.popUp.PopUpStateHolders
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -175,7 +181,7 @@ val FounderBacking by ComponentStyle {
     base {
         Modifier
             .width(Width.FitContent)
-            .height(Height.FitContent)
+            .height(60.vh)
             .padding(10.px)
     }
 }
@@ -227,9 +233,7 @@ val CtoBioSectionVariant by FounderBacking.addVariant {
 
 @Composable
 fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
-    var popUpText by remember { mutableStateOf("") }
-    var image by remember { mutableStateOf("") }
-    var isShowing by remember { mutableStateOf(false) }
+    val popUpState by PopUpStateHolders.FounderPopUiStateHolder.popUpState.collectAsState()
     Box(
         modifier = BackgroundStyle.toModifier(TeamSectionBackgroundVariant)
             .id(id),
@@ -239,31 +243,20 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
             modifier = Modifier
                 .zIndex(1)
                 .fillMaxWidth(80.percent)
-        ) { bio, founder ->
-            popUpText = bio
-            isShowing = true
-            image = founder
+        ) { founder ->
+            PopUpStateHolders.FounderPopUiStateHolder.adjustPopUpText(founder)
         }
 
-        PopUpScreen(
-            popUpUIModel = PopUpScreenUIModel(
-                promptText = popUpText,
-                isShowing = isShowing,
-                image = image,
-                buttonState = ButtonState(
-                    buttonText = "Ok, I see you fam.",
-                    onButtonClick = {
-                        // TODO:  Close the pop up button
-                        isShowing = false
-                    }
-                )
-            ),
-            variant = PopUpBioScreenVariant,
-            textVariant = PopUpTextVariant,
-            modifier = Modifier
-                .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
-                .zIndex(if (isShowing) 3 else 1)
-        )
+        with(popUpState) {
+            PopUpScreen(
+                popUpUIModel = this,
+                variant = FounderPopUpVariant,
+                textVariant = FounderPopUpTextVariant,
+                modifier = Modifier
+                    .visibility(if (isVisible) Visibility.Visible else Visibility.Hidden)
+                    .zIndex(if (isVisible) 2 else 0)
+            )
+        }
     }
 }
 
@@ -276,7 +269,7 @@ val FoundersGridVariant by SimpleGridStyle.addVariant {
 @Composable
 fun FounderContentSection(
     modifier: Modifier = Modifier,
-    onFounderBioClicked: (bio: String, image: String) -> Unit
+    onFounderBioClicked: (founder: Founders) -> Unit
 ) = with(Pages.Story_Section.OurFounders) {
     var state by remember { mutableStateOf(SectionPosition.IDLE) }
     Column(
@@ -299,7 +292,7 @@ fun FounderContentSection(
             FounderText(
                 estherBio,
                 onFounderBioClicked = {
-                    onFounderBioClicked(it, estherBio.image)
+                    onFounderBioClicked(Founders.CEO)
                 }
             )
             Image(
@@ -311,7 +304,7 @@ fun FounderContentSection(
             FounderText(
                 teamBio = joshBio,
                 onFounderBioClicked = {
-                    onFounderBioClicked(it, joshBio.image)
+                    onFounderBioClicked(Founders.CTO)
                 }
             )
         }
@@ -372,18 +365,17 @@ val FounderTextContainer by FounderBacking.addVariant {
 @Composable
 fun FounderText(
     teamBio: Pages.Story_Section.TeamBio,
-    onFounderBioClicked: (bio: String) -> Unit
+    onFounderBioClicked: () -> Unit
 ) = with(teamBio) {
     val mod = FounderBacking.toModifier(FounderTextContainer)
         .fillMaxWidth()
-        .height(Height.Inherit)
     Column(
         modifier = mod,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         FounderNameAndPosition(name, position)
-        FounderBioSection(founderType, story, onFounderBioClicked)
+        FounderBioSection(founderType, desc, onFounderBioClicked)
     }
 }
 
@@ -391,7 +383,7 @@ fun FounderText(
 fun FounderBioSection(
     founder: Founders,
     founderBio: String,
-    onFounderBioClicked: (bio: String) -> Unit
+    onFounderBioClicked: () -> Unit
 ) {
     Column(
         modifier = FounderBacking.toModifier(
@@ -415,7 +407,7 @@ fun FounderBioSection(
             state = ButtonState(
                 buttonText = "Read More",
                 onButtonClick = {
-                    onFounderBioClicked(founderBio)
+                    onFounderBioClicked()
                 }
             ),
             buttonVariant = ReadMoreVariant,
@@ -478,7 +470,7 @@ fun TeamBioDisplay(
             TeammateImage(image, name, position)
         },
         secondSection = {
-            TeammateStory(bio.story)
+            TeammateStory(bio.fullStory)
         }
     )
 }

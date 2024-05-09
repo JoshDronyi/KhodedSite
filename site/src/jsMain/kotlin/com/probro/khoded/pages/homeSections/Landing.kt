@@ -71,6 +71,7 @@ val DesignBackgroundVariant by BackgroundStyle.addVariant {
             .fillMaxWidth(80.percent)
             .color(Colors.Black)
             .margin(top = 100.px, bottom = 200.px)
+            .padding(topBottom = 50.px)
     }
 }
 val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
@@ -259,7 +260,9 @@ fun LandingText(
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Landing) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .scrollSnapStop(ScrollSnapStop.Always)
+            .scrollSnapType(ScrollSnapType.Inherit),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.Start
     ) {

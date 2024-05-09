@@ -42,6 +42,7 @@ object GmailQuickstart {
      * Application name.
      */
     private const val APPLICATION_NAME = "KhodedSite"
+
     /**
      * Global instance of the JSON factory.
      */
@@ -129,7 +130,6 @@ object GmailQuickstart {
                 }
             }
             logger.info("Got the file created. $file")
-            logger.info("getting secrets from file.")
             val clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, InputStreamReader(file.inputStream()))
 
@@ -204,22 +204,22 @@ object GmailQuickstart {
                 writeTo(buffer)
                 logger.info("Created message $this")
             }
-            val rawMessageBytes = buffer.toByteArray()
-            val encodedEmail = Base64.encodeBase64URLSafeString(rawMessageBytes)
             val message = Message().apply {
-                setRaw(encodedEmail)
+                setRaw(
+                    Base64.encodeBase64URLSafeString(
+                        buffer.toByteArray()
+                    )
+                )
             }
             try {
-                // Create the draft message
-
-                // Create send message
                 logger.info("Tryna send the draft.")
-                var draft = Draft()
-                draft.setMessage(message)
-                draft = service.users().drafts().create("me", draft).execute()
-                println("Draft id: " + draft.id)
-                println(draft.toPrettyString())
-                return draft
+                return Draft().apply {
+                    setMessage(message)
+                    service.users().drafts().create("me", this).execute()
+                }.also {
+                    println("Draft id: " + it.id)
+                    println(it.toPrettyString())
+                }
             } catch (e: GoogleJsonResponseException) {
                 // TODO(developer) - handle error appropriately
                 val error = e.details
@@ -265,10 +265,12 @@ object GmailQuickstart {
                 writeTo(messageByteStream)
             }
             logger.info("Adding message bytes")
-            val rawMessageBytes = messageByteStream.toByteArray()
-            val encodedEmail = Base64.encodeBase64URLSafeString(rawMessageBytes)
             var message = Message().apply {
-                setRaw(encodedEmail)
+                setRaw(
+                    Base64.encodeBase64URLSafeString(
+                        messageByteStream.toByteArray()
+                    )
+                )
             }
             try {
                 // Create send message

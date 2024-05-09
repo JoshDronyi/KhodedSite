@@ -43,7 +43,6 @@ val BaseButtonTextVariant by BaseTextStyle.addVariant {
             .styleModifier {
                 attr("text-wrap", "balance")
             }
-//            .wordBreak(WordBreak.BreakAll)
             .height(Height.FitContent)
     }
     Breakpoint.ZERO {

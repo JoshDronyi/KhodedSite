@@ -23,7 +23,7 @@ fun Index() {
     Scaffold(
         onNavigate = { path ->
             ctx.router.navigateTo(path)
-        }
+        },
     ) { header, footer, modifier ->
         HomePageSections(header, footer, modifier) { page ->
             ctx.router.navigateTo(page.path)
@@ -50,6 +50,9 @@ fun HomePageSections(
         )
         ServicesSectionDisplay(Pages.Home_Section.Services)
         DesignSectionDisplay(Pages.Home_Section.Design)
-        ConsultationSectionDisplay(footer, Pages.Home_Section.Consultation)
+        ConsultationSectionDisplay(
+            footer = footer,
+            data = Pages.Home_Section.Consultation,
+        )
     }
 }

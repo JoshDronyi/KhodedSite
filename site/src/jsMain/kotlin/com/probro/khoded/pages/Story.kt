@@ -21,10 +21,10 @@ fun Story(modifier: Modifier = Modifier.fillMaxSize()) {
         modifier = modifier,
         onNavigate = {
             ctx.router.navigateTo(it)
-        }
-    ) { header, footer, jawn ->
+        },
+    ) { header, footer, mod ->
         Column(
-            modifier = jawn,
+            modifier = mod,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
