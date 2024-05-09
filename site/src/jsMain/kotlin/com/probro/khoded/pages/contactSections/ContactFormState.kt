@@ -7,7 +7,6 @@ import com.probro.khoded.messaging.messageData.MessageData
 import com.probro.khoded.utils.Pages
 
 data class ContactFormState(
-    val clientFilledData: Pages.Contact_Section.MessageUIModel,
     val placeholderData: Pages.Contact_Section.MessageUIModel,
     override val stage: MessagingStage = MessagingStage.IDLE(),
     override val isLoading: Boolean = false,

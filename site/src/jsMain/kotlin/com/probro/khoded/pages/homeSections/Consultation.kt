@@ -3,18 +3,16 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.PinkButtonVariant
-import com.probro.khoded.components.composables.ConsultationPopUpTextVariant
-import com.probro.khoded.components.composables.ConsultationPopUpVariant
-import com.probro.khoded.components.composables.PopUpScreen
-import com.probro.khoded.messaging.messageData.MessageData
+import com.probro.khoded.components.composables.popupscreen.MessagingPopUpTextVariant
+import com.probro.khoded.components.composables.popupscreen.MessagingPopUpVariant
+import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.styles.BaseTextStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.Strings.EMAIL_REGEX
 import com.probro.khoded.utils.TitleIDs
-import com.probro.khoded.utils.popUp.PopUpStateHolder
+import com.probro.khoded.utils.popUp.PopUpStateHolders
 import com.stevdza.san.kotlinbs.forms.BSInput
 import com.stevdza.san.kotlinbs.models.InputSize
 import com.stevdza.san.kotlinbs.models.InputValidation
@@ -57,7 +55,6 @@ fun ConsultationSectionDisplay(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        val popUpState by PopUpStateHolder.popUpState.collectAsState()
         Column(
             modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant),
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -68,31 +65,10 @@ fun ConsultationSectionDisplay(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                ConsultationDisplaySection(
-                    mainImage = mainImage,
-                    modifier = Modifier
-                        .id(id),
-                )
+                ConsultationDisplaySection(mainImage = mainImage)
                 QuoteSection(quotes, subText)
             }
             footer(null)
-        }
-
-        with(popUpState) {
-            PopUpScreen(
-                popUpUIModel = this,
-                variant = ConsultationPopUpVariant,
-                textVariant = ConsultationPopUpTextVariant,
-                modifier = Modifier
-                    .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
-                    .opacity(if (isShowing) 100.percent else 0.percent)
-                    .zIndex(if (isShowing) 2 else 0)
-                    .transition(
-                        CSSTransition(property = "visibility", duration = 300.ms),
-                        CSSTransition(property = "opacity", duration = 300.ms),
-                        CSSTransition(property = "zIndex", duration = 300.ms)
-                    )
-            )
         }
     }
 }
@@ -131,6 +107,7 @@ fun ConsultationDisplaySection(
     mainImage: String,
     modifier: Modifier = Modifier,
 ) = with(Pages.Home_Section.Consultation) {
+    val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
     Box(
         modifier = modifier
             .fillMaxWidth(),
@@ -140,13 +117,34 @@ fun ConsultationDisplaySection(
             src = mainImage,
             description = "Message Bubbles",
             modifier = ConsultationImageStyle.toModifier()
+                .zIndex(0)
         )
         ConsultationTextSection(
             mainText = mainText,
             ctaButton = ctaButton,
             modifier = ConsultationRequestStyle.toModifier()
-                .align(Alignment.BottomStart),
+                .id(id)
+                .align(Alignment.BottomStart)
+                .scrollSnapStop(ScrollSnapStop.Always)
+                .scrollSnapType(ScrollSnapAxis.Block, ScrollSnapMode.Mandatory),
         )
+        with(popUpState) {
+            PopUpScreen(
+                popUpUIModel = this,
+                variant = MessagingPopUpVariant,
+                textVariant = MessagingPopUpTextVariant,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
+                    .opacity(if (isShowing) 100.percent else 0.percent)
+                    .zIndex(if (isShowing) 2 else 0)
+                    .transition(
+                        CSSTransition(property = "visibility", duration = 300.ms),
+                        CSSTransition(property = "opacity", duration = 300.ms),
+                        CSSTransition(property = "zIndex", duration = 300.ms)
+                    )
+            )
+        }
     }
 }
 
@@ -217,7 +215,7 @@ val MessagingSectionStyle by ComponentStyle {
 fun ConsultationTextSection(
     mainText: String,
     ctaButton: ButtonState,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val formState by ConsultationStateHolder.formState.collectAsState()
     Column(
@@ -228,7 +226,6 @@ fun ConsultationTextSection(
     ) {
         ConsultationTitle(mainText)
         MessagingSection(
-            messageData = formState.messageData,
             modifier = MessagingSectionStyle.toModifier(),
             placeHolder = formState.placeholderData
         )
@@ -236,17 +233,19 @@ fun ConsultationTextSection(
             ctaButton = ButtonState(
                 buttonText = ctaButton.buttonText,
                 onButtonClick = {
-                    with(formState.messageData) {
-                        println("Clicked consultation")
-                        println("Sending message $message")
-                        ConsultationStateHolder.onMessageSend(message)
-                        println("Send message initiated.")
-                    }
+                    println("Clicked consultation")
+                    ConsultationStateHolder.onMessageSend(formState.messageData.message)
                 }
             ),
             modifier = ConsultationButtonDisplay.toModifier()
                 .align(Alignment.CenterHorizontally)
         )
+    }
+    LaunchedEffect(formState.stage) {
+        formState.stage.let {
+            println("Going to stage $it")
+            PopUpStateHolders.MessagingPopUpStateHolder.adjustPopUpText(it)
+        }
     }
 }
 
@@ -399,7 +398,6 @@ val ContactInfoRowStyle by ComponentStyle {
 
 @Composable
 fun MessagingSection(
-    messageData: MessageData.ConsultationMessageData,
     placeHolder: Pages.Home_Section.ConsultationRequestUIModel,
     modifier: Modifier = Modifier
 ) {
@@ -423,9 +421,6 @@ fun MessagingSection(
             TextBox(
                 placeholder = placeHolder.email,
                 required = true,
-                validation = InputValidation(
-                    isValid = messageData.email.matches(Regex(EMAIL_REGEX))
-                ),
                 modifier = ConsultationTextBox.toModifier()
             ) {
                 ConsultationStateHolder.updateEmail(it)
@@ -539,7 +534,7 @@ fun TextBox(
     var value by remember { mutableStateOf("") }
     BSInput(
         value = value,
-        label = placeholder,
+        placeholder = placeholder,
         required = required,
         validation = validation,
         onValueChange = {

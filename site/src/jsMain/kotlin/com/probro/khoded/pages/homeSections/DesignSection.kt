@@ -9,9 +9,7 @@ import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.CSSTransition
-import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -93,7 +91,9 @@ fun DesignTextSection(
                     style(LineStyle.Solid)
                     color(Colors.RebeccaPurple)
                 }
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .scrollSnapStop(ScrollSnapStop.Normal)
+                .scrollSnapType(ScrollSnapAxis.Y, ScrollSnapMode.Mandatory),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

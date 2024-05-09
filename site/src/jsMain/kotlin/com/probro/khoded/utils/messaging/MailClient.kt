@@ -18,19 +18,30 @@ object MailClient {
             .encodeToByteArray()
         println("Got jsonData as $jsonData")
         try {
+            when (type) {
+                FormType.CONTACT -> require(
+                    data is MessageData.ContactMessageData
+                ) { "Please send a ContactMessageData object if you want to use the type $type" }
+
+                FormType.CONSULTATION -> require(data is MessageData.ConsultationMessageData)
+                { "Please send a ConsultationMessageData object if you want to use the type $type" }
+            }
             val response = window.api.post(
                 apiPath = "sendemail?${MailParams.TYPE.value}=${type.value}",
                 body = jsonData
             ).decodeToString()
             println("Success!!!!! $response")
             return@supervisorScope json.decodeFromString<MailResponse.Success>(response)
+        } catch (ex: IllegalArgumentException) {
+            return@supervisorScope MailResponse.Error.withException(ex).apply {
+                println("Validation Error: $exceptionMesaage")
+                println(stackTrace)
+            }
         } catch (ex: Exception) {
-            println("Issue sending message: ${ex.message}")
-            ex.printStackTrace()
-            return@supervisorScope MailResponse.Error(
-                exceptionMesaage = ex.message ?: "Unknown error.",
-                stackTrace = ex.stackTraceToString()
-            )
+            return@supervisorScope MailResponse.Error.withException(ex).apply {
+                println("Issue sending message: $exceptionMesaage")
+                println(stackTrace)
+            }
         }
     }
 

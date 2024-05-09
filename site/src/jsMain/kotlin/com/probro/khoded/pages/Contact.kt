@@ -3,13 +3,14 @@ package com.probro.khoded.pages
 import androidx.compose.runtime.*
 import com.probro.khoded.BaseButtonTextVariant
 import com.probro.khoded.BlueButtonVariant
-import com.probro.khoded.components.composables.ContactPopUpTextVariant
-import com.probro.khoded.components.composables.ContactPopUpVariant
 import com.probro.khoded.components.composables.DarkLogoTextVariant
-import com.probro.khoded.components.composables.PopUpScreen
+import com.probro.khoded.components.composables.popupscreen.MessagingPopUpTextVariant
+import com.probro.khoded.components.composables.popupscreen.MessagingPopUpVariant
+import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.components.widgets.ContactFooterVariant
 import com.probro.khoded.components.widgets.ContactPageHeaderVariant
 import com.probro.khoded.components.widgets.Scaffold
+import com.probro.khoded.messaging.messageData.MessageData
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.contactSections.ContactFormState
 import com.probro.khoded.pages.contactSections.ContactPageStateHolder
@@ -23,7 +24,7 @@ import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.fallInAnimation
-import com.probro.khoded.utils.popUp.PopUpStateHolder
+import com.probro.khoded.utils.popUp.PopUpStateHolders
 import com.stevdza.san.kotlinbs.models.InputValidation
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
@@ -43,6 +44,7 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
+import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.components.style.addVariant
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
@@ -84,64 +86,84 @@ val ContactFooterBackgroundVariant by BackgroundStyle.addVariant {
 fun Contact() {
     val ctx = rememberPageContext()
     val formState by ContactPageStateHolder.formState.collectAsState()
-    val popUpState by PopUpStateHolder.popUpState.collectAsState()
+    val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
+
     Scaffold(
         onNavigate = {
             ctx.router.navigateTo(it)
-        }
+        },
     ) { header, footer, modifier ->
         with(Pages.Contact_Section.Landing) {
             Box(
                 modifier = Modifier,
                 contentAlignment = Alignment.Center
             ) {
-                // Background Colors used to make the gradient
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Box(
-                        BackgroundStyle.toModifier(ContactLandingBackgroundVariant)
-                            .fillMaxSize()
-                    )
-                    Box(
-                        BackgroundStyle.toModifier(ContactFooterBackgroundVariant)
-                            .fillMaxSize()
-                    )
-                }
-                Column(
-                    modifier = modifier
-                        .height(Height.FitContent),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    header(ContactPageHeaderVariant, DarkLogoTextVariant)
-                    SimpleGrid(
-                        numColumns = numColumns(base = 1, md = 2),
-                        modifier = ContactPageRowStyle.toModifier(LandingSectionVariant)
-                            .id(id)
-                    ) {
-                        ContactForm(
-                            contactFormState = formState
-                        )
-                        CompanyContactInfoSection(
-                            image = mainImage,
-                            contactInfoUIModel = contactInfoUIModel,
-                        )
-                    }
-                    footer(ContactFooterVariant)
-                }
+                ContactPageSections(modifier, header, formState, footer)
                 with(popUpState) {
                     PopUpScreen(
                         popUpUIModel = this,
-                        variant = ContactPopUpVariant,
-                        textVariant = ContactPopUpTextVariant,
+                        variant = MessagingPopUpVariant,
+                        textVariant = MessagingPopUpTextVariant,
                         modifier = Modifier
-                            .visibility(if (isShowing) Visibility.Visible else Visibility.Hidden)
-                            .opacity(if (isShowing) 100.percent else 0.percent)
+                            .visibility(if (isVisible) Visibility.Visible else Visibility.Hidden)
+                            .opacity(if (isVisible) 100.percent else 0.percent)
+                            .zIndex(if (isVisible) 2 else 0)
+                            .transition(
+                                CSSTransition(property = "visibility", duration = 300.ms),
+                                CSSTransition(property = "opacity", duration = 300.ms),
+                                CSSTransition(property = "zIndex", duration = 300.ms)
+                            )
                     )
                 }
             }
         }
+        LaunchedEffect(formState.stage) {
+            PopUpStateHolders.MessagingPopUpStateHolder.adjustPopUpText(formState.stage)
+        }
+    }
+}
+
+@Composable
+fun ContactPageSections(
+    modifier: Modifier,
+    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
+    formState: ContactFormState,
+    footer: @Composable (variant: ComponentVariant?) -> Unit
+) = with(Pages.Contact_Section.Landing) {
+    // Background Colors used to make the gradient
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            BackgroundStyle.toModifier(ContactLandingBackgroundVariant)
+                .fillMaxSize()
+        )
+        Box(
+            BackgroundStyle.toModifier(ContactFooterBackgroundVariant)
+                .fillMaxSize()
+        )
+    }
+    Column(
+        modifier = modifier
+            .height(Height.FitContent),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        header(ContactPageHeaderVariant, DarkLogoTextVariant)
+        SimpleGrid(
+            numColumns = numColumns(base = 1, md = 2),
+            modifier = ContactPageRowStyle.toModifier(LandingSectionVariant)
+                .id(id)
+        ) {
+            ContactForm(
+                contactFormState = formState
+            )
+            CompanyContactInfoSection(
+                image = mainImage,
+                contactInfoUIModel = contactInfoUIModel,
+            )
+        }
+        footer(ContactFooterVariant)
     }
 }
 
@@ -165,21 +187,24 @@ fun ContactForm(
                 mainText = mainText,
                 subText = subText,
                 placeholderData = placeholderData,
-                clientFilledData = clientFilledData,
+                messageData = messageData,
                 onMessageSend = { message ->
                     ContactPageStateHolder.onMessageSend(message)
                 },
                 onStateChange = {
-                    with(clientFilledData) {
-                        ContactPageStateHolder.updateName(fullName)
-                        ContactPageStateHolder.updateEmail(email)
-                        ContactPageStateHolder.updateSubject(messageSubject)
-                        ContactPageStateHolder.updateOgranization(organization)
-                        ContactPageStateHolder.updateMessage(message)
+                    with(ContactPageStateHolder) {
+                        messageData.apply {
+                            updateName(name)
+                            updateEmail(email)
+                            updateSubject(subject)
+                            updateOrganization(organization)
+                            updateMessage(message)
+                        }
                     }
                 })
         }
     }
+
 }
 
 val ClientInfoPromptVariant by BaseTextStyle.addVariant {
@@ -208,11 +233,10 @@ fun ClientContactInfoDisplay(
     mainText: String,
     subText: String,
     placeholderData: Pages.Contact_Section.MessageUIModel,
-    clientFilledData: Pages.Contact_Section.MessageUIModel,
+    messageData: MessageData.ContactMessageData,
     onStateChange: () -> Unit,
     onMessageSend: (message: String) -> Unit,
 ) = with(placeholderData) {
-    val popUpState by PopUpStateHolder.popUpState.collectAsState()
     Box(
         modifier = ContactSectionContainerStyle.toModifier(ClientInfoContainerVariant),
         contentAlignment = Alignment.Center
@@ -221,45 +245,45 @@ fun ClientContactInfoDisplay(
             modifier = Modifier.fillMaxWidth(80.percent)
         ) {
             ClientInfoTitle(mainText, subText)
-            ClientInfoInputDisplay(
-                placeholderData = placeholderData,
-                clientFilledData = clientFilledData,
-                onOrganizationChange = {
-                    clientFilledData.organization = it
-                },
-                onSubjectChange = {
-                    clientFilledData.messageSubject = it
-                },
-                onNameChange = {
-                    clientFilledData.fullName = it
-                },
-                onEmailChange = {
-                    clientFilledData.email = it
+            Span(
+                attrs = Modifier
+                    .background(Colors.Black.copy(alpha = 30))
+                    .borderRadius(20.px)
+                    .padding(topBottom = 10.px, leftRight = 20.px)
+                    .fillMaxWidth()
+                    .toAttrs()
+            ) {
+                ClientInfoInputDisplay(
+                    placeholderData = placeholderData,
+                    messageData = messageData,
+                    onOrganizationChange = {
+                        messageData.organization = it
+                    },
+                    onSubjectChange = {
+                        messageData.subject = it
+                    },
+                    onNameChange = {
+                        messageData.name = it
+                    },
+                    onEmailChange = {
+                        messageData.email = it
+                    }
+                )
+                MessageArea(
+                    modifier = ClientInfoTextBoxStyle.toModifier(ClientInfoTextAreaVariant)
+                ) { newText ->
+                    messageData.message = newText
                 }
-            )
-            MessageArea(
-                modifier = ClientInfoTextBoxStyle.toModifier(ClientInfoTextAreaVariant)
-            ) { newText ->
-                message = newText
-                clientFilledData.message = newText
+                ContactUsCTA(
+                    onStateChange,
+                    onMessageSend = {
+                        onMessageSend(message)
+                    },
+                    modifier = Modifier.width(Width.FitContent)
+                        .margin(topBottom = 10.px)
+                        .align(Alignment.CenterHorizontally)
+                )
             }
-            ContactUsCTA(
-                onStateChange,
-                onMessageSend = {
-                    onMessageSend(message)
-                },
-                modifier = Modifier.width(Width.FitContent)
-                    .margin(topBottom = 10.px)
-                    .align(Alignment.Start)
-            )
-        }
-        with(popUpState) {
-            PopUpScreen(
-                popUpUIModel = this,
-                variant = ContactPopUpVariant,
-                textVariant = ContactPopUpTextVariant,
-                modifier = Modifier
-            )
         }
     }
 }
@@ -343,7 +367,7 @@ val ClientInfoTextAreaVariant by ClientInfoTextBoxStyle.addVariant {
 @Composable
 fun ClientInfoInputDisplay(
     placeholderData: Pages.Contact_Section.MessageUIModel,
-    clientFilledData: Pages.Contact_Section.MessageUIModel,
+    messageData: MessageData.ContactMessageData,
     onNameChange: (newText: String) -> Unit,
     onEmailChange: (newText: String) -> Unit,
     onOrganizationChange: (newText: String) -> Unit,

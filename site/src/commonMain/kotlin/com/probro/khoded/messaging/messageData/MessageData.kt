@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 sealed class MessageData {
     @Serializable
     data class ContactMessageData(
-        val email: String = "",
-        val name: String = "",
-        val message: String = "",
-        val organization: String = "",
-        val subject: String = ""
+        var email: String = "",
+        var name: String = "",
+        var message: String = "",
+        var organization: String = "",
+        var subject: String = ""
     ) : MessageData()
 
     @Serializable

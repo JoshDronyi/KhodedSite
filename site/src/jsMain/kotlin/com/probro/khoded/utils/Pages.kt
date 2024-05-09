@@ -161,19 +161,26 @@ object Pages {
             path = "${Routes.Story.SLUG}${Routes.Story.FOUNDERS}"
         ) {
             val jointFoundersImage = Images.StoryPage.jointFounderImage
+            
             val estherBio = TeamBio(
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",
                 image = Images.StoryPage.founderEsther,
-                story = Strings.EstherFounderBio, //"She cool or whateva!"
-                founderType = Founders.CEO
+                fullStory = Strings.EstherFounderBio, //"She cool or whateva!"
+                founderType = Founders.CEO,
+                title = Strings.EstherTitle,
+                desc = Strings.EstherDesc,
+                shortDesc = Strings.EstherShortDesc
             )
             val joshBio = TeamBio(
                 name = "Joshua Dronyi",
                 position = "CTO/Co-Founder",
                 image = Images.StoryPage.founderJosh,
-                story = Strings.JoshFounderBio, //"He cool or whateva!"
-                founderType = Founders.CTO
+                fullStory = Strings.JoshFounderBio, //"He cool or whateva!"
+                founderType = Founders.CTO,
+                title = Strings.JoshTitle,
+                desc = Strings.JoshDesc,
+                shortDesc = Strings.JoshShortDesc
             )
         }
 
@@ -218,7 +225,10 @@ object Pages {
             val name: String,
             val position: String,
             val image: String,
-            val story: String,
+            val fullStory: String,
+            val shortDesc: String,
+            val desc: String,
+            val title: String,
             val founderType: Founders
         )
 

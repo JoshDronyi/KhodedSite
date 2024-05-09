@@ -8,7 +8,7 @@ import com.probro.khoded.utils.Pages
 
 data class ConsultationFormState(
     val placeholderData: Pages.Home_Section.ConsultationRequestUIModel,
-    override val stage: MessagingStage = MessagingStage.IDLE(),
+    override val stage: MessagingStage,
     override val isLoading: Boolean = false,
     override val messageResult: MessageResult = MessageResult.MessagingError("Havent started yet."),
     override val messageData: MessageData.ConsultationMessageData = MessageData.ConsultationMessageData()

@@ -9,6 +9,8 @@ import com.probro.khoded.models.Routes
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.ScrollBehavior
+import com.varabyte.kobweb.compose.css.ScrollSnapAlign
+import com.varabyte.kobweb.compose.css.ScrollSnapType
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -33,6 +35,7 @@ fun Scaffold(
 ) {
     val navState by Navigator.pageState.collectAsState()
     val breakpoint = rememberBreakpoint()
+
     Box(
         modifier = Modifier
             .height(100.vh)
@@ -63,15 +66,15 @@ fun Scaffold(
                         .margin(top = 40.px, bottom = 10.px),
                     variant = variant
                 ) {
-                    it.path.let {
-                        onNavigate(it)
-                    }
+                    it.path.let { onNavigate(it) }
                 }
             },
             modifier.height(100.vh)
                 .zIndex(1)
                 .fillMaxWidth()
                 .scrollBehavior(ScrollBehavior.Smooth)
+                .scrollSnapType(ScrollSnapType.Initial)
+                .scrollSnapAlign(ScrollSnapAlign.Center)
         )
     }
     LaunchedEffect(navState.currentSection) {

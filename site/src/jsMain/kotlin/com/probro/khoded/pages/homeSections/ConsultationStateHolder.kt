@@ -1,24 +1,29 @@
 package com.probro.khoded.pages.homeSections
 
-import com.probro.khoded.messaging.messageData.MailResponse
-import com.probro.khoded.messaging.MessageResult
 import com.probro.khoded.messaging.MessagingStage
 import com.probro.khoded.messaging.MessagingStateHolder
 import com.probro.khoded.messaging.messageData.FormType
+import com.probro.khoded.messaging.messageData.MailResponse
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.Strings
+import com.probro.khoded.utils.Strings.EMAIL_REGEX
 import com.probro.khoded.utils.messaging.MailClient
-import com.probro.khoded.utils.popUp.PopUpStateHolder
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 object ConsultationStateHolder : MessagingStateHolder<ConsultationFormState>() {
+
+    private val scope = CoroutineScope(Dispatchers.Default + CoroutineExceptionHandler { coroutineContext, throwable ->
+        throwable.printStackTrace()
+    })
+
     private val _consultationState: MutableStateFlow<ConsultationFormState> = MutableStateFlow(
         ConsultationFormState(
             placeholderData = Pages.Home_Section.ConsultationRequestUIModel(),
-            isLoading = false
+            isLoading = false,
+            stage = MessagingStage.IDLE()
         )
     )
     val formState: StateFlow<ConsultationFormState>
@@ -37,62 +42,89 @@ object ConsultationStateHolder : MessagingStateHolder<ConsultationFormState>() {
     }
 
     override fun validateData() {
-        TODO("Not yet implemented")
+        _consultationState.update {
+            it.copy(
+                isLoading = true,
+                stage = MessagingStage.VALIDATING("Validating your consultation request.")
+            )
+        }
+        try {
+            with(formState.value.messageData) {
+                require(name.isNotEmpty()) { "Name should not be empty" }
+                email.apply {
+                    require(isNotEmpty()) { "Email should not be empty" }
+                    require(matches(Regex(EMAIL_REGEX)))
+                    { "Email ($email) does not fit typical email format. Please fit 'email@example.com'." }
+                }
+                require(message.isNotEmpty()) { " Cannot send an empty message." }
+            }
+        } catch (ex: IllegalArgumentException) {
+            _consultationState.update {
+                it.copy(
+                    isLoading = false,
+                    stage = MessagingStage.ERROR(ex.message ?: "Unknown validation error.")
+                )
+            }
+        }
     }
 
-    private val scope = CoroutineScope(Dispatchers.Default + CoroutineExceptionHandler { coroutineContext, throwable ->
-        throwable.printStackTrace()
-    })
 
     override fun onMessageSend(message: String) {
-        _consultationState.update { it.copy(isLoading = true) }
-        if (PopUpStateHolder.popUpState.value.isShowing.not()) {
-            println("Pop up is showing: ${PopUpStateHolder.popUpState.value.isShowing}")
-            PopUpStateHolder.showPopUp()
+        validateData()
+        println("Sending the message.")
+        if (formState.value.isLoading) {
+            sendMessage()
         }
-        if (message == Strings.projectPrompt) {
-            println("default message string.")
-            PopUpStateHolder.adjustPopUpText(MessagingStage.ERROR("Please change the messages default value."))
-        } else {
-            println("Sending the message.")
-            PopUpStateHolder.adjustPopUpText(MessagingStage.SENDING(message))
-            scope.launch {
-                val response = scope.async { sendMessage() }
-                PopUpStateHolder.adjustPopUpText(
-                    MessagingStage.RESPONDING(
-                        response.await()
-                    )
+    }
+
+    private fun sendMessage() = with(formState.value) {
+        println("clientData was $messageData")
+        println("getting the mail response")
+        _consultationState.update {
+            it.copy(
+                stage = MessagingStage.SENDING(
+                    StringBuilder()
+                        .append("Setting your response email to ${messageData.email}\n")
+                        .append("")
+                        .append("Delivering the message:\n ${messageData.message}")
+                        .toString()
                 )
-                _consultationState.update {
-                    it.copy(isLoading = false, messageResult = MessageResult.Success(response.await()))
+            )
+        }
+        val mailResponse = scope.async {
+            MailClient
+                .sendEmail(data = messageData, type = FormType.CONSULTATION)
+        }
+        println("Mail response was $mailResponse")
+        scope.launch {
+            mailResponse.await().apply {
+                when (this) {
+                    is MailResponse.Error -> {
+                        _consultationState.update {
+                            it.copy(
+                                isLoading = false,
+                                stage = MessagingStage.ERROR(this.exceptionMesaage)
+                            )
+                        }
+                    }
+
+                    is MailResponse.Success -> {
+                        _consultationState.update {
+                            it.copy(
+                                isLoading = false,
+                                stage = MessagingStage.SENT(
+                                    Strings.consultationThanksMessage
+                                )
+                            )
+                        }
+                        storeRequest()
+                    }
                 }
             }
         }
     }
 
-    // TODO: EXPAND SSEND MESSAGE FRONT END MESSAGES TO BE FRIENDLIER TO USERS INSTEAD OF DISPLAYING THE EXCEPTION.
-    private suspend fun sendMessage(): String = with(formState.value) {
-        println("sending data: $messageData")
-        println("clientData was $messageData")
-        println("Message was ${messageData.message}")
-        println("getting the mail response")
-
-        val mailResponse = MailClient
-            .sendEmail(data = messageData, type = FormType.CONSULTATION)
-        println("Mail response was $mailResponse")
-
-        return when (mailResponse) {
-            is MailResponse.Error -> {
-                "Exception: ${mailResponse.exceptionMesaage}"
-            }
-
-            is MailResponse.Success -> {
-                Strings.consultationThanksMessage
-            }
-        }
-    }
-
-    fun storeRequest() {
+    private fun storeRequest() {
         // TODO("Save the request in a database.")
     }
 }

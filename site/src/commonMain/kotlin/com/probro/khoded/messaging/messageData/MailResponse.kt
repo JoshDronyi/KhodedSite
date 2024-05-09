@@ -13,5 +13,13 @@ sealed class MailResponse {
     data class Error(
         val exceptionMesaage: String,
         val stackTrace: String
-    ) : MailResponse()
+    ) : MailResponse() {
+        companion object {
+            fun withException(ex: Exception): MailResponse.Error {
+                return MailResponse.Error(ex.message ?: "UnKnown Error.", ex.stackTraceToString())
+            }
+        }
+    }
+
+
 }

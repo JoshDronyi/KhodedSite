@@ -9,10 +9,7 @@ import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
 import com.varabyte.kobweb.api.http.readBodyText
 import com.varabyte.kobweb.api.http.setBodyText
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -36,7 +33,7 @@ lateinit var client: MailClient
 
 
 @Api("sendemail")
-suspend fun sendEmail(ctx: ApiContext) {
+suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApiFunction") + Dispatchers.IO) {
     with(ctx) {
         val formType = logger.let {
             it.info("Got to send email. ${ctx.req.readBodyText()}")
@@ -45,9 +42,9 @@ suspend fun sendEmail(ctx: ApiContext) {
             ctx.req.params[MailParams.TYPE.value]
         }
         val body = req.body?.decodeToString()
-        logger.info("body was $body")
-        val mailResponse = when (formType) {
-            FormType.CONTACT.name -> {
+        logger.info("formType was $formType,\n body was $body")
+        val mailResponse = when {
+            formType?.equals(FormType.CONTACT.name, ignoreCase = true) == true -> {
                 messagingScope.async {
                     sendContactMessage(
                         json.decodeFromString<MessageData.ContactMessageData>(body ?: "")
@@ -55,36 +52,42 @@ suspend fun sendEmail(ctx: ApiContext) {
                 }
             }
 
-            else -> {
+            formType?.equals(FormType.CONSULTATION.name, ignoreCase = true) == true -> {
                 messagingScope.async {
                     sendConsultationMessage(
                         json.decodeFromString<MessageData.ConsultationMessageData>(body ?: "")
                     )
                 }
             }
+
+            else -> {
+                messagingScope.async {
+                    MailResponse.Error(
+                        exceptionMesaage = "Unable to handle formType of $formType",
+                        stackTrace = "Send Email Api function."
+                    )
+                }
+            }
         }
         with(mailResponse.await()) {
             println("mailResponse for $body is $this")
-            when (this) {
+            when (val response = this) {
                 is MailResponse.Error -> {
-//                    TODO("Send something different. No need for serialization.")
                     logger.apply {
-                        info("Issue trying to build and send email: $exceptionMesaage")
-                        info("Sending response stacktrace: $stackTrace")
+                        info("Issue trying to build and send email: ${response.exceptionMesaage}")
+                        info("Stacktrace: ${response.stackTrace}")
                     }
                     res.apply {
                         status = HttpStatus.SC_INTERNAL_SERVER_ERROR
-                        setBodyText(json.encodeToString(this@with))
+                        setBodyText(json.encodeToString(response))
                     }
                 }
 
                 is MailResponse.Success -> {
                     logger.info("Sending success response")
-
-//                    TODO("Send something different. No need for serialization.")
                     res.apply {
                         status = HttpStatus.SC_OK
-                        setBodyText(json.encodeToString(this@with))
+                        setBodyText(json.encodeToString(response))
                     }
                 }
             }
@@ -107,11 +110,11 @@ suspend fun sendConsultationMessage(data: MessageData.ConsultationMessageData?):
 }
 
 suspend fun sendContactMessage(data: MessageData.ContactMessageData?): MailResponse {
-    requireNotNull(data, lazyMessage = {
-        "Contact messages must contain a contact message data object."
-    })
+
+    requireNotNull(data) { "Contact messages must contain a contact message data object." }
 
     validateMessageData(data)
+
     return with(data) {
         client.sendMessage(
             senderName = name,
