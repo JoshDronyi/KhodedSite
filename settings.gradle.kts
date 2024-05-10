@@ -6,16 +6,6 @@ pluginManagement {
         maven("https://us-central1-maven.pkg.dev/varabyte-repos/public")
     }
 }
-//
-//buildscript {
-//    repositories {
-//        mavenCentral()
-//    }
-//    dependencies {
-//        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
-//    }
-//}
-
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }

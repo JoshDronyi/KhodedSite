@@ -27,7 +27,6 @@ kotlin {
     jvmToolchain(19)
     configAsKobwebApplication("khoded", includeServer = true)
 
-
     sourceSets {
         val commonMain by getting {
             dependencies {

@@ -8,10 +8,7 @@ import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.CSSTransition
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -49,6 +46,8 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
         ServicesTitle(
             title = title,
             modifier = Modifier.align(Alignment.TopEnd)
+                .scrollSnapStop(ScrollSnapStop.Normal)
+                .scrollSnapType(ScrollSnapType.Initial)
         )
         Column(
             modifier = ServicesStyle.toModifier()
@@ -71,7 +70,7 @@ val ServicesStyle by ComponentStyle {
     }
     Breakpoint.ZERO {
         Modifier
-            .translateY( ty = 60.px )
+            .translateY(ty = 60.px)
     }
     Breakpoint.SM
     Breakpoint.MD {

@@ -2,9 +2,9 @@ package com.probro.khoded.email
 
 import com.google.api.services.gmail.model.Message
 import com.probro.khoded.IntakeFormDTO
-import com.probro.khoded.MailResponse
 import com.probro.khoded.local.KhodedDB
 import com.probro.khoded.local.KhodedDB.db
+import com.probro.khoded.messaging.messageData.MailResponse
 import com.varabyte.kobweb.api.log.Logger
 import kotlinx.coroutines.supervisorScope
 import org.jetbrains.exposed.sql.transactions.TransactionManager.Companion.closeAndUnregister
@@ -21,9 +21,9 @@ class MailClient(
 
     suspend fun sendMessage(
         senderName: String,
-        senderOrganization: String,
+        senderOrganization: String = "",
         senderEmail: String,
-        subject: String,
+        subject: String = "",
         message: String
     ): MailResponse = supervisorScope {
         logger.info("Attempting to use the mailer to send email.")
@@ -40,7 +40,11 @@ class MailClient(
             )
             email?.let {
                 logger.info("Sent email: $email")
-                return@supervisorScope MailResponse.Success(email.toString())
+                return@supervisorScope MailResponse.Success(
+                    email.labelIds.any {
+                        it.equals("sent", ignoreCase = true)
+                    }
+                )
             } ?: run {
                 val unkKnownErrorMsg = "Sorry, unable to send message."
                 logger.error(unkKnownErrorMsg)

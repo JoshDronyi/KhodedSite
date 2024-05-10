@@ -80,16 +80,15 @@ object Pages {
             // Images.HomePage.consultation_MessageBubble_And_Squiggle
             //            val subImage: String =
             val quotes: String = Images.HomePage.consultation_Quotes
-            val consultationRequestUIModel = ConsultationRequestUIModel()
             val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
                 //TODO: Navigate to the  contact section.
             }
         }
 
         data class ConsultationRequestUIModel(
-            var fullName: String = "Full Name",
-            var email: String = "Email",
-            var projectSynopsis: String = "Tell Us A Little About Your Project"
+            var fullName: String = Strings.namePrompt,
+            var email: String = Strings.emailPrompt,
+            var projectSynopsis: String = Strings.projectPrompt
         )
     }
 
@@ -162,19 +161,26 @@ object Pages {
             path = "${Routes.Story.SLUG}${Routes.Story.FOUNDERS}"
         ) {
             val jointFoundersImage = Images.StoryPage.jointFounderImage
+            
             val estherBio = TeamBio(
                 name = "Esther Dronyi",
                 position = "CEO/Co-Founder",
                 image = Images.StoryPage.founderEsther,
-                story = Strings.EstherFounderBio, //"She cool or whateva!"
-                founderType = Founders.CEO
+                fullStory = Strings.EstherFounderBio, //"She cool or whateva!"
+                founderType = Founders.CEO,
+                title = Strings.EstherTitle,
+                desc = Strings.EstherDesc,
+                shortDesc = Strings.EstherShortDesc
             )
             val joshBio = TeamBio(
                 name = "Joshua Dronyi",
                 position = "CTO/Co-Founder",
                 image = Images.StoryPage.founderJosh,
-                story = Strings.JoshFounderBio, //"He cool or whateva!"
-                founderType = Founders.CTO
+                fullStory = Strings.JoshFounderBio, //"He cool or whateva!"
+                founderType = Founders.CTO,
+                title = Strings.JoshTitle,
+                desc = Strings.JoshDesc,
+                shortDesc = Strings.JoshShortDesc
             )
         }
 
@@ -219,7 +225,10 @@ object Pages {
             val name: String,
             val position: String,
             val image: String,
-            val story: String,
+            val fullStory: String,
+            val shortDesc: String,
+            val desc: String,
+            val title: String,
             val founderType: Founders
         )
 
@@ -244,13 +253,6 @@ object Pages {
             slug = Routes.Contact.SLUG,
             path = "${Routes.Contact.SLUG}${Routes.Contact.LANDING}"
         ) {
-            val placeholderMsgUIModel: MessaageUIModel = MessaageUIModel(
-                fullName = "Full Name",
-                email = "Email",
-                organization = "Organization",
-                messageSubject = "What Do you need Help With",
-                message = "Drop Us A Message"
-            )
             val contactInfoUIModel: ContactInfoUIModel = ContactInfoUIModel()
             val mainText = "Ensure your brand story never ends up in the digital abyss."
             val subText = "Hit us up to craft a site that's 404-proof"
@@ -260,7 +262,7 @@ object Pages {
             }
         }
 
-        data class MessaageUIModel(
+        data class MessageUIModel(
             var fullName: String = "",
             var email: String = "",
             var organization: String = "",
