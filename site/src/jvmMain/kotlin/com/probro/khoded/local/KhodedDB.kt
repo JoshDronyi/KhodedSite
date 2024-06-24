@@ -1,32 +1,29 @@
 package com.probro.khoded.local
 
-import Answer
-import ClientMessage
-import ProjectRequest
+import Project
 import Projects
-import com.probro.khoded.IntakeFormDTO
+import com.google.api.client.util.DateTime
 import com.probro.khoded.KhodedConfig
 import com.probro.khoded.local.datatables.*
-import com.varabyte.kobweb.api.log.Logger
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
-import java.util.*
-import javax.money.Monetary
 
 const val IS_PROD: Boolean = false
+const val POSTGRES_DRIVER ="org.postgresql.Driver"
 
 object KhodedDB {
     val db by lazy {
         val config = HikariConfig().apply {
             jdbcUrl = if (IS_PROD) KhodedConfig.prodUri else KhodedConfig.devUri
-            driverClassName = "org.postgresql.Driver"
+            driverClassName = POSTGRES_DRIVER
             username = if (IS_PROD) KhodedConfig.prodUsername else KhodedConfig.devUsername
             password = if (IS_PROD) KhodedConfig.prodPassword else KhodedConfig.devPassword
             maximumPoolSize = 10
@@ -34,7 +31,8 @@ object KhodedDB {
         val datasource = HikariDataSource(config)
         Database.connect(datasource = datasource)
     }
-    private val dataScope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { coroutineContext, throwable ->
+
+    private val dataScope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
     })
 
@@ -43,7 +41,6 @@ object KhodedDB {
             setUpSchemaTables()
         }
     }
-
 
     private suspend fun setUpSchemaTables() = newSuspendedTransaction {
         SchemaUtils.create(Customers)
@@ -65,8 +62,8 @@ object KhodedDB {
         }
     }
 
-    suspend fun updateUser(user:User){
-        User.findByIdAndUpdate(user.id.value){ userToUpdate ->
+    suspend fun updateUser(user: User) = newSuspendedTransaction {
+        User.findByIdAndUpdate(user.id.value) { userToUpdate ->
             userToUpdate.apply {
                 name = user.name
                 email = user.email
@@ -76,56 +73,60 @@ object KhodedDB {
         }
     }
 
-    suspend fun deleteUser(user:User){
+    suspend fun deleteUser(user: User) = newSuspendedTransaction {
         User.removeFromCache(user)
     }
 
-
-    suspend fun saveMessage(
-        from: String,
-        organization: String,
-        message: String
+    suspend fun createProjectForUser(
+        user: User,
+        name: String,
+        description: String
     ) = newSuspendedTransaction {
-        ClientMessage.new(UUID.randomUUID()) {
-            this.from = from
-            this.organization = organization
+        Project.new {
+            this.name = name
+            this.description = description
+            this.customer = user
+            this.createdAt = Clock.System.now()
+        }
+    }
+
+    suspend fun updateProject(project: Project) = newSuspendedTransaction {
+        Project.findByIdAndUpdate(project.id.value) { oldProj ->
+            oldProj.name = project.name
+            oldProj.description = project.description
+        }
+    }
+
+    suspend fun deleteProject(project: Project) = newSuspendedTransaction {
+        Project.removeFromCache(project)
+    }
+
+    suspend fun createNewConsultation(
+        message: String,
+        suggestedTimes: List<DateTime>,
+        meetingMedium: String
+    ) = newSuspendedTransaction {
+        Consultation.new {
             this.message = message
+            this.meetingMedium = meetingMedium
+            this.suggestedTimes = suggestedTimes.joinToString()
+            this.processed = false
         }
     }
 
-    suspend fun saveProjectRequest(intakeFormDTO: IntakeFormDTO, logger: Logger) = suspendedTransactionAsync {
-        val answers = getAnswers(intakeFormDTO).filterNotNull()
-        logger.info("Got answers $answers")
-        logger.info("Creating new Project request")
-        ProjectRequest.new {
-            logger.info("getting requester info")
-            this.requester = getRequester(intakeFormDTO)
-            logger.info("setting answers")
-            this.answers = SizedCollection(answers)
-            logger.info("Setting requester budget")
-            this.budget = Monetary.getDefaultAmountFactory()
-                .setCurrency(Monetary.getCurrency("U.S"))
-                .setNumber(0)
-                .create()
-            logger.info("creating request")
+    suspend fun updateConsultation(consultation: Consultation) = newSuspendedTransaction {
+        Consultation.findByIdAndUpdate(consultation.id.value) { oldJawn ->
+            with(oldJawn) {
+                message = consultation.message
+                meetingTime = consultation.meetingTime
+                suggestedTimes = consultation.suggestedTimes
+                processed = consultation.processed
+                meetingMedium = consultation.meetingMedium
+            }
         }
     }
 
-    private fun getRequester(intakeFormDTO: IntakeFormDTO) =
-        intakeFormDTO.organization ?: intakeFormDTO.contactFormAnswers?.first()?.answerValue ?: "Unknown"
-
-    private suspend fun getAnswers(intakeFormDTO: IntakeFormDTO): List<Answer?> = with(intakeFormDTO) {
-        mutableListOf<Deferred<List<Answer>?>>().apply {
-            add(dataScope.async { contactFormAnswers?.map { it.toEntity() } })
-            add(dataScope.async { projectOverviewAnswers?.map { it.toEntity() } })
-            add(dataScope.async { designBrandingAnswers?.map { it.toEntity() } })
-            add(dataScope.async { contentImageryAnswers?.map { it.toEntity() } })
-            add(dataScope.async { timelineBudgetAnswers?.map { it.toEntity() } })
-            add(dataScope.async { maintenanceUpdatesAnswers?.map { it.toEntity() } })
-            add(dataScope.async { structureFunctionalityAnswers?.map { it.toEntity() } })
-            add(dataScope.async { additionalInfo?.map { it.toEntity() } })
-        }.awaitAll()
-            .filterNotNull()
-            .flatten()
+    suspend fun removeConsultation(consultation: Consultation) = newSuspendedTransaction {
+        Consultation.removeFromCache(consultation)
     }
 }

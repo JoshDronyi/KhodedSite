@@ -13,7 +13,7 @@ import java.util.*
 object Consultations : UUIDTable("Consultations") {
     val message = varchar("message", MAX_VARCHAR_LENGTH)
     val meetingTime = datetime("MeetingTime")
-    val fallbackTime = datetime("FallbackTime")
+    val suggestedTimes = varchar("FallbackTimes", MAX_VARCHAR_LENGTH)
     val processed = bool("Processed")
     val meetingMedium = varchar("MeetingMedium", BASE_VARCHAR_LENGTH)
 }
@@ -23,7 +23,7 @@ class Consultation(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var message by Consultations.message
     var meetingTime by Consultations.meetingTime
-    val fallbackTime by Consultations.fallbackTime
-    val processed by Consultations.processed
-    val meetingMedium by Consultations.meetingMedium
+    var suggestedTimes by Consultations.suggestedTimes
+    var processed by Consultations.processed
+    var meetingMedium by Consultations.meetingMedium
 }

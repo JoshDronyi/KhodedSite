@@ -6,20 +6,15 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import java.util.*
-
-const val DECIMAL_PRECISION = 10
-const val DECIMAL_SCALE = 2
-
-const val BASE_VARCHAR_LENGTH = 100
-const val MAX_VARCHAR_LENGTH = BASE_VARCHAR_LENGTH * 5
-
 
 object Projects : UUIDTable("Projects") {
     val name = varchar("Name", BASE_VARCHAR_LENGTH)
     val description = varchar("Description", MAX_VARCHAR_LENGTH)
-    val consultations = reference("Consultations", Consultations)
+    val consultations = optReference("Consultations", Consultations)
     val customer = reference("Customers", KhodedUsers)
+    val createdAt = timestamp("CreatedAt")
 }
 
 class Project(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -27,7 +22,8 @@ class Project(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var name by Projects.name
     var description by Projects.description
-    var consultations by Consultation referencedOn Projects.consultations
+    var createdAt by Projects.createdAt
+    val consultations by Consultation optionalReferencedOn Projects.consultations
     var customer by User referencedOn Projects.customer
 }
 
