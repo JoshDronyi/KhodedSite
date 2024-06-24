@@ -1,21 +1,17 @@
 package com.probro.khoded.local
 
 import Answer
-import Answers
 import ClientMessage
-import ClientMessages
 import ProjectRequest
-import ProjectRequestAnswers
-import ProjectRequests
-import ProjectSections
-import Questions
-import com.probro.khoded.FormAnswerDTO
+import Projects
 import com.probro.khoded.IntakeFormDTO
 import com.probro.khoded.KhodedConfig
+import com.probro.khoded.local.datatables.*
 import com.varabyte.kobweb.api.log.Logger
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.*
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
@@ -49,14 +45,41 @@ object KhodedDB {
     }
 
 
-    suspend fun setUpSchemaTables() = newSuspendedTransaction {
-        SchemaUtils.create(ClientMessages)
-        SchemaUtils.create(ProjectRequests)
-        SchemaUtils.create(ProjectRequestAnswers)
-        SchemaUtils.create(Questions)
-        SchemaUtils.create(ProjectSections)
-        SchemaUtils.create(Answers)
+    private suspend fun setUpSchemaTables() = newSuspendedTransaction {
+        SchemaUtils.create(Customers)
+        SchemaUtils.create(Employees)
+        SchemaUtils.create(KhodedUsers)
+        SchemaUtils.create(Projects)
+        SchemaUtils.create(Consultations)
     }
+
+    suspend fun createNewUser(
+        name: String, email: String, phone: String, password: String
+    ) = newSuspendedTransaction {
+        User.new {
+            this.name = name
+            this.email = email
+            this.phone = phone
+            this.password = password
+            this.createdAt = Clock.System.now()
+        }
+    }
+
+    suspend fun updateUser(user:User){
+        User.findByIdAndUpdate(user.id.value){ userToUpdate ->
+            userToUpdate.apply {
+                name = user.name
+                email = user.email
+                phone = user.phone
+                password = user.password
+            }
+        }
+    }
+
+    suspend fun deleteUser(user:User){
+        User.removeFromCache(user)
+    }
+
 
     suspend fun saveMessage(
         from: String,
@@ -104,13 +127,5 @@ object KhodedDB {
         }.awaitAll()
             .filterNotNull()
             .flatten()
-    }
-}
-
-
-fun FormAnswerDTO.toEntity(): Answer {
-    return Answer.new {
-        this.questionText = questionText
-        this.value = answerValue
     }
 }

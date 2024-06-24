@@ -1,10 +1,12 @@
 [versions]
-jetbrains-compose = "1.5.11"
-kobweb = "0.15.3"
-kotlin = "1.9.21"
+jetbrains-compose = "1.6.1"
+kobweb = "0.17.3"
+kotlin = "1.9.23"
 kotlinx-serialization = "1.6.2"
 kotlinMailer = "0.2.0"
-moko = "0.23.0"
+buildKonfig = "0.15.1"
+flyway = "10.0.0"
+ktor-version = "2.3.1"
 
 [libraries]
 kobweb-api = { module = "com.varabyte.kobweb:kobweb-api", version.ref = "kobweb" }
@@ -14,14 +16,14 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 silk-icons-fa = { module = "com.varabyte.kobwebx:silk-icons-fa", version.ref = "kobweb" }
 mailer-core = { module = "at.quickme.kotlinmailer:kotlinmailer-core", version.ref = "kotlinMailer" }
 mailer-client = { module = "at.quickme.kotlinmailer:kotlinmailer-html", version.ref = "kotlinMailer" }
-moko-generator = {module = "dev.icerock.moko:resources-generator", version.ref="moko"}
-moko-resources = {module = "dev.icerock.moko:resources", version.ref="moko"}
-
+ktor-sessions = { module ="io.ktor:ktor-server-sessions", version.ref = "ktor-version"}
 
 [plugins]
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
 kobweb-application = { id = "com.varabyte.kobweb.application", version.ref = "kobweb" }
+kobweb-library = { id = "com.varabyte.kobweb.library", version.ref = "kobweb" }
 kobwebx-markdown = { id = "com.varabyte.kobwebx.markdown", version.ref = "kobweb" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-moko-generator = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
+build-konfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }

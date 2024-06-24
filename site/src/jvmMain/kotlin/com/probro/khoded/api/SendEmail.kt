@@ -9,7 +9,12 @@ import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
 import com.varabyte.kobweb.api.http.readBodyText
 import com.varabyte.kobweb.api.http.setBodyText
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -33,67 +38,68 @@ lateinit var client: MailClient
 
 
 @Api("sendemail")
-suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApiFunction") + Dispatchers.IO) {
-    with(ctx) {
-        val formType = logger.let {
-            it.info("Got to send email. ${ctx.req.readBodyText()}")
-            it.info("Params were ${ctx.req.params}")
-            client = MailClient(it)
-            ctx.req.params[MailParams.TYPE.value]
-        }
-        val body = req.body?.decodeToString()
-        logger.info("formType was $formType,\n body was $body")
-        val mailResponse = when {
-            formType?.equals(FormType.CONTACT.name, ignoreCase = true) == true -> {
-                messagingScope.async {
-                    sendContactMessage(
-                        json.decodeFromString<MessageData.ContactMessageData>(body ?: "")
-                    )
-                }
+suspend fun sendEmail(ctx: ApiContext) =
+    withContext(CoroutineName("SendEmailApiFunction") + Dispatchers.IO) {
+        with(ctx) {
+            val formType = logger.let {
+                it.info("Got to send email. ${ctx.req.readBodyText()}")
+                it.info("Params were ${ctx.req.params}")
+                client = MailClient(it)
+                ctx.req.params[MailParams.TYPE.value]
             }
-
-            formType?.equals(FormType.CONSULTATION.name, ignoreCase = true) == true -> {
-                messagingScope.async {
-                    sendConsultationMessage(
-                        json.decodeFromString<MessageData.ConsultationMessageData>(body ?: "")
-                    )
-                }
-            }
-
-            else -> {
-                messagingScope.async {
-                    MailResponse.Error(
-                        exceptionMesaage = "Unable to handle formType of $formType",
-                        stackTrace = "Send Email Api function."
-                    )
-                }
-            }
-        }
-        with(mailResponse.await()) {
-            println("mailResponse for $body is $this")
-            when (val response = this) {
-                is MailResponse.Error -> {
-                    logger.apply {
-                        info("Issue trying to build and send email: ${response.exceptionMesaage}")
-                        info("Stacktrace: ${response.stackTrace}")
-                    }
-                    res.apply {
-                        status = HttpStatus.SC_INTERNAL_SERVER_ERROR
-                        setBodyText(json.encodeToString(response))
+            val body = req.body?.decodeToString()
+            logger.info("formType was $formType,\n body was $body")
+            val mailResponse = when {
+                formType?.equals(FormType.CONTACT.name, ignoreCase = true) == true -> {
+                    messagingScope.async {
+                        sendContactMessage(
+                            json.decodeFromString<MessageData.ContactMessageData>(body ?: "")
+                        )
                     }
                 }
 
-                is MailResponse.Success -> {
-                    logger.info("Sending success response")
-                    res.apply {
-                        status = HttpStatus.SC_OK
-                        setBodyText(json.encodeToString(response))
+                formType?.equals(FormType.CONSULTATION.name, ignoreCase = true) == true -> {
+                    messagingScope.async {
+                        sendConsultationMessage(
+                            json.decodeFromString<MessageData.ConsultationMessageData>(body ?: "")
+                        )
+                    }
+                }
+
+                else -> {
+                    messagingScope.async {
+                        MailResponse.Error(
+                            exceptionMesaage = "Unable to handle formType of $formType",
+                            stackTrace = "Send Email Api function."
+                        )
+                    }
+                }
+            }
+            with(mailResponse.await()) {
+                println("mailResponse for $body is $this")
+                when (val response = this) {
+                    is MailResponse.Error -> {
+                        logger.apply {
+                            info("Issue trying to build and send email: ${response.exceptionMesaage}")
+                            info("Stacktrace: ${response.stackTrace}")
+                        }
+                        res.apply {
+                            status = HttpStatus.SC_INTERNAL_SERVER_ERROR
+                            setBodyText(json.encodeToString(response))
+                        }
+                    }
+
+                    is MailResponse.Success -> {
+                        logger.info("Sending success response")
+                        res.apply {
+                            status = HttpStatus.SC_OK
+                            setBodyText(json.encodeToString(response))
+                        }
                     }
                 }
             }
         }
     }
-}
 
 
 suspend fun sendConsultationMessage(data: MessageData.ConsultationMessageData?): MailResponse {
@@ -144,7 +150,8 @@ sealed class MessagingResponse {
         val message = "Sent."
     }
 
-    sealed class MessagingError(val errorMessage: String, val statusCode: Int) : MessagingResponse() {
+    sealed class MessagingError(val errorMessage: String, val statusCode: Int) :
+        MessagingResponse() {
         object EmptyMessage : MessagingError("Message cannot be empty", 3)
         object EmptyEmail : MessagingError("Email cannot be empty", 2)
         object EmptyName : MessagingError("Name cannot be empty", 1)

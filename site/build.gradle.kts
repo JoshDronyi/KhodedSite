@@ -6,10 +6,10 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kobweb.application)
-    alias(libs.plugins.kobwebx.markdown)
+//    alias(libs.plugins.kobwebx.markdown)
     alias(libs.plugins.kotlin.serialization)
-    id("com.codingfeline.buildkonfig") version "0.15.1"
-    id("org.flywaydb.flyway") version "10.0.0"
+    alias(libs.plugins.build.konfig)
+    alias(libs.plugins.flyway)
 }
 
 group = "com.probro.khoded"
@@ -28,15 +28,9 @@ kotlin {
     configAsKobwebApplication("khoded", includeServer = true)
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(compose.runtime)
-                api(libs.kotlinx.serialization.json)
-            }
-        }
-
         val jsMain by getting {
             dependencies {
+                implementation(project(":common"))
                 implementation(compose.html.core)
                 implementation(libs.kobweb.core)
                 implementation(libs.kobweb.silk)
@@ -46,6 +40,8 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
+                implementation(project(":common"))
+
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
 
                 //Kotlin Mailer dependencies (Jakarta)
@@ -60,8 +56,8 @@ kotlin {
                 implementation("com.google.auth:google-auth-library-credentials:1.16.1")
                 implementation("com.google.http-client:google-http-client:1.43.1")
 
-                //TODO: LOOK UP flyway GRADLE DEPENDENCIES for database migrations
 
+                implementation(libs.ktor.sessions)
                 // Postgresdb
                 implementation("org.postgresql:postgresql:42.7.1")
                 // Hikari (for Connection pooling)
@@ -69,7 +65,7 @@ kotlin {
 
 
                 //Exposed (Jetbrains library for database connection)
-                val exposedVersion = "0.45.0"
+                val exposedVersion = "0.51.1"
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
                 // use a dao to have it be similar to android logic
@@ -82,6 +78,8 @@ kotlin {
             }
         }
     }
+
+    task("testClasses")
 }
 
 buildkonfig {
@@ -95,17 +93,35 @@ buildkonfig {
         //Gmail Config
         buildConfigField(FieldSpec.Type.STRING, "Type", properties.getProperty("type"))
         buildConfigField(FieldSpec.Type.STRING, "ProjectID", properties.getProperty("project_id"))
-        buildConfigField(FieldSpec.Type.STRING, "PrivateKeyID", properties.getProperty("private_key_id"))
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "PrivateKeyID",
+            properties.getProperty("private_key_id")
+        )
         buildConfigField(FieldSpec.Type.STRING, "PrivateKey", properties.getProperty("private_key"))
-        buildConfigField(FieldSpec.Type.STRING, "ClientEmail", properties.getProperty("client_email"))
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "ClientEmail",
+            properties.getProperty("client_email")
+        )
         buildConfigField(FieldSpec.Type.STRING, "ClientID", properties.getProperty("client_id"))
         buildConfigField(FieldSpec.Type.STRING, "AuthUri", properties.getProperty("auth_uri"))
         buildConfigField(FieldSpec.Type.STRING, "TokenUri", properties.getProperty("token_uri"))
         buildConfigField(
-            FieldSpec.Type.STRING, "AuthProviderUrl", properties.getProperty("auth_provider_x509_cert_url")
+            FieldSpec.Type.STRING,
+            "AuthProviderUrl",
+            properties.getProperty("auth_provider_x509_cert_url")
         )
-        buildConfigField(FieldSpec.Type.STRING, "ClientCertUrl", properties.getProperty("client_x509_cert_url"))
-        buildConfigField(FieldSpec.Type.STRING, "UniversDomain", properties.getProperty("universe_domain"))
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "ClientCertUrl",
+            properties.getProperty("client_x509_cert_url")
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "UniversDomain",
+            properties.getProperty("universe_domain")
+        )
 
         //Postgres values
         buildConfigField(FieldSpec.Type.STRING, "devUri", "dev_Uri")
