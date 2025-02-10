@@ -6,6 +6,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.probro.khoded.components.composables.HeaderLogoTextVariant
 import com.probro.khoded.models.Routes
+import com.probro.khoded.styles.textStyles.BaseTextKind
+import com.probro.khoded.styles.textStyles.ColumnKind
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
 import com.varabyte.kobweb.compose.css.ScrollBehavior
@@ -15,8 +17,8 @@ import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.CssStyleVariant
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import org.jetbrains.compose.web.css.percent
@@ -28,8 +30,11 @@ fun Scaffold(
     modifier: Modifier = Modifier,
     onNavigate: (path: String) -> Unit,
     content: @Composable (
-        header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
-        footer: @Composable (variant: ComponentVariant?) -> Unit,
+        header: @Composable (
+            variant: CssStyleVariant<HeaderKind>?,
+            textVariant: CssStyleVariant<BaseTextKind>?
+        ) -> Unit,
+        footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit,
         modifier: Modifier,
     ) -> Unit
 ) {

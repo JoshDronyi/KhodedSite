@@ -4,12 +4,16 @@ import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.ScrollSnapStop
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -19,10 +23,10 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
@@ -50,13 +54,13 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
         secondSection = {
             DesignImageSection(
                 secondImage = mainImage,
-                modifier = DesignImageStyle.toModifier()
+                modifier = ImageStyle.toModifier(DesignImageVariant)
             )
         }
     )
 }
 
-val DesignImageStyle by ComponentStyle {
+val DesignImageVariant = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxSize()
@@ -92,8 +96,8 @@ fun DesignTextSection(
                     color(Colors.RebeccaPurple)
                 }
                 .fillMaxWidth()
-                .scrollSnapStop(ScrollSnapStop.Normal)
-                .scrollSnapType(ScrollSnapAxis.Y, ScrollSnapMode.Mandatory),
+                // .scrollSnapType(ScrollSnapAxis.Y, ScrollSnapMode.Mandatory)
+                .scrollSnapStop(ScrollSnapStop.Normal),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -107,7 +111,7 @@ fun DesignTextSection(
     }
 }
 
-val BlackUnderlineVariant by ImageStyle.addVariant {
+val BlackUnderlineVariant = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(40.percent)
@@ -125,7 +129,7 @@ val BlackUnderlineVariant by ImageStyle.addVariant {
     }
 }
 
-val PlaneImageVariant by ImageStyle.addVariant {
+val PlaneImageVariant = ImageStyle.addVariant {
     base {
         Modifier
             .zIndex(2)
@@ -147,7 +151,7 @@ val PlaneImageVariant by ImageStyle.addVariant {
 @Composable
 fun DesignSubText(lowerText: String) {
     P(
-        attrs = HomeTitleTextStyle.toModifier(DesignSubTitleVariant)
+        attrs = BaseTextStyle.toModifier(DesignSubTitleVariant)
             .toAttrs()
     ) {
         Text(value = lowerText)
@@ -166,29 +170,16 @@ fun DesignHeading(
     val secondText = remember { upperText.substring(justIndex + LENGTH_OF_JUST) }
 
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+    val animation = when (sectionPosition) {
+        SectionPosition.ABOVE -> jobPostingShiftDownKeyFrames
+        SectionPosition.ON_SCREEN -> jobPostingShiftUPKeyFrames
+        SectionPosition.BELOW -> jobPostingShiftDownKeyFrames
+        SectionPosition.IDLE -> jobPostingShiftUPKeyFrames
+    }
     P(
-        attrs = HomeTitleTextStyle.toModifier(DesignTitleVariant)
+        attrs = BaseTextStyle.toModifier(DesignTitleVariant)
             .id(TitleIDs.designTitleID)
-            .translateY(
-                ty = when (sectionPosition) {
-                    SectionPosition.ABOVE -> (-100).px
-                    SectionPosition.ON_SCREEN -> 0.px
-                    SectionPosition.BELOW -> (-100).px
-                    SectionPosition.IDLE -> 0.px
-                }
-            )
-            .opacity(
-                when (sectionPosition) {
-                    SectionPosition.ABOVE -> 0.percent
-                    SectionPosition.ON_SCREEN -> 100.percent
-                    SectionPosition.BELOW -> 0.percent
-                    SectionPosition.IDLE -> 100.percent
-                }
-            )
-            .transition(
-                CSSTransition(property = "translate", duration = 600.ms),
-                CSSTransition(property = "opacity", duration = 600.ms)
-            )
+            .animation(animation.toAnimation(600.ms))
             .toAttrs()
     ) {
         Text(value = firstText)
@@ -226,7 +217,7 @@ fun DesignImageSection(
     }
 }
 
-val ComputerPicVariant by ImageStyle.addVariant {
+val ComputerPicVariant = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()

@@ -1,20 +1,18 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.ReadMoreVariant
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.components.composables.TeamSectionCard
-import com.probro.khoded.components.composables.popupscreen.FounderPopUpTextVariant
-import com.probro.khoded.components.composables.popupscreen.FounderPopUpVariant
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.pages.homeSections.BackgroundStyle
 import com.probro.khoded.pages.homeSections.ButtonDisplay
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.styles.TeamBioParagraphVaraiant
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.componentStyles.FounderPopUpTextVariant
+import com.probro.khoded.styles.componentStyles.FounderPopUpVariant
+import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -33,15 +31,16 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.SimpleGridStyle
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.extendedBy
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val TeamSectionBackgroundVariant by BackgroundStyle.addVariant {
+val TeamSectionBackgroundVariant = BackgroundStyle.addVariant {
     base {
         Modifier
             .background(Colors.RebeccaPurple)
@@ -49,7 +48,7 @@ val TeamSectionBackgroundVariant by BackgroundStyle.addVariant {
             .height(Height.FitContent)
     }
 }
-val FounderTextStyle by ComponentStyle {
+val FounderTextStyle = BaseTextStyle.addVariant {
     base {
         Modifier
             .padding(0.px)
@@ -63,7 +62,7 @@ val FounderTextStyle by ComponentStyle {
     }
 }
 
-val FounderTitleVariant by FounderTextStyle.addVariant {
+val FounderTitleVariant = FounderTextStyle.extendedBy {
     base {
         Modifier
             .fontSize(48.px)
@@ -85,7 +84,7 @@ val FounderTitleVariant by FounderTextStyle.addVariant {
     }
 }
 
-val FounderNameVariant by FounderTextStyle.addVariant {
+val FounderNameVariant = FounderTextStyle.extendedBy {
     base {
         Modifier
             .fontSize(FontSize.Medium)
@@ -108,7 +107,7 @@ val FounderNameVariant by FounderTextStyle.addVariant {
             .fontSize(FontSize.Large)
     }
 }
-val FounderPositionVariant by FounderTextStyle.addVariant {
+val FounderPositionVariant = FounderTextStyle.extendedBy {
     base {
         Modifier
             .fontSize(FontSize.Medium)
@@ -132,7 +131,7 @@ val FounderPositionVariant by FounderTextStyle.addVariant {
             .fontSize(FontSize.Medium)
     }
 }
-val FounderBioVariant by FounderTextStyle.addVariant {
+val FounderBioVariant = FounderTextStyle.extendedBy {
     base {
         Modifier
             .fontSize(FontSize.Small)
@@ -156,7 +155,7 @@ val FounderBioVariant by FounderTextStyle.addVariant {
     }
 }
 
-val FounderImageVariant by ImageStyle.addVariant {
+val FounderImageVariant = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -177,7 +176,7 @@ val FounderImageVariant by ImageStyle.addVariant {
         Modifier
     }
 }
-val FounderBacking by ComponentStyle {
+val FounderBackingVariant = BackgroundStyle.addVariant {
     base {
         Modifier
             .width(Width.FitContent)
@@ -185,14 +184,14 @@ val FounderBacking by ComponentStyle {
             .padding(10.px)
     }
 }
-val ImageSectionBacking by FounderBacking.addVariant {
+val ImageSectionBacking = FounderBackingVariant.extendedBy {
     base {
         Modifier
             .padding(leftRight = 20.px)
     }
 }
 
-val CeoBackingSectionVariant by FounderBacking.addVariant {
+val CeoBackingSectionVariant = FounderBackingVariant.extendedBy {
     base {
         Modifier
             .backgroundColor(Colors.MediumPurple)
@@ -211,7 +210,7 @@ val CeoBackingSectionVariant by FounderBacking.addVariant {
     }
 }
 
-val CtoBioSectionVariant by FounderBacking.addVariant {
+val CtoBioSectionVariant = FounderBackingVariant.extendedBy {
     base {
         Modifier
             .backgroundColor(KhodedColors.PURPLE.rgb)
@@ -260,7 +259,7 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
     }
 }
 
-val FoundersGridVariant by SimpleGridStyle.addVariant {
+val FoundersGridVariant = SimpleGridStyle.addVariant {
     base {
         Modifier
     }
@@ -321,29 +320,16 @@ fun FoundersTitle(
     state: SectionPosition,
     modifier: Modifier = Modifier
 ) = with(Pages.Story_Section.OurFounders) {
+    val animation = when (state) {
+        SectionPosition.ABOVE -> jobPostingShiftDownKeyFrames
+        SectionPosition.ON_SCREEN -> jobPostingShiftUPKeyFrames
+        SectionPosition.BELOW -> jobPostingShiftDownKeyFrames
+        SectionPosition.IDLE -> jobPostingShiftUPKeyFrames
+    }
     P(
-        attrs = FounderTextStyle.toModifier(FounderTitleVariant)
+        attrs = BaseTextStyle.toModifier(FounderTitleVariant)
             .then(modifier)
-            .translateY(
-                ty = when (state) {
-                    SectionPosition.ABOVE -> (-100).px
-                    SectionPosition.ON_SCREEN -> 0.px
-                    SectionPosition.BELOW -> (-100).px
-                    SectionPosition.IDLE -> 0.px
-                }
-            )
-            .opacity(
-                when (state) {
-                    SectionPosition.ABOVE -> 0.percent
-                    SectionPosition.ON_SCREEN -> 100.percent
-                    SectionPosition.BELOW -> 0.percent
-                    SectionPosition.IDLE -> 100.percent
-                }
-            )
-            .transition(
-                CSSTransition(property = "translate", duration = 600.ms),
-                CSSTransition(property = "opacity", duration = 600.ms)
-            )
+            .animation(animation.toAnimation(600.ms))
             .toAttrs()
     ) {
         Text(title)
@@ -355,7 +341,7 @@ enum class Founders {
 }
 
 
-val FounderTextContainer by FounderBacking.addVariant {
+val FounderTextContainer = FounderBackingVariant.extendedBy {
     base {
         Modifier
             .width(Width.FitContent)
@@ -367,7 +353,7 @@ fun FounderText(
     teamBio: Pages.Story_Section.TeamBio,
     onFounderBioClicked: () -> Unit
 ) = with(teamBio) {
-    val mod = FounderBacking.toModifier(FounderTextContainer)
+    val mod = BackgroundStyle.toModifier(FounderTextContainer)
         .fillMaxWidth()
     Column(
         modifier = mod,
@@ -386,7 +372,7 @@ fun FounderBioSection(
     onFounderBioClicked: () -> Unit
 ) {
     Column(
-        modifier = FounderBacking.toModifier(
+        modifier = BackgroundStyle.toModifier(
             when (founder) {
                 Founders.CEO -> CeoBackingSectionVariant
                 Founders.CTO -> CtoBioSectionVariant
@@ -397,7 +383,7 @@ fun FounderBioSection(
         verticalArrangement = Arrangement.Bottom
     ) {
         P(
-            attrs = FounderTextStyle.toModifier(FounderBioVariant)
+            attrs = BaseTextStyle.toModifier(FounderBioVariant)
                 .weight(1)
                 .toAttrs()
         ) {
@@ -410,7 +396,7 @@ fun FounderBioSection(
                     onFounderBioClicked()
                 }
             ),
-            buttonVariant = ReadMoreVariant,
+            buttonVariant = ReadMoreButtonVariant,
             modifier = Modifier.padding(topBottom = 10.px)
                 .margin(top = 10.px)
         ) {
@@ -433,13 +419,13 @@ fun FounderNameAndPosition(founderName: String, founderTitle: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         P(
-            attrs = FounderTextStyle.toModifier(FounderNameVariant)
+            attrs = BaseTextStyle.toModifier(FounderNameVariant)
                 .toAttrs()
         ) {
             Text(founderName.uppercase())
         }
         P(
-            attrs = FounderTextStyle.toModifier(FounderPositionVariant)
+            attrs = BaseTextStyle.toModifier(FounderPositionVariant)
                 .toAttrs()
         ) {
             Text(founderTitle.uppercase())
@@ -447,7 +433,7 @@ fun FounderNameAndPosition(founderName: String, founderTitle: String) {
     }
 }
 
-val ReadMoreTextVariant by BaseTextStyle.addVariant {
+val ReadMoreTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .fontSize(FontSize.Medium)

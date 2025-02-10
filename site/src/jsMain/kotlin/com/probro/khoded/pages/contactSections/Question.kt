@@ -4,8 +4,9 @@ import androidx.compose.runtime.*
 import com.probro.khoded.IntakeFormAnswer
 import com.probro.khoded.Question
 import com.probro.khoded.QuestionType
-import com.probro.khoded.styles.BaseTextStyle
-import com.varabyte.kobweb.compose.css.CSSTransition
+import com.probro.khoded.styles.textStyles.BaseContainerStyle
+import com.probro.khoded.styles.textStyles.BaseTextInputStyle
+import com.probro.khoded.styles.textStyles.BaseTextStyle
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -20,12 +21,11 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.hover
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.CheckboxInput
@@ -198,7 +198,7 @@ fun ABQuestionDisplay(
     }
 }
 
-val TextInputStyle by ComponentStyle {
+val TextInputVariant = BaseTextInputStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -216,16 +216,16 @@ fun OpenQuestionDisplay(
     Input(
         type = InputType.Text,
         value = textValue,
-        onValueChanged = {
+        onValueChange = {
             textValue = it
             onValueChange(it)
         },
-        modifier = TextInputStyle.toModifier()
+        modifier = BaseTextInputStyle.toModifier(TextInputVariant)
             .then(modifier)
     )
 }
 
-val AnswerOptionStyle by ComponentStyle {
+val AnswerOptionVariant = BaseContainerStyle.addVariant {
     base {
         Modifier
             .border(
@@ -243,7 +243,7 @@ val AnswerOptionStyle by ComponentStyle {
                 offsetX = 2.px,
                 blurRadius = 2.px
             )
-            .transition(CSSTransition(property = "shadow", duration = 400.ms))
+        //  .transition(CSSTransition(property = "shadow", duration = 400.ms))
     }
     hover {
         Modifier
@@ -253,7 +253,7 @@ val AnswerOptionStyle by ComponentStyle {
                 offsetX = 4.px,
                 blurRadius = 4.px
             )
-            .transition(CSSTransition(property = "shadow", duration = 400.ms))
+        //.transition(CSSTransition(property = "shadow", duration = 400.ms))
     }
 }
 
@@ -262,7 +262,7 @@ fun AnswerOption(
     option: String,
     isSelected: Boolean,
     questionType: QuestionType,
-    modifier: Modifier = AnswerOptionStyle.toModifier(),
+    modifier: Modifier = BaseContainerStyle.toModifier(AnswerOptionVariant),
     onOptionSelect: (option: String) -> Unit
 ) {
     println("For option $option is selected is $isSelected")

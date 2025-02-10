@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.probro.khoded.models.KhodedColors
+import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.fallInAnimation
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.ObjectFit
@@ -15,13 +16,10 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.*
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import org.jetbrains.compose.web.css.*
@@ -30,13 +28,15 @@ import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import kotlin.time.Duration.Companion.seconds
 
-val LogoContainerStyle by ComponentStyle {
+sealed interface LogoKind : ComponentKind
+
+val LogoContainerVariant = BaseContainerStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
     }
 }
-val LogoImageStyle by ComponentStyle {
+val LogoImageVariant = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(50.percent)
@@ -50,7 +50,7 @@ val LogoImageStyle by ComponentStyle {
 //    Breakpoint.XL { Modifier.fillMaxWidth(20.percent) }
 }
 
-val LogoTextStyle by ComponentStyle {
+val LogoTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .textAlign(TextAlign.Start)
@@ -72,7 +72,7 @@ val LogoTextStyle by ComponentStyle {
     }
 }
 
-val HeaderLogoContainerVariant by LogoContainerStyle.addVariant {
+val HeaderLogoContainerVariant = LogoContainerVariant.extendedBy {
     base {
         Modifier
             .fillMaxWidth()
@@ -80,7 +80,7 @@ val HeaderLogoContainerVariant by LogoContainerStyle.addVariant {
     }
 }
 
-val HeaderImageVariant by LogoImageStyle.addVariant {
+val HeaderImageVariant = LogoImageVariant.extendedBy {
     base {
         Modifier
             .maxHeight(3.vh)
@@ -89,7 +89,7 @@ val HeaderImageVariant by LogoImageStyle.addVariant {
     }
 }
 
-val HeaderLogoTextVariant by LogoTextStyle.addVariant {
+val HeaderLogoTextVariant = LogoTextVariant.extendedBy {
     base {
         Modifier
             .fillMaxWidth()
@@ -97,13 +97,13 @@ val HeaderLogoTextVariant by LogoTextStyle.addVariant {
     }
 }
 
-val DarkLogoTextVariant by LogoTextStyle.addVariant {
+val DarkLogoTextVariant = LogoTextVariant.extendedBy {
     base {
         Modifier
             .color(KhodedColors.PURPLE.rgb)
     }
 }
-val FooterLogoContainerVariant by LogoContainerStyle.addVariant {
+val FooterLogoContainerVariant = LogoContainerVariant.extendedBy {
     base {
         Modifier
             .fillMaxWidth()
@@ -114,13 +114,13 @@ val FooterLogoContainerVariant by LogoContainerStyle.addVariant {
             }
     }
 }
-val FooterImageVariant by LogoImageStyle.addVariant {
+val FooterImageVariant = LogoImageVariant.extendedBy {
     base {
         Modifier
             .fillMaxWidth(40.percent)
     }
 }
-val FooterLogoTextVariant by LogoTextStyle.addVariant {
+val FooterLogoTextVariant = LogoTextVariant.extendedBy {
     base {
         Modifier
             .fillMaxWidth()
@@ -131,36 +131,36 @@ val FooterLogoTextVariant by LogoTextStyle.addVariant {
         Modifier.fontSize(FontSize.Larger)
     }
 }
-val SideNavLogoContainerVariant by LogoContainerStyle.addVariant {
+val SideNavLogoContainerVariant = LogoContainerVariant.extendedBy {
     base {
         Modifier
     }
 }
-val SideNavImageVariant by LogoImageStyle.addVariant {
-    base {
-        Modifier
-    }
-}
-
-val SideNavLogoTextVariant by LogoTextStyle.addVariant {
+val SideNavImageVariant = LogoImageVariant.extendedBy {
     base {
         Modifier
     }
 }
 
-val SeparatorLogoContainerVariant by LogoContainerStyle.addVariant {
+val SideNavLogoTextVariant = LogoTextVariant.extendedBy {
     base {
         Modifier
     }
 }
 
-val SeparatorImageVariant by LogoImageStyle.addVariant {
+val SeparatorLogoContainerVariant = LogoContainerVariant.extendedBy {
     base {
         Modifier
     }
 }
 
-val SeparatorLogoTextVariant by LogoTextStyle.addVariant {
+val SeparatorImageVariant = LogoImageVariant.extendedBy {
+    base {
+        Modifier
+    }
+}
+
+val SeparatorLogoTextVariant = LogoTextVariant.extendedBy {
     base {
         Modifier
     }
@@ -170,21 +170,21 @@ val SeparatorLogoTextVariant by LogoTextStyle.addVariant {
 @Composable
 fun LogoDisplay(
     image: String,
-    imageVariant: ComponentVariant? = null,
-    variant: ComponentVariant? = null,
-    textVariant: ComponentVariant? = null
+    imageVariant: CssStyleVariant<ImageKind>? = null,
+    variant: CssStyleVariant<ContainerKind>? = null,
+    textVariant: CssStyleVariant<BaseTextKind>? = null
 ) {
     Row(
-        modifier = LogoContainerStyle.toModifier(variant),
+        modifier = BaseContainerStyle.toModifier(LogoContainerVariant),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
         Image(
             src = image,
-            modifier = LogoImageStyle.toModifier(imageVariant)
+            modifier = ImageStyle.toModifier(LogoImageVariant)
         )
         P(
-            attrs = LogoTextStyle.toModifier(textVariant)
+            attrs = BaseTextStyle.toModifier(LogoTextVariant)
                 .toAttrs()
         ) {
             "KHODED".forEachIndexed { index, letter ->

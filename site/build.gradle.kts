@@ -1,10 +1,15 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import kotlinx.html.link
+import kotlinx.html.meta
+import kotlinx.html.title
 import java.util.*
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+//    alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kobweb.application)
     alias(libs.plugins.kobwebx.markdown)
     alias(libs.plugins.kotlin.serialization)
@@ -18,7 +23,16 @@ version = "1.0-SNAPSHOT"
 kobweb {
     app {
         index {
-            description.set("Powered by Kobweb")
+            head.add {
+                title("Khoded | Custom Web Development & Digital Solutions for Entrepreneurs")
+                link(rel = "cannonical", href = "https://khoded.onrender.com")
+                meta(name = "robots", content = "index, follow")
+            }
+            description.set(
+                "Transform your vision with custom web development, secure hosting, and comprehensive" +
+                        " branding. Specializing in tailored digital solutions for entrepreneurs. Book your free" +
+                        " consultation."
+            )
         }
     }
 }
@@ -41,7 +55,7 @@ kotlin {
                 implementation(libs.kobweb.core)
                 implementation(libs.kobweb.silk)
                 implementation(libs.silk.icons.fa)
-                implementation("com.github.stevdza-san:KotlinBootstrap:0.0.8")
+                implementation("com.github.stevdza-san:KotlinBootstrap:0.1.5")
             }
         }
         val jvmMain by getting {

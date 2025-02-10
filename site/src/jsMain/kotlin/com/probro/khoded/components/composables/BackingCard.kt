@@ -1,41 +1,28 @@
 package com.probro.khoded.components.composables
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.styles.componentStyles.BackingCardStyle
+import com.probro.khoded.styles.componentStyles.DivKind
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
-import com.varabyte.kobweb.compose.ui.modifiers.color
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.ResponsiveValues
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.CssStyleVariant
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.breakpoint.ResponsiveValues
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
 
-val BackingCardStyle by ComponentStyle {
-    base {
-        Modifier
-            .fillMaxWidth(90.percent)
-            .borderRadius(20.px)
-            .color(Colors.Black)
-    }
-}
-
-val NoBorderBackingCardVariant by BackingCardStyle.addVariant {
+val NoBorderBackingCardVariant = BackingCardStyle.addVariant {
     base {
         Modifier
     }
 }
 
-val SingleBorderBackingCardVariant by BackingCardStyle.addVariant {
+val SingleBorderBackingCardVariant = BackingCardStyle.addVariant {
     base {
         Modifier
             .border {
@@ -64,7 +51,7 @@ fun TwoPaneCard(
 @Composable
 fun BackingCard(
     modifier: Modifier = Modifier,
-    variant: ComponentVariant? = null,
+    variant: CssStyleVariant<DivKind>? = null,
     firstSection: @Composable () -> Unit,
     secondSection: @Composable () -> Unit,
 ) {
@@ -83,7 +70,7 @@ fun BackingCard(
 @Composable
 fun TeamSectionCard(
     modifier: Modifier = Modifier,
-    variant: ComponentVariant? = null,
+    variant: CssStyleVariant<DivKind>? = null,
     firstSection: @Composable () -> Unit,
     secondSection: @Composable () -> Unit
 ) {

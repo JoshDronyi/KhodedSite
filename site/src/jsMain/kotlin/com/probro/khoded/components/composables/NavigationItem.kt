@@ -1,6 +1,8 @@
 package com.probro.khoded.components.composables
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.styles.componentStyles.NavItemKind
+import com.probro.khoded.styles.componentStyles.NavItemStyle
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
@@ -17,27 +19,18 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.fa.FaArrowRightLong
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.CssStyleVariant
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.extendedBy
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val NavItemStyle by ComponentStyle {
-    base {
-        Modifier
-            .padding(0.px)
-            .margin(0.px)
-            .textAlign(TextAlign.Center)
-    }
-}
-
-val HeaderNavItemVariant by NavItemStyle.addVariant {
+val HeaderNavItemVariant = NavItemStyle.addVariant {
     base {
         Modifier
             .width(Width.MinContent)
@@ -52,7 +45,7 @@ val HeaderNavItemVariant by NavItemStyle.addVariant {
         Modifier.fontSize(FontSize.Medium)
     }
 }
-val FooterNavItemVariant by NavItemStyle.addVariant {
+val FooterNavItemVariant = NavItemStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -73,7 +66,7 @@ val FooterNavItemVariant by NavItemStyle.addVariant {
         Modifier.fontSize(FontSize.Larger)
     }
 }
-val SideNavItemVariant by NavItemStyle.addVariant {
+val SideNavItemVariant = NavItemStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -85,7 +78,7 @@ val SideNavItemVariant by NavItemStyle.addVariant {
 fun NavigationItem(
     text: String,
     root: Navigator.KeySections,
-    navItemVariant: ComponentVariant? = null,
+    navItemVariant: CssStyleVariant<NavItemKind>? = null,
     onNavItemSelect: (section: PageSection) -> Unit,
 ) {
     NavSectionTitle(
@@ -111,7 +104,7 @@ fun NavigationItem(
 private fun NavSectionTitle(
     text: String,
     linkPath: String? = null,
-    navItemVariant: ComponentVariant? = null,
+    navItemVariant: CssStyleVariant<NavItemKind>? = null,
     onNavItemSelect: () -> Unit
 ) {
     Row(
@@ -129,7 +122,7 @@ private fun NavSectionTitle(
     }
 }
 
-val NavSubItemStyle by ComponentStyle {
+val NavSubItemVariant = NavItemStyle.addVariant {
     base {
         Modifier
             .margin(0.px)
@@ -137,13 +130,13 @@ val NavSubItemStyle by ComponentStyle {
     }
 }
 
-val FooterSubItemVariant by NavSubItemStyle.addVariant {
+val FooterSubItemVariant = NavSubItemVariant.extendedBy {
     base {
         Modifier
     }
 }
 
-val SideSubItemVariant by NavSubItemStyle.addVariant {
+val SideSubItemVariant = NavSubItemVariant.extendedBy {
     base {
         Modifier
             .color(Color.white)
@@ -154,7 +147,7 @@ val SideSubItemVariant by NavSubItemStyle.addVariant {
 fun NavSubItem(
     section: PageSection,
     modifier: Modifier = Modifier,
-    variant: ComponentVariant?,
+    variant: CssStyleVariant<NavItemKind>?,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Row(
@@ -174,7 +167,7 @@ fun NavSubItem(
             )
         }
         P(
-            attrs = NavSubItemStyle.toModifier(variant)
+            attrs = NavItemStyle.toModifier(NavSubItemVariant)
                 .textAlign(TextAlign.Start)
                 .onClick { onNavItemSelect(section) }
                 .toAttrs()

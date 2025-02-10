@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.KhodedColors
+import com.probro.khoded.styles.textStyles.BaseTextKind
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
@@ -17,8 +18,9 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.style.*
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.*
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -26,7 +28,9 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Span
 
-val HeaderStyle by ComponentStyle {
+sealed interface HeaderKind : ComponentKind
+
+val HeaderStyle = CssStyle<HeaderKind> {
     base {
         Modifier
             .fillMaxWidth()
@@ -39,7 +43,7 @@ val HeaderStyle by ComponentStyle {
     }
 }
 
-val HomePageHeaderVariant by HeaderStyle.addVariant {
+val HomePageHeaderVariant = HeaderStyle.addVariant {
     base {
         Modifier
             .color(Colors.White)
@@ -47,10 +51,10 @@ val HomePageHeaderVariant by HeaderStyle.addVariant {
             .fillMaxWidth()
     }
 }
-val StoryPageHeaderVariant by HeaderStyle.addVariant {
+val StoryPageHeaderVariant = HeaderStyle.addVariant {
     base { Modifier.color(Colors.White) }
 }
-val ContactPageHeaderVariant by HeaderStyle.addVariant {
+val ContactPageHeaderVariant = HeaderStyle.addVariant {
     base {
         Modifier
             .color(KhodedColors.PURPLE.rgb)
@@ -62,8 +66,8 @@ val ContactPageHeaderVariant by HeaderStyle.addVariant {
 @Composable
 fun Header(
     modifier: Modifier,
-    variant: ComponentVariant? = null,
-    textVariant: ComponentVariant? = HeaderLogoTextVariant,
+    variant: CssStyleVariant<HeaderKind>? = null,
+    textVariant: CssStyleVariant<BaseTextKind>? = HeaderLogoTextVariant,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     val breakpoint = rememberBreakpoint()

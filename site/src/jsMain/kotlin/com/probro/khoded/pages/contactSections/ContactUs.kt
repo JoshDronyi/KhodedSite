@@ -1,16 +1,13 @@
 package com.probro.khoded.pages.contactSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.BaseButtonTextVariant
-import com.probro.khoded.BlueButtonVariant
 import com.probro.khoded.components.composables.BackingCard
 import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.pages.homeSections.ButtonDisplay
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.MainTextVariant
+import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.Pages
 import com.stevdza.san.kotlinbs.forms.BSInput
 import com.stevdza.san.kotlinbs.forms.BSTextArea
@@ -28,10 +25,9 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.CssStyleVariant
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.percent
@@ -89,12 +85,6 @@ fun ComposeMessageSection(
     }
 }
 
-val MessageTextInputStyle by ComponentStyle {
-    base {
-        Modifier.color(Colors.DarkGray)
-            .margin(bottom = 10.px)
-    }
-}
 
 @Composable
 fun MessageSubSection(
@@ -114,7 +104,7 @@ fun MessageSubSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BSInput(
-            modifier = MessageTextInputStyle.toModifier()
+            modifier = BaseTextInputStyle.toModifier()
                 .fillMaxWidth(),
             value = messengerName,
             placeholder = "Your Name Here",
@@ -126,7 +116,7 @@ fun MessageSubSection(
             }
         )
         BSInput(
-            modifier = MessageTextInputStyle.toModifier()
+            modifier = BaseTextInputStyle.toModifier()
                 .fillMaxWidth(),
             value = messengerEmail,
             placeholder = "Email",
@@ -138,7 +128,7 @@ fun MessageSubSection(
             }
         )
         BSInput(
-            modifier = MessageTextInputStyle.toModifier()
+            modifier = BaseTextInputStyle.toModifier()
                 .fillMaxWidth(),
             value = messengerOrganization,
             placeholder = "Organization",
@@ -149,7 +139,7 @@ fun MessageSubSection(
             }
         )
         BSTextArea(
-            modifier = MessageTextInputStyle.toModifier()
+            modifier = BaseTextInputStyle.toModifier()
                 .fillMaxSize(),
             value = messengerMessage,
             placeholder = "Message...",
@@ -194,7 +184,7 @@ fun MessageSubSection(
     }
 }
 
-val ContactInfoStyle by ComponentStyle {
+val ContactInfoVariant = BaseFormStyle.addVariant {
     base {
         Modifier
             .borderRadius(20.px)
@@ -211,7 +201,7 @@ val ContactInfoStyle by ComponentStyle {
             .fillMaxWidth(80.percent)
     }
 }
-val ContactHeadingVariant by BaseTextStyle.addVariant {
+val ContactHeadingVariant = BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .padding(leftRight = 30.px)
@@ -220,7 +210,7 @@ val ContactHeadingVariant by BaseTextStyle.addVariant {
             .textAlign(TextAlign.Start)
     }
 }
-val ContactValueVariant by BaseTextStyle.addVariant {
+val ContactValueVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -231,7 +221,7 @@ val ContactValueVariant by BaseTextStyle.addVariant {
     }
 }
 
-val ContactTitleVariant by BaseTextStyle.addVariant {
+val ContactTitleVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .textAlign(TextAlign.Center)
@@ -240,7 +230,7 @@ val ContactTitleVariant by BaseTextStyle.addVariant {
 }
 
 @Composable
-fun ContactText(title: String, content: String, variant: ComponentVariant = ContactHeadingVariant) {
+fun ContactText(title: String, content: String, variant: CssStyleVariant<BaseTextKind> = ContactHeadingVariant) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -268,7 +258,7 @@ fun ContactInformationSection(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = ContactInfoStyle.toModifier()
+            modifier = BaseFormStyle.toModifier(ContactInfoVariant)
                 .fillMaxSize(80.percent)
                 .height(Height.Inherit),
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -2,8 +2,9 @@ package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.ImageBox
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -19,11 +20,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.hover
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
@@ -50,7 +51,7 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
                 .scrollSnapType(ScrollSnapType.Initial)
         )
         Column(
-            modifier = ServicesStyle.toModifier()
+            modifier = BaseSectionStyles.toModifier(ServicesVariant)
                 .align(Alignment.BottomEnd),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
@@ -62,7 +63,7 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
     }
 }
 
-val ServicesStyle by ComponentStyle {
+val ServicesVariant = BaseSectionStyles.addVariant {
     base {
         Modifier
             .height(Height.MaxContent)
@@ -86,30 +87,17 @@ val ServicesStyle by ComponentStyle {
 @Composable
 fun ServicesTitle(title: String, modifier: Modifier = Modifier) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+    val animation = when (sectionPosition) {
+        SectionPosition.ABOVE -> jobPostingShiftDownKeyFrames
+        SectionPosition.ON_SCREEN -> jobPostingShiftUPKeyFrames
+        SectionPosition.BELOW -> jobPostingShiftDownKeyFrames
+        SectionPosition.IDLE -> jobPostingShiftUPKeyFrames
+    }
     P(
-        attrs = HomeTitleTextStyle.toModifier(ServicesTitleVariant)
+        attrs = BaseTextStyle.toModifier(ServicesTitleVariant)
             .then(modifier)
             .id(TitleIDs.servicesTitleID)
-            .translateY(
-                ty = when (sectionPosition) {
-                    SectionPosition.ABOVE -> (-100).px
-                    SectionPosition.ON_SCREEN -> 0.px
-                    SectionPosition.BELOW -> (-100).px
-                    SectionPosition.IDLE -> 0.px
-                }
-            )
-            .opacity(
-                when (sectionPosition) {
-                    SectionPosition.ABOVE -> 0.percent
-                    SectionPosition.ON_SCREEN -> 100.percent
-                    SectionPosition.BELOW -> 0.percent
-                    SectionPosition.IDLE -> 100.percent
-                }
-            )
-            .transition(
-                CSSTransition(property = "translate", duration = 600.ms),
-                CSSTransition(property = "opacity", duration = 600.ms)
-            )
+            .animation(animation.toAnimation(600.ms))
             .toAttrs()
     ) {
         Text(title)
@@ -123,7 +111,7 @@ fun ServicesTitle(title: String, modifier: Modifier = Modifier) {
     }
 }
 
-val PinkUnderLineVaraint by ImageStyle.addVariant {
+val PinkUnderLineVaraint = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(30.percent)
@@ -143,7 +131,7 @@ val PinkUnderLineVaraint by ImageStyle.addVariant {
 fun WebServiceDisplay(service: Pair<String, String>) {
     var isShown by remember { mutableStateOf(false) }
     Column(
-        modifier = ServiceSectionStyle.toModifier(),
+        modifier = BaseSectionStyles.toModifier(ServiceSectionVariant),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -162,7 +150,7 @@ fun WebServiceDisplay(service: Pair<String, String>) {
     }
 }
 
-val ServiceSectionStyle by ComponentStyle {
+val ServiceSectionVariant = BaseSectionStyles.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -180,7 +168,7 @@ val ServiceSectionStyle by ComponentStyle {
 
 }
 
-val ServiceTextVariant by BaseTextStyle.addVariant {
+val ServiceTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .color(Color.black)
@@ -200,7 +188,7 @@ val ServiceTextVariant by BaseTextStyle.addVariant {
             .fontSize(FontSize.XXLarge)
     }
 }
-val ServiceDescriptionVariant by BaseTextStyle.addVariant {
+val ServiceDescriptionVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .color(Color.black)

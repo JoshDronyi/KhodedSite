@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.components.composables.FooterNavItemVariant
 import com.probro.khoded.components.composables.NavigationItem
 import com.probro.khoded.models.KhodedColors
+import com.probro.khoded.styles.textStyles.ColumnKind
+import com.probro.khoded.styles.textStyles.ColumnStyle
+import com.probro.khoded.styles.textStyles.FooterRow
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.varabyte.kobweb.compose.css.Width
@@ -15,24 +18,17 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.width
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.CssStyleVariant
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.extendedBy
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.px
-
-
-val FooterRow by ComponentStyle {
-    base {
-        Modifier
-    }
-}
 
 @Composable
 fun Footer(
     modifier: Modifier = Modifier,
-    variant: ComponentVariant? = null,
+    variant: CssStyleVariant<ColumnKind>? = null,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Row(
@@ -62,7 +58,7 @@ fun Footer(
     }
 }
 
-val FooterColumnStyle by ComponentStyle {
+val FooterColumnVariant = ColumnStyle.addVariant {
     base {
         Modifier
             .color(Color.white)
@@ -70,7 +66,7 @@ val FooterColumnStyle by ComponentStyle {
     }
 }
 
-val ContactFooterVariant by FooterColumnStyle.addVariant {
+val ContactFooterVariant = FooterColumnVariant.extendedBy {
     base {
         Modifier
             .color(KhodedColors.PURPLE.rgb)
@@ -81,11 +77,11 @@ val ContactFooterVariant by FooterColumnStyle.addVariant {
 fun FooterNavItemSet(
     section1: Navigator.KeySections,
     section2: Navigator.KeySections? = null,
-    variant: ComponentVariant? = null,
+    variant: CssStyleVariant<ColumnKind>? = FooterColumnVariant,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
     Column(
-        modifier = FooterColumnStyle.toModifier(variant),
+        modifier = ColumnStyle.toModifier(variant),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

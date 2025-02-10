@@ -3,11 +3,11 @@ package com.probro.khoded.utils
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.top
-import com.varabyte.kobweb.silk.components.animation.Keyframes
+import com.varabyte.kobweb.silk.style.animation.Keyframes
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
-val fallInAnimation by Keyframes {
+val fallInAnimation = Keyframes {
     from {
         Modifier
             .opacity(0.percent)
@@ -20,7 +20,7 @@ val fallInAnimation by Keyframes {
 
     }
 }
-val flyUpAnimation by Keyframes {
+val flyUpAnimation = Keyframes {
     from {
         Modifier
             .opacity(100.percent)
