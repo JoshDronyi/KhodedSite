@@ -96,6 +96,7 @@ val BaseSectionStyles = CssStyle<SectionKind> {
         Modifier.fillMaxWidth()
             .minHeight(Constants.SECTION_HEIGHT.px)
             .borderBottom(width = 2.px, color = Color.black)
+            .margin(topBottom = 5.px)
     }
 }
 val BackgroundStyle = CssStyle<BackgroundKind> {

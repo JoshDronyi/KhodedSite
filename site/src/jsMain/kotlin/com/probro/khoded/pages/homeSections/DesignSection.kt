@@ -1,25 +1,22 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.pageStyles.ComputerPicVariant
+import com.probro.khoded.styles.pageStyles.DesignTextColumnVariant
 import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
-import com.varabyte.kobweb.compose.css.ScrollSnapStop
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
@@ -27,7 +24,6 @@ import com.varabyte.kobweb.silk.style.addVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.toModifier
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -38,42 +34,21 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
-    BackingCard(
-        modifier = BackgroundStyle.toModifier(DesignBackgroundVariant)
-            .id(id),
-        variant = NoBorderBackingCardVariant,
-        firstSection = {
-            DesignTextSection(
-                upperText = mainText,
-                underlineImage = underlineImage,
-                lowerText = subText,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        },
-        secondSection = {
-            DesignImageSection(
-                secondImage = mainImage,
-                modifier = ImageStyle.toModifier(DesignImageVariant)
-            )
-        }
-    )
-}
-
-val DesignImageVariant = ImageStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxSize()
-    }
-    Breakpoint.ZERO {
-        Modifier
-    }
-    Breakpoint.SM {
-        Modifier
-    }
-    Breakpoint.MD {
-        Modifier
-            .translateY(ty = (-80).px)
+    Box(
+        modifier = BaseSectionStyles.toModifier(DesignBackgroundVariant)
+            .id(id)
+    ) {
+        Image(
+            src = mainImage,
+            modifier = ImageStyle.toModifier(ComputerPicVariant)
+                .align(Alignment.TopEnd)
+        )
+        DesignTextSection(
+            upperText = mainText,
+            underlineImage = underlineImage,
+            lowerText = subText,
+            modifier = ColumnStyle.toModifier(DesignTextColumnVariant)
+        )
     }
 }
 
@@ -84,31 +59,19 @@ fun DesignTextSection(
     lowerText: String,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .borderBottom {
-                    width(2.px)
-                    style(LineStyle.Solid)
-                    color(Colors.RebeccaPurple)
-                }
-                .fillMaxWidth()
-                // .scrollSnapType(ScrollSnapAxis.Y, ScrollSnapMode.Mandatory)
-                .scrollSnapStop(ScrollSnapStop.Normal),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            DesignHeading(upperText)
-            Image(
-                src = underlineImage,
-                modifier = ImageStyle.toModifier(BlackUnderlineVariant)
-            )
-            DesignSubText(lowerText)
-        }
+        DesignHeading(upperText)
+        Image(
+            src = underlineImage,
+            modifier = ImageStyle.toModifier(BlackUnderlineVariant)
+        )
+        DesignSubText(lowerText)
     }
+
 }
 
 val BlackUnderlineVariant = ImageStyle.addVariant {
@@ -198,30 +161,5 @@ fun DesignHeading(
     ) {
         sectionPosition = it
         println("New Position for ${Pages.Home_Section.Design.id} is $it")
-    }
-}
-
-@Composable
-fun DesignImageSection(
-    secondImage: String,
-    modifier: Modifier = Modifier
-) = with(Pages.Home_Section.Design) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            src = secondImage,
-            modifier = ImageStyle.toModifier(ComputerPicVariant)
-        )
-    }
-}
-
-val ComputerPicVariant = ImageStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .objectFit(ObjectFit.Fill)
-            .zIndex(1)
     }
 }

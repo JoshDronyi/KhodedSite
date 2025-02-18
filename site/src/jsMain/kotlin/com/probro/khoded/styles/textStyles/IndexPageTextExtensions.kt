@@ -58,13 +58,13 @@ val ServicesBackgroundVariant = BackgroundStyle.addVariant {
             .color(Color.white)
     }
 }
-val DesignBackgroundVariant = BackgroundStyle.addVariant {
+val DesignBackgroundVariant = BaseSectionStyles.addVariant {
     base {
         Modifier
-            .fillMaxWidth(80.percent)
             .color(Colors.Black)
-            .margin(top = 100.px, bottom = 200.px)
-            .padding(topBottom = 50.px)
+            .margin(bottom = 200.px)
+            .padding(top = 50.px, bottom = 200.px)
+            .height(Height.MaxContent)
     }
 }
 val ConsultationBackgroundVariant = BackgroundStyle.addVariant {

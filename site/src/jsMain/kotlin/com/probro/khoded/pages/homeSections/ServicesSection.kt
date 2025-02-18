@@ -1,9 +1,10 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.ImageBox
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.pageStyles.ServiceColumText
+import com.probro.khoded.styles.pageStyles.ServiceSectionDisplayVariant
 import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
@@ -18,6 +19,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.style.addVariant
@@ -34,30 +36,32 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
     Box(
-        modifier = BackgroundStyle.toModifier(ServicesBackgroundVariant)
-            .id(id),
-        contentAlignment = Alignment.CenterEnd
+        modifier = BaseSectionStyles.toModifier(ServicesVariant)
+            .id(id)
     ) {
-        ImageBox(
-            image = data.mainImage,
-            imageDesc = "Man sitting on laptop",
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        ServicesTitle(
-            title = title,
-            modifier = Modifier.align(Alignment.TopEnd)
-                .scrollSnapStop(ScrollSnapStop.Normal)
-                .scrollSnapType(ScrollSnapType.Initial)
+        Image(
+            src = data.mainImage,
+            description = "Man sitting on laptop",
+            modifier = ImageStyle.toModifier(ServiceSectionDisplayVariant)
         )
         Column(
-            modifier = BaseSectionStyles.toModifier(ServicesVariant)
-                .align(Alignment.BottomEnd),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            modifier = ColumnStyle.toModifier(ServiceColumText)
+                .align(Alignment.TopEnd)
         ) {
-            khodedServices.forEach {
-                WebServiceDisplay(it)
+            ServicesTitle(
+                title = title,
+                modifier = Modifier
+                    .scrollSnapStop(ScrollSnapStop.Normal)
+                    .scrollSnapType(ScrollSnapType.Initial)
+            )
+            Column(
+                modifier = ColumnStyle.toModifier(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                khodedServices.forEach {
+                    WebServiceDisplay(it)
+                }
             }
         }
     }
@@ -67,7 +71,7 @@ val ServicesVariant = BaseSectionStyles.addVariant {
     base {
         Modifier
             .height(Height.MaxContent)
-            .fillMaxWidth(40.percent)
+            .fillMaxWidth(75.percent)
     }
     Breakpoint.ZERO {
         Modifier
@@ -131,7 +135,7 @@ val PinkUnderLineVaraint = ImageStyle.addVariant {
 fun WebServiceDisplay(service: Pair<String, String>) {
     var isShown by remember { mutableStateOf(false) }
     Column(
-        modifier = BaseSectionStyles.toModifier(ServiceSectionVariant),
+        modifier = ColumnStyle.toModifier(ServiceSectionVariant),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -150,7 +154,7 @@ fun WebServiceDisplay(service: Pair<String, String>) {
     }
 }
 
-val ServiceSectionVariant = BaseSectionStyles.addVariant {
+val ServiceSectionVariant = ColumnStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -159,7 +163,6 @@ val ServiceSectionVariant = BaseSectionStyles.addVariant {
                 style(LineStyle.Solid)
                 color(Color.purple)
             }
-            .padding(leftRight = 5.px, topBottom = 10.px)
     }
     hover {
         Modifier
