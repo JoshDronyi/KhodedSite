@@ -1,11 +1,8 @@
 package com.probro.khoded.pages
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.DarkLogoTextVariant
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.components.widgets.ContactFooterVariant
-import com.probro.khoded.components.widgets.ContactPageHeaderVariant
-import com.probro.khoded.components.widgets.HeaderKind
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.messaging.messageData.MessageData
 import com.probro.khoded.models.ButtonState
@@ -32,7 +29,9 @@ import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.fallInAnimation
 import com.probro.khoded.utils.popUp.PopUpStateHolders
 import com.stevdza.san.kotlinbs.models.InputValidation
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.Height
+import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -98,7 +97,7 @@ fun Contact() {
 @Composable
 fun ContactPageSections(
     modifier: Modifier,
-    header: @Composable (variant: CssStyleVariant<HeaderKind>?, textVariant: CssStyleVariant<BaseTextKind>?) -> Unit,
+    header: @Composable () -> Unit,
     formState: ContactFormState,
     footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit
 ) = with(Pages.Contact_Section.Landing) {
@@ -121,7 +120,7 @@ fun ContactPageSections(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        header(ContactPageHeaderVariant, DarkLogoTextVariant)
+        header()
         SimpleGrid(
             numColumns = numColumns(base = 1, md = 2),
             modifier = BaseRowStyle.toModifier(LandingSectionVariant)

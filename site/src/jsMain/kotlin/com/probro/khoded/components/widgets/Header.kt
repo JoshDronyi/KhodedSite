@@ -1,32 +1,33 @@
 package com.probro.khoded.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.components.composables.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.styles.textStyles.BaseTextKind
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
+import com.stevdza.san.kotlinbs.components.BSNavBar
+import com.stevdza.san.kotlinbs.models.BackgroundStyle
+import com.stevdza.san.kotlinbs.models.navbar.NavBarBrand
+import com.stevdza.san.kotlinbs.models.navbar.NavLink
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.style.*
+import com.varabyte.kobweb.silk.style.ComponentKind
+import com.varabyte.kobweb.silk.style.CssStyle
+import com.varabyte.kobweb.silk.style.addVariant
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
-import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.Span
 
 sealed interface HeaderKind : ComponentKind
 
@@ -49,6 +50,7 @@ val HomePageHeaderVariant = HeaderStyle.addVariant {
             .color(Colors.White)
             .background(Colors.Black.copy(alpha = 70))
             .fillMaxWidth()
+            .padding(leftRight = 40.px, topBottom = 20.px)
     }
 }
 val StoryPageHeaderVariant = HeaderStyle.addVariant {
@@ -65,42 +67,70 @@ val ContactPageHeaderVariant = HeaderStyle.addVariant {
 
 @Composable
 fun Header(
-    modifier: Modifier,
-    variant: CssStyleVariant<HeaderKind>? = null,
-    textVariant: CssStyleVariant<BaseTextKind>? = HeaderLogoTextVariant,
+    modifier: Modifier = Modifier,
     onNavItemSelect: (section: PageSection) -> Unit
 ) {
-    val breakpoint = rememberBreakpoint()
-    Box(
-        modifier = HeaderStyle.toModifier(variant),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Span(
-                attrs = Modifier
-                    .onClick {
-                        onNavItemSelect(Pages.Home_Section.Landing)
-                    }
-                    .toAttrs()
-            ) {
-                LogoDisplay(
-                    image = Images.Logos.minimalLogo,
-                    variant = HeaderLogoContainerVariant,
-                    imageVariant = HeaderImageVariant,
-                    textVariant = textVariant,
-                )
-            }
-            HeaderNavItemDisplay(
-                modifier = Modifier
-                    .fillMaxWidth(getWidthFromBreakpoint(breakpoint)),
-                onNavItemSelect = onNavItemSelect
-            )
-        }
-    }
+//    val breakpoint = rememberBreakpoint()
+    BSNavBar(
+        modifier = HeaderStyle.toModifier(HomePageHeaderVariant)
+            .then(modifier),
+        stickyTop = true,
+        brand = NavBarBrand(
+            title = "Khoded",
+            image = Images.Logos.minimalLogo,
+            imageWidth = 50.px,
+            href = "#",
+        ),
+        items = listOf(
+            NavLink(
+                id = "consultation",
+                title = Navigator.KeySections.TrafficStops.consultation.text,
+                onClick = { onNavItemSelect(Pages.Home_Section.Consultation) }
+            ),
+            NavLink(
+                id = "story",
+                title = Navigator.KeySections.PageRoots.story.text,
+                onClick = { onNavItemSelect(Pages.Story_Section.OurStory) }
+            ),
+            NavLink(
+                id = "contact",
+                title = Navigator.KeySections.PageRoots.contact.text,
+                onClick = { onNavItemSelect(Pages.Contact_Section.Landing) }
+            )),
+        itemsAlignment = Alignment.CenterHorizontally,
+        backgroundStyle = BackgroundStyle.Dark
+//            BackgroundStyle.toModifier(HeaderBackground)
+    )
+//    Box(
+//        modifier = HeaderStyle.toModifier(variant),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Row(
+//            modifier = modifier,
+//            horizontalArrangement = Arrangement.SpaceAround,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Span(
+//                attrs = Modifier
+//                    .onClick {
+//                        onNavItemSelect(Pages.Home_Section.Landing)
+//                    }
+//                    .toAttrs()
+//            ) {
+//                LogoDisplay(
+//                    image = Images.Logos.minimalLogo,
+//                    variant = HeaderLogoContainerVariant,
+//                    imageVariant = HeaderImageVariant,
+//                    textVariant = textVariant,
+//                )
+//            }
+//            HeaderNavItemDisplay(
+//                modifier = Modifier
+//                    .fillMaxWidth(getWidthFromBreakpoint(breakpoint)),
+//                onNavItemSelect = onNavItemSelect
+//            )
+//        }
+//    }
 }
 
 private fun getWidthFromBreakpoint(breakpoint: Breakpoint): CSSSizeValue<CSSUnit.percent> {
@@ -158,29 +188,6 @@ fun HeaderNavItemDisplay(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
-        NavigationItem(
-            text = Navigator.KeySections.TrafficStops.consultation.text,
-            root = Navigator.KeySections.TrafficStops.consultation,
-            navItemVariant = HeaderNavItemVariant,
-        ) { path ->
-            println("Clicked on ${path.title}")
-            onNavItemSelect(Pages.Home_Section.Consultation)
-        }
-        NavigationItem(
-            text = Navigator.KeySections.PageRoots.story.text,
-            root = Navigator.KeySections.PageRoots.story,
-            navItemVariant = HeaderNavItemVariant,
-        ) { path ->
-            println("Clicked on ${path.title}")
-            onNavItemSelect(path)
-        }
-        NavigationItem(
-            text = Navigator.KeySections.PageRoots.contact.text,
-            root = Navigator.KeySections.PageRoots.contact,
-            navItemVariant = HeaderNavItemVariant,
-        ) { path ->
-            println("Clicked on ${path.title}")
-            onNavItemSelect(path)
-        }
+
     }
 }

@@ -16,7 +16,8 @@ import org.jetbrains.compose.web.css.px
 
 val LandingImageVariant = ImageStyle.addVariant {
     base {
-        Modifier.fillMaxWidth(90.percent)
+        Modifier.fillMaxWidth(80.percent)
+            .padding(top = 60.px)
     }
     Breakpoint.ZERO
     Breakpoint.SM
@@ -169,6 +170,7 @@ val HomeSubTitleVariant = BaseTextStyle.addVariant {
     }
     Breakpoint.LG {
         Modifier.fontSize(FontSize.XLarge)
+            .translateX(40.px)
     }
 }
 
@@ -177,6 +179,7 @@ val firstLineVariant = BaseTextStyle.addVariant {
         Modifier
             .fillMaxWidth()
             .textAlign(TextAlign.Center)
+            .fontSize(FontSize.Small)
     }
     Breakpoint.ZERO {
         Modifier
@@ -187,17 +190,17 @@ val firstLineVariant = BaseTextStyle.addVariant {
     Breakpoint.LG
     Breakpoint.XL {
         Modifier
-            .translate(tx = 40.px, ty = 20.px)
+            .translate(tx = 40.px, ty = 50.px)
             .fontSize(60.px)
     }
 }
 val PinkTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
-            .minWidth(Width.MaxContent)
+            .maxWidth(MaxWidth.FitContent)
             .color(Colors.DeepPink)
             .fontStyle(FontStyle.Italic)
-            .textAlign(TextAlign.End)
+            .fontSize(FontSize.Medium)
     }
     Breakpoint.ZERO {
         Modifier
@@ -208,16 +211,17 @@ val PinkTextVariant = BaseTextStyle.addVariant {
     Breakpoint.LG
     Breakpoint.XL {
         Modifier
-            .translate(tx = 40.px, ty = 20.px)
-//            .fontSize(60.px)
+            .translate(tx = 40.px, ty = 50.px)
+            .fontSize(FontSize.XXLarge)
     }
 }
 val SecondLineVariant = BaseTextStyle.addVariant {
     base {
         Modifier
-            .width(Width.FitContent)
+            .width(Width.MaxContent)
             .textAlign(TextAlign.Start)
             .margin(left = 10.px)
+            .fontSize(FontSize.Medium)
     }
     Breakpoint.ZERO {
         Modifier
@@ -228,8 +232,8 @@ val SecondLineVariant = BaseTextStyle.addVariant {
     Breakpoint.LG
     Breakpoint.XL {
         Modifier
-            .translate(tx = 40.px, ty = 20.px)
-            .fontSize(60.px)
+            .translate(tx = 40.px, ty = 50.px)
+            .fontSize(FontSize.XXLarge)
     }
 }
 

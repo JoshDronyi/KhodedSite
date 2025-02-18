@@ -36,7 +36,7 @@ fun Index() {
 
 @Composable
 fun HomePageSections(
-    header: @Composable (variant: CssStyleVariant<HeaderKind>?, textVariant: CssStyleVariant<BaseTextKind>?) -> Unit,
+    header: @Composable () -> Unit,
     footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit,
     modifier: Modifier = Modifier,
     onNavigate: (page: PageSection) -> Unit

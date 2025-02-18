@@ -6,6 +6,7 @@ import com.probro.khoded.styles.componentStyles.NavItemStyle
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
+import com.stevdza.san.kotlinbs.models.navbar.NavLink
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -81,9 +82,10 @@ fun NavigationItem(
     navItemVariant: CssStyleVariant<NavItemKind>? = null,
     onNavItemSelect: (section: PageSection) -> Unit,
 ) {
-    NavSectionTitle(
-        navItemVariant = navItemVariant,
-        onNavItemSelect = {
+    NavLink(
+        id = root.root,
+        title = text,
+        onClick = {
             onNavItemSelect(
                 when (root) {
                     is Navigator.KeySections.PageRoots.Contact -> Pages.Contact_Section.Landing
@@ -95,9 +97,16 @@ fun NavigationItem(
                         Pages.Misc.Sections.TermsAndConditions
                 }
             )
-        },
-        text = text
+        }
     )
+//    NavSectionTitle(
+//        navItemVariant = navItemVariant,
+//        onNavItemSelect = {
+//            onNavItemSelect(
+//            )
+//        },
+//        text = text
+//    )
 }
 
 @Composable
@@ -107,6 +116,7 @@ private fun NavSectionTitle(
     navItemVariant: CssStyleVariant<NavItemKind>? = null,
     onNavItemSelect: () -> Unit
 ) {
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,

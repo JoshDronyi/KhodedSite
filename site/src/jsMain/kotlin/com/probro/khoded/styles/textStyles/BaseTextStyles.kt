@@ -34,7 +34,7 @@ sealed interface CTAKind : ComponentKind
 
 val BaseTextStyle = CssStyle<BaseTextKind> {
     base {
-        Modifier.fontSize(FontSize.Medium)
+        Modifier.fontSize(FontSize.Small)
             .fontFamily("Times New Roman")
             .padding(0.px)
             .margin(0.px)
@@ -46,19 +46,13 @@ val BaseTextStyle = CssStyle<BaseTextKind> {
 
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Medium)
+        Modifier.fontSize(FontSize.Smaller)
     }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.Large)
+        Modifier.fontSize(FontSize.Small)
     }
     Breakpoint.MD {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.XLarge)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(FontSize.Medium)
     }
 }
 
@@ -264,6 +258,7 @@ val BlueButtonVariant = ButtonStyle.addVariant {
     base {
         Modifier.background(KhodedColors.BLUE.rgb)
             .color(Colors.White)
+            .padding(10.px)
     }
     Breakpoint.ZERO {
         Modifier.padding(leftRight = 10.px, topBottom = 5.px)

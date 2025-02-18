@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.probro.khoded.components.composables.HeaderLogoTextVariant
 import com.probro.khoded.models.Routes
-import com.probro.khoded.styles.textStyles.BaseTextKind
 import com.probro.khoded.styles.textStyles.ColumnKind
 import com.probro.khoded.utils.Navigator
 import com.probro.khoded.utils.Pages
@@ -18,10 +16,8 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.style.CssStyleVariant
-import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 
@@ -30,10 +26,7 @@ fun Scaffold(
     modifier: Modifier = Modifier,
     onNavigate: (path: String) -> Unit,
     content: @Composable (
-        header: @Composable (
-            variant: CssStyleVariant<HeaderKind>?,
-            textVariant: CssStyleVariant<BaseTextKind>?
-        ) -> Unit,
+        header: @Composable () -> Unit,
         footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit,
         modifier: Modifier,
     ) -> Unit
@@ -48,17 +41,8 @@ fun Scaffold(
         contentAlignment = Alignment.Center
     ) {
         content(
-            { variant, textVariant ->
-                Header(
-                    modifier = Modifier.fillMaxWidth(
-                        when (breakpoint) {
-                            Breakpoint.ZERO, Breakpoint.SM -> 100.percent
-                            Breakpoint.MD, Breakpoint.LG, Breakpoint.XL -> 90.percent
-                        }
-                    ),
-                    variant = variant,
-                    textVariant = textVariant ?: HeaderLogoTextVariant
-                ) {
+            {
+                Header() {
                     with(it) {
                         onNavigate(path)
                         focusOnSectionWithId(path)
