@@ -6,3 +6,7 @@ object Constants {
     const val LENGTH_OF_TELLS = 5
     const val FREE_TEXT = "Free 30 Min"
 }
+
+object IDs{
+    const val PopUpID = "PopUp"
+}

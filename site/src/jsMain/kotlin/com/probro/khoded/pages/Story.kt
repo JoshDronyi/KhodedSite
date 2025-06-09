@@ -15,10 +15,10 @@ import com.varabyte.kobweb.core.rememberPageContext
 
 @Page
 @Composable
-fun Story(modifier: Modifier = Modifier.fillMaxSize()) {
+fun Story() {
     val ctx = rememberPageContext()
     Scaffold(
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
         onNavigate = {
             ctx.router.navigateTo(it)
         },

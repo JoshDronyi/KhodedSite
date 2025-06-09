@@ -1,7 +1,6 @@
 package com.probro.khoded.styles.componentStyles
 
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.styles.textStyles.BaseCTAStyle
 import com.probro.khoded.styles.textStyles.BaseContainerStyle
 import com.probro.khoded.styles.textStyles.ImageStyle
 import com.varabyte.kobweb.compose.css.*
@@ -22,7 +21,7 @@ import org.jetbrains.compose.web.css.vh
 val PopUpScreenVariant = BaseContainerStyle.addVariant {
     base {
         Modifier
-            .height(60.vh)
+            .maxWidth(MaxWidth.MaxContent)
             .borderRadius(20.px)
             .padding(10.px)
     }

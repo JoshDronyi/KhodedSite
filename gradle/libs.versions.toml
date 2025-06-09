@@ -1,11 +1,12 @@
 [versions]
-jetbrains-compose = "1.7.3"
-kobweb = "0.20.3"
-kotlin = "2.1.10"
-ksp = "2.1.10-1.0.29"
+jetbrains-compose = "1.8.0"
+kobweb = "0.22.0"
+kotlin = "2.1.21"
+ksp = "2.1.21-2.0.1"
 kotlinx-serialization = "1.8.0"
 kotlinMailer = "0.3.0"
 moko = "0.24.4"
+bootstrap = "0.1.6"
 
 [libraries]
 kobweb-api = { module = "com.varabyte.kobweb:kobweb-api", version.ref = "kobweb" }
@@ -16,11 +17,12 @@ kobwebx-serialization-kotlinx = { module = "com.varabyte.kobwebx:kobwebx-seriali
 silk-icons-fa = { module = "com.varabyte.kobwebx:silk-icons-fa", version.ref = "kobweb" }
 silk-foundation = { module = "com.varabyte.kobweb:silk-foundation", version.ref = "kobweb" }
 silk-icons-mdi = { module = "com.varabyte.kobwebx:silk-icons-mdi", version.ref = "kobweb" }
+bootstrap = { module = "com.github.stevdza-san:KotlinBootstrap", version.ref = "bootstrap" }
 
 mailer-core = { module = "at.quickme.kotlinmailer:kotlinmailer-core", version.ref = "kotlinMailer" }
 mailer-client = { module = "at.quickme.kotlinmailer:kotlinmailer-html", version.ref = "kotlinMailer" }
-moko-generator = {module = "dev.icerock.moko:resources-generator", version.ref="moko"}
-moko-resources = {module = "dev.icerock.moko:resources", version.ref="moko"}
+moko-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "moko" }
+moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 
 
 [plugins]

@@ -1,19 +1,17 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.models.ButtonState
-import com.probro.khoded.styles.animations.*
-import com.probro.khoded.styles.componentStyles.MessagingPopUpTextVariant
-import com.probro.khoded.styles.componentStyles.MessagingPopUpVariant
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.pageStyles.MessagingFormVariant
 import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Constants.FREE_TEXT
-import com.probro.khoded.utils.IsOnScreenObservable
-import com.probro.khoded.utils.Pages
-import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.TitleIDs
 import com.probro.khoded.utils.popUp.PopUpStateHolders
+import com.stevdza.san.kotlinbs.components.showModalOnClick
 import com.stevdza.san.kotlinbs.forms.BSInput
+import com.stevdza.san.kotlinbs.forms.BSTextArea
 import com.stevdza.san.kotlinbs.models.InputSize
 import com.stevdza.san.kotlinbs.models.InputValidation
 import com.varabyte.kobweb.compose.css.Height
@@ -34,11 +32,11 @@ import com.varabyte.kobweb.silk.style.toModifier
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.dom.Form
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
@@ -77,7 +75,6 @@ fun ConsultationDisplaySection(
     mainImage: String,
     modifier: Modifier = Modifier,
 ) = with(Pages.Home_Section.Consultation) {
-    val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
     Box(
         modifier = modifier
             .fillMaxWidth(),
@@ -96,23 +93,7 @@ fun ConsultationDisplaySection(
                 .id(id)
                 .align(Alignment.BottomStart)
                 .scrollSnapStop(ScrollSnapStop.Always)
-            //  .scrollSnapType(ScrollSnapAxis.Block, ScrollSnapMode.Mandatory),
         )
-        with(popUpState) {
-            PopUpScreen(
-                popUpUIModel = this,
-                variant = MessagingPopUpVariant,
-                textVariant = MessagingPopUpTextVariant,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .animation(
-                        if (isShowing) makeVisibleKeyFrames.toAnimation(300.ms)
-                        else makeInvisibleKeyFrames.toAnimation(300.ms),
-                        if (isShowing) shiftForwardKeyFrames.toAnimation(300.ms)
-                        else shiftBackwardKeyframes.toAnimation(300.ms)
-                    )
-            )
-        }
     }
 }
 
@@ -156,11 +137,11 @@ fun ConsultationTextSection(
         modifier = modifier
             .zIndex(1),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ConsultationTitle(mainText)
         MessagingSection(
-            modifier = BaseFormStyle.toModifier(),
+            modifier = BaseFormStyle.toModifier(MessagingFormVariant),
             placeHolder = formState.placeholderData
         )
         ConsultationRequestButton(
@@ -173,6 +154,7 @@ fun ConsultationTextSection(
             ),
             modifier = BaseCTAStyle.toModifier()
                 .align(Alignment.CenterHorizontally)
+                .showModalOnClick(IDs.PopUpID)
         )
     }
     LaunchedEffect(formState.stage) {
@@ -265,10 +247,8 @@ fun MessagingSection(
     placeHolder: Pages.Home_Section.ConsultationRequestUIModel,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Form(
+        attrs = modifier.toAttrs()
     ) {
         Row(
             modifier = BaseRowStyle.toModifier(),
@@ -308,15 +288,15 @@ fun MessageArea(
     onValueChange: (newText: String) -> Unit
 ) {
     var value by remember { mutableStateOf("") }
-    BSInput(
+
+    BSTextArea(
         value = value,
         label = placeholder,
-        type = InputType.Text,
-        size = InputSize.Large,
         onValueChange = {
             value = it
             onValueChange(it)
         },
+        size = InputSize.Large,
         required = true,
         modifier = InputStyle.toModifier(TextAreaVariant)
             .then(modifier)

@@ -55,7 +55,9 @@ kotlin {
                 implementation(libs.kobweb.core)
                 implementation(libs.kobweb.silk)
                 implementation(libs.silk.icons.fa)
-                implementation("com.github.stevdza-san:KotlinBootstrap:0.1.5")
+                implementation(libs.silk.foundation)
+                implementation(libs.silk.icons.mdi)
+                implementation(libs.bootstrap)
             }
         }
         val jvmMain by getting {

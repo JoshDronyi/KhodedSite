@@ -1,14 +1,15 @@
 package com.probro.khoded.components.composables.popupscreen
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.componentStyles.*
 import com.probro.khoded.styles.textStyles.BaseContainerStyle
-import com.probro.khoded.styles.textStyles.ContainerKind
 import com.probro.khoded.styles.textStyles.ImageStyle
+import com.probro.khoded.utils.IDs
 import com.probro.khoded.utils.popUp.FounderText
 import com.probro.khoded.utils.popUp.PopUpScreenUIModel
+import com.stevdza.san.kotlinbs.components.BSModal
 import com.stevdza.san.kotlinbs.components.BSProgress
+import com.stevdza.san.kotlinbs.models.ModalSize
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -30,41 +31,34 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun PopUpScreen(
     popUpUIModel: PopUpScreenUIModel,
-    variant: CssStyleVariant<ContainerKind>? = null,
     textVariant: CssStyleVariant<PopUpKind>? = null,
     modifier: Modifier = Modifier
 ) = with(popUpUIModel) {
-    Column(
-        modifier = BaseContainerStyle.toModifier(PopUpScreenVariant)
-            .then(modifier),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        when (val model = this@with) {
-            is PopUpScreenUIModel.FounderHighlightPopUpUIModel -> FounderPopUpDisplay(
-                textVariant = textVariant,
-                model = model
-            )
+    BSModal(
+        id = IDs.PopUpID,
+        modifier = BaseContainerStyle.toModifier(PopUpScreenVariant),
+        title = "",
+        body = {
+            when (val model = this@with) {
+                is PopUpScreenUIModel.FounderHighlightPopUpUIModel -> FounderPopUpDisplay(
+                    textVariant = textVariant,
+                    model = model
+                )
 
-            is PopUpScreenUIModel.MessagingPopUpUiModel -> MessagingStateDisplay(
-                textVariant = textVariant,
-                model = model
-            )
-        }
-        ButtonDisplay(
-            state = buttonState,
-            buttonVariant = PopUpCTAVariant,
-            modifier = Modifier
-                .margin(top = 10.px)
-        ) {
-            P(
-                attrs = PopUpTextStyle.toModifier(textVariant)
-                    .toAttrs()
-            ) {
-                Text(it)
+                is PopUpScreenUIModel.MessagingPopUpUiModel -> MessagingStateDisplay(
+                    textVariant = textVariant,
+                    model = model
+                )
             }
-        }
-    }
+        },
+        negativeButtonText = "Close",
+        positiveButtonText = buttonState.buttonText,
+        closableOutside = true,
+        centered = true,
+        size = ModalSize.Large,
+        onNegativeButtonClick = { modifier::onClick },
+        onPositiveButtonClick = buttonState.onButtonClick,
+    )
 }
 
 @Composable

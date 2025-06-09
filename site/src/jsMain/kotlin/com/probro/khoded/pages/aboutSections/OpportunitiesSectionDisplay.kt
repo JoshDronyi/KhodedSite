@@ -10,10 +10,7 @@ import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -24,6 +21,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.framework.annotations.DelicateApi
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
@@ -43,9 +41,10 @@ val OpportunitiesBackgroundVariant = BackgroundStyle.addVariant {
             .padding(topBottom = 40.px)
             .backgroundImage(
                 linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
                     from = Colors.RebeccaPurple,
                     to = KhodedColors.PURPLE.rgb,
+                    dir = LinearGradient.Direction.ToBottom,
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
     }
@@ -94,6 +93,7 @@ fun OpportunitiesSectionDisplay(
     }
 }
 
+@OptIn(DelicateApi::class)
 @Composable
 private fun getWidthFromBreakpoint(): CSSNumericValue<out CSSUnitLengthOrPercentage> {
     return when (rememberBreakpoint()) {

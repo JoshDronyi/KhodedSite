@@ -122,6 +122,21 @@ val ConsultationTitleVariant = BaseTextStyle.addVariant {
     base {
         Modifier
     }
+    Breakpoint.ZERO {
+        Modifier.fontSize(FontSize.Small)
+    }
+    Breakpoint.SM {
+        Modifier.fontSize(FontSize.Medium)
+    }
+    Breakpoint.MD {
+        Modifier.fontSize(FontSize.Large)
+    }
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XLarge)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(60.px)
+    }
 }
 val DesignSubTitleVariant = BaseTextStyle.addVariant {
     base {
@@ -257,29 +272,26 @@ val FreeTextVariant = BaseTextStyle.addVariant {
 }
 val ConsultationSectionVariant = BaseSectionStyles.addVariant {
     base {
-        Modifier.fillMaxWidth()
+        Modifier.fillMaxWidth(80.percent)
     }
 }
 val ConsultationImageVariant = ImageStyle.addVariant {
     base {
         Modifier
             .fillMaxSize()
+            .translateY(ty = (-50).px)
     }
     Breakpoint.ZERO {
         Modifier
-            .translateY(ty = (-100).px)
     }
     Breakpoint.SM {
         Modifier
-            .translateY(ty = (-100).px)
     }
     Breakpoint.MD {
         Modifier
-            .translateY(ty = (-150).px)
     }
     Breakpoint.LG {
         Modifier
-            .translateY(ty = (-200).px)
     }
 }
 val ConsultationRequestVariant = BaseFormStyle.addVariant {

@@ -1,18 +1,12 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.widgets.HeaderKind
-import com.probro.khoded.components.widgets.StoryPageHeaderVariant
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
 import com.probro.khoded.styles.textStyles.BackgroundStyle
-import com.probro.khoded.styles.textStyles.BaseTextKind
 import com.probro.khoded.styles.textStyles.BaseTextStyle
 import com.probro.khoded.utils.*
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -25,7 +19,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.addVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
@@ -41,9 +34,10 @@ val StoryBackgroundVariant = BackgroundStyle.addVariant {
             .color(Color.white)
             .backgroundImage(
                 linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
                     from = KhodedColors.PURPLE.rgb,
-                    to = Colors.RebeccaPurple
+                    to = Colors.RebeccaPurple,
+                    dir = LinearGradient.Direction.ToBottom,
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
             .padding(bottom = 15.px)

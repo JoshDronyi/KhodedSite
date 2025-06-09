@@ -75,7 +75,6 @@ fun Contact() {
                 with(popUpState) {
                     PopUpScreen(
                         popUpUIModel = this,
-                        variant = MessagingPopUpVariant,
                         textVariant = MessagingPopUpTextVariant,
                         modifier = Modifier
                             .animation(

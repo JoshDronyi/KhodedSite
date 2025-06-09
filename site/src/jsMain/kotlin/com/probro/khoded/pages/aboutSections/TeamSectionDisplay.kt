@@ -11,7 +11,6 @@ import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
 import com.probro.khoded.styles.componentStyles.FounderPopUpTextVariant
-import com.probro.khoded.styles.componentStyles.FounderPopUpVariant
 import com.probro.khoded.styles.textStyles.*
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
@@ -249,7 +248,6 @@ fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
         with(popUpState) {
             PopUpScreen(
                 popUpUIModel = this,
-                variant = FounderPopUpVariant,
                 textVariant = FounderPopUpTextVariant,
                 modifier = Modifier
                     .visibility(if (isVisible) Visibility.Visible else Visibility.Hidden)

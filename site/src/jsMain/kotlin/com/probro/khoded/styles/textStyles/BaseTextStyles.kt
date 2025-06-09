@@ -140,7 +140,7 @@ val BaseTabStyle = CssStyle<TabKind> {
             .color(Color.black)
             .textOverflow(TextOverflow.Ellipsis)
             .overflowWrap(OverflowWrap.Anywhere)
-            .minHeight(Height.FitContent)
+            .minHeight(MinHeight.FitContent)
             .padding(10.px)
             .margin(10.px)
     }

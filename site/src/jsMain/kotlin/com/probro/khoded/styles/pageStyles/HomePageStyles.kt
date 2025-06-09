@@ -1,10 +1,7 @@
 package com.probro.khoded.styles.pageStyles
 
 import com.probro.khoded.models.BaseTheme
-import com.probro.khoded.styles.textStyles.BackgroundStyle
-import com.probro.khoded.styles.textStyles.BaseTabStyle
-import com.probro.khoded.styles.textStyles.ColumnStyle
-import com.probro.khoded.styles.textStyles.ImageStyle
+import com.probro.khoded.styles.textStyles.*
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.ScrollSnapStop
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -83,6 +80,11 @@ val DesignTextColumnVariant = ColumnStyle.addVariant {
                 color(Colors.RebeccaPurple)
             }
             .scrollSnapStop(ScrollSnapStop.Normal)
+    }
+}
+val MessagingFormVariant = BaseFormStyle.addVariant {
+    base {
+        Modifier.fillMaxWidth(80.percent)
     }
 }
 

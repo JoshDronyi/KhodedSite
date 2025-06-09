@@ -19,6 +19,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.framework.annotations.DelicateApi
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
@@ -199,6 +200,7 @@ val ServiceDescriptionVariant = BaseTextStyle.addVariant {
     }
 }
 
+@OptIn(DelicateApi::class)
 @Composable
 fun ServiceTitleDisplay(
     service: String,
