@@ -3,6 +3,8 @@ package com.probro.khoded.pages
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.probro.khoded.components.ErrorBoundary
+import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.pages.homeSections.ConsultationSectionDisplay
@@ -34,6 +36,30 @@ import org.jetbrains.compose.web.css.ms
 @Composable
 fun Index() {
     val ctx = rememberPageContext()
+    // Development vs Production configuration
+    val errorConfig = ErrorBoundaryConfig(
+        showStackTrace = false, // Set to true in development
+        enableErrorReporting = true,
+        fallbackTitle = "Khoded - Service Temporarily Unavailable",
+        fallbackMessage = "We're experiencing technical difficulties. Our team has been notified and is working on a fix."
+    )
+
+    ErrorBoundary(
+        config = errorConfig,
+        onError = { error, errorInfo ->
+            // Custom error handling for your agency
+            console.error("Khoded website error:", error)
+            // TODO: Integrate with your analytics/monitoring service
+        }
+    ) {
+        val navigationController = rememberNavigationController()
+        IndexContent(navigationController)
+    }
+}
+
+
+@Composable
+fun IndexContent() {
     Scaffold(
         onNavigate = { path ->
             ctx.router.navigateTo(path)

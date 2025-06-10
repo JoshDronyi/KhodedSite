@@ -30,8 +30,10 @@ sealed interface FooterKind : ComponentKind
 sealed interface TextInputKind : ComponentKind
 sealed interface FormKind : ComponentKind
 sealed interface CTAKind : ComponentKind
+sealed interface BodyKind : ComponentKind
 
-
+val BodyStyle = CssStyle<BodyKind> {}
+val HeadingStyle = CssStyle<BodyKind> {}
 val BaseTextStyle = CssStyle<BaseTextKind> {
     base {
         Modifier.fontSize(FontSize.Small)
