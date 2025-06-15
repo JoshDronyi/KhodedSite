@@ -44,7 +44,6 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun ConsultationSectionDisplay(
-    footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit,
     data: Pages.Home_Section.Consultation,
 ) = with(data) {
     Box(
@@ -64,7 +63,6 @@ fun ConsultationSectionDisplay(
                 ConsultationDisplaySection(mainImage = mainImage)
                 QuoteSection(quotes, subText)
             }
-            footer(null)
         }
     }
 }

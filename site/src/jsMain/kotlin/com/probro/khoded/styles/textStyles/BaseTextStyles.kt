@@ -31,9 +31,22 @@ sealed interface TextInputKind : ComponentKind
 sealed interface FormKind : ComponentKind
 sealed interface CTAKind : ComponentKind
 sealed interface BodyKind : ComponentKind
+sealed interface HeadingKind : ComponentKind
 
-val BodyStyle = CssStyle<BodyKind> {}
-val HeadingStyle = CssStyle<BodyKind> {}
+val BodyStyle = CssStyle<
+        BodyKind> {
+    base {
+        Modifier
+            .fillMaxSize()
+            .backgroundColor(Color.white)
+    }
+}
+val HeadingStyle = CssStyle<HeadingKind> {
+    base {
+        Modifier
+            .fillMaxWidth()
+    }
+}
 val BaseTextStyle = CssStyle<BaseTextKind> {
     base {
         Modifier.fontSize(FontSize.Small)

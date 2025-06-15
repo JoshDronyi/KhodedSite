@@ -32,7 +32,6 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun LandingSectionDisplay(
-    header: @Composable () -> Unit,
     onNavigate: (page: PageSection) -> Unit,
     data: Pages.Home_Section.Landing
 ) = with(data) {
@@ -47,7 +46,6 @@ fun LandingSectionDisplay(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        header()
         Box(
             modifier = Modifier
                 .fillMaxWidth(80.percent)

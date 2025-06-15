@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
-import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.pages.homeSections.ConsultationSectionDisplay
 import com.probro.khoded.pages.homeSections.DesignSectionDisplay
 import com.probro.khoded.pages.homeSections.LandingSectionDisplay
@@ -16,7 +15,7 @@ import com.probro.khoded.styles.animations.makeVisibleKeyFrames
 import com.probro.khoded.styles.animations.shiftBackwardKeyframes
 import com.probro.khoded.styles.animations.shiftForwardKeyFrames
 import com.probro.khoded.styles.componentStyles.MessagingPopUpTextVariant
-import com.probro.khoded.styles.textStyles.ColumnKind
+import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.PageSection
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.popUp.PopUpStateHolders
@@ -28,7 +27,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.animation
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
-import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import org.jetbrains.compose.web.css.ms
 
@@ -41,7 +39,8 @@ fun Index() {
         showStackTrace = false, // Set to true in development
         enableErrorReporting = true,
         fallbackTitle = "Khoded - Service Temporarily Unavailable",
-        fallbackMessage = "We're experiencing technical difficulties. Our team has been notified and is working on a fix."
+        fallbackMessage = "We're experiencing technical difficulties." +
+                " Our team has been notified and is working on a fix."
     )
 
     ErrorBoundary(
@@ -52,20 +51,9 @@ fun Index() {
             // TODO: Integrate with your analytics/monitoring service
         }
     ) {
-        val navigationController = rememberNavigationController()
-        IndexContent(navigationController)
-    }
-}
-
-
-@Composable
-fun IndexContent() {
-    Scaffold(
-        onNavigate = { path ->
-            ctx.router.navigateTo(path)
-        },
-    ) { header, footer, modifier ->
-        HomePageSections(header, footer, modifier) { page ->
+        //  val navigationController = rememberNavigationController()
+        NavigationHeader()
+        HomePageSections() { page ->
             ctx.router.navigateTo(page.path)
         }
     }
@@ -73,8 +61,6 @@ fun IndexContent() {
 
 @Composable
 fun HomePageSections(
-    header: @Composable () -> Unit,
-    footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit,
     modifier: Modifier = Modifier,
     onNavigate: (page: PageSection) -> Unit
 ) {
@@ -88,15 +74,13 @@ fun HomePageSections(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LandingSectionDisplay(
-                header = header,
                 data = Pages.Home_Section.Landing,
                 onNavigate = onNavigate
             )
             ServicesSectionDisplay(Pages.Home_Section.Services)
             DesignSectionDisplay(Pages.Home_Section.Design)
             ConsultationSectionDisplay(
-                footer = footer,
-                data = Pages.Home_Section.Consultation,
+                data = Pages.Home_Section.Consultation
             )
         }
 

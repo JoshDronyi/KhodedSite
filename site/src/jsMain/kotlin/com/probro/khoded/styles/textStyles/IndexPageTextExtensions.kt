@@ -43,9 +43,10 @@ val HomeLandingBackgroundVariant = BackgroundStyle.addVariant {
             .padding(bottom = 40.px)
             .backgroundImage(
                 linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
                     from = KhodedColors.PURPLE.rgb,
-                    to = Colors.RebeccaPurple
+                    to = Colors.RebeccaPurple,
+                    dir = LinearGradient.Direction.ToBottom,
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
     }
@@ -72,9 +73,10 @@ val ConsultationBackgroundVariant = BackgroundStyle.addVariant {
         Modifier
             .backgroundImage(
                 linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
                     from = Colors.SkyBlue,
-                    to = KhodedColors.PURPLE.rgb
+                    to = KhodedColors.PURPLE.rgb,
+                    dir = LinearGradient.Direction.ToBottom,
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
     }
