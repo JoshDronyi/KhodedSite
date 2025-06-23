@@ -32,13 +32,13 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun LandingSectionDisplay(
-    onNavigate: (page: PageSection) -> Unit,
+    onNavigate: (path: NavigationRoute) -> Unit,
     data: Pages.Home_Section.Landing
 ) = with(data) {
     data.apply {
         ctaButton = ctaButton.copy(onButtonClick = {
             println("Doing the navigation.")
-            onNavigate(Pages.Home_Section.Consultation)
+            onNavigate(NavigationRoute.CONTACT)
         })
     }
     Column(

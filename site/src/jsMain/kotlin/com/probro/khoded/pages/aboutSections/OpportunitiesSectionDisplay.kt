@@ -25,7 +25,6 @@ import com.varabyte.kobweb.framework.annotations.DelicateApi
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.addVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
@@ -60,9 +59,7 @@ val OpportuinitesImageVariant = ImageStyle.addVariant {
 }
 
 @Composable
-fun OpportunitiesSectionDisplay(
-    footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit
-) = with(Pages.Story_Section.JoinOurTeam) {
+fun OpportunitiesSectionDisplay() = with(Pages.Story_Section.JoinOurTeam) {
     Box(
         modifier = BackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
             .id(id),
@@ -88,7 +85,6 @@ fun OpportunitiesSectionDisplay(
                     .fillMaxWidth(getWidthFromBreakpoint())
                     .padding(bottom = 40.px)
             )
-            footer(null)
         }
     }
 }

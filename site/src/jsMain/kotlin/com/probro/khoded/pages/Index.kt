@@ -16,8 +16,9 @@ import com.probro.khoded.styles.animations.shiftBackwardKeyframes
 import com.probro.khoded.styles.animations.shiftForwardKeyFrames
 import com.probro.khoded.styles.componentStyles.MessagingPopUpTextVariant
 import com.probro.khoded.utils.NavigationHeader
-import com.probro.khoded.utils.PageSection
+import com.probro.khoded.utils.NavigationRoute
 import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.WithNavigation
 import com.probro.khoded.utils.popUp.PopUpStateHolders
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -25,10 +26,14 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.animation
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import org.jetbrains.compose.web.css.ms
+import org.jetbrains.compose.web.css.px
 
 @Page
 @Composable
@@ -36,7 +41,7 @@ fun Index() {
     val ctx = rememberPageContext()
     // Development vs Production configuration
     val errorConfig = ErrorBoundaryConfig(
-        showStackTrace = false, // Set to true in development
+        showStackTrace = true, // Set to true in development
         enableErrorReporting = true,
         fallbackTitle = "Khoded - Service Temporarily Unavailable",
         fallbackMessage = "We're experiencing technical difficulties." +
@@ -51,10 +56,16 @@ fun Index() {
             // TODO: Integrate with your analytics/monitoring service
         }
     ) {
-        //  val navigationController = rememberNavigationController()
-        NavigationHeader()
-        HomePageSections() { page ->
-            ctx.router.navigateTo(page.path)
+        WithNavigation {
+            NavigationHeader(navigationState = it)
+            HomePageSections(
+                Modifier.fillMaxSize()
+                    .margin(0.px)
+                    .padding(0.px)
+            ) { page ->
+                ctx.router.navigateTo(page.path)
+            }
+//            PopUpComposable()
         }
     }
 }
@@ -62,28 +73,33 @@ fun Index() {
 @Composable
 fun HomePageSections(
     modifier: Modifier = Modifier,
-    onNavigate: (page: PageSection) -> Unit
+    onNavigate: (path: NavigationRoute) -> Unit
 ) {
-    val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
-    Box(
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LandingSectionDisplay(
-                data = Pages.Home_Section.Landing,
-                onNavigate = onNavigate
-            )
-            ServicesSectionDisplay(Pages.Home_Section.Services)
-            DesignSectionDisplay(Pages.Home_Section.Design)
-            ConsultationSectionDisplay(
-                data = Pages.Home_Section.Consultation
-            )
-        }
+        LandingSectionDisplay(
+            data = Pages.Home_Section.Landing,
+            onNavigate = onNavigate
+        )
+        ServicesSectionDisplay(Pages.Home_Section.Services)
+        DesignSectionDisplay(Pages.Home_Section.Design)
+        ConsultationSectionDisplay(
+            data = Pages.Home_Section.Consultation
+        )
+    }
+}
 
+@Composable
+fun PopUpComposable(modifier: Modifier = Modifier) {
+    val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+    ) {
         with(popUpState) {
             PopUpScreen(
                 popUpUIModel = this,

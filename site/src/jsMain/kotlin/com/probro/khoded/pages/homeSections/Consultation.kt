@@ -26,7 +26,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.forms.InputStyle
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.toModifier
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -46,24 +45,13 @@ import org.jetbrains.compose.web.dom.Text
 fun ConsultationSectionDisplay(
     data: Pages.Home_Section.Consultation,
 ) = with(data) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = BaseSectionStyles.toModifier(ConsultationSectionVariant),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
-        Column(
-            modifier = BackgroundStyle.toModifier(ConsultationBackgroundVariant),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Column(
-                modifier = BaseSectionStyles.toModifier(ConsultationSectionVariant),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
-            ) {
-                ConsultationDisplaySection(mainImage = mainImage)
-                QuoteSection(quotes, subText)
-            }
-        }
+        ConsultationDisplaySection(mainImage = mainImage)
+        QuoteSection(quotes, subText)
     }
 }
 

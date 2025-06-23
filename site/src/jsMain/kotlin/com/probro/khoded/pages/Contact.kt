@@ -1,9 +1,9 @@
 package com.probro.khoded.pages
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.ErrorBoundary
+import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
-import com.probro.khoded.components.widgets.ContactFooterVariant
-import com.probro.khoded.components.widgets.Scaffold
 import com.probro.khoded.messaging.messageData.MessageData
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.contactSections.ContactFormState
@@ -16,17 +16,13 @@ import com.probro.khoded.styles.animations.makeVisibleKeyFrames
 import com.probro.khoded.styles.animations.shiftBackwardKeyframes
 import com.probro.khoded.styles.animations.shiftForwardKeyFrames
 import com.probro.khoded.styles.componentStyles.MessagingPopUpTextVariant
-import com.probro.khoded.styles.componentStyles.MessagingPopUpVariant
 import com.probro.khoded.styles.pageStyles.ClientInfoPromptVariant
 import com.probro.khoded.styles.pageStyles.ContactFooterBackgroundVariant
 import com.probro.khoded.styles.pageStyles.ContactLandingBackgroundVariant
 import com.probro.khoded.styles.pageStyles.LandingSectionVariant
 import com.probro.khoded.styles.textStyles.*
-import com.probro.khoded.utils.IsOnScreenObservable
-import com.probro.khoded.utils.Pages
+import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
-import com.probro.khoded.utils.SectionPosition
-import com.probro.khoded.utils.fallInAnimation
 import com.probro.khoded.utils.popUp.PopUpStateHolders
 import com.stevdza.san.kotlinbs.models.InputValidation
 import com.varabyte.kobweb.compose.css.Height
@@ -45,7 +41,6 @@ import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.*
@@ -61,44 +56,57 @@ fun Contact() {
     val formState by ContactPageStateHolder.formState.collectAsState()
     val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
 
-    Scaffold(
-        onNavigate = {
-            ctx.router.navigateTo(it)
-        },
-    ) { header, footer, modifier ->
-        with(Pages.Contact_Section.Landing) {
-            Box(
-                modifier = Modifier,
-                contentAlignment = Alignment.Center
-            ) {
-                ContactPageSections(modifier, header, formState, footer)
-                with(popUpState) {
-                    PopUpScreen(
-                        popUpUIModel = this,
-                        textVariant = MessagingPopUpTextVariant,
-                        modifier = Modifier
-                            .animation(
-                                if (isVisible) makeVisibleKeyFrames.toAnimation(300.ms)
-                                else makeInvisibleKeyFrames.toAnimation(duration = 300.ms),
-                                if (isVisible) shiftForwardKeyFrames.toAnimation(300.ms)
-                                else shiftBackwardKeyframes.toAnimation(duration = 300.ms)
-                            )
-                    )
+    // Development vs Production configuration
+    val errorConfig = ErrorBoundaryConfig(
+        showStackTrace = false, // Set to true in development
+        enableErrorReporting = true,
+        fallbackTitle = "Khoded - Service Temporarily Unavailable",
+        fallbackMessage = "We're experiencing technical difficulties." +
+                " Our team has been notified and is working on a fix."
+    )
+
+    ErrorBoundary(
+        config = errorConfig,
+        onError = { error, errorInfo ->
+            // Custom error handling for your agency
+            console.error("Khoded website error:", error)
+            // TODO: Integrate with your analytics/monitoring service
+        }
+    ) {
+        WithNavigation {
+            NavigationHeader(navigationState = it)
+            with(Pages.Contact_Section.Landing) {
+                Box(
+                    modifier = Modifier,
+                    contentAlignment = Alignment.Center
+                ) {
+                    ContactPageSections(formState = formState)
+                    with(popUpState) {
+                        PopUpScreen(
+                            popUpUIModel = this,
+                            textVariant = MessagingPopUpTextVariant,
+                            modifier = Modifier
+                                .animation(
+                                    if (isVisible) makeVisibleKeyFrames.toAnimation(300.ms)
+                                    else makeInvisibleKeyFrames.toAnimation(duration = 300.ms),
+                                    if (isVisible) shiftForwardKeyFrames.toAnimation(300.ms)
+                                    else shiftBackwardKeyframes.toAnimation(duration = 300.ms)
+                                )
+                        )
+                    }
                 }
             }
-        }
-        LaunchedEffect(formState.stage) {
-            PopUpStateHolders.MessagingPopUpStateHolder.adjustPopUpText(formState.stage)
+            LaunchedEffect(formState.stage) {
+                PopUpStateHolders.MessagingPopUpStateHolder.adjustPopUpText(formState.stage)
+            }
         }
     }
 }
 
 @Composable
 fun ContactPageSections(
-    modifier: Modifier,
-    header: @Composable () -> Unit,
     formState: ContactFormState,
-    footer: @Composable (variant: CssStyleVariant<ColumnKind>?) -> Unit
+    modifier: Modifier = Modifier,
 ) = with(Pages.Contact_Section.Landing) {
     // Background Colors used to make the gradient
     Column(
@@ -119,7 +127,6 @@ fun ContactPageSections(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        header()
         SimpleGrid(
             numColumns = numColumns(base = 1, md = 2),
             modifier = BaseRowStyle.toModifier(LandingSectionVariant)
@@ -133,7 +140,6 @@ fun ContactPageSections(
                 contactInfoUIModel = contactInfoUIModel,
             )
         }
-        footer(ContactFooterVariant)
     }
 }
 

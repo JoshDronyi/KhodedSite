@@ -12,14 +12,18 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.navigation.Link
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.theme.breakpoint.toPx
+import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.attributes.ATarget
 import org.jetbrains.compose.web.attributes.target
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
+import org.w3c.dom.events.Event
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -206,7 +210,7 @@ fun NavigationHeader(
                 MobileMenuButton(
                     isOpen = navigationState.isMobileMenuOpen,
                     onClick = navigationState.onToggleMobileMenu,
-                    modifier = Modifier.displayIf(Breakpoint.SM, Breakpoint.MD) // Show only on mobile
+                    modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.MD) // Show only on mobile
                 )
             }
 
@@ -215,7 +219,7 @@ fun NavigationHeader(
                 MobileNavigationMenu(
                     currentRoute = navigationState.currentRoute,
                     onNavigate = navigationState.onRouteChange,
-                    modifier = Modifier.displayIf(Breakpoint.SM, Breakpoint.MD)
+                    modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.MD)
                 )
             }
         }
@@ -283,10 +287,10 @@ private fun DesktopNavigationMenu(
             when (route) {
                 NavigationRoute.SERVICES -> {
                     // Services dropdown menu
-                    ServicesDropdownMenu(
-                        currentRoute = currentRoute,
-                        onNavigate = onNavigate
-                    )
+//                    ServicesDropdownMenu(
+//                        currentRoute = currentRoute,
+//                        onNavigate = onNavigate
+//                    )
                 }
 
                 else -> {
@@ -492,13 +496,14 @@ private fun MobileMenuButton(
     modifier: Modifier = Modifier
 ) {
     Button(
-        attrs = {
-            onClick { onClick() }
-            attr("aria-label", if (isOpen) "Close menu" else "Open menu")
-            attr("aria-expanded", isOpen.toString())
-            attr("aria-controls", "mobile-navigation-menu")
-            classes("mobile-menu-button")
-        }
+        attrs = modifier
+            .onClick { onClick.invoke() }
+            .toAttrs {
+                attr("aria-label", if (isOpen) "Close menu" else "Open menu")
+                attr("aria-expanded", isOpen.toString())
+                attr("aria-controls", "mobile-navigation-menu")
+                classes("mobile-menu-button")
+            }
     ) {
         // Animated hamburger icon
         Div(
@@ -529,11 +534,12 @@ private fun MobileNavigationMenu(
     modifier: Modifier = Modifier
 ) {
     Ul(
-        attrs = {
-            id("mobile-navigation-menu")
-            attr("role", "menu")
-            classes("mobile-nav-menu")
-        }
+        attrs = modifier
+            .id("mobile-navigation-menu")
+            .toAttrs {
+                attr("role", "menu")
+                classes("mobile-nav-menu")
+            }
     ) {
         // Main navigation items
         NavigationRoute.getMainNavItems().forEach { route ->
@@ -670,11 +676,122 @@ object NavigationAnalytics {
  * Conditional display based on breakpoint
  * Simplifies responsive design patterns
  */
+@Composable
 fun Modifier.displayIf(vararg breakpoints: Breakpoint): Modifier {
-    // Implementation would depend on your responsive system
-    // This is a placeholder showing the intended API
-    return this // TODO: Replace with actual responsive logic
+    val currentWidth by rememberBreakpointState()
+
+    val shouldDisplay = when {
+        breakpoints.isEmpty() -> true
+        breakpoints.size == 1 -> {
+            // Single breakpoint: show if screen width is AT LEAST the breakpoint
+            currentWidth >= breakpoints.first().toPx().value.toDouble()
+        }
+
+        else -> {
+            // Multiple breakpoints: show if screen width is within the range
+            val sortedBreakpoints = breakpoints.sortedBy { it.toPx().value }
+            val minWidth = sortedBreakpoints.first().toPx().value.toDouble()
+            val maxWidth = sortedBreakpoints.last().toPx().value.toDouble()
+            currentWidth in minWidth..maxWidth
+        }
+    }
+
+    return if (shouldDisplay) {
+        this
+    } else {
+        this.display(DisplayStyle.None)
+    }
 }
+
+/**
+ * Alternative implementation using visibility (keeps layout space)
+ */
+@Composable
+fun Modifier.displayIfVisible(vararg breakpoints: Breakpoint): Modifier {
+    val currentWidth by rememberBreakpointState()
+
+    val shouldDisplay = when {
+        breakpoints.isEmpty() -> true
+        breakpoints.size == 1 -> {
+            currentWidth >= breakpoints.first().toPx().value.toDouble()
+        }
+
+        else -> {
+            val sortedBreakpoints = breakpoints.sortedBy { it.toPx().value }
+            val minWidth = sortedBreakpoints.first().toPx().value.toDouble()
+            val maxWidth = sortedBreakpoints.last().toPx().value.toDouble()
+            currentWidth in minWidth..maxWidth
+        }
+    }
+
+    return this.visibility(if (shouldDisplay) Visibility.Visible else Visibility.Hidden)
+}
+
+/**
+ * Alternative implementation using opacity for smooth transitions
+ */
+@Composable
+fun Modifier.displayIfOpacity(vararg breakpoints: Breakpoint): Modifier {
+    val currentWidth by rememberBreakpointState()
+
+    val shouldDisplay = when {
+        breakpoints.isEmpty() -> true
+        breakpoints.size == 1 -> {
+            currentWidth >= breakpoints.first().toPx().value.toDouble()
+        }
+
+        else -> {
+            val sortedBreakpoints = breakpoints.sortedBy { it.toPx().value }
+            val minWidth = sortedBreakpoints.first().toPx().value.toDouble()
+            val maxWidth = sortedBreakpoints.last().toPx().value.toDouble()
+            currentWidth in minWidth..maxWidth
+        }
+    }
+
+    return this.opacity(if (shouldDisplay) 1.0 else 0.0)
+}
+
+/**
+ * Remembers the current breakpoint state and updates on window resize
+ */
+@Composable
+private fun rememberBreakpointState(): State<Double> {
+    val breakpointState = remember { mutableStateOf(window.innerWidth.toDouble()) }
+
+    DisposableEffect(Unit) {
+        val listener: (Event) -> Unit = {
+            breakpointState.value = window.innerWidth.toDouble()
+        }
+
+        window.addEventListener("resize", listener)
+
+        onDispose {
+            window.removeEventListener("resize", listener)
+        }
+    }
+
+    return breakpointState
+}
+
+/**
+ * Alternative using Kobweb's built-in breakpoint system if you prefer
+// */
+//@Composable
+//fun Modifier.displayIfKobweb(vararg breakpoints: com.varabyte.kobweb.silk.theme.breakpoint.Breakpoint): Modifier {
+//    return this.styleModifier {
+//        breakpoints.forEach { breakpoint ->
+//            breakpoint {
+//                Modifier.display(DisplayStyle.Block)
+//            }
+//        }
+//        // Hide by default if breakpoints are specified
+//        if (breakpoints.isNotEmpty()) {
+//            base {
+//                Modifier.display(DisplayStyle.None)
+//            }
+//        }
+//    }
+//}
 
 /**
  * Navigation-aware composable wrapper
@@ -689,7 +806,7 @@ fun WithNavigation(
     // Track route changes for analytics
     LaunchedEffect(navigationState.currentRoute) {
         NavigationAnalytics.trackNavigation(
-            fromRoute = NavigationRoute.HOME, // Would track previous route in real implementation
+            fromRoute = NavigationRoute.HOME, //TODO: Would track previous route in real implementation
             toRoute = navigationState.currentRoute
         )
     }

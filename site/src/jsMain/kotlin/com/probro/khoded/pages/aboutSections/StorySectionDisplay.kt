@@ -53,9 +53,7 @@ val StoryParagraphVariant = BaseTextStyle.addVariant {
 }
 
 @Composable
-fun StorySectionDisplay(
-    header: @Composable () -> Unit
-) = with(Pages.Story_Section.OurStory) {
+fun StorySectionDisplay() = with(Pages.Story_Section.OurStory) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
     Column(
         modifier = BackgroundStyle.toModifier(StoryBackgroundVariant)
@@ -63,7 +61,6 @@ fun StorySectionDisplay(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        header()
         Column(
             modifier = Modifier
                 .fillMaxWidth(80.percent)

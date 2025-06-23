@@ -32,7 +32,6 @@ fun Scaffold(
     ) -> Unit
 ) {
     val navState by Navigator.pageState.collectAsState()
-    val breakpoint = rememberBreakpoint()
 
     Box(
         modifier = Modifier

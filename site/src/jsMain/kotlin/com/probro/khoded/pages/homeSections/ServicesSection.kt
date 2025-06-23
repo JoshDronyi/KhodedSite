@@ -74,19 +74,19 @@ val ServicesVariant = BaseSectionStyles.addVariant {
             .height(Height.MaxContent)
             .fillMaxWidth(75.percent)
     }
-    Breakpoint.ZERO {
-        Modifier
-            .translateY(ty = 60.px)
-    }
-    Breakpoint.SM
-    Breakpoint.MD {
-        Modifier.translateY(ty = 20.px)
-    }
-    Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .translateY(ty = 40.px)
-    }
+//    Breakpoint.ZERO {
+//        Modifier
+//            .translateY(ty = 60.px)
+//    }
+//    Breakpoint.SM
+//    Breakpoint.MD {
+//        Modifier.translateY(ty = 20.px)
+//    }
+//    Breakpoint.LG
+//    Breakpoint.XL {
+//        Modifier
+//            .translateY(ty = 40.px)
+//    }
 }
 
 @Composable

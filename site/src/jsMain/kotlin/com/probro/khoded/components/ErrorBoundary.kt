@@ -253,7 +253,7 @@ fun ErrorBoundary(
             try {
                 // This is where we would ideally catch composition errors
                 // In practice, Compose for Web doesn't have built-in error boundaries like React
-                // So we implement error catching at the business logic level
+                // So we TODO: implement error catching at the business logic level
             } catch (error: Throwable) {
                 handleError(error, config, errorClassifier, onError) { appError ->
                     currentError = appError

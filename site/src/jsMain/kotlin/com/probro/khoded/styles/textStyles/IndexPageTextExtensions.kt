@@ -23,10 +23,10 @@ val LandingImageVariant = ImageStyle.addVariant {
     Breakpoint.SM
     Breakpoint.MD
     Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .translateX(tx = 50.px)
-    }
+//    Breakpoint.XL {
+//        Modifier
+//            .translateX(tx = 50.px)
+//    }
 }
 val LandingTextVariant = BaseTextStyle.addVariant {
     base {
@@ -301,7 +301,7 @@ val ConsultationRequestVariant = BaseFormStyle.addVariant {
         Modifier
             .fillMaxWidth(60.percent)
             .fillMaxHeight()
-            .padding(topBottom = 10.px, leftRight = 20.px)
+            .padding(topBottom = 10.px)
     }
     Breakpoint.ZERO {
         Modifier
