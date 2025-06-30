@@ -1,14 +1,21 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.ImageBox
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.SectionTitleVariant
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.components.BaseColumnStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.ScrollSnapStop
+import com.varabyte.kobweb.compose.css.ScrollSnapType
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -17,13 +24,15 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.framework.annotations.DelicateApi
+import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.hover
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.selectors.hover
+import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
@@ -33,83 +42,51 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
     Box(
-        modifier = BackgroundStyle.toModifier(ServicesBackgroundVariant)
-            .id(id),
-        contentAlignment = Alignment.CenterEnd
+        modifier = BaseBackgroundStyle.toModifier()
+            .id(id)
     ) {
-        ImageBox(
-            image = data.mainImage,
-            imageDesc = "Man sitting on laptop",
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        ServicesTitle(
-            title = title,
-            modifier = Modifier.align(Alignment.TopEnd)
-                .scrollSnapStop(ScrollSnapStop.Normal)
-                .scrollSnapType(ScrollSnapType.Initial)
+        Image(
+            src = data.mainImage,
+            description = "Man sitting on laptop",
+            modifier = BaseImageStyle.toModifier()
         )
         Column(
-            modifier = ServicesStyle.toModifier()
-                .align(Alignment.BottomEnd),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            modifier = BaseColumnStyle.toModifier()
+                .align(Alignment.TopEnd)
         ) {
-            khodedServices.forEach {
-                WebServiceDisplay(it)
+            ServicesTitle(
+                title = title,
+                modifier = Modifier
+                    .scrollSnapStop(ScrollSnapStop.Normal)
+                    .scrollSnapType(ScrollSnapType.Initial)
+            )
+            Column(
+                modifier = BaseColumnStyle.toModifier(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                khodedServices.forEach {
+                    WebServiceDisplay(it)
+                }
             }
         }
-    }
-}
-
-val ServicesStyle by ComponentStyle {
-    base {
-        Modifier
-            .height(Height.MaxContent)
-            .fillMaxWidth(40.percent)
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .translateY(ty = 60.px)
-    }
-    Breakpoint.SM
-    Breakpoint.MD {
-        Modifier.translateY(ty = 20.px)
-    }
-    Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .translateY(ty = 40.px)
     }
 }
 
 @Composable
 fun ServicesTitle(title: String, modifier: Modifier = Modifier) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+    val animation = when (sectionPosition) {
+        SectionPosition.ABOVE -> jobPostingShiftDownKeyFrames
+        SectionPosition.ON_SCREEN -> jobPostingShiftUPKeyFrames
+        SectionPosition.BELOW -> jobPostingShiftDownKeyFrames
+        SectionPosition.IDLE -> jobPostingShiftUPKeyFrames
+    }
     P(
-        attrs = HomeTitleTextStyle.toModifier(ServicesTitleVariant)
+        attrs = BaseTextStyle.toModifier(SectionTitleVariant)
             .then(modifier)
             .id(TitleIDs.servicesTitleID)
-            .translateY(
-                ty = when (sectionPosition) {
-                    SectionPosition.ABOVE -> (-100).px
-                    SectionPosition.ON_SCREEN -> 0.px
-                    SectionPosition.BELOW -> (-100).px
-                    SectionPosition.IDLE -> 0.px
-                }
-            )
-            .opacity(
-                when (sectionPosition) {
-                    SectionPosition.ABOVE -> 0.percent
-                    SectionPosition.ON_SCREEN -> 100.percent
-                    SectionPosition.BELOW -> 0.percent
-                    SectionPosition.IDLE -> 100.percent
-                }
-            )
-            .transition(
-                CSSTransition(property = "translate", duration = 600.ms),
-                CSSTransition(property = "opacity", duration = 600.ms)
-            )
+            .animation(animation.toAnimation(600.ms))
             .toAttrs()
     ) {
         Text(title)
@@ -123,7 +100,7 @@ fun ServicesTitle(title: String, modifier: Modifier = Modifier) {
     }
 }
 
-val PinkUnderLineVaraint by ImageStyle.addVariant {
+val PinkUnderLineVaraint = BaseImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(30.percent)
@@ -143,7 +120,7 @@ val PinkUnderLineVaraint by ImageStyle.addVariant {
 fun WebServiceDisplay(service: Pair<String, String>) {
     var isShown by remember { mutableStateOf(false) }
     Column(
-        modifier = ServiceSectionStyle.toModifier(),
+        modifier = BaseColumnStyle.toModifier(ServiceSectionVariant),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -162,7 +139,7 @@ fun WebServiceDisplay(service: Pair<String, String>) {
     }
 }
 
-val ServiceSectionStyle by ComponentStyle {
+val ServiceSectionVariant = BaseColumnStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -171,7 +148,6 @@ val ServiceSectionStyle by ComponentStyle {
                 style(LineStyle.Solid)
                 color(Color.purple)
             }
-            .padding(leftRight = 5.px, topBottom = 10.px)
     }
     hover {
         Modifier
@@ -180,7 +156,7 @@ val ServiceSectionStyle by ComponentStyle {
 
 }
 
-val ServiceTextVariant by BaseTextStyle.addVariant {
+val ServiceTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .color(Color.black)
@@ -200,7 +176,7 @@ val ServiceTextVariant by BaseTextStyle.addVariant {
             .fontSize(FontSize.XXLarge)
     }
 }
-val ServiceDescriptionVariant by BaseTextStyle.addVariant {
+val ServiceDescriptionVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .color(Color.black)
@@ -208,6 +184,7 @@ val ServiceDescriptionVariant by BaseTextStyle.addVariant {
     }
 }
 
+@OptIn(DelicateApi::class)
 @Composable
 fun ServiceTitleDisplay(
     service: String,

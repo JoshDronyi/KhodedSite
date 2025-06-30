@@ -3,11 +3,14 @@ package com.probro.khoded.pages.aboutSections
 import androidx.compose.runtime.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.pages.homeSections.BackgroundStyle
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.styles.JobDescriptionVariant
-import com.probro.khoded.styles.JobTitleVariant
+import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.JobDescriptionVariant
+import com.probro.khoded.styles.base.JobTitleVariant
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.components.BaseTabStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -23,34 +26,35 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.framework.annotations.DelicateApi
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val OpportunitiesBackgroundVariant by BackgroundStyle.addVariant {
+val OpportunitiesBackgroundVariant = BaseBackgroundStyle.addVariant {
     base {
         Modifier
             .padding(topBottom = 40.px)
             .backgroundImage(
                 linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
                     from = Colors.RebeccaPurple,
                     to = KhodedColors.PURPLE.rgb,
+                    dir = LinearGradient.Direction.ToBottom,
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
     }
 }
 
-val OpportuinitesImageVariant by ImageStyle.addVariant {
+val OpportuinitesImageVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(30.percent)
@@ -60,18 +64,16 @@ val OpportuinitesImageVariant by ImageStyle.addVariant {
 }
 
 @Composable
-fun OpportunitiesSectionDisplay(
-    footer: @Composable (variant: ComponentVariant?) -> Unit
-) = with(Pages.Story_Section.JoinOurTeam) {
+fun OpportunitiesSectionDisplay() = with(Pages.Story_Section.JoinOurTeam) {
     Box(
-        modifier = BackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
+        modifier = BaseBackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
             .id(id),
         contentAlignment = Alignment.Center
     ) {
         Image(
             src = Images.StoryPage.megaphone,
             description = "Megaphone",
-            modifier = ImageStyle.toModifier(OpportuinitesImageVariant)
+            modifier = BaseImageStyle.toModifier(OpportuinitesImageVariant)
                 .align(Alignment.TopEnd)
         )
         Column(
@@ -88,11 +90,11 @@ fun OpportunitiesSectionDisplay(
                     .fillMaxWidth(getWidthFromBreakpoint())
                     .padding(bottom = 40.px)
             )
-            footer(null)
         }
     }
 }
 
+@OptIn(DelicateApi::class)
 @Composable
 private fun getWidthFromBreakpoint(): CSSNumericValue<out CSSUnitLengthOrPercentage> {
     return when (rememberBreakpoint()) {
@@ -102,7 +104,7 @@ private fun getWidthFromBreakpoint(): CSSNumericValue<out CSSUnitLengthOrPercent
     }
 }
 
-val PostingsTitleVariant by BaseTextStyle.addVariant {
+val PostingsTitleVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .fontSize(48.px)
@@ -120,6 +122,19 @@ fun JobPostings(
     modifier: Modifier = Modifier
 ) {
     var state by remember { mutableStateOf(SectionPosition.IDLE) }
+    val animations by remember {
+        mutableStateOf(
+            when (state) {
+                SectionPosition.ABOVE -> jobPostingShiftDownKeyFrames
+                SectionPosition.ON_SCREEN -> jobPostingShiftUPKeyFrames
+                SectionPosition.BELOW -> jobPostingShiftDownKeyFrames
+                SectionPosition.IDLE -> {
+                    jobPostingShiftUPKeyFrames
+                }
+            }
+        )
+    }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -134,27 +149,26 @@ fun JobPostings(
             attrs = BaseTextStyle.toModifier(PostingsTitleVariant)
                 .id(TitleIDs.opportunitiesTitle)
                 .fillMaxWidth()
-                .translateY(
-                    ty = when (state) {
-                        SectionPosition.ABOVE -> (-100).px
-                        SectionPosition.ON_SCREEN -> 0.px
-                        SectionPosition.BELOW -> (-100).px
-                        SectionPosition.IDLE -> 0.px
-                    }
-                )
-                .opacity(
-                    when (state) {
-                        SectionPosition.ABOVE -> 0.percent
-                        SectionPosition.ON_SCREEN -> 100.percent
-                        SectionPosition.BELOW -> 0.percent
-                        SectionPosition.IDLE -> 100.percent
-                    }
-                )
-                .transition(
-                    CSSTransition(property = "translate", duration = 600.ms),
-                    CSSTransition(property = "opacity", duration = 600.ms)
+                .animation(
+                    animations.toAnimation(600.ms)
                 )
                 .toAttrs()
+//                .translateY(
+//                    ty = when (state) {
+//                        SectionPosition.ABOVE -> (-100).px
+//                        SectionPosition.ON_SCREEN -> 0.px
+//                        SectionPosition.BELOW -> (-100).px
+//                        SectionPosition.IDLE -> 0.px
+//                    }
+//                )
+//                .opacity(
+//                    when (state) {
+//                        SectionPosition.ABOVE -> 0.percent
+//                        SectionPosition.ON_SCREEN -> 100.percent
+//                        SectionPosition.BELOW -> 0.percent
+//                        SectionPosition.IDLE -> 100.percent
+//                    }
+//                )
         ) {
             Text(title)
         }
@@ -176,28 +190,6 @@ fun JobPostings(
     }
 }
 
-val JobPositionStyle by ComponentStyle {
-    base {
-        Modifier
-            .borderRadius(20.px)
-            .background(Color.white)
-            .color(Color.black)
-            .textOverflow(TextOverflow.Ellipsis)
-            .overflowWrap(OverflowWrap.Anywhere)
-            .minHeight(Height.FitContent)
-            .padding(10.px)
-            .margin(10.px)
-    }
-}
-
-val JobPositionContainerStyle by ComponentStyle {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .padding(20.px)
-            .height(Height.Inherit)
-    }
-}
 
 @Composable
 fun JobPositionDisplay(
@@ -206,7 +198,7 @@ fun JobPositionDisplay(
 ) = with(position) {
     var shouldShow by remember { mutableStateOf(false) }
     Column(
-        modifier = JobPositionStyle.toModifier()
+        modifier = BaseTabStyle.toModifier()
             .fillMaxWidth(80.percent)
             .fillMaxHeight(90.percent),
         verticalArrangement = Arrangement.Center,

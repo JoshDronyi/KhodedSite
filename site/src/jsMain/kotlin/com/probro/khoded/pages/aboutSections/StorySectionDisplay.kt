@@ -1,15 +1,12 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.widgets.StoryPageHeaderVariant
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
-import com.probro.khoded.pages.homeSections.BackgroundStyle
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.utils.*
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -20,35 +17,34 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val StoryBackgroundVariant by BackgroundStyle.addVariant {
+val StoryBackgroundVariant = BaseBackgroundStyle.addVariant {
     base {
         Modifier
             .height(Height.MaxContent)
             .color(Color.white)
             .backgroundImage(
                 linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
                     from = KhodedColors.PURPLE.rgb,
-                    to = Colors.RebeccaPurple
+                    to = Colors.RebeccaPurple,
+                    dir = LinearGradient.Direction.ToBottom,
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
             .padding(bottom = 15.px)
     }
 }
 
-val StoryParagraphStyle by ComponentStyle {
+val StoryParagraphVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -57,17 +53,14 @@ val StoryParagraphStyle by ComponentStyle {
 }
 
 @Composable
-fun StorySectionDisplay(
-    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit
-) = with(Pages.Story_Section.OurStory) {
+fun StorySectionDisplay() = with(Pages.Story_Section.OurStory) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
     Column(
-        modifier = BackgroundStyle.toModifier(StoryBackgroundVariant)
+        modifier = BaseBackgroundStyle.toModifier(StoryBackgroundVariant)
             .id(id),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        header(StoryPageHeaderVariant, null)
         Column(
             modifier = Modifier
                 .fillMaxWidth(80.percent)
@@ -81,7 +74,7 @@ fun StorySectionDisplay(
                 sectionPosition = it
             }
             P(
-                attrs = StoryTextStyle.toModifier(StoryPageTitleVariant)
+                attrs = BaseTextStyle.toModifier(StoryPageTitleVariant)
                     .id(TitleIDs.storyTitle)
                     .fillMaxWidth()
                     .position(Position.Relative)
@@ -106,7 +99,7 @@ fun StorySectionDisplay(
 @Composable
 fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
     Column(
-        modifier = StoryParagraphStyle.toModifier(),
+        modifier = BaseTextStyle.toModifier(StoryParagraphVariant),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -123,7 +116,7 @@ fun StoryParagraph(storySection: Pages.Story_Section.StorySection) {
 @Composable
 fun ParagraphContent(text: String) {
     P(
-        attrs = StoryTextStyle.toModifier(StoryParagraphTextVariant)
+        attrs = BaseTextStyle.toModifier(StoryParagraphTextVariant)
             .fillMaxWidth(95.percent)
             .toAttrs()
     ) {
@@ -149,7 +142,7 @@ fun ParagraphTitle(
             size = IconSize.LG
         )
         P(
-            attrs = StoryTextStyle.toModifier(StoryTitleTextVariant)
+            attrs = BaseTextStyle.toModifier(StoryTitleTextVariant)
                 .toAttrs()
         ) {
             Text(title)
@@ -157,7 +150,7 @@ fun ParagraphTitle(
     }
 }
 
-val StoryTextStyle by ComponentStyle {
+val StoryTextStyle = BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .fontFamily(FONT_FAMILY)
@@ -182,7 +175,7 @@ val StoryTextStyle by ComponentStyle {
     }
 }
 
-val StoryTitleTextVariant by StoryTextStyle.addVariant {
+val StoryTitleTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .cursor(Cursor.Pointer)
@@ -201,7 +194,7 @@ val StoryTitleTextVariant by StoryTextStyle.addVariant {
     }
 }
 
-val StoryParagraphTextVariant by StoryTextStyle.addVariant {
+val StoryParagraphTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier.fillMaxWidth()
             .textAlign(TextAlign.Start)
@@ -226,7 +219,7 @@ val StoryParagraphTextVariant by StoryTextStyle.addVariant {
 
 }
 
-val StoryPageTitleVariant by StoryTextStyle.addVariant {
+val StoryPageTitleVariant = BaseTextStyle.addVariant {
     base {
         Modifier
             .textAlign(TextAlign.Start)

@@ -12,7 +12,7 @@ ARG KOBWEB_APP_ROOT="site"
 
 FROM openjdk:19-jdk-slim AS export
 
-ENV KOBWEB_CLI_VERSION=0.9.15
+ENV KOBWEB_CLI_VERSION=0.9.18
 ARG KOBWEB_APP_ROOT
 
 # Copy the project code to an arbitrary subdir so we can install stuff in the

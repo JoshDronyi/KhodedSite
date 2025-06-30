@@ -1,29 +1,33 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.BackingCard
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
 import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.styles.ImageStyle
+import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
+import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.SectionTitleVariant
+import com.probro.khoded.styles.base.SubTitleVariant
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
-import org.jetbrains.compose.web.css.LineStyle
+import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -34,42 +38,21 @@ import org.jetbrains.compose.web.dom.Text
 
 @Composable
 fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
-    BackingCard(
-        modifier = BackgroundStyle.toModifier(DesignBackgroundVariant)
-            .id(id),
-        variant = NoBorderBackingCardVariant,
-        firstSection = {
-            DesignTextSection(
-                upperText = mainText,
-                underlineImage = underlineImage,
-                lowerText = subText,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        },
-        secondSection = {
-            DesignImageSection(
-                secondImage = mainImage,
-                modifier = DesignImageStyle.toModifier()
-            )
-        }
-    )
-}
-
-val DesignImageStyle by ComponentStyle {
-    base {
-        Modifier
-            .fillMaxSize()
-    }
-    Breakpoint.ZERO {
-        Modifier
-    }
-    Breakpoint.SM {
-        Modifier
-    }
-    Breakpoint.MD {
-        Modifier
-            .translateY(ty = (-80).px)
+    Box(
+        modifier = BaseBackgroundStyle.toModifier()
+            .id(id)
+    ) {
+        Image(
+            src = mainImage,
+            modifier = BaseImageStyle.toModifier()
+                .align(Alignment.TopEnd)
+        )
+        DesignTextSection(
+            upperText = mainText,
+            underlineImage = underlineImage,
+            lowerText = subText,
+            modifier = BaseColumnStyle.toModifier()
+        )
     }
 }
 
@@ -80,34 +63,22 @@ fun DesignTextSection(
     lowerText: String,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .borderBottom {
-                    width(2.px)
-                    style(LineStyle.Solid)
-                    color(Colors.RebeccaPurple)
-                }
-                .fillMaxWidth()
-                .scrollSnapStop(ScrollSnapStop.Normal)
-                .scrollSnapType(ScrollSnapAxis.Y, ScrollSnapMode.Mandatory),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            DesignHeading(upperText)
-            Image(
-                src = underlineImage,
-                modifier = ImageStyle.toModifier(BlackUnderlineVariant)
-            )
-            DesignSubText(lowerText)
-        }
+        DesignHeading(upperText)
+        Image(
+            src = underlineImage,
+            modifier = BaseImageStyle.toModifier(BlackUnderlineVariant)
+        )
+        DesignSubText(lowerText)
     }
+
 }
 
-val BlackUnderlineVariant by ImageStyle.addVariant {
+val BlackUnderlineVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(40.percent)
@@ -125,7 +96,7 @@ val BlackUnderlineVariant by ImageStyle.addVariant {
     }
 }
 
-val PlaneImageVariant by ImageStyle.addVariant {
+val PlaneImageVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .zIndex(2)
@@ -147,7 +118,7 @@ val PlaneImageVariant by ImageStyle.addVariant {
 @Composable
 fun DesignSubText(lowerText: String) {
     P(
-        attrs = HomeTitleTextStyle.toModifier(DesignSubTitleVariant)
+        attrs = BaseTextStyle.toModifier(SubTitleVariant)
             .toAttrs()
     ) {
         Text(value = lowerText)
@@ -166,29 +137,16 @@ fun DesignHeading(
     val secondText = remember { upperText.substring(justIndex + LENGTH_OF_JUST) }
 
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
+    val animation = when (sectionPosition) {
+        SectionPosition.ABOVE -> jobPostingShiftDownKeyFrames
+        SectionPosition.ON_SCREEN -> jobPostingShiftUPKeyFrames
+        SectionPosition.BELOW -> jobPostingShiftDownKeyFrames
+        SectionPosition.IDLE -> jobPostingShiftUPKeyFrames
+    }
     P(
-        attrs = HomeTitleTextStyle.toModifier(DesignTitleVariant)
+        attrs = BaseTextStyle.toModifier(SectionTitleVariant)
             .id(TitleIDs.designTitleID)
-            .translateY(
-                ty = when (sectionPosition) {
-                    SectionPosition.ABOVE -> (-100).px
-                    SectionPosition.ON_SCREEN -> 0.px
-                    SectionPosition.BELOW -> (-100).px
-                    SectionPosition.IDLE -> 0.px
-                }
-            )
-            .opacity(
-                when (sectionPosition) {
-                    SectionPosition.ABOVE -> 0.percent
-                    SectionPosition.ON_SCREEN -> 100.percent
-                    SectionPosition.BELOW -> 0.percent
-                    SectionPosition.IDLE -> 100.percent
-                }
-            )
-            .transition(
-                CSSTransition(property = "translate", duration = 600.ms),
-                CSSTransition(property = "opacity", duration = 600.ms)
-            )
+            .animation(animation.toAnimation(600.ms))
             .toAttrs()
     ) {
         Text(value = firstText)
@@ -207,30 +165,5 @@ fun DesignHeading(
     ) {
         sectionPosition = it
         println("New Position for ${Pages.Home_Section.Design.id} is $it")
-    }
-}
-
-@Composable
-fun DesignImageSection(
-    secondImage: String,
-    modifier: Modifier = Modifier
-) = with(Pages.Home_Section.Design) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            src = secondImage,
-            modifier = ImageStyle.toModifier(ComputerPicVariant)
-        )
-    }
-}
-
-val ComputerPicVariant by ImageStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .objectFit(ObjectFit.Fill)
-            .zIndex(1)
     }
 }
