@@ -15,12 +15,11 @@ import com.probro.khoded.styles.animations.makeInvisibleKeyFrames
 import com.probro.khoded.styles.animations.makeVisibleKeyFrames
 import com.probro.khoded.styles.animations.shiftBackwardKeyframes
 import com.probro.khoded.styles.animations.shiftForwardKeyFrames
-import com.probro.khoded.styles.componentStyles.MessagingPopUpTextVariant
-import com.probro.khoded.styles.pageStyles.ClientInfoPromptVariant
-import com.probro.khoded.styles.pageStyles.ContactFooterBackgroundVariant
-import com.probro.khoded.styles.pageStyles.ContactLandingBackgroundVariant
-import com.probro.khoded.styles.pageStyles.LandingSectionVariant
-import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.CompanyContactTextVariant
+import com.probro.khoded.styles.base.SectionTitleVariant
+import com.probro.khoded.styles.components.*
+import com.probro.khoded.styles.popups.MessagingPopUpTextVariant
 import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
 import com.probro.khoded.utils.popUp.PopUpStateHolders
@@ -113,11 +112,11 @@ fun ContactPageSections(
         modifier = Modifier.fillMaxSize()
     ) {
         Box(
-            BackgroundStyle.toModifier(ContactLandingBackgroundVariant)
+            BaseBackgroundStyle.toModifier(ContactLandingBackgroundVariant)
                 .fillMaxSize()
         )
         Box(
-            BackgroundStyle.toModifier(ContactFooterBackgroundVariant)
+            BaseBackgroundStyle.toModifier(ContactFooterBackgroundVariant)
                 .fillMaxSize()
         )
     }
@@ -193,7 +192,7 @@ fun ClientContactInfoDisplay(
     onMessageSend: (message: String) -> Unit,
 ) = with(placeholderData) {
     Box(
-        modifier = BaseContainerStyle.toModifier(ClientInfoContainerVariant),
+        modifier = BaseContainerStyle.toModifier(CompanyInfoContainerVariant),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -260,7 +259,7 @@ fun ContactUsCTA(
         modifier = modifier
     ) {
         P(
-            attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+            attrs = BaseCTAStyle.toModifier()
                 .toAttrs()
         ) {
             Text(it)
@@ -274,7 +273,7 @@ fun ClientInfoTitle(
     subText: String
 ) {
     P(
-        attrs = BaseTextStyle.toModifier(ClientInfoPromptVariant)
+        attrs = BaseTextStyle.toModifier(SectionTitleVariant)
             .position(Position.Relative)
             .animation(
                 fallInAnimation.toAnimation(
@@ -314,8 +313,7 @@ fun ClientInfoInputDisplay(
 ) =
     with(placeholderData) {
         Column(
-            modifier = Modifier.fillMaxWidth()
-                .fillMaxHeight()
+            modifier = Modifier.fillMaxSize()
                 .margin(top = 20.px),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
@@ -379,7 +377,7 @@ fun CompanyContactInfoSection(
 @Composable
 fun ContactInfoDisplay(contactInfoUIModel: Pages.Contact_Section.ContactInfoUIModel) = with(contactInfoUIModel) {
     Column(
-        modifier = ColumnStyle.toModifier(CompanyInfoColumnStyle),
+        modifier = BaseContainerStyle.toModifier(CompanyInfoContainerVariant),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -425,9 +423,4 @@ fun InputDisplays(
 
         }
     }
-}
-
-@Composable
-fun SpacerSection() {
-    Box(modifier = BaseContainerStyle.toModifier(SpacerContainerVariant))
 }

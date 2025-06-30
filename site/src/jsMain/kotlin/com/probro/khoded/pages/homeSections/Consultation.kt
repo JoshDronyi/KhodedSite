@@ -2,10 +2,13 @@ package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.models.ButtonState
+import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
-import com.probro.khoded.styles.pageStyles.MessagingFormVariant
-import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.styles.base.AccentTextVariant
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.SectionTitleVariant
+import com.probro.khoded.styles.components.*
 import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Constants.FREE_TEXT
 import com.probro.khoded.utils.popUp.PopUpStateHolders
@@ -25,12 +28,11 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.forms.InputStyle
+import com.varabyte.kobweb.silk.components.graphics.FitWidthImageVariant
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.graphics.ImageStyle
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.toModifier
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
@@ -46,7 +48,7 @@ fun ConsultationSectionDisplay(
     data: Pages.Home_Section.Consultation,
 ) = with(data) {
     Column(
-        modifier = BaseSectionStyles.toModifier(ConsultationSectionVariant),
+        modifier = BaseBackgroundStyle.toModifier(GradientBackgroundVariant),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -69,7 +71,7 @@ fun ConsultationDisplaySection(
         Image(
             src = mainImage,
             description = "Message Bubbles",
-            modifier = ImageStyle.toModifier(ConsultationImageVariant)
+            modifier = BaseImageStyle.toModifier()
                 .zIndex(0)
         )
         ConsultationTextSection(
@@ -158,21 +160,21 @@ private fun ConsultationRequestButton(
 ) {
     ButtonDisplay(
         state = ctaButton,
-        buttonVariant = PinkButtonVariant,
+        buttonVariant = PurpleButtonVariant,
         modifier = modifier
     ) { text ->
         val index = remember { text.indexOf(FREE_TEXT, ignoreCase = true) }
         val before = remember { text.substring(0, index) }
         val after = remember { text.substring(index + FREE_TEXT.length) }
         P(
-            attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
+            attrs = BaseCTAStyle.toModifier()
                 .toAttrs()
         ) {
             Span {
                 Text(before)
             }
             Span(
-                attrs = BaseTextStyle.toModifier(FreeTextVariant)
+                attrs = BaseTextStyle.toModifier(AccentTextVariant)
                     .toAttrs()
             ) {
                 Text(FREE_TEXT.uppercase())
@@ -183,11 +185,6 @@ private fun ConsultationRequestButton(
         }
     }
 }
-
-val scope = CoroutineScope(Dispatchers.Default + CoroutineExceptionHandler { _, throwable ->
-    println(throwable.message)
-})
-
 
 @Composable
 fun ConsultationTitle(mainText: String) {
@@ -205,7 +202,7 @@ fun ConsultationTitle(mainText: String) {
     }
 
     P(
-        attrs = BaseTextStyle.toModifier(ConsultationTitleVariant)
+        attrs = BaseTextStyle.toModifier(SectionTitleVariant)
             .id(TitleIDs.consultationTitleID)
             .animation(animation.toAnimation(600.ms))
             .toAttrs()
@@ -244,14 +241,14 @@ fun MessagingSection(
             TextBox(
                 placeholder = placeHolder.fullName,
                 required = true,
-                modifier = InputStyle.toModifier(ConsultationTextBox)
+                modifier = InputStyle.toModifier(TextBoxVariant)
             ) {
                 ConsultationStateHolder.updateName(it)
             }
             TextBox(
                 placeholder = placeHolder.email,
                 required = true,
-                modifier = InputStyle.toModifier(ConsultationTextBox)
+                modifier = InputStyle.toModifier(TextBoxVariant)
             ) {
                 ConsultationStateHolder.updateEmail(it)
             }

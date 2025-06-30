@@ -2,7 +2,15 @@ package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.models.ButtonState
-import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.UnderlineImageVariant
+import com.probro.khoded.styles.base.AccentTextVariant
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.HighlightTextVariant
+import com.probro.khoded.styles.base.MainTextVariant
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.components.BlueButtonVariant
+import com.probro.khoded.styles.components.GradientBackgroundVariant
 import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Constants.LENGTH_OF_TELLS
 import com.stevdza.san.kotlinbs.components.BSButton
@@ -11,7 +19,6 @@ import com.varabyte.kobweb.compose.css.ScrollSnapType
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
@@ -42,7 +49,7 @@ fun LandingSectionDisplay(
         })
     }
     Column(
-        modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant),
+        modifier = BaseBackgroundStyle.toModifier(GradientBackgroundVariant),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -55,10 +62,10 @@ fun LandingSectionDisplay(
             Image(
                 src = mainImage,
                 description = "Landing section image.",
-                modifier = ImageStyle.toModifier(LandingImageVariant)
+                modifier = BaseImageStyle.toModifier()
             )
             LandingText(
-                modifier = BaseTextStyle.toModifier(LandingTextVariant)
+                modifier = BaseTextStyle.toModifier(MainTextVariant)
                     .align(Alignment.TopStart)
             )
         }
@@ -87,27 +94,13 @@ fun LandingText(
             text = ctaButton.buttonText,
             onClick = ctaButton.onButtonClick,
         )
-//        ButtonDisplay(
-//            ctaButton,
-//            BlueButtonVariant,
-//            modifier = Modifier
-//                .fillMaxWidth(40.percent)
-//                .textAlign(TextAlign.Center)
-//        ) {
-//            P(
-//                attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
-//                    .toAttrs()
-//            ) {
-//                Text(it)
-//            }
-//        }
     }
 }
 
 @Composable
 private fun LandingSubTitle() = with(Pages.Home_Section.Landing) {
     P(
-        attrs = BaseTextStyle.toModifier(HomeSubTitleVariant)
+        attrs = BaseTextStyle.toModifier(HighlightTextVariant)
             .toAttrs()
     ) {
         Text(subText)
@@ -123,7 +116,9 @@ private fun LandingTitle(
     var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
 
     val indexOfTells: Int = remember { mainText.indexOf("tells") }
-    val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
+    val commaIndex: Int = remember { mainText.indexOf(',') }
+    val firstLine = remember { mainText.substring(startIndex = 0, endIndex = commaIndex) }
+    val goodSite = remember { mainText.substring(startIndex = commaIndex, endIndex = indexOfTells) }
     val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
     val secondLine = remember { mainText.substring(startIndex = indexOfTells + LENGTH_OF_TELLS) }
 
@@ -138,37 +133,28 @@ private fun LandingTitle(
             )
             .toAttrs()
     ) {
-        Column(
-            modifier = ColumnStyle.toModifier(),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
-        ) {
+        Column {
             Span(
-                attrs = BaseTextStyle.toModifier(firstLineVariant)
+                attrs = BaseTextStyle.toModifier(MainTextVariant)
                     .toAttrs()
             ) {
                 Text(firstLine.trim())
+                Text(goodSite.trimEnd())
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Span(
-                    attrs = BaseTextStyle.toModifier(PinkTextVariant)
-                        .toAttrs()
-                ) {
-                    Text(tells.trim())
-                }
-                Span(
-                    attrs = BaseTextStyle.toModifier(SecondLineVariant)
-                        .toAttrs()
-                ) {
-                    Text(secondLine.trim())
-                }
-            }
+            Image(
+                src = underlineImage,
+                description = "Blue underline",
+                modifier = BaseImageStyle.toModifier(UnderlineImageVariant)
+            )
         }
+        Span(
+            attrs = BaseTextStyle.toModifier(AccentTextVariant)
+                .toAttrs()
+        ) {
+            Text(tells.trim())
+
+        }
+        Text(secondLine.trim())
     }
 
     IsOnScreenObservable(

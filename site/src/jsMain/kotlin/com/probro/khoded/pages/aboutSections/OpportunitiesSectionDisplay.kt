@@ -3,9 +3,14 @@ package com.probro.khoded.pages.aboutSections
 import androidx.compose.runtime.*
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.KhodedColors
+import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
-import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.JobDescriptionVariant
+import com.probro.khoded.styles.base.JobTitleVariant
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.components.BaseTabStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -34,7 +39,7 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val OpportunitiesBackgroundVariant = BackgroundStyle.addVariant {
+val OpportunitiesBackgroundVariant = BaseBackgroundStyle.addVariant {
     base {
         Modifier
             .padding(topBottom = 40.px)
@@ -49,7 +54,7 @@ val OpportunitiesBackgroundVariant = BackgroundStyle.addVariant {
     }
 }
 
-val OpportuinitesImageVariant = ImageStyle.addVariant {
+val OpportuinitesImageVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(30.percent)
@@ -61,14 +66,14 @@ val OpportuinitesImageVariant = ImageStyle.addVariant {
 @Composable
 fun OpportunitiesSectionDisplay() = with(Pages.Story_Section.JoinOurTeam) {
     Box(
-        modifier = BackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
+        modifier = BaseBackgroundStyle.toModifier(OpportunitiesBackgroundVariant)
             .id(id),
         contentAlignment = Alignment.Center
     ) {
         Image(
             src = Images.StoryPage.megaphone,
             description = "Megaphone",
-            modifier = ImageStyle.toModifier(OpportuinitesImageVariant)
+            modifier = BaseImageStyle.toModifier(OpportuinitesImageVariant)
                 .align(Alignment.TopEnd)
         )
         Column(

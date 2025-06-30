@@ -1,7 +1,7 @@
 [versions]
 jetbrains-compose = "1.8.0"
 kobweb = "0.22.0"
-kotlin = "2.1.21"
+kotlin = "2.2.0"
 ksp = "2.1.21-2.0.1"
 kotlinx-serialization = "1.8.0"
 kotlinMailer = "0.3.0"

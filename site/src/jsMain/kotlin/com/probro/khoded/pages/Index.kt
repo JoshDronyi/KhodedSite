@@ -14,7 +14,8 @@ import com.probro.khoded.styles.animations.makeInvisibleKeyFrames
 import com.probro.khoded.styles.animations.makeVisibleKeyFrames
 import com.probro.khoded.styles.animations.shiftBackwardKeyframes
 import com.probro.khoded.styles.animations.shiftForwardKeyFrames
-import com.probro.khoded.styles.componentStyles.MessagingPopUpTextVariant
+import com.probro.khoded.styles.base.BodyStyle
+import com.probro.khoded.styles.popups.MessagingPopUpTextVariant
 import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.NavigationRoute
 import com.probro.khoded.utils.Pages
@@ -26,14 +27,11 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.animation
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.style.animation.toAnimation
+import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.ms
-import org.jetbrains.compose.web.css.px
 
 @Page
 @Composable
@@ -58,14 +56,10 @@ fun Index() {
     ) {
         WithNavigation {
             NavigationHeader(navigationState = it)
-            HomePageSections(
-                Modifier.fillMaxSize()
-                    .margin(0.px)
-                    .padding(0.px)
-            ) { page ->
+            HomePageSections(BodyStyle.toModifier()) { page ->
                 ctx.router.navigateTo(page.path)
             }
-//            PopUpComposable()
+            PopUpComposable()
         }
     }
 }

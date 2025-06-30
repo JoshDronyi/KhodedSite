@@ -1,9 +1,9 @@
 package com.probro.khoded.components.composables.popupscreen
 
 import androidx.compose.runtime.Composable
-import com.probro.khoded.styles.componentStyles.*
-import com.probro.khoded.styles.textStyles.BaseContainerStyle
-import com.probro.khoded.styles.textStyles.ImageStyle
+import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.components.BaseContainerStyle
+import com.probro.khoded.styles.popups.*
 import com.probro.khoded.utils.IDs
 import com.probro.khoded.utils.popUp.FounderText
 import com.probro.khoded.utils.popUp.PopUpScreenUIModel
@@ -36,7 +36,7 @@ fun PopUpScreen(
 ) = with(popUpUIModel) {
     BSModal(
         id = IDs.PopUpID,
-        modifier = BaseContainerStyle.toModifier(PopUpScreenVariant),
+        modifier = BaseContainerStyle.toModifier(BasePopUpScreenVariant),
         title = "",
         body = {
             when (val model = this@with) {
@@ -75,14 +75,14 @@ fun FounderPopUpDisplay(
     ) {
         FounderTextDisplay(
             text,
-            PopUpTextStyle.toModifier(textVariant)
+            BasePopUpTextStyle.toModifier(textVariant)
                 .fillMaxWidth(80.percent)
         )
         image?.let {
             Image(
                 src = it,
                 description = "Animated image of founder.",
-                modifier = ImageStyle.toModifier(BioImageVariant)
+                modifier = BaseImageStyle.toModifier()
             )
         }
     }
@@ -98,19 +98,19 @@ fun FounderTextDisplay(founderText: FounderText, modifier: Modifier) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         P(
-            attrs = PopUpTextStyle.toModifier(FounderTitleVariant)
+            attrs = BasePopUpTextStyle.toModifier(FounderTitleVariant)
                 .toAttrs()
         ) {
             Text(founderText.titleText)
         }
         P(
-            attrs = PopUpTextStyle.toModifier(FounderShortDescVariant)
+            attrs = BasePopUpTextStyle.toModifier(FounderShortDescVariant)
                 .toAttrs()
         ) {
             Text(founderText.shortDesc)
         }
         P(
-            attrs = PopUpTextStyle.toModifier(FounderDescVariant)
+            attrs = BasePopUpTextStyle.toModifier(FounderDescVariant)
                 .toAttrs()
         ) {
             Text(founderText.desc)
@@ -139,7 +139,7 @@ fun MessagingStateDisplay(
             )
         }
         P(
-            attrs = PopUpTextStyle.toModifier(textVariant)
+            attrs = BasePopUpTextStyle.toModifier(textVariant)
                 .fillMaxWidth(80.percent)
                 .toAttrs()
         ) {

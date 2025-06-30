@@ -40,8 +40,8 @@ package com.probro.khoded.components
  */
 
 import androidx.compose.runtime.*
-import com.probro.khoded.styles.textStyles.BodyStyle
-import com.probro.khoded.styles.textStyles.HeadingStyle
+import com.probro.khoded.styles.base.BodyStyle
+import com.probro.khoded.styles.base.HeadingStyle
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign

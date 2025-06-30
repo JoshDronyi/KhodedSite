@@ -3,8 +3,8 @@ package com.probro.khoded.pages.aboutSections
 import androidx.compose.runtime.*
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.models.Res.TextStyle.FONT_FAMILY
-import com.probro.khoded.styles.textStyles.BackgroundStyle
-import com.probro.khoded.styles.textStyles.BaseTextStyle
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
@@ -27,7 +27,7 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val StoryBackgroundVariant = BackgroundStyle.addVariant {
+val StoryBackgroundVariant = BaseBackgroundStyle.addVariant {
     base {
         Modifier
             .height(Height.MaxContent)
@@ -56,7 +56,7 @@ val StoryParagraphVariant = BaseTextStyle.addVariant {
 fun StorySectionDisplay() = with(Pages.Story_Section.OurStory) {
     var sectionPosition by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
     Column(
-        modifier = BackgroundStyle.toModifier(StoryBackgroundVariant)
+        modifier = BaseBackgroundStyle.toModifier(StoryBackgroundVariant)
             .id(id),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

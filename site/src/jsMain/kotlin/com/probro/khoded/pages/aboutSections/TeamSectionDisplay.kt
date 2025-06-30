@@ -2,16 +2,18 @@ package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.components.composables.ImageBox
-import com.probro.khoded.components.composables.NoBorderBackingCardVariant
-import com.probro.khoded.components.composables.TeamSectionCard
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.pages.homeSections.ButtonDisplay
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
-import com.probro.khoded.styles.componentStyles.FounderPopUpTextVariant
-import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.components.BaseSectionStyle
+import com.probro.khoded.styles.components.ReadMoreButtonVariant
+import com.probro.khoded.styles.popups.FounderPopUpTextVariant
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -27,6 +29,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.graphics.ImageStyle
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.SimpleGridStyle
 import com.varabyte.kobweb.silk.components.layout.numColumns
@@ -39,7 +42,7 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.P
 import org.jetbrains.compose.web.dom.Text
 
-val TeamSectionBackgroundVariant = BackgroundStyle.addVariant {
+val TeamSectionBackgroundVariant = BaseBackgroundStyle.addVariant {
     base {
         Modifier
             .background(Colors.RebeccaPurple)
@@ -154,7 +157,7 @@ val FounderBioVariant = FounderTextStyle.extendedBy {
     }
 }
 
-val FounderImageVariant = ImageStyle.addVariant {
+val FounderImageVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth()
@@ -175,7 +178,7 @@ val FounderImageVariant = ImageStyle.addVariant {
         Modifier
     }
 }
-val FounderBackingVariant = BackgroundStyle.addVariant {
+val FounderSectionVariant = BaseSectionStyle.addVariant {
     base {
         Modifier
             .width(Width.FitContent)
@@ -183,14 +186,14 @@ val FounderBackingVariant = BackgroundStyle.addVariant {
             .padding(10.px)
     }
 }
-val ImageSectionBacking = FounderBackingVariant.extendedBy {
+val ImageSectionBacking = FounderSectionVariant.extendedBy {
     base {
         Modifier
             .padding(leftRight = 20.px)
     }
 }
 
-val CeoBackingSectionVariant = FounderBackingVariant.extendedBy {
+val CeoBackingSectionVariant = FounderSectionVariant.extendedBy {
     base {
         Modifier
             .backgroundColor(Colors.MediumPurple)
@@ -209,7 +212,7 @@ val CeoBackingSectionVariant = FounderBackingVariant.extendedBy {
     }
 }
 
-val CtoBioSectionVariant = FounderBackingVariant.extendedBy {
+val CtoBioSectionVariant = FounderSectionVariant.extendedBy {
     base {
         Modifier
             .backgroundColor(KhodedColors.PURPLE.rgb)
@@ -233,7 +236,7 @@ val CtoBioSectionVariant = FounderBackingVariant.extendedBy {
 fun TeamSectionDisplay() = with(Pages.Story_Section.OurFounders) {
     val popUpState by PopUpStateHolders.FounderPopUiStateHolder.popUpState.collectAsState()
     Box(
-        modifier = BackgroundStyle.toModifier(TeamSectionBackgroundVariant)
+        modifier = BaseBackgroundStyle.toModifier(TeamSectionBackgroundVariant)
             .id(id),
         contentAlignment = Alignment.Center
     ) {
@@ -295,7 +298,7 @@ fun FounderContentSection(
             Image(
                 src = jointFoundersImage,
                 description = "Animated image of Esther and Josh.",
-                modifier = ImageStyle.toModifier(FounderImageVariant)
+                modifier = BaseImageStyle.toModifier(FounderImageVariant)
                     .align(Alignment.CenterHorizontally)
             )
             FounderText(
@@ -339,7 +342,7 @@ enum class Founders {
 }
 
 
-val FounderTextContainer = FounderBackingVariant.extendedBy {
+val FounderTextContainer = FounderSectionVariant.extendedBy {
     base {
         Modifier
             .width(Width.FitContent)
@@ -351,7 +354,7 @@ fun FounderText(
     teamBio: Pages.Story_Section.TeamBio,
     onFounderBioClicked: () -> Unit
 ) = with(teamBio) {
-    val mod = BackgroundStyle.toModifier(FounderTextContainer)
+    val mod = BaseSectionStyle.toModifier(FounderTextContainer)
         .fillMaxWidth()
     Column(
         modifier = mod,
@@ -370,7 +373,7 @@ fun FounderBioSection(
     onFounderBioClicked: () -> Unit
 ) {
     Column(
-        modifier = BackgroundStyle.toModifier(
+        modifier = BaseSectionStyle.toModifier(
             when (founder) {
                 Founders.CEO -> CeoBackingSectionVariant
                 Founders.CTO -> CtoBioSectionVariant
@@ -441,25 +444,6 @@ val ReadMoreTextVariant = BaseTextStyle.addVariant {
 }
 
 @Composable
-fun TeamBioDisplay(
-    bio: Pages.Story_Section.TeamBio,
-    modifier: Modifier = Modifier
-) = with(bio) {
-    TeamSectionCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(15.px),
-        variant = NoBorderBackingCardVariant,
-        firstSection = {
-            TeammateImage(image, name, position)
-        },
-        secondSection = {
-            TeammateStory(bio.fullStory)
-        }
-    )
-}
-
-@Composable
 fun TeammateImage(
     image: String,
     name: String,
@@ -479,7 +463,7 @@ fun TeammateImage(
             ImageBox(
                 image = image,
                 imageDesc = "Teammate bio pic",
-                modifier = ImageStyle.toModifier()
+                modifier = BaseImageStyle.toModifier()
                     .fillMaxWidth()
             )
             ImageText(name, position)
@@ -521,7 +505,7 @@ fun TeammateStory(story: String, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         P(
-            attrs = BaseTextStyle.toModifier(TeamBioParagraphVaraiant)
+            attrs = BaseTextStyle.toModifier()
                 .toAttrs()
         ) {
             Text(story)

@@ -6,6 +6,7 @@ package com.probro.khoded.utils
 
 
 import androidx.compose.runtime.*
+import com.probro.khoded.styles.base.HeadingStyle
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.navigation.Link
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.toPx
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
@@ -162,7 +164,7 @@ data class NavigationState(
  */
 @Composable
 fun NavigationHeader(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = HeadingStyle.toModifier(),
     navigationState: NavigationState = rememberNavigationState()
 ) {
     // Main header container with semantic HTML structure

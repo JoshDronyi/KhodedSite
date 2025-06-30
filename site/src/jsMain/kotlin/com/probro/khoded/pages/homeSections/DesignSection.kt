@@ -2,11 +2,15 @@ package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
 import com.probro.khoded.models.KhodedColors
+import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
-import com.probro.khoded.styles.pageStyles.ComputerPicVariant
-import com.probro.khoded.styles.pageStyles.DesignTextColumnVariant
-import com.probro.khoded.styles.textStyles.*
+import com.probro.khoded.styles.base.BaseTextStyle
+import com.probro.khoded.styles.base.SectionTitleVariant
+import com.probro.khoded.styles.base.SubTitleVariant
+import com.probro.khoded.styles.components.BaseBackgroundStyle
+import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -35,19 +39,19 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
     Box(
-        modifier = BaseSectionStyles.toModifier(DesignBackgroundVariant)
+        modifier = BaseBackgroundStyle.toModifier()
             .id(id)
     ) {
         Image(
             src = mainImage,
-            modifier = ImageStyle.toModifier(ComputerPicVariant)
+            modifier = BaseImageStyle.toModifier()
                 .align(Alignment.TopEnd)
         )
         DesignTextSection(
             upperText = mainText,
             underlineImage = underlineImage,
             lowerText = subText,
-            modifier = ColumnStyle.toModifier(DesignTextColumnVariant)
+            modifier = BaseColumnStyle.toModifier()
         )
     }
 }
@@ -67,14 +71,14 @@ fun DesignTextSection(
         DesignHeading(upperText)
         Image(
             src = underlineImage,
-            modifier = ImageStyle.toModifier(BlackUnderlineVariant)
+            modifier = BaseImageStyle.toModifier(BlackUnderlineVariant)
         )
         DesignSubText(lowerText)
     }
 
 }
 
-val BlackUnderlineVariant = ImageStyle.addVariant {
+val BlackUnderlineVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .fillMaxWidth(40.percent)
@@ -92,7 +96,7 @@ val BlackUnderlineVariant = ImageStyle.addVariant {
     }
 }
 
-val PlaneImageVariant = ImageStyle.addVariant {
+val PlaneImageVariant = BaseImageStyle.addVariant {
     base {
         Modifier
             .zIndex(2)
@@ -114,7 +118,7 @@ val PlaneImageVariant = ImageStyle.addVariant {
 @Composable
 fun DesignSubText(lowerText: String) {
     P(
-        attrs = BaseTextStyle.toModifier(DesignSubTitleVariant)
+        attrs = BaseTextStyle.toModifier(SubTitleVariant)
             .toAttrs()
     ) {
         Text(value = lowerText)
@@ -140,7 +144,7 @@ fun DesignHeading(
         SectionPosition.IDLE -> jobPostingShiftUPKeyFrames
     }
     P(
-        attrs = BaseTextStyle.toModifier(DesignTitleVariant)
+        attrs = BaseTextStyle.toModifier(SectionTitleVariant)
             .id(TitleIDs.designTitleID)
             .animation(animation.toAnimation(600.ms))
             .toAttrs()
