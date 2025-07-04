@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import com.probro.khoded.styles.base.HeadingStyle
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -170,64 +171,77 @@ fun NavigationHeader(
     // Main header container with semantic HTML structure
     Header(
         attrs = {
-            attr("role", "banner") // Accessibility: Define landmark role
-            attr("aria-label", "Main navigation") // Screen reader support
+            attr("role", "banner")
+            attr("aria-label", "Main navigation")
         }
     ) {
         Nav(
             attrs = {
                 attr("role", "navigation")
                 attr("aria-label", "Primary navigation")
-                classes("main-navigation") // For external CSS integration
+                classes("main-navigation")
             }
         ) {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(leftRight = 1.cssRem, topBottom = 0.75.cssRem)
-                    .background(Color.white) // Consistent branding
-                    .boxShadow(
-                        offsetX = 0.px,
-                        offsetY = 2.px,
-                        blurRadius = 4.px,
-                        color = rgba(0, 0, 0, 0.1)
-                    ), // Subtle depth
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Logo/Brand section with proper linking
-                BrandLogo(
-                    onClick = { navigationState.onRouteChange(NavigationRoute.HOME) },
-                    isActive = navigationState.currentRoute == NavigationRoute.HOME
-                )
+            Column {
+                // Top navigation bar
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(leftRight = 1.cssRem, topBottom = 0.75.cssRem)
+                        .background(Color.white)
+                        .boxShadow(
+                            offsetX = 0.px,
+                            offsetY = 2.px,
+                            blurRadius = 4.px,
+                            color = rgba(0, 0, 0, 0.1)
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Logo/Brand section
+                    BrandLogo(
+                        onClick = { navigationState.onRouteChange(NavigationRoute.HOME) },
+                        isActive = navigationState.currentRoute == NavigationRoute.HOME
+                    )
 
-                // Desktop navigation menu
-                DesktopNavigationMenu(
-                    currentRoute = navigationState.currentRoute,
-                    onNavigate = navigationState.onRouteChange,
-                    modifier = Modifier.displayIf(Breakpoint.MD) // Hide on mobile
-                )
+                    // Desktop navigation menu (hidden on mobile)
+                    DesktopNavigationMenu(
+                        currentRoute = navigationState.currentRoute,
+                        onNavigate = navigationState.onRouteChange,
+                        modifier = Modifier.displayIf(Breakpoint.MD)
+                    )
 
-                // Mobile menu toggle button
-                MobileMenuButton(
-                    isOpen = navigationState.isMobileMenuOpen,
-                    onClick = navigationState.onToggleMobileMenu,
-                    modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.MD) // Show only on mobile
-                )
-            }
+                    // Mobile menu toggle button (shown only on mobile)
+                    MobileMenuButton(
+                        isOpen = navigationState.isMobileMenuOpen,
+                        onClick = navigationState.onToggleMobileMenu,
+                        modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.SM)
+                    )
+                }
 
-            // Mobile navigation menu (collapsible)
-            if (navigationState.isMobileMenuOpen) {
-                MobileNavigationMenu(
-                    currentRoute = navigationState.currentRoute,
-                    onNavigate = navigationState.onRouteChange,
-                    modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.MD)
-                )
+                // Mobile navigation menu (collapsible, full width)
+                if (navigationState.isMobileMenuOpen) {
+                    MobileNavigationMenu(
+                        currentRoute = navigationState.currentRoute,
+                        onNavigate = navigationState.onRouteChange,
+                        modifier = Modifier
+                            .displayIf(Breakpoint.ZERO, Breakpoint.SM)
+                            .fillMaxWidth()
+                            .background(Color.white)
+                            .boxShadow(
+                                offsetX = 0.px,
+                                offsetY = 2.px,
+                                blurRadius = 8.px,
+                                color = rgba(0, 0, 0, 0.15)
+                            )
+                            .padding(1.cssRem)
+                    )
+                }
             }
         }
     }
 
-    // Display navigation errors to user (with automatic dismissal)
+    // Display navigation errors
     navigationState.navigationError?.let { error ->
         NavigationErrorDisplay(
             error = error,

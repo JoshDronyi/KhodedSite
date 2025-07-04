@@ -3,14 +3,17 @@ package com.probro.khoded.pages
 import androidx.compose.runtime.*
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
+import com.probro.khoded.components.KhodedSEO
+import com.probro.khoded.components.OptimizedImage
+import com.probro.khoded.components.SEOHead
+import com.probro.khoded.components.composables.MessageArea
+import com.probro.khoded.components.composables.TextBox
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.messaging.messageData.MessageData
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.contactSections.ContactFormState
 import com.probro.khoded.pages.contactSections.ContactPageStateHolder
 import com.probro.khoded.pages.homeSections.ButtonDisplay
-import com.probro.khoded.pages.homeSections.MessageArea
-import com.probro.khoded.pages.homeSections.TextBox
 import com.probro.khoded.styles.animations.makeInvisibleKeyFrames
 import com.probro.khoded.styles.animations.makeVisibleKeyFrames
 import com.probro.khoded.styles.animations.shiftBackwardKeyframes
@@ -37,7 +40,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.style.animation.toAnimation
@@ -52,6 +54,7 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun Contact() {
     val ctx = rememberPageContext()
+    SEOHead(KhodedSEO.contactPage, ctx)
     val formState by ContactPageStateHolder.formState.collectAsState()
     val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
 
@@ -361,7 +364,7 @@ fun CompanyContactInfoSection(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.End
         ) {
-            Image(
+            OptimizedImage(
                 src = image,
                 description = "Planet 404",
                 modifier = Modifier

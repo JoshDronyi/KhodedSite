@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.OptimizedImage
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseImageStyle
@@ -27,7 +28,6 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.framework.annotations.DelicateApi
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.style.addVariant
@@ -70,7 +70,7 @@ fun OpportunitiesSectionDisplay() = with(Pages.Story_Section.JoinOurTeam) {
             .id(id),
         contentAlignment = Alignment.Center
     ) {
-        Image(
+        OptimizedImage(
             src = Images.StoryPage.megaphone,
             description = "Megaphone",
             modifier = BaseImageStyle.toModifier(OpportuinitesImageVariant)
