@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.OptimizedImage
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.UnderlineImageVariant
@@ -25,7 +26,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.forms.ButtonKind
 import com.varabyte.kobweb.silk.components.forms.ButtonStyle
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.toModifier
@@ -59,7 +59,7 @@ fun LandingSectionDisplay(
                 .id(id),
             contentAlignment = Alignment.Center
         ) {
-            Image(
+            OptimizedImage(
                 src = mainImage,
                 description = "Landing section image.",
                 modifier = BaseImageStyle.toModifier()
@@ -141,7 +141,7 @@ private fun LandingTitle(
                 Text(firstLine.trim())
                 Text(goodSite.trimEnd())
             }
-            Image(
+            OptimizedImage(
                 src = underlineImage,
                 description = "Blue underline",
                 modifier = BaseImageStyle.toModifier(UnderlineImageVariant)

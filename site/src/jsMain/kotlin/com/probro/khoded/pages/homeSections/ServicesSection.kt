@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.OptimizedImage
 import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
@@ -25,7 +26,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.framework.annotations.DelicateApi
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.style.addVariant
@@ -45,7 +45,7 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
         modifier = BaseBackgroundStyle.toModifier()
             .id(id)
     ) {
-        Image(
+        OptimizedImage(
             src = data.mainImage,
             description = "Man sitting on laptop",
             modifier = BaseImageStyle.toModifier()

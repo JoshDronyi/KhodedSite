@@ -5,6 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
+import com.probro.khoded.components.KhodedSEO
+import com.probro.khoded.components.SEOHead
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.pages.homeSections.ConsultationSectionDisplay
 import com.probro.khoded.pages.homeSections.DesignSectionDisplay
@@ -37,6 +39,8 @@ import org.jetbrains.compose.web.css.ms
 @Composable
 fun Index() {
     val ctx = rememberPageContext()
+    SEOHead(KhodedSEO.homePage, ctx)
+
     // Development vs Production configuration
     val errorConfig = ErrorBoundaryConfig(
         showStackTrace = true, // Set to true in development

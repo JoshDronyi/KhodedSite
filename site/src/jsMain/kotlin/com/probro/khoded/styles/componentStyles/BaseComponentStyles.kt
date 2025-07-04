@@ -18,6 +18,8 @@ import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.extendedBy
 import com.varabyte.kobweb.silk.style.selectors.hover
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.JustifyContent
 
 // Component kinds
 sealed interface SectionKind : ComponentKind
@@ -314,25 +316,35 @@ val BlueButtonVariant = ButtonStyle.addVariant {
         Modifier
             .background(KhodedColors.BLUE.rgb)
             .color(Colors.White)
-            .padding(leftRight = 16.px, topBottom = 8.px)
-            .borderRadius(6.px)
-            .fontSize(14.px)
-            .minHeight(40.px)
+            .padding(leftRight = 20.px, topBottom = 12.px)
+            .borderRadius(8.px)
+            .fontSize(16.px)
+            .minHeight(44.px) // Minimum touch target
+            .minWidth(44.px)   // Minimum touch target
             .cursor(Cursor.Pointer)
+            .border(width = 0.px, style = LineStyle.None) // Remove default border
+    }
+
+    Breakpoint.ZERO {
+        Modifier
+            .padding(leftRight = 24.px, topBottom = 14.px)
+            .fontSize(16.px)
+            .minHeight(48.px) // Larger on smallest screens
+            .minWidth(120.px) // Ensure adequate width
     }
 
     Breakpoint.SM {
         Modifier
-            .padding(leftRight = 20.px, topBottom = 10.px)
-            .fontSize(16.px)
-            .minHeight(44.px)
+            .padding(leftRight = 28.px, topBottom = 16.px)
+            .fontSize(17.px)
+            .minHeight(48.px)
     }
 
     Breakpoint.MD {
         Modifier
-            .padding(leftRight = 24.px, topBottom = 12.px)
+            .padding(leftRight = 32.px, topBottom = 18.px)
             .fontSize(18.px)
-            .minHeight(48.px)
+            .minHeight(52.px)
     }
 
     hover {
@@ -345,25 +357,35 @@ val PurpleButtonVariant = ButtonStyle.addVariant {
         Modifier
             .background(KhodedColors.PURPLE.rgb)
             .color(Colors.White)
-            .padding(leftRight = 16.px, topBottom = 8.px)
-            .borderRadius(6.px)
-            .fontSize(14.px)
-            .minHeight(40.px)
+            .padding(leftRight = 20.px, topBottom = 12.px)
+            .borderRadius(8.px)
+            .fontSize(16.px)
+            .minHeight(44.px)
+            .minWidth(44.px)
             .cursor(Cursor.Pointer)
+            .border(width = 0.px, style = LineStyle.None)
+    }
+
+    Breakpoint.ZERO {
+        Modifier
+            .padding(leftRight = 24.px, topBottom = 14.px)
+            .fontSize(16.px)
+            .minHeight(48.px)
+            .minWidth(120.px)
     }
 
     Breakpoint.SM {
         Modifier
-            .padding(leftRight = 20.px, topBottom = 10.px)
-            .fontSize(16.px)
-            .minHeight(44.px)
+            .padding(leftRight = 28.px, topBottom = 16.px)
+            .fontSize(17.px)
+            .minHeight(48.px)
     }
 
     Breakpoint.MD {
         Modifier
-            .padding(leftRight = 24.px, topBottom = 12.px)
+            .padding(leftRight = 32.px, topBottom = 18.px)
             .fontSize(18.px)
-            .minHeight(48.px)
+            .minHeight(52.px)
     }
 
     hover {
@@ -469,28 +491,44 @@ val BackingCardStyle = CssStyle<DivKind> {
 }
 
 // Navigation styles
+// Add this new variant for better mobile navigation
 val NavItemStyle = CssStyle<NavItemKind> {
     base {
         Modifier
-            .padding(8.px)
+            .padding(12.px)
             .margin(4.px)
             .textAlign(TextAlign.Center)
-            .borderRadius(4.px)
+            .borderRadius(6.px)
             .cursor(Cursor.Pointer)
+            .minHeight(44.px) // Touch target compliance
+            .display(DisplayStyle.Flex)
+            .alignItems(AlignItems.Center)
+            .justifyContent(JustifyContent.Center)
+    }
+
+    Breakpoint.ZERO {
+        Modifier
+            .padding(16.px)
+            .margin(6.px)
+            .minHeight(48.px)
+            .fontSize(18.px)
     }
 
     Breakpoint.SM {
         Modifier
-            .padding(10.px)
+            .padding(14.px)
             .margin(6.px)
+            .fontSize(17.px)
     }
 
     Breakpoint.MD {
         Modifier
             .padding(12.px)
             .margin(8.px)
+            .fontSize(16.px)
     }
 }
+
 
 // Specialized container variants
 val ContactSectionContainerVariant = BaseContainerStyle.addVariant {

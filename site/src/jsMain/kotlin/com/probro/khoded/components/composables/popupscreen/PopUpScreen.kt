@@ -1,6 +1,7 @@
 package com.probro.khoded.components.composables.popupscreen
 
 import androidx.compose.runtime.Composable
+import com.probro.khoded.components.OptimizedImage
 import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.components.BaseContainerStyle
 import com.probro.khoded.styles.popups.*
@@ -18,7 +19,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.style.CssStyleVariant
 import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.percent
@@ -79,7 +79,7 @@ fun FounderPopUpDisplay(
                 .fillMaxWidth(80.percent)
         )
         image?.let {
-            Image(
+            OptimizedImage(
                 src = it,
                 description = "Animated image of founder.",
                 modifier = BaseImageStyle.toModifier()

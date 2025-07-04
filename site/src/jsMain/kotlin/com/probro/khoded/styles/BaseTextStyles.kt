@@ -63,28 +63,38 @@ val BodyStyle = CssStyle<BodyKind> {
 val MainTextVariant = BaseTextStyle.addVariant {
     base {
         Modifier
-            .fontSize(48.px)
+            .fontSize(20.px) // Base size for mobile
             .textAlign(TextAlign.Start)
             .fontWeight(FontWeight.Bolder)
-            .padding(leftRight = 15.px)
+            .padding(leftRight = 8.px) // Reduced padding for mobile
+            .lineHeight(1.4) // Better line spacing for readability
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Larger)
+        Modifier
+            .fontSize(18.px)
+            .padding(leftRight = 12.px)
     }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier
+            .fontSize(22.px)
+            .padding(leftRight = 16.px)
     }
     Breakpoint.MD {
-        Modifier.fontSize(FontSize.XLarge)
+        Modifier
+            .fontSize(28.px)
+            .padding(leftRight = 20.px)
     }
     Breakpoint.LG {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier
+            .fontSize(32.px)
+            .padding(leftRight = 24.px)
     }
     Breakpoint.XL {
-        Modifier.fontSize(36.px)
+        Modifier
+            .fontSize(36.px)
+            .padding(leftRight = 24.px)
     }
 }
-
 // Title variants for different sections
 val SectionTitleVariant = BaseTextStyle.addVariant {
     base {
@@ -94,19 +104,21 @@ val SectionTitleVariant = BaseTextStyle.addVariant {
             .fontWeight(FontWeight.Bold)
     }
     Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Larger)
+        Modifier.fontSize(24.px) // Much smaller for mobile
     }
     Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
+        Modifier.fontSize(32.px)
     }
     Breakpoint.MD {
-        Modifier.fontSize(48.px)
+        Modifier.fontSize(40.px)
     }
     Breakpoint.LG {
-        Modifier.fontSize(72.px)
+        Modifier.fontSize(48.px)
+    }
+    Breakpoint.XL {
+        Modifier.fontSize(56.px)
     }
 }
-
 val SubTitleVariant = BaseTextStyle.addVariant {
     base {
         Modifier

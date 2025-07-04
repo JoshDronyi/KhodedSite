@@ -1,7 +1,7 @@
 package com.probro.khoded.pages.aboutSections
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.composables.ImageBox
+import com.probro.khoded.components.OptimizedImage
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.KhodedColors
@@ -28,8 +28,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.graphics.ImageStyle
 import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.SimpleGridStyle
 import com.varabyte.kobweb.silk.components.layout.numColumns
@@ -295,7 +293,7 @@ fun FounderContentSection(
                     onFounderBioClicked(Founders.CEO)
                 }
             )
-            Image(
+            OptimizedImage(
                 src = jointFoundersImage,
                 description = "Animated image of Esther and Josh.",
                 modifier = BaseImageStyle.toModifier(FounderImageVariant)
@@ -460,9 +458,9 @@ fun TeammateImage(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ImageBox(
-                image = image,
-                imageDesc = "Teammate bio pic",
+            OptimizedImage(
+                src = image,
+                description = "Teammate bio pic",
                 modifier = BaseImageStyle.toModifier()
                     .fillMaxWidth()
             )

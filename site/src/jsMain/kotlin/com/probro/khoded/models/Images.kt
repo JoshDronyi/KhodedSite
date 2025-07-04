@@ -1,13 +1,24 @@
 package com.probro.khoded.models
 
+import kotlinx.browser.window
+
 object Images {
     object HomePage {
-        const val landing_Rocket: String = "/home/rocketManSquiggle.png"
-        const val services_ChartMaker: String = "/home/laptopDudeSquiggle.png"
-        const val design_Paperplane_Computer: String = "/home/laptopPlane.png"
-        const val consultation_MessageBubble_And_Squiggle: String = "/home/textBubblesAndSquiggle.png"
-        const val consultation_CheckMessage: String = "/home/phoneTextBubble.png"
-        const val consultation_Quotes: String = "/home/quotes.svg.png"
+        // Add responsive versions for better mobile performance
+        const val landing_Rocket: String = "/home/rocketManSquiggle.webp" // Convert to WebP
+        const val landing_Rocket_Mobile: String = "/home/rocketManSquiggle-mobile.webp"
+        const val services_ChartMaker: String = "/home/laptopDudeSquiggle.webp"
+        const val services_ChartMaker_Mobile: String = "/home/laptopDudeSquiggle-mobile.webp"
+        const val design_Paperplane_Computer: String = "/home/laptopPlane.webp"
+        const val design_Paperplane_Computer_Mobile: String = "/home/laptopPlane-mobile.webp"
+        const val consultation_MessageBubble_And_Squiggle: String = "/home/textBubblesAndSquiggle.webp"
+        const val consultation_CheckMessage: String = "/home/phoneTextBubble.webp"
+        const val consultation_Quotes: String = "/home/quotes.svg" // Keep SVGs as-is
+    }
+
+    // Helper function to get responsive image
+    fun getResponsiveImage(desktop: String, mobile: String): String {
+        return if (window.innerWidth < 768) mobile else desktop
     }
 
     object StoryPage {

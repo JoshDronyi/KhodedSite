@@ -1,6 +1,7 @@
 package com.probro.khoded.pages.homeSections
 
 import androidx.compose.runtime.*
+import com.probro.khoded.components.OptimizedImage
 import com.probro.khoded.models.KhodedColors
 import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
@@ -10,7 +11,6 @@ import com.probro.khoded.styles.base.SectionTitleVariant
 import com.probro.khoded.styles.base.SubTitleVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BaseColumnStyle
-import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -23,7 +23,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.style.addVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
@@ -42,8 +41,9 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
         modifier = BaseBackgroundStyle.toModifier()
             .id(id)
     ) {
-        Image(
+        OptimizedImage(
             src = mainImage,
+            description = "Design Section backing",
             modifier = BaseImageStyle.toModifier()
                 .align(Alignment.TopEnd)
         )
@@ -69,8 +69,9 @@ fun DesignTextSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DesignHeading(upperText)
-        Image(
+        OptimizedImage(
             src = underlineImage,
+            description = "Black line",
             modifier = BaseImageStyle.toModifier(BlackUnderlineVariant)
         )
         DesignSubText(lowerText)

@@ -3,6 +3,8 @@ package com.probro.khoded.pages
 import androidx.compose.runtime.Composable
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
+import com.probro.khoded.components.KhodedSEO
+import com.probro.khoded.components.SEOHead
 import com.probro.khoded.pages.aboutSections.OpportunitiesSectionDisplay
 import com.probro.khoded.pages.aboutSections.StorySectionDisplay
 import com.probro.khoded.pages.aboutSections.TeamSectionDisplay
@@ -15,6 +17,8 @@ import com.varabyte.kobweb.core.rememberPageContext
 @Composable
 fun About() {
     val ctx = rememberPageContext()
+    SEOHead(KhodedSEO.aboutPage, ctx)
+
     // Development vs Production configuration
     val errorConfig = ErrorBoundaryConfig(
         showStackTrace = false, // Set to true in development
