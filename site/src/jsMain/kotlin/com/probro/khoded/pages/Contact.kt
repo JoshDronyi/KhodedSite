@@ -1,11 +1,7 @@
 package com.probro.khoded.pages
 
 import androidx.compose.runtime.*
-import com.probro.khoded.components.ErrorBoundary
-import com.probro.khoded.components.ErrorBoundaryConfig
-import com.probro.khoded.components.KhodedSEO
-import com.probro.khoded.components.OptimizedImage
-import com.probro.khoded.components.SEOHead
+import com.probro.khoded.components.*
 import com.probro.khoded.components.composables.MessageArea
 import com.probro.khoded.components.composables.TextBox
 import com.probro.khoded.components.composables.popupscreen.PopUpScreen
@@ -13,7 +9,7 @@ import com.probro.khoded.messaging.messageData.MessageData
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.pages.contactSections.ContactFormState
 import com.probro.khoded.pages.contactSections.ContactPageStateHolder
-import com.probro.khoded.pages.homeSections.ButtonDisplay
+import com.probro.khoded.pages.homeSections.EnhancedButtonDisplay
 import com.probro.khoded.styles.animations.makeInvisibleKeyFrames
 import com.probro.khoded.styles.animations.makeVisibleKeyFrames
 import com.probro.khoded.styles.animations.shiftBackwardKeyframes
@@ -21,6 +17,7 @@ import com.probro.khoded.styles.animations.shiftForwardKeyFrames
 import com.probro.khoded.styles.base.BaseTextStyle
 import com.probro.khoded.styles.base.CompanyContactTextVariant
 import com.probro.khoded.styles.base.SectionTitleVariant
+import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
 import com.probro.khoded.styles.components.*
 import com.probro.khoded.styles.popups.MessagingPopUpTextVariant
 import com.probro.khoded.utils.*
@@ -115,11 +112,14 @@ fun ContactPageSections(
         modifier = Modifier.fillMaxSize()
     ) {
         Box(
-            BaseBackgroundStyle.toModifier(ContactLandingBackgroundVariant)
+
+            MobileFirstContainerStyle.toModifier()
+                .then(BaseBackgroundStyle.toModifier(ContactLandingBackgroundVariant))
                 .fillMaxSize()
         )
         Box(
-            BaseBackgroundStyle.toModifier(ContactFooterBackgroundVariant)
+            MobileFirstContainerStyle.toModifier()
+                .then(BaseBackgroundStyle.toModifier(ContactFooterBackgroundVariant))
                 .fillMaxSize()
         )
     }
@@ -251,14 +251,13 @@ fun ContactUsCTA(
     onMessageSend: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ButtonDisplay(
+    EnhancedButtonDisplay(
         state = ctaButton.copy(
             onButtonClick = {
                 onStateChange()
                 onMessageSend()
             }
         ),
-        BlueButtonVariant,
         modifier = modifier
     ) {
         P(

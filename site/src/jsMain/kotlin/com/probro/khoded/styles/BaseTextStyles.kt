@@ -13,6 +13,7 @@ import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.vh
 
 // Base text component kinds
 sealed interface BaseTextKind : ComponentKind
@@ -95,6 +96,7 @@ val MainTextVariant = BaseTextStyle.addVariant {
             .padding(leftRight = 24.px)
     }
 }
+
 // Title variants for different sections
 val SectionTitleVariant = BaseTextStyle.addVariant {
     base {

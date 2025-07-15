@@ -9,6 +9,7 @@ import com.probro.khoded.styles.base.AccentTextVariant
 import com.probro.khoded.styles.base.BaseTextStyle
 import com.probro.khoded.styles.base.HighlightTextVariant
 import com.probro.khoded.styles.base.MainTextVariant
+import com.probro.khoded.styles.componentStyles.EnhancedBlueButtonVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BlueButtonVariant
 import com.probro.khoded.styles.components.GradientBackgroundVariant
@@ -174,6 +175,23 @@ fun ButtonDisplay(
 ) = with(state) {
     Box(
         modifier = ButtonStyle.toModifier(buttonVariant)
+            .then(modifier)
+            .onClick { onButtonClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        clickableContent(buttonText)
+    }
+}
+
+// In ButtonDisplay function, add option for enhanced button:
+@Composable
+fun EnhancedButtonDisplay(
+    state: ButtonState,
+    modifier: Modifier = Modifier,
+    clickableContent: @Composable (buttonText: String) -> Unit,
+) = with(state) {
+    Box(
+        modifier = ButtonStyle.toModifier(EnhancedBlueButtonVariant)
             .then(modifier)
             .onClick { onButtonClick() },
         contentAlignment = Alignment.Center

@@ -9,12 +9,13 @@ import com.probro.khoded.styles.base.BaseTextStyle
 import com.probro.khoded.styles.base.SectionTitleVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.pageStyles.ServiceDescriptionVariant
+import com.probro.khoded.styles.pageStyles.ServiceSectionVariant
+import com.probro.khoded.styles.pageStyles.ServiceTextVariant
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
 import com.probro.khoded.utils.TitleIDs
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.ScrollSnapStop
 import com.varabyte.kobweb.compose.css.ScrollSnapType
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -28,10 +29,8 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.framework.annotations.DelicateApi
 import com.varabyte.kobweb.silk.components.icons.fa.FaPlus
 import com.varabyte.kobweb.silk.components.icons.fa.IconSize
-import com.varabyte.kobweb.silk.style.addVariant
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.style.selectors.hover
 import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.*
@@ -100,22 +99,6 @@ fun ServicesTitle(title: String, modifier: Modifier = Modifier) {
     }
 }
 
-val PinkUnderLineVaraint = BaseImageStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth(30.percent)
-    }
-    Breakpoint.ZERO {
-        Modifier
-    }
-    Breakpoint.SM {
-        Modifier
-    }
-    Breakpoint.MD {
-        Modifier
-    }
-}
-
 @Composable
 fun WebServiceDisplay(service: Pair<String, String>) {
     var isShown by remember { mutableStateOf(false) }
@@ -136,51 +119,6 @@ fun WebServiceDisplay(service: Pair<String, String>) {
         if (isShown) {
             ServiceDescriptionDisplay(service.second)
         }
-    }
-}
-
-val ServiceSectionVariant = BaseColumnStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .borderBottom {
-                width(2.px)
-                style(LineStyle.Solid)
-                color(Color.purple)
-            }
-    }
-    hover {
-        Modifier
-            .cursor(Cursor.Pointer)
-    }
-
-}
-
-val ServiceTextVariant = BaseTextStyle.addVariant {
-    base {
-        Modifier
-            .color(Color.black)
-    }
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XXSmall)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.Smaller)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Medium)
-    }
-    Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .fontSize(FontSize.XXLarge)
-    }
-}
-val ServiceDescriptionVariant = BaseTextStyle.addVariant {
-    base {
-        Modifier
-            .color(Color.black)
-            .fillMaxWidth(80.percent)
     }
 }
 

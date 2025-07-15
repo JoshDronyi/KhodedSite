@@ -7,6 +7,8 @@ package com.probro.khoded.utils
 
 import androidx.compose.runtime.*
 import com.probro.khoded.styles.base.HeadingStyle
+import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
+import com.probro.khoded.styles.componentStyles.NavigationContainerVariant
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -170,73 +172,60 @@ fun NavigationHeader(
 ) {
     // Main header container with semantic HTML structure
     Header(
-        attrs = {
+        attrs = MobileFirstContainerStyle.toModifier(NavigationContainerVariant).toAttrs {
             attr("role", "banner")
             attr("aria-label", "Main navigation")
         }
     ) {
+        // Top navigation bar
         Nav(
-            attrs = {
+            attrs = modifier.toAttrs {
                 attr("role", "navigation")
                 attr("aria-label", "Primary navigation")
                 classes("main-navigation")
             }
         ) {
-            Column {
-                // Top navigation bar
-                Row(
-                    modifier = modifier
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Logo/Brand section
+                BrandLogo(
+                    onClick = { navigationState.onRouteChange(NavigationRoute.HOME) },
+                    isActive = navigationState.currentRoute == NavigationRoute.HOME
+                )
+
+                // Desktop navigation menu (hidden on mobile)
+                DesktopNavigationMenu(
+                    currentRoute = navigationState.currentRoute,
+                    onNavigate = navigationState.onRouteChange,
+                    modifier = Modifier.displayIf(Breakpoint.MD)
+                )
+
+                // Mobile menu toggle button (shown only on mobile)
+                EnhancedMobileMenuButton(
+                    isOpen = navigationState.isMobileMenuOpen,
+                    onClick = navigationState.onToggleMobileMenu,
+                    modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.MD)
+                )
+            }
+            // Mobile navigation menu (collapsible, full width)
+            if (navigationState.isMobileMenuOpen) {
+                MobileNavigationMenu(
+                    currentRoute = navigationState.currentRoute,
+                    onNavigate = navigationState.onRouteChange,
+                    modifier = Modifier
+                        .displayIf(Breakpoint.ZERO, Breakpoint.SM)
                         .fillMaxWidth()
-                        .padding(leftRight = 1.cssRem, topBottom = 0.75.cssRem)
                         .background(Color.white)
                         .boxShadow(
                             offsetX = 0.px,
                             offsetY = 2.px,
-                            blurRadius = 4.px,
-                            color = rgba(0, 0, 0, 0.1)
-                        ),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Logo/Brand section
-                    BrandLogo(
-                        onClick = { navigationState.onRouteChange(NavigationRoute.HOME) },
-                        isActive = navigationState.currentRoute == NavigationRoute.HOME
-                    )
-
-                    // Desktop navigation menu (hidden on mobile)
-                    DesktopNavigationMenu(
-                        currentRoute = navigationState.currentRoute,
-                        onNavigate = navigationState.onRouteChange,
-                        modifier = Modifier.displayIf(Breakpoint.MD)
-                    )
-
-                    // Mobile menu toggle button (shown only on mobile)
-                    MobileMenuButton(
-                        isOpen = navigationState.isMobileMenuOpen,
-                        onClick = navigationState.onToggleMobileMenu,
-                        modifier = Modifier.displayIf(Breakpoint.ZERO, Breakpoint.SM)
-                    )
-                }
-
-                // Mobile navigation menu (collapsible, full width)
-                if (navigationState.isMobileMenuOpen) {
-                    MobileNavigationMenu(
-                        currentRoute = navigationState.currentRoute,
-                        onNavigate = navigationState.onRouteChange,
-                        modifier = Modifier
-                            .displayIf(Breakpoint.ZERO, Breakpoint.SM)
-                            .fillMaxWidth()
-                            .background(Color.white)
-                            .boxShadow(
-                                offsetX = 0.px,
-                                offsetY = 2.px,
-                                blurRadius = 8.px,
-                                color = rgba(0, 0, 0, 0.15)
-                            )
-                            .padding(1.cssRem)
-                    )
-                }
+                            blurRadius = 8.px,
+                            color = rgba(0, 0, 0, 0.15)
+                        )
+                        .padding(1.cssRem)
+                )
             }
         }
     }
@@ -848,3 +837,45 @@ fun WithNavigation(
  *     }
  * }
  */
+
+@Composable
+private fun EnhancedMobileMenuButton(
+    isOpen: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        attrs = modifier
+            .minHeight(48.px) // WCAG compliance
+            .minWidth(48.px)
+            .padding(12.px)
+            .onClick { onClick.invoke() }
+            .toAttrs {
+                attr("aria-label", if (isOpen) "Close menu" else "Open menu")
+                attr("aria-expanded", isOpen.toString())
+                classes("mobile-menu-button")
+            }
+    ) {
+        // Hamburger icon with better mobile styling
+        Div(
+            attrs = {
+                classes("hamburger-icon")
+            }
+        ) {
+            repeat(3) { index ->
+                Div(
+                    attrs = Modifier
+                        .width(24.px)
+                        .height(3.px)
+                        .backgroundColor(Color("#333"))
+                        .margin(bottom = 4.px)
+                        .borderRadius(2.px)
+                        .transition(Transition.of("all", 0.3.s))
+                        .toAttrs {
+                            classes("hamburger-line")
+                        }
+                )
+            }
+        }
+    }
+}

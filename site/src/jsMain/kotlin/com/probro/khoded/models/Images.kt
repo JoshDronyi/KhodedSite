@@ -5,7 +5,7 @@ import kotlinx.browser.window
 object Images {
     object HomePage {
         // Add responsive versions for better mobile performance
-        const val landing_Rocket: String = "/home/rocketManSquiggle.webp" // Convert to WebP
+        const val landing_Rocket: String = "/home/newRocketMan.webp" // Convert to WebP
         const val landing_Rocket_Mobile: String = "/home/rocketManSquiggle-mobile.webp"
         const val services_ChartMaker: String = "/home/laptopDudeSquiggle.webp"
         const val services_ChartMaker_Mobile: String = "/home/laptopDudeSquiggle-mobile.webp"

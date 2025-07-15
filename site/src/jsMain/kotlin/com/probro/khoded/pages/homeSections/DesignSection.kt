@@ -11,6 +11,7 @@ import com.probro.khoded.styles.base.SectionTitleVariant
 import com.probro.khoded.styles.base.SubTitleVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.pageStyles.BlackUnderlineVariant
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.SectionPosition
@@ -79,42 +80,6 @@ fun DesignTextSection(
 
 }
 
-val BlackUnderlineVariant = BaseImageStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth(40.percent)
-    }
-    Breakpoint.ZERO {
-        Modifier
-    }
-    Breakpoint.SM {
-        Modifier
-//            .translateY(ty = (-15).px)
-    }
-    Breakpoint.MD {
-        Modifier
-//            .translateY(ty = (-30).px)
-    }
-}
-
-val PlaneImageVariant = BaseImageStyle.addVariant {
-    base {
-        Modifier
-            .zIndex(2)
-            .overflow(Overflow.Hidden)
-    }
-    Breakpoint.ZERO {
-        Modifier.fillMaxWidth(30.percent)
-            .translate(tx = 50.px, ty = (-100).px)
-    }
-    Breakpoint.SM {
-        Modifier
-            .fillMaxWidth(40.percent)
-    }
-    Breakpoint.MD {
-        Modifier.fillMaxWidth(30.percent)
-    }
-}
 
 @Composable
 fun DesignSubText(lowerText: String) {
