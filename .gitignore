@@ -1,3 +1,25 @@
 .gradle/
 .idea/
 build/
+
+# Development and build files
+.claude/
+.kotlin/
+site/.kobweb/server/logs/
+site/.kobweb/server/state.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
