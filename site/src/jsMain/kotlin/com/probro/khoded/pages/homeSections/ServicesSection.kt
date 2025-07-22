@@ -9,6 +9,8 @@ import com.probro.khoded.styles.base.BaseTextStyle
 import com.probro.khoded.styles.base.SectionTitleVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
+import com.probro.khoded.styles.componentStyles.TextBackingCardVariant
 import com.probro.khoded.styles.pageStyles.ServiceDescriptionVariant
 import com.probro.khoded.styles.pageStyles.ServiceSectionVariant
 import com.probro.khoded.styles.pageStyles.ServiceTextVariant
@@ -50,7 +52,8 @@ fun ServicesSectionDisplay(data: Pages.Home_Section.Services) = with(data) {
             modifier = BaseImageStyle.toModifier()
         )
         Column(
-            modifier = BaseColumnStyle.toModifier()
+            modifier = MobileFirstContainerStyle.toModifier(TextBackingCardVariant)
+                .then(BaseColumnStyle.toModifier())
                 .align(Alignment.TopEnd)
         ) {
             ServicesTitle(

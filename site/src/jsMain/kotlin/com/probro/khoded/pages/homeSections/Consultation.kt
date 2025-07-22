@@ -6,12 +6,15 @@ import com.probro.khoded.components.composables.MessageArea
 import com.probro.khoded.components.composables.TextBox
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.styles.BaseImageStyle
+import com.probro.khoded.styles.KhodedColors
 import com.probro.khoded.styles.animations.jobPostingShiftDownKeyFrames
 import com.probro.khoded.styles.animations.jobPostingShiftUPKeyFrames
 import com.probro.khoded.styles.base.AccentTextVariant
 import com.probro.khoded.styles.base.BaseTextStyle
 import com.probro.khoded.styles.base.SectionTitleVariant
 import com.probro.khoded.styles.components.*
+import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
+import com.probro.khoded.styles.componentStyles.TextBackingCardVariant
 import com.probro.khoded.utils.*
 import com.probro.khoded.utils.Constants.FREE_TEXT
 import com.probro.khoded.utils.popUp.PopUpStateHolders
@@ -72,7 +75,8 @@ fun ConsultationDisplaySection(
         ConsultationTextSection(
             mainText = mainText,
             ctaButton = ctaButton,
-            modifier = BaseFormStyle.toModifier(ConsultationRequestVariant)
+            modifier = MobileFirstContainerStyle.toModifier(TextBackingCardVariant)
+                .then(BaseFormStyle.toModifier(ConsultationRequestVariant))
                 .id(id)
                 .align(Alignment.BottomStart)
                 .scrollSnapStop(ScrollSnapStop.Always)
@@ -98,13 +102,18 @@ fun QuoteSection(
             modifier = Modifier
                 .fillMaxWidth()
         )
-        P(
-            attrs = BaseTextStyle.toModifier()
-                .fillMaxWidth(80.percent)
-                .color(Color.white)
-                .toAttrs()
+        Column(
+            modifier = MobileFirstContainerStyle.toModifier(TextBackingCardVariant)
+                .fillMaxWidth(80.percent),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(subText)
+            P(
+                attrs = BaseTextStyle.toModifier()
+                    .color(KhodedColors.TextPrimary) // Using design system color
+                    .toAttrs()
+            ) {
+                Text(subText)
+            }
         }
     }
 }
@@ -204,7 +213,7 @@ fun ConsultationTitle(mainText: String) {
     ) {
         Span(
             attrs = Modifier
-                .color(Color.purple)
+                .color(KhodedColors.Purple600) // Using design system purple
                 .margin(right = 10.px)
                 .toAttrs()
         ) {

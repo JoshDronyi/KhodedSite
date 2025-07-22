@@ -11,6 +11,8 @@ import com.probro.khoded.styles.base.SectionTitleVariant
 import com.probro.khoded.styles.base.SubTitleVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
+import com.probro.khoded.styles.componentStyles.TextBackingCardVariant
 import com.probro.khoded.styles.pageStyles.BlackUnderlineVariant
 import com.probro.khoded.utils.IsOnScreenObservable
 import com.probro.khoded.utils.Pages
@@ -52,7 +54,8 @@ fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
             upperText = mainText,
             underlineImage = underlineImage,
             lowerText = subText,
-            modifier = BaseColumnStyle.toModifier()
+            modifier = MobileFirstContainerStyle.toModifier(TextBackingCardVariant)
+                .then(BaseColumnStyle.toModifier())
         )
     }
 }

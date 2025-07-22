@@ -10,6 +10,8 @@ import com.probro.khoded.styles.base.BaseTextStyle
 import com.probro.khoded.styles.base.HighlightTextVariant
 import com.probro.khoded.styles.base.MainTextVariant
 import com.probro.khoded.styles.componentStyles.EnhancedBlueButtonVariant
+import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
+import com.probro.khoded.styles.componentStyles.TextBackingCardVariant
 import com.probro.khoded.styles.components.BaseBackgroundStyle
 import com.probro.khoded.styles.components.BlueButtonVariant
 import com.probro.khoded.styles.components.GradientBackgroundVariant
@@ -78,7 +80,8 @@ fun LandingText(
     modifier: Modifier = Modifier
 ) = with(Pages.Home_Section.Landing) {
     Column(
-        modifier = modifier
+        modifier = MobileFirstContainerStyle.toModifier(TextBackingCardVariant)
+            .then(modifier)
             .scrollSnapStop(ScrollSnapStop.Always)
             .scrollSnapType(ScrollSnapType.Inherit),
         verticalArrangement = Arrangement.SpaceEvenly,
