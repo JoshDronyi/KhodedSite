@@ -3,7 +3,20 @@ package com.probro.khoded.models
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.rgba
 
-
+/**
+ * Color palette and theming system for the Khoded brand.
+ *
+ * This enum defines the complete color system used throughout the application,
+ * providing both hex and RGB color values for consistent styling. The colors
+ * are designed to maintain brand consistency and accessibility standards.
+ *
+ * @property hex Hexadecimal color value for CSS and design tools compatibility
+ * @property rgb RGBA color value optimized for Compose Web styling with alpha support
+ *
+ * @since 1.0.0
+ * @see BaseTheme for semantic color assignments
+ * @see com.probro.khoded.styles.BaseTextStyles for color usage examples
+ */
 enum class KhodedColors(val hex: String, val rgb: CSSColorValue) {
     WHITE(hex = "#FFFFFF", rgb = rgba(255, 255, 255, 1)),
     BLACK(hex = "#000000", rgb = rgba(0, 0, 0, 1)),
@@ -17,6 +30,25 @@ enum class KhodedColors(val hex: String, val rgb: CSSColorValue) {
     HOVER_PURPLE(hex = "#390050", rgb = rgba(57, 0, 80,.8 ))
 }
 
+/**
+ * Semantic color theme configuration for the Khoded application.
+ *
+ * This object maps semantic color roles to specific KhodedColors values,
+ * following Material Design color system principles. It provides a
+ * centralized way to manage the application's visual theme.
+ *
+ * The theme follows accessibility guidelines ensuring proper contrast ratios
+ * between text and background colors for WCAG compliance.
+ *
+ * @since 1.0.0
+ * @see KhodedColors for available color values
+ *
+ * Usage:
+ * ```kotlin
+ * modifier.color(BaseTheme.primaryColor.rgb)
+ * modifier.backgroundColor(BaseTheme.backgroundColor.rgb)
+ * ```
+ */
 object BaseTheme {
     val primaryColor: KhodedColors = KhodedColors.PURPLE
     val onPrimaryColor: KhodedColors = KhodedColors.WHITE

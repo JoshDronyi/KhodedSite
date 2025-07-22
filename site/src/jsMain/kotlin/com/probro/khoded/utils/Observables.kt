@@ -7,6 +7,35 @@ import kotlinx.browser.window
 import org.w3c.dom.Element
 import org.w3c.dom.events.EventListener
 
+/**
+ * Viewport intersection observer for tracking element visibility during scroll events.
+ *
+ * This composable provides functionality to detect when specific page sections
+ * enter or exit the viewport, enabling scroll-based animations, lazy loading,
+ * and user engagement tracking. It's particularly useful for single-page
+ * applications with multiple content sections.
+ *
+ * @param sectionID The HTML element ID to observe (without the # prefix)
+ * @param distanceFromTop Distance threshold from the top of the viewport in pixels.
+ *                       Defaults to SECTION_HEIGHT for consistent section-based detection.
+ * @param onEnterViewPort Callback executed when the element enters the viewport.
+ *                       Use for triggering animations, analytics, or content loading.
+ * @param onExitViewPort Callback executed when the element exits the viewport.
+ *                      Use for cleanup, pausing animations, or state updates.
+ *
+ * @since 1.0.0
+ * @see IsOnScreenObservable for alternative position-based observation
+ * @see Constants.SECTION_HEIGHT for default distance threshold
+ *
+ * Example usage:
+ * ```kotlin
+ * OnViewPortEnteredObservable(
+ *     sectionID = "hero-section",
+ *     onEnterViewPort = { startHeroAnimation() },
+ *     onExitViewPort = { pauseHeroAnimation() }
+ * )
+ * ```
+ */
 @Composable
 fun OnViewPortEnteredObservable(
     sectionID: String,
@@ -86,6 +115,14 @@ fun OnViewPortEnteredObservable(
     }
 }
 
+/**
+ * Extension function to check if the top edge of an element is within viewport bounds.
+ *
+ * Calculates whether the element's top boundary is positioned within a reasonable
+ * viewing area, accounting for partial visibility and smooth scrolling transitions.
+ *
+ * @return true if the element's top edge is considered "in bounds" for visibility
+ */
 private fun Element.topIsInBounds(): Boolean {
     val bounds = getBoundingClientRect()
     val viewportBottom = window.pageYOffset + window.innerHeight
@@ -93,6 +130,14 @@ private fun Element.topIsInBounds(): Boolean {
             && bounds.top < (viewportBottom - bounds.height.div(2))
 }
 
+/**
+ * Extension function to check if the bottom edge of an element is within viewport bounds.
+ *
+ * Calculates whether the element's bottom boundary is positioned within the
+ * viewport, considering both positive and negative scroll directions.
+ *
+ * @return true if the element's bottom edge is considered "in bounds" for visibility
+ */
 private fun Element.bottomIsInBounds(): Boolean {
     val bounds = getBoundingClientRect()
     val viewportBottom = window.pageYOffset + window.innerHeight
@@ -101,9 +146,15 @@ private fun Element.bottomIsInBounds(): Boolean {
 }
 
 /**
- * Checks to see if an element is visible on the screen,
+ * Determines the complete visibility state of an element relative to the viewport.
  *
- * @return ViewState -> An enum representing if an element is fully visible, partially visible or not visible at all.
+ * This function provides comprehensive visibility detection by analyzing the element's
+ * position and dimensions against the current viewport boundaries. It distinguishes
+ * between full, partial, and no visibility states.
+ *
+ * @param distanceFromTop Distance threshold from the top of the viewport
+ * @return ViewState enum indicating the element's current visibility status
+ * @see ViewState for possible return values
  */
 private fun Element.getViewState(distanceFromTop: Double): ViewState {
     val state = if (isFullyVisible()) {
@@ -118,9 +169,14 @@ private fun Element.getViewState(distanceFromTop: Double): ViewState {
 }
 
 /**
- * Checks to see if any of the corners are visible on the screen.
+ * Determines if any portion of the element is visible within the viewport.
  *
- * @return a boolean representing if the element can be seen at all.
+ * This function performs intersection detection to identify when an element
+ * has any visible area within the current viewport boundaries. It's useful
+ * for triggering actions when elements first become visible.
+ *
+ * @param distanceFromTop Distance threshold from the top of the viewport
+ * @return true if any part of the element is visible on screen
  */
 private fun Element.isPartiallyVisible(distanceFromTop: Double): Boolean {
     val bounds = getBoundingClientRect()
@@ -132,9 +188,13 @@ private fun Element.isPartiallyVisible(distanceFromTop: Double): Boolean {
 
 
 /**
- * Checks to see if all four corners of an element are on screen.
+ * Determines if the entire element is completely visible within the viewport.
  *
- * @return true if all corners are on screen.
+ * This function checks that all boundaries of the element (top, bottom, left, right)
+ * are within the current viewport dimensions. Useful for ensuring complete
+ * visibility before triggering certain animations or interactions.
+ *
+ * @return true if the entire element is visible within the viewport
  */
 private fun Element.isFullyVisible(): Boolean {
     val bounds = getBoundingClientRect()
@@ -144,8 +204,14 @@ private fun Element.isFullyVisible(): Boolean {
 
 
 /**
- * Checks to see if a double value is within the visible screen boundaries.
- *  @returns true if the double is currently shown on screen.
+ * Extension function to check if a coordinate value is within visible screen boundaries.
+ *
+ * This utility function helps determine if a specific coordinate (typically a
+ * vertical position) is within the viewable area of the screen, considering
+ * the provided distance threshold.
+ *
+ * @param distanceFromTop Distance threshold from the top of the viewport
+ * @return true if the coordinate value is currently within screen bounds
  */
 private fun Double.isWithinScreenBounds(distanceFromTop: Double): Boolean {
     return this < distanceFromTop
@@ -153,10 +219,22 @@ private fun Double.isWithinScreenBounds(distanceFromTop: Double): Boolean {
 
 
 /**
- * View state: an enum class representing the possible visibility states for a
+ * Enumeration representing the possible visibility states of an element within the viewport.
  *
- * @constructor Create empty View state
+ * This enum provides a clear taxonomy for element visibility, enabling precise
+ * control over scroll-based interactions and animations. Each state represents
+ * a distinct level of element visibility relative to the current viewport.
+ *
+ * @since 1.0.0
+ * @see Element.getViewState for usage in visibility detection
  */
 enum class ViewState {
-    FULL, PARTIAL, GONE
+    /** The element is completely visible within the viewport */
+    FULL,
+    
+    /** The element is partially visible (some portion is within the viewport) */
+    PARTIAL,
+    
+    /** The element is not visible at all within the current viewport */
+    GONE
 }
