@@ -1,6 +1,10 @@
 package com.probro.khoded.styles.componentStyles
 
-import com.probro.khoded.models.KhodedColors
+import com.probro.khoded.styles.KhodedColors
+import com.probro.khoded.styles.KhodedSpacing
+import com.probro.khoded.styles.KhodedRadius
+import com.probro.khoded.styles.KhodedShadows
+import com.probro.khoded.styles.KhodedAnimations
 import com.probro.khoded.styles.components.BaseTextInputStyle
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -22,24 +26,24 @@ val MobileFirstContainerStyle = CssStyle<ContainerKind> {
     base {
         Modifier
             .fillMaxWidth()
-            .padding(16.px) // Mobile-first padding
+            .padding(KhodedSpacing.lg) // Mobile-first padding
             .height(Height.Inherit)
             .maxWidth(100.vw) // Prevent overflow
     }
 
     Breakpoint.SM {
-        Modifier.padding(24.px)
+        Modifier.padding(KhodedSpacing.xl2)
     }
 
     Breakpoint.MD {
         Modifier
-            .padding(32.px)
-//            .maxWidth(1200.px)
-            .margin(leftRight = autoLength)
+            .padding(KhodedSpacing.xl3)
+            .maxWidth(1200.px)
+            .margin(leftRight = org.jetbrains.compose.web.css.auto)
     }
 
     Breakpoint.LG {
-        Modifier.padding(40.px)
+        Modifier.padding(KhodedSpacing.xl4)
     }
 }
 
@@ -47,66 +51,59 @@ val NavigationContainerVariant = MobileFirstContainerStyle.addVariant {
     base {
         Modifier
             .margin(0.px)
-            .padding(leftRight = 1.cssRem, topBottom = 0.75.cssRem)
-            .background(Color.white)
-            .boxShadow(
-                offsetX = 0.px,
-                offsetY = 2.px,
-                blurRadius = 4.px,
-                color = rgba(0, 0, 0, 0.1)
-            )
+            .padding(leftRight = KhodedSpacing.lg, topBottom = KhodedSpacing.md)
+            .background(KhodedColors.Background)
+            .boxShadow(KhodedShadows.sm)
     }
     Breakpoint.MD {
         Modifier
-            .padding(32.px)
-            .maxWidth(100.vh)
-//            .margin(leftRight = autoLength)
+            .padding(KhodedSpacing.xl3)
+            .fillMaxWidth()
+            .margin(leftRight = org.jetbrains.compose.web.css.auto)
     }
 
 }
 
 // Enhanced button variant (new, doesn't replace existing)
-val EnhancedBlueButtonVariant = ButtonStyle.addVariant {
+val EnhancedPrimaryButtonVariant = ButtonStyle.addVariant {
     base {
         Modifier
-            .background(KhodedColors.BLUE.rgb)
-            .color(Colors.White)
-            .padding(leftRight = 24.px, topBottom = 16.px)
-            .borderRadius(12.px)
-            .fontSize(16.px)
+            .background(KhodedColors.Purple500.toString())
+            .color(KhodedColors.TextInverse)
+            .padding(leftRight = KhodedSpacing.xl2, topBottom = KhodedSpacing.lg)
+            .borderRadius(KhodedRadius.md)
+            .fontSize(KhodedSpacing.lg)
             .fontWeight(FontWeight.SemiBold)
-            .minHeight(48.px) // WCAG compliance
-            .minWidth(48.px)
+            .minHeight(KhodedSpacing.touchTargetMin) // WCAG compliance
+            .minWidth(KhodedSpacing.touchTargetMin)
             .cursor(Cursor.Pointer)
             .border(width = 0.px, style = LineStyle.None)
             .textAlign(TextAlign.Center)
-            .transition(
-                Transition.of("all", 0.2.s, TransitionTimingFunction.EaseInOut)
-            )
+            .transition(CSSTransition("all", KhodedAnimations.normal))
             .outline(width = 0.px, style = LineStyle.None)
     }
 
     Breakpoint.SM {
         Modifier
-            .padding(leftRight = 32.px, topBottom = 18.px)
+            .padding(leftRight = KhodedSpacing.xl3, topBottom = KhodedSpacing.xl)
             .fontSize(17.px)
     }
 
     Breakpoint.MD {
         Modifier
-            .padding(leftRight = 40.px, topBottom = 20.px)
+            .padding(leftRight = KhodedSpacing.xl4, topBottom = KhodedSpacing.xl)
             .fontSize(18.px)
     }
 
     hover {
         Modifier
-            .background(KhodedColors.HOVER_BLUE.rgb)
+            .background(KhodedColors.Purple600.toString())
             .transform { scale(1.02) }
     }
 
     focus {
         Modifier
-            .outline(width = 2.px, style = LineStyle.Solid, color = Color("#007bff"))
+            .outline(width = 2.px, style = LineStyle.Solid, color = KhodedColors.Focus)
             .outlineOffset(2.px)
     }
 }
@@ -115,27 +112,51 @@ val EnhancedBlueButtonVariant = ButtonStyle.addVariant {
 val MobileOptimizedInputVariant = BaseTextInputStyle.addVariant {
     base {
         Modifier
-            .fontSize(16.px) // Prevents iOS zoom
-            .minHeight(48.px) // Touch target
-            .padding(16.px)
-            .border {
-                width(1.px)
-                style(LineStyle.Solid)
-                color(Color("#e1e5e9"))
-            }
+            .fontSize(KhodedSpacing.lg) // Prevents iOS zoom
+            .minHeight(KhodedSpacing.touchTargetMin) // Touch target
+            .padding(KhodedSpacing.lg)
+            .border(1.px, LineStyle.Solid, KhodedColors.Gray300)
+            .borderRadius(KhodedRadius.md)
+            .color(KhodedColors.TextPrimary)
     }
 
     focus {
         Modifier
-            .border {
-                width(2.px)
-                style(LineStyle.Solid)
-                color(KhodedColors.BLUE.rgb)
-            }
-            .boxShadow(
-                0.px, 0.px, 0.px, 3.px,
-                color = KhodedColors.BLUE_HIGHLIGHT.rgb,
-                inset = false
-            )
+            .border(2.px, LineStyle.Solid, KhodedColors.Purple500)
+            .boxShadow(KhodedShadows.focus)
+    }
+}
+
+// Text backing card for content over images
+val TextBackingCardVariant = MobileFirstContainerStyle.addVariant {
+    base {
+        Modifier
+            .background("rgba(255, 255, 255, 0.85)") // Semi-transparent white
+            .borderRadius(KhodedRadius.lg)
+            .padding(KhodedSpacing.xl)
+            .margin(KhodedSpacing.lg)
+            .boxShadow(KhodedShadows.lg)
+    }
+    
+    Breakpoint.SM {
+        Modifier
+            .padding(KhodedSpacing.xl2)
+            .margin(KhodedSpacing.xl)
+            .borderRadius(KhodedRadius.xl)
+    }
+    
+    Breakpoint.MD {
+        Modifier
+            .padding(KhodedSpacing.xl3)
+            .margin(KhodedSpacing.xl2)
+            .borderRadius(KhodedRadius.xl2)
+            .background("rgba(255, 255, 255, 0.75)") // Slightly more transparent on larger screens
+    }
+    
+    Breakpoint.LG {
+        Modifier
+            .padding(KhodedSpacing.xl4)
+            .margin(KhodedSpacing.xl3)
+            .background("rgba(255, 255, 255, 0.7)") // Even more transparent on desktop
     }
 }
