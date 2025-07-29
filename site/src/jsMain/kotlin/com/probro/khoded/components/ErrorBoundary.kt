@@ -40,8 +40,8 @@ package com.probro.khoded.components
  */
 
 import androidx.compose.runtime.*
-import com.probro.khoded.styles.base.BodyStyle
-import com.probro.khoded.styles.base.HeadingStyle
+import com.probro.khoded.styles.BodyTextStyle
+import com.probro.khoded.styles.HeadingStyle
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -53,8 +53,8 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.silk.components.forms.Button
-import com.varabyte.kobweb.silk.components.icons.fa.FaIcon
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.components.icons.fa.FaStar
 import com.varabyte.kobweb.silk.style.toModifier
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.Color
@@ -377,10 +377,9 @@ private fun DefaultErrorFallback(
             verticalArrangement = Arrangement.spacedBy(20.px)
         ) {
             // Error icon
-            FaIcon(
-                name = "alert-triangle",
+            FaStar(
                 modifier = Modifier
-                    .size(48.px)
+                    .fontSize(48.px)
                     .color(Color("#dc2626")) // Red color
             )
 
@@ -395,7 +394,7 @@ private fun DefaultErrorFallback(
             // Error message
             SpanText(
                 text = getErrorMessage(error, config),
-                modifier = BodyStyle.toModifier()
+                modifier = BodyTextStyle.toModifier()
                     .textAlign(TextAlign.Center)
                     .color(Color("#6b7280"))
                     .lineHeight(1.6)
