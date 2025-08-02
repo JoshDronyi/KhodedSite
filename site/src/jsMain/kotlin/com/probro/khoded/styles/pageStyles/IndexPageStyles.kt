@@ -1,14 +1,16 @@
 package com.probro.khoded.styles.pageStyles
 
 import com.probro.khoded.styles.BaseImageStyle
-import com.probro.khoded.styles.base.BaseTextStyle
-import com.probro.khoded.styles.components.BaseColumnStyle
+import com.probro.khoded.styles.BodyTextStyle
+// import com.probro.khoded.styles.components.BaseColumnStyle // TODO: Fix when available
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.addVariant
+import com.varabyte.kobweb.silk.style.base
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.selectors.hover
 import org.jetbrains.compose.web.css.Color
@@ -31,24 +33,24 @@ val PinkUnderLineVaraint = BaseImageStyle.addVariant {
         Modifier
     }
 }
-val ServiceSectionVariant = BaseColumnStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .borderBottom {
-                width(2.px)
-                style(LineStyle.Solid)
-                color(Color.purple)
-            }
-    }
-    hover {
-        Modifier
-            .cursor(Cursor.Pointer)
-    }
+// TODO: Fix when BaseColumnStyle is available
+// val ServiceSectionVariant = BaseColumnStyle.addVariant {
+//     base {
+//         Modifier
+//             .fillMaxWidth()
+//             .borderBottom {
+//                 width(2.px)
+//                 style(LineStyle.Solid)
+//                 color(Color.purple)
+//             }
+//     }
+//     hover {
+//         Modifier
+//             .cursor(Cursor.Pointer)
+//     }
+// }
 
-}
-
-val ServiceTextVariant = BaseTextStyle.addVariant {
+val ServiceTextVariant = CssStyle {
     base {
         Modifier
             .color(Color.black)
@@ -62,13 +64,15 @@ val ServiceTextVariant = BaseTextStyle.addVariant {
     Breakpoint.MD {
         Modifier.fontSize(FontSize.Medium)
     }
-    Breakpoint.LG
+    Breakpoint.LG {
+        Modifier.fontSize(FontSize.XLarge)
+    }
     Breakpoint.XL {
         Modifier
             .fontSize(FontSize.XXLarge)
     }
 }
-val ServiceDescriptionVariant = BaseTextStyle.addVariant {
+val ServiceDescriptionVariant = CssStyle {
     base {
         Modifier
             .color(Color.black)

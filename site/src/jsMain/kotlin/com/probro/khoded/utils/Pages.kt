@@ -3,7 +3,7 @@ package com.probro.khoded.utils
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
-import com.probro.khoded.pages.aboutSections.Founders
+import com.probro.khoded.models.Founders
 
 /**
  * Interface defining the common structure for page sections throughout the application.

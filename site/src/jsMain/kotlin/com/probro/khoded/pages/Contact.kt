@@ -1,428 +1,289 @@
 package com.probro.khoded.pages
 
-import androidx.compose.runtime.*
-import com.probro.khoded.components.*
-import com.probro.khoded.components.composables.MessageArea
-import com.probro.khoded.components.composables.TextBox
-import com.probro.khoded.components.composables.popupscreen.PopUpScreen
-import com.probro.khoded.messaging.messageData.MessageData
-import com.probro.khoded.models.ButtonState
-import com.probro.khoded.pages.contactSections.ContactFormState
-import com.probro.khoded.pages.contactSections.ContactPageStateHolder
-import com.probro.khoded.pages.homeSections.EnhancedButtonDisplay
-import com.probro.khoded.styles.animations.makeInvisibleKeyFrames
-import com.probro.khoded.styles.animations.makeVisibleKeyFrames
-import com.probro.khoded.styles.animations.shiftBackwardKeyframes
-import com.probro.khoded.styles.animations.shiftForwardKeyFrames
-import com.probro.khoded.styles.base.BaseTextStyle
-import com.probro.khoded.styles.base.CompanyContactTextVariant
-import com.probro.khoded.styles.base.SectionTitleVariant
-import com.probro.khoded.styles.componentStyles.MobileFirstContainerStyle
-import com.probro.khoded.styles.components.*
-import com.probro.khoded.styles.popups.MessagingPopUpTextVariant
-import com.probro.khoded.utils.*
-import com.probro.khoded.utils.Pages.Contact_Section.Landing.ctaButton
-import com.probro.khoded.utils.popUp.PopUpStateHolders
-import com.stevdza.san.kotlinbs.models.InputValidation
-import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.Width
+import androidx.compose.runtime.Composable
+import com.probro.khoded.components.ErrorBoundary
+import com.probro.khoded.components.ErrorBoundaryConfig
+import com.probro.khoded.design.KhodedDesignSystem
+import com.probro.khoded.components.widgets.Footer
+import com.probro.khoded.utils.NavigationHeader
+import com.probro.khoded.utils.WithNavigation
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
-import com.varabyte.kobweb.core.rememberPageContext
-import com.varabyte.kobweb.silk.components.layout.SimpleGrid
-import com.varabyte.kobweb.silk.components.layout.numColumns
-import com.varabyte.kobweb.silk.style.animation.toAnimation
-import com.varabyte.kobweb.silk.style.toModifier
+import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.dom.P
-import org.jetbrains.compose.web.dom.Span
-import org.jetbrains.compose.web.dom.Text
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.functions.LinearGradient
+import com.varabyte.kobweb.compose.css.functions.linearGradient
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 
-
+/**
+ * Contact Page - Get in touch with Khoded
+ */
 @Page
 @Composable
-fun Contact() {
-    val ctx = rememberPageContext()
-    SEOHead(KhodedSEO.contactPage, ctx)
-    val formState by ContactPageStateHolder.formState.collectAsState()
-    val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
-
-    // Development vs Production configuration
-    val errorConfig = ErrorBoundaryConfig(
-        showStackTrace = false, // Set to true in development
-        enableErrorReporting = true,
-        fallbackTitle = "Khoded - Service Temporarily Unavailable",
-        fallbackMessage = "We're experiencing technical difficulties." +
-                " Our team has been notified and is working on a fix."
-    )
-
-    ErrorBoundary(
-        config = errorConfig,
-        onError = { error, errorInfo ->
-            // Custom error handling for your agency
-            console.error("Khoded website error:", error)
-            // TODO: Integrate with your analytics/monitoring service
-        }
-    ) {
-        WithNavigation {
-            NavigationHeader(navigationState = it)
-            with(Pages.Contact_Section.Landing) {
-                Box(
-                    modifier = Modifier,
-                    contentAlignment = Alignment.Center
-                ) {
-                    ContactPageSections(formState = formState)
-                    with(popUpState) {
-                        PopUpScreen(
-                            popUpUIModel = this,
-                            textVariant = MessagingPopUpTextVariant,
-                            modifier = Modifier
-                                .animation(
-                                    if (isVisible) makeVisibleKeyFrames.toAnimation(300.ms)
-                                    else makeInvisibleKeyFrames.toAnimation(duration = 300.ms),
-                                    if (isVisible) shiftForwardKeyFrames.toAnimation(300.ms)
-                                    else shiftBackwardKeyframes.toAnimation(duration = 300.ms)
-                                )
+fun ContactPage() {
+    ErrorBoundary(config = ErrorBoundaryConfig()) {
+        WithNavigation { navigationState ->
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Hero Section
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .minHeight(60.vh)
+                        .backgroundImage(
+                        linearGradient(
+                            dir = LinearGradient.Direction.ToBottomRight,
+                            from = rgb(15, 23, 42),    // Deep navy
+                            to = rgb(30, 41, 59)       // Lighter navy
                         )
-                    }
+                    )
+                    .padding(80.px, 40.px),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    SpanText(
+                        "Get In Touch",
+                        modifier = Modifier
+                            .fontSize(48.px)
+                            .fontWeight(700)
+                            .color(Color.white)
+                            .textAlign(TextAlign.Center)
+                            .margin(bottom = 20.px)
+                    )
+                    
+                    SpanText(
+                        "Ready to achieve 80% code reuse with Kotlin Multiplatform? Let's discuss your Connecticut business needs.",
+                        modifier = Modifier
+                            .fontSize(20.px)
+                            .color(Color.white)
+                            .textAlign(TextAlign.Center)
+                            .maxWidth(600.px)
+                    )
                 }
-            }
-            LaunchedEffect(formState.stage) {
-                PopUpStateHolders.MessagingPopUpStateHolder.adjustPopUpText(formState.stage)
-            }
-        }
-    }
-}
 
-@Composable
-fun ContactPageSections(
-    formState: ContactFormState,
-    modifier: Modifier = Modifier,
-) = with(Pages.Contact_Section.Landing) {
-    // Background Colors used to make the gradient
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Box(
-
-            MobileFirstContainerStyle.toModifier()
-                .then(BaseBackgroundStyle.toModifier(ContactLandingBackgroundVariant))
-                .fillMaxSize()
-        )
-        Box(
-            MobileFirstContainerStyle.toModifier()
-                .then(BaseBackgroundStyle.toModifier(ContactFooterBackgroundVariant))
-                .fillMaxSize()
-        )
-    }
-    Column(
-        modifier = modifier
-            .height(Height.FitContent),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        SimpleGrid(
-            numColumns = numColumns(base = 1, md = 2),
-            modifier = BaseRowStyle.toModifier(LandingSectionVariant)
-                .id(id)
-        ) {
-            ContactForm(
-                contactFormState = formState
-            )
-            CompanyContactInfoSection(
-                image = mainImage,
-                contactInfoUIModel = contactInfoUIModel,
-            )
-        }
-    }
-}
-
-@Composable
-fun ContactForm(
-    contactFormState: ContactFormState,
-    modifier: Modifier = Modifier,
-) = with(Pages.Contact_Section.Landing) {
-    Column(
-        modifier = modifier
-            .id(id)
-    ) {
-        var state by remember { mutableStateOf(SectionPosition.ON_SCREEN) }
-        IsOnScreenObservable(
-            sectionID = id,
-        ) {
-            state = it
-        }
-        with(contactFormState) {
-            ClientContactInfoDisplay(
-                mainText = mainText,
-                subText = subText,
-                placeholderData = placeholderData,
-                messageData = messageData,
-                onMessageSend = { message ->
-                    ContactPageStateHolder.onMessageSend(message)
-                },
-                onStateChange = {
-                    with(ContactPageStateHolder) {
-                        messageData.apply {
-                            updateName(name)
-                            updateEmail(email)
-                            updateSubject(subject)
-                            updateOrganization(organization)
-                            updateMessage(message)
+                // Contact Form Section
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .maxWidth(1200.px)
+                        .padding(80.px, 40.px),
+                    horizontalArrangement = Arrangement.spacedBy(60.px),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    // Left side - Contact form
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(30.px)
+                    ) {
+                        SpanText(
+                            "Send us a message",
+                            modifier = Modifier
+                                .fontSize(28.px)
+                                .fontWeight(700)
+                                .color(rgb(15, 23, 42))
+                        )
+                        
+                        // Contact form placeholder
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .backgroundColor(Color.white)
+                                .borderRadius(12.px)
+                                .padding(40.px)
+                                .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15)),
+                            verticalArrangement = Arrangement.spacedBy(20.px)
+                        ) {
+                            ContactFormField("Name")
+                            ContactFormField("Email")
+                            ContactFormField("Subject")
+                            ContactFormField("Message", isTextArea = true)
+                            
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.px, 24.px)
+                                    .backgroundColor(rgb(6, 182, 212))
+                                    .borderRadius(8.px)
+                                    .cursor(Cursor.Pointer),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                SpanText(
+                                    "Send Message",
+                                    modifier = Modifier
+                                        .fontSize(16.px)
+                                        .fontWeight(600)
+                                        .color(Color.white)
+                                )
+                            }
                         }
                     }
-                })
-        }
-    }
-
-}
-
-@Composable
-fun ClientContactInfoDisplay(
-    mainText: String,
-    subText: String,
-    placeholderData: Pages.Contact_Section.MessageUIModel,
-    messageData: MessageData.ContactMessageData,
-    onStateChange: () -> Unit,
-    onMessageSend: (message: String) -> Unit,
-) = with(placeholderData) {
-    Box(
-        modifier = BaseContainerStyle.toModifier(CompanyInfoContainerVariant),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(80.percent)
-        ) {
-            ClientInfoTitle(mainText, subText)
-            Span(
-                attrs = Modifier
-                    .background(Colors.Black.copy(alpha = 30))
-                    .borderRadius(20.px)
-                    .padding(topBottom = 10.px, leftRight = 20.px)
-                    .fillMaxWidth()
-                    .toAttrs()
-            ) {
-                ClientInfoInputDisplay(
-                    placeholderData = placeholderData,
-                    messageData = messageData,
-                    onOrganizationChange = {
-                        messageData.organization = it
-                    },
-                    onSubjectChange = {
-                        messageData.subject = it
-                    },
-                    onNameChange = {
-                        messageData.name = it
-                    },
-                    onEmailChange = {
-                        messageData.email = it
+                    
+                    // Right side - Contact info
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(40.px)
+                    ) {
+                        SpanText(
+                            "Contact Information",
+                            modifier = Modifier
+                                .fontSize(28.px)
+                                .fontWeight(700)
+                                .color(rgb(15, 23, 42))
+                        )
+                        
+                        ContactInfoCard(
+                            title = "Email",
+                            value = "hello@khoded.com",
+                            description = "Send us an email anytime"
+                        )
+                        
+                        ContactInfoCard(
+                            title = "Phone",
+                            value = "+1 (555) 123-4567",
+                            description = "Call us during business hours"
+                        )
+                        
+                        ContactInfoCard(
+                            title = "Location",
+                            value = "Connecticut, USA",
+                            description = "Serving Connecticut's Finance, Healthcare & Manufacturing"
+                        )
+                        
+                        // Free consultation CTA
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .backgroundColor(rgb(6, 182, 212))
+                                .borderRadius(12.px)
+                                .padding(30.px),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(15.px)
+                        ) {
+                            SpanText(
+                                "Free 30-Min Consultation",
+                                modifier = Modifier
+                                    .fontSize(20.px)
+                                    .fontWeight(700)
+                                    .color(Color.white)
+                                    .textAlign(TextAlign.Center)
+                            )
+                            
+                            SpanText(
+                                "Get expert guidance on Kotlin Multiplatform adoption and Connecticut industry compliance.",
+                                modifier = Modifier
+                                    .fontSize(14.px)
+                                    .color(rgba(255, 255, 255, 0.9))
+                                    .textAlign(TextAlign.Center)
+                            )
+                            
+                            Column(
+                                modifier = Modifier
+                                    .padding(12.px, 20.px)
+                                    .backgroundColor(Color.white)
+                                    .borderRadius(8.px)
+                                    .cursor(Cursor.Pointer),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                SpanText(
+                                    "Schedule Now",
+                                    modifier = Modifier
+                                        .fontSize(14.px)
+                                        .fontWeight(600)
+                                        .color(rgb(6, 182, 212))
+                                )
+                            }
+                        }
                     }
-                )
-                MessageArea(
-                    modifier = BaseTextInputStyle.toModifier(ClientInfoTextAreaVariant)
-                ) { newText ->
-                    messageData.message = newText
                 }
-                ContactUsCTA(
-                    onStateChange,
-                    onMessageSend = {
-                        onMessageSend(message)
-                    },
-                    modifier = Modifier.width(Width.FitContent)
-                        .margin(topBottom = 10.px)
-                        .align(Alignment.CenterHorizontally)
-                )
+                
+                Footer()
             }
         }
     }
 }
 
 @Composable
-fun ContactUsCTA(
-    onStateChange: () -> Unit,
-    onMessageSend: () -> Unit,
-    modifier: Modifier = Modifier
+private fun ContactFormField(
+    label: String,
+    isTextArea: Boolean = false
 ) {
-    EnhancedButtonDisplay(
-        state = ctaButton.copy(
-            onButtonClick = {
-                onStateChange()
-                onMessageSend()
-            }
-        ),
-        modifier = modifier
-    ) {
-        P(
-            attrs = BaseCTAStyle.toModifier()
-                .toAttrs()
-        ) {
-            Text(it)
-        }
-    }
-}
-
-@Composable
-fun ClientInfoTitle(
-    mainText: String,
-    subText: String
-) {
-    P(
-        attrs = BaseTextStyle.toModifier(SectionTitleVariant)
-            .position(Position.Relative)
-            .animation(
-                fallInAnimation.toAnimation(
-                    duration = 600.ms,
-                    timingFunction = AnimationTimingFunction.Ease,
-                    direction = AnimationDirection.Normal,
-                )
-            )
-            .toAttrs()
-    ) {
-        Span(
-            attrs = Modifier
-                .color(Colors.Purple)
-                .margin(right = 10.px)
-                .toAttrs()
-        ) {
-            Text(mainText)
-        }
-        Span(
-            attrs = Modifier
-                .color(Colors.HotPink)
-                .toAttrs()
-        ) {
-            Text(subText)
-        }
-    }
-}
-
-@Composable
-fun ClientInfoInputDisplay(
-    placeholderData: Pages.Contact_Section.MessageUIModel,
-    messageData: MessageData.ContactMessageData,
-    onNameChange: (newText: String) -> Unit,
-    onEmailChange: (newText: String) -> Unit,
-    onOrganizationChange: (newText: String) -> Unit,
-    onSubjectChange: (newText: String) -> Unit,
-) =
-    with(placeholderData) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-                .margin(top = 20.px),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            TextBox(
-                placeholder = fullName,
-                modifier = BaseTextInputStyle.toModifier(ClientInfoTextBoxVariant)
-            ) {
-                onNameChange(it)
-            }
-            TextBox(
-                placeholder = email,
-                modifier = BaseTextInputStyle.toModifier(ClientInfoTextBoxVariant)
-            ) {
-                onEmailChange(it)
-            }
-            TextBox(
-                placeholder = organization,
-                modifier = BaseTextInputStyle.toModifier(ClientInfoTextBoxVariant)
-            ) {
-                onOrganizationChange(it)
-            }
-            TextBox(
-                placeholder = messageSubject,
-                modifier = BaseTextInputStyle.toModifier(ClientInfoTextBoxVariant),
-                required = true,
-                validation = InputValidation()
-            ) {
-                onSubjectChange(it)
-            }
-        }
-    }
-
-@Composable
-fun CompanyContactInfoSection(
-    image: String,
-    contactInfoUIModel: Pages.Contact_Section.ContactInfoUIModel
-) {
-    Box(
-        modifier = BaseContainerStyle.toModifier(CompanyInfoContainerVariant),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(80.percent),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.End
-        ) {
-            OptimizedImage(
-                src = image,
-                description = "Planet 404",
-                modifier = Modifier
-                    .fillMaxWidth(70.percent)
-                    .objectFit(ObjectFit.Contain)
-            )
-            ContactInfoDisplay(contactInfoUIModel)
-        }
-    }
-}
-
-
-@Composable
-fun ContactInfoDisplay(contactInfoUIModel: Pages.Contact_Section.ContactInfoUIModel) = with(contactInfoUIModel) {
     Column(
-        modifier = BaseContainerStyle.toModifier(CompanyInfoContainerVariant),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.px)
     ) {
-        P(
-            attrs = BaseTextStyle.toModifier(CompanyContactTextVariant)
-                .toAttrs()
-        ) {
-            Text(phone)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(CompanyContactTextVariant)
-                .toAttrs()
-        ) {
-            Text(email)
-        }
-        P(
-            attrs = BaseTextStyle.toModifier(CompanyContactTextVariant)
-                .toAttrs()
-        ) {
-            Text(address)
-        }
-    }
-}
-
-
-@Composable
-fun InputDisplays(
-    message: String,
-    ctaButton: ButtonState,
-    onMessageSend: (message: String) -> Unit
-) {
-    Box(
-        modifier = BaseContainerStyle.toModifier(MessagingSectionContainerVariant),
-        contentAlignment = Alignment.Center
-    ) {
+        SpanText(
+            label,
+            modifier = Modifier
+                .fontSize(14.px)
+                .fontWeight(500)
+                .color(rgb(15, 23, 42))
+        )
+        
         Column(
             modifier = Modifier
-                .fillMaxWidth(80.percent)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
+                .fillMaxWidth()
+                .height(if (isTextArea) 120.px else 48.px)
+                .backgroundColor(rgb(249, 250, 251))
+                .border(1.px, LineStyle.Solid, rgb(209, 213, 219))
+                .borderRadius(8.px)
+                .padding(12.px),
+            verticalArrangement = Arrangement.Top
         ) {
-
+            // Form field placeholder
+            SpanText(
+                "Enter ${label.lowercase()}...",
+                modifier = Modifier
+                    .fontSize(14.px)
+                    .color(rgb(156, 163, 175))
+            )
         }
+    }
+}
+
+@Composable
+private fun ContactInfoCard(
+    title: String,
+    value: String,
+    description: String
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .backgroundColor(Color.white)
+            .borderRadius(12.px)
+            .padding(24.px)
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 12.px, color = rgba(0, 0, 0, 0.1)),
+        verticalArrangement = Arrangement.spacedBy(8.px)
+    ) {
+        SpanText(
+            title,
+            modifier = Modifier
+                .fontSize(16.px)
+                .fontWeight(600)
+                .color(rgb(6, 182, 212))
+        )
+        
+        SpanText(
+            value,
+            modifier = Modifier
+                .fontSize(18.px)
+                .fontWeight(700)
+                .color(rgb(15, 23, 42))
+        )
+        
+        SpanText(
+            description,
+            modifier = Modifier
+                .fontSize(14.px)
+                .color(rgb(100, 116, 139))
+        )
     }
 }

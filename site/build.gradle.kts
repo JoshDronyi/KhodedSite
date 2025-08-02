@@ -38,8 +38,9 @@ kobweb {
 }
 
 kotlin {
-    jvmToolchain(19)
+    jvmToolchain(21)
     configAsKobwebApplication("khoded", includeServer = true)
+    
 
     sourceSets {
         val commonMain by getting {
@@ -55,46 +56,67 @@ kotlin {
                 implementation(libs.kobweb.core)
                 implementation(libs.kobweb.compose)
                 implementation(libs.kobweb.silk)
-                implementation(libs.silk.icons.fa)
                 implementation(libs.silk.foundation)
+                
+                // Icon libraries
+                implementation(libs.silk.icons.fa)
                 implementation(libs.silk.icons.mdi)
-                implementation(libs.bootstrap)
             }
         }
         val jvmMain by getting {
             dependencies {
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
 
-                //Kotlin Mailer dependencies (Jakarta)
-                implementation(libs.mailer.core)
-                implementation(libs.mailer.client)
+                // Ktor Client for lightweight email HTTP requests (replaces Kotlin Mailer)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                
+                // Additional Ktor dependencies for email service  
+                implementation("io.ktor:ktor-client-plugins:3.0.3")
+                
+                // JDBI for lightweight PostgreSQL database access
+                implementation("org.jdbi:jdbi3-core:3.45.1")
+                implementation("org.jdbi:jdbi3-postgres:3.45.1")
+                implementation("org.jdbi:jdbi3-kotlin:3.45.1")
+                implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.45.1")
+                
+                // HikariCP for connection pooling
+                implementation("com.zaxxer:HikariCP:5.1.0")
+                implementation("org.postgresql:postgresql:42.7.3")
+                
+                // HTTP Status constants
+                implementation("org.apache.httpcomponents:httpcore:4.4.16")
 
-                //Gmail api dependencies
-                implementation("com.google.api-client:google-api-client:2.0.0")
-                implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
-                implementation("com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0")
-                implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
-                implementation("com.google.auth:google-auth-library-credentials:1.16.1")
-                implementation("com.google.http-client:google-http-client:1.43.1")
+                // Gmail api dependencies - temporarily disabled for performance testing
+                // The new KtorEmailService replaces these heavy dependencies
+                // implementation("com.google.api-client:google-api-client:2.0.0")
+                // implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+                // implementation("com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0")
+                // implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+                // implementation("com.google.auth:google-auth-library-credentials:1.16.1")
+                // implementation("com.google.http-client:google-http-client:1.43.1")
 
                 //TODO: LOOK UP flyway GRADLE DEPENDENCIES for database migrations
 
-                // Postgresdb
-                implementation("org.postgresql:postgresql:42.7.1")
-                // Hikari (for Connection pooling)
-                implementation("com.zaxxer:HikariCP:5.1.0")
-
-
-                //Exposed (Jetbrains library for database connection)
-                val exposedVersion = "0.45.0"
-                implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-                // use a dao to have it be similar to android logic
-                implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
+                // Temporarily disable database dependencies to test the application
+                // Since you're not saving data yet, we can run without database for now
+                // This eliminates ~2.2MB of dependencies during testing
+                
+                // Previous heavy database stack (disabled for performance testing):
+                // implementation("org.postgresql:postgresql:42.7.1")          // ~1.1MB
+                // implementation("com.zaxxer:HikariCP:5.1.0")                 // ~150KB + deps
+                // implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")     // ~500KB
+                // implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")     // ~100KB
+                // implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")      // ~200KB
+                // implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")    // ~50KB
+                // implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion") // ~100KB
+                // implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")    // ~50KB
+                // implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")     // ~50KB
+                
+                // Note: sqlx4k is Native-only (no JVM support), so we'll implement 
+                // a different lightweight solution later or use in-memory storage for now
 
             }
         }

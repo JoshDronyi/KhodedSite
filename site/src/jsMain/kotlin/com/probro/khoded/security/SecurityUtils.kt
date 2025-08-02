@@ -94,7 +94,7 @@ object ContentSecurityPolicy {
     
     private fun setupCSPReporting() {
         // Listen for CSP violations
-        document.addEventListener("securitypolicyviolation") { event ->
+        document.addEventListener("securitypolicyviolation", { event: dynamic ->
             val violation = event.asDynamic()
             val report = mapOf(
                 "violatedDirective" to violation.violatedDirective,
@@ -109,7 +109,7 @@ object ContentSecurityPolicy {
             
             // Send to monitoring service
             reportSecurityViolation("csp_violation", report)
-        }
+        })
     }
 }
 
@@ -121,8 +121,8 @@ object InputSanitizer {
     fun sanitizeHtml(input: String): String {
         return input
             .replace(Regex("<script[^>]*>.*?</script>"), "") // Remove script tags
-            .replace(Regex("javascript:", flags = setOf(RegexOption.IGNORE_CASE)), "") // Remove javascript: URLs
-            .replace(Regex("on\\w+\\s*=", flags = setOf(RegexOption.IGNORE_CASE)), "") // Remove event handlers
+            .replace(Regex("javascript:", RegexOption.IGNORE_CASE), "") // Remove javascript: URLs
+            .replace(Regex("on\\w+\\s*=", RegexOption.IGNORE_CASE), "") // Remove event handlers
             .replace(Regex("<iframe[^>]*>.*?</iframe>"), "") // Remove iframes
             .replace(Regex("<embed[^>]*>"), "") // Remove embed tags
             .replace(Regex("<object[^>]*>.*?</object>"), "") // Remove object tags
@@ -147,7 +147,7 @@ object InputSanitizer {
         return if (input.matches(emailRegex) && input.length <= 254) {
             input.trim().lowercase()
         } else {
-            throw SecurityException("Invalid email format")
+            throw IllegalArgumentException("Invalid email format")
         }
     }
     
@@ -158,7 +158,7 @@ object InputSanitizer {
         return if (cleanDigits.length in 10..15) {
             digitsOnly.trim()
         } else {
-            throw SecurityException("Invalid phone number format")
+            throw IllegalArgumentException("Invalid phone number format")
         }
     }
     
@@ -167,14 +167,14 @@ object InputSanitizer {
         val lowercaseInput = input.trim().lowercase()
         
         if (!allowedProtocols.any { lowercaseInput.startsWith(it) }) {
-            throw SecurityException("Invalid URL protocol")
+            throw IllegalArgumentException("Invalid URL protocol")
         }
         
         // Check for common XSS patterns
         if (lowercaseInput.contains("javascript:") || 
             lowercaseInput.contains("data:") ||
             lowercaseInput.contains("vbscript:")) {
-            throw SecurityException("Potentially malicious URL")
+            throw IllegalArgumentException("Potentially malicious URL")
         }
         
         return input.trim()
@@ -207,7 +207,7 @@ object CSRFProtection {
         return headers
     }
     
-    fun addTokenToFormData(formData: FormData): FormData {
+    fun addTokenToFormData(formData: dynamic): dynamic {
         formData.append("_csrf_token", getToken())
         return formData
     }

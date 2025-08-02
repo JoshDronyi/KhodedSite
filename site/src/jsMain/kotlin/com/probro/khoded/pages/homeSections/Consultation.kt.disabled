@@ -1,0 +1,287 @@
+package com.probro.khoded.pages.homeSections
+
+import androidx.compose.runtime.*
+import com.probro.khoded.components.OptimizedImage
+import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.compose.ui.toAttrs
+import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.*
+import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.placeholder
+
+
+@Composable
+fun ConsultationSectionDisplay(data: Pages.Home_Section.Consultation) = with(data) {
+    Section(
+        attrs = Modifier
+            .fillMaxWidth()
+            .padding(topBottom = 60.px)
+            .styleModifier {
+                property("background", "linear-gradient(135deg, #67E8F9 0%, #06B6D4 100%)")
+                property("@media (min-width: 768px)", "{ padding-top: 100px; padding-bottom: 100px; }")
+            }
+            .toAttrs()
+    ) {
+        Div(
+            attrs = Modifier
+                .fillMaxWidth()
+                .maxWidth(1200.px)
+                .padding(leftRight = 20.px)
+                .styleModifier {
+                    property("margin", "0 auto")
+                    property("display", "grid")
+                    property("grid-template-columns", "1fr")
+                    property("gap", "40px")
+                    property("align-items", "center")
+                    property("@media (min-width: 768px)", "{ grid-template-columns: 1fr 1fr; gap: 80px; padding-left: 24px; padding-right: 24px; }")
+                }
+                .toAttrs()
+        ) {
+            // Left side - Content with form
+            Column(
+                verticalArrangement = Arrangement.spacedBy(32.px),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .styleModifier {
+                        property("order", "2")
+                        property("text-align", "center")
+                        property("@media (min-width: 768px)", "{ order: 1; text-align: left; }")
+                    }
+            ) {
+                // Main heading
+                H2(
+                    attrs = Modifier
+                        .fontSize(32.px)
+                        .fontWeight(700)
+                        .color(rgb(51, 51, 51))
+                        .margin(0.px)
+                        .lineHeight(1.2)
+                        .styleModifier {
+                            property("@media (min-width: 768px)", "{ font-size: 48px; }")
+                        }
+                        .toAttrs()
+                ) {
+                    Span(
+                        attrs = Modifier
+                            .color(rgb(147, 51, 234)) // Purple color
+                            .toAttrs()
+                    ) {
+                        Text("let's chat ")
+                    }
+                    Text("about your project!")
+                }
+                
+                // Contact form
+                Form(
+                    attrs = Modifier
+                        .fillMaxWidth()
+                        .styleModifier {
+                            property("display", "flex")
+                            property("flex-direction", "column")
+                            property("gap", "20px")
+                        }
+                        .toAttrs()
+                ) {
+                    // Name and Email row
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.px),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Input(
+                            type = InputType.Text,
+                            attrs = Modifier
+                                .width(50.percent)
+                                .padding(16.px)
+                                .backgroundColor(Color.white)
+                                .border(0.px)
+                                .borderRadius(8.px)
+                                .fontSize(16.px)
+                                .color(rgb(51, 51, 51))
+                                .styleModifier {
+                                    property("flex", "1")
+                                    property("outline", "none")
+                                    property("box-shadow", "0 2px 4px rgba(0, 0, 0, 0.1)")
+                                }
+                                .toAttrs {
+                                    placeholder("FULL NAME")
+                                }
+                        )
+                        
+                        Input(
+                            type = InputType.Email,
+                            attrs = Modifier
+                                .width(50.percent)
+                                .padding(16.px)
+                                .backgroundColor(Color.white)
+                                .border(0.px)
+                                .borderRadius(8.px)
+                                .fontSize(16.px)
+                                .color(rgb(51, 51, 51))
+                                .styleModifier {
+                                    property("flex", "1")
+                                    property("outline", "none")
+                                    property("box-shadow", "0 2px 4px rgba(0, 0, 0, 0.1)")
+                                }
+                                .toAttrs {
+                                    placeholder("EMAIL")
+                                }
+                        )
+                    }
+                    
+                    // Project description textarea
+                    TextArea(
+                        attrs = Modifier
+                            .fillMaxWidth()
+                            .height(150.px)
+                            .padding(16.px)
+                            .backgroundColor(Color.white)
+                            .border(0.px)
+                            .borderRadius(8.px)
+                            .fontSize(16.px)
+                            .color(rgb(51, 51, 51))
+                            .styleModifier {
+                                property("outline", "none")
+                                property("box-shadow", "0 2px 4px rgba(0, 0, 0, 0.1)")
+                                property("resize", "none")
+                                property("font-family", "inherit")
+                            }
+                            .toAttrs {
+                                placeholder("TELL US A LITTLE ABOUT YOUR PROJECT")
+                            }
+                    )
+                }
+            }
+            
+            // Right side - Mobile illustration
+            Div(
+                attrs = Modifier
+                    .styleModifier {
+                        property("display", "flex")
+                        property("justify-content", "center")
+                        property("align-items", "center")
+                        property("position", "relative")
+                        property("order", "1")
+                        property("@media (min-width: 768px)", "{ order: 2; }")
+                    }
+                    .toAttrs()
+            ) {
+                // Mobile phone illustration
+                Div(
+                    attrs = Modifier
+                        .width(180.px)
+                        .height(350.px)
+                        .backgroundColor(rgb(51, 51, 51))
+                        .borderRadius(20.px)
+                        .styleModifier {
+                            property("position", "relative")
+                            property("@media (min-width: 768px)", "{ width: 250px; height: 500px; border-radius: 30px; }")
+                        }
+                        .toAttrs()
+                ) {
+                    // Screen
+                    Div(
+                        attrs = Modifier
+                            .width(160.px)
+                            .height(320.px)
+                            .backgroundColor(Color.white)
+                            .borderRadius(15.px)
+                            .margin(10.px)
+                            .styleModifier {
+                                property("@media (min-width: 768px)", "{ width: 220px; height: 470px; border-radius: 20px; margin: 15px; }")
+                            }
+                            .toAttrs()
+                    )
+                }
+                
+                // Floating speech bubbles
+                ConsultationFloatingElements()
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConsultationFloatingElements() {
+    // Yellow speech bubble (top left)
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("top", "40px")
+                property("left", "-40px")
+                property("width", "80px")
+                property("height", "60px")
+                property("background", "#FCD34D")
+                property("border-radius", "20px 20px 20px 5px")
+                property("animation", "float 3s ease-in-out infinite alternate")
+            }
+            .toAttrs()
+    )
+    
+    // Orange speech bubble (top right)
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("top", "20px")
+                property("right", "-30px")
+                property("width", "70px")
+                property("height", "50px")
+                property("background", "#F97316")
+                property("border-radius", "15px 15px 5px 15px")
+                property("animation", "float 3s ease-in-out infinite alternate 0.5s")
+            }
+            .toAttrs()
+    )
+    
+    // Purple speech bubble with dots (top)
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("top", "-40px")
+                property("left", "50px")
+                property("width", "120px")
+                property("height", "80px")
+                property("background", "linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)")
+                property("border-radius", "25px 25px 25px 8px")
+                property("display", "flex")
+                property("align-items", "center")
+                property("justify-content", "center")
+                property("gap", "8px")
+                property("animation", "float 3s ease-in-out infinite alternate 1s")
+            }
+            .toAttrs()
+    ) {
+        repeat(3) {
+            Div(
+                attrs = Modifier
+                    .width(8.px)
+                    .height(8.px)
+                    .backgroundColor(Color.white)
+                    .borderRadius(50.percent)
+                    .toAttrs()
+            )
+        }
+    }
+}
+
+// Add CSS animations
+@Composable
+fun ConsultationSectionStyles() {
+    Style {
+        """
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); }
+        }
+        """.trimIndent()
+    }
+}

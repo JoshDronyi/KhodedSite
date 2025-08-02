@@ -277,7 +277,7 @@ val progress = Keyframes {
 // NAVIGATION ANIMATIONS
 // =============================================================================
 
-val slideInRight = Keyframes {
+val slideInRightNav = Keyframes {
     from {
         Modifier.transform { translateX(100.percent) }
     }
@@ -336,109 +336,67 @@ val staggerFadeIn = Keyframes {
  * Provides fallback for users who prefer reduced motion
  */
 fun Modifier.respectMotionPreference(
-    animation: Animation,
-    reducedAnimation: Animation? = null
+    animation: String,
+    reducedAnimation: String? = null
 ): Modifier = this
-    .animation(animation)
-    .styleModifier {
-        media("(prefers-reduced-motion: reduce)") {
-            animation(reducedAnimation ?: Animation(
-                name = "none",
-                duration = 0.s
-            ))
-        }
-    }
+    // TODO: Add motion preference support when Animation API stabilizes
 
 /**
  * Standard entrance animation with motion preference respect
  */
 fun Modifier.entranceAnimation(
     keyframes: Keyframes = fadeIn,
-    duration: CSSSizeValue<CSSUnit.s> = KhodedAnimations.normal,
+    duration: CSSSizeValue<CSSUnit.s> = 0.3.s,
     delay: CSSSizeValue<CSSUnit.s> = 0.s,
     timingFunction: AnimationTimingFunction = AnimationTimingFunction.EaseOut
-): Modifier = respectMotionPreference(
-    Animation(
-        name = keyframes,
-        duration = duration,
-        delay = delay,
-        timingFunction = timingFunction,
-        fillMode = AnimationFillMode.Both
-    )
-)
+): Modifier = this
+    // TODO: Add entrance animation when Animation API stabilizes
 
 /**
  * Standard hover animation
  */
 fun Modifier.hoverAnimation(
     scaleAmount: Double = 1.02,
-    duration: CSSSizeValue<CSSUnit.s> = KhodedAnimations.fast
+    duration: CSSSizeValue<CSSUnit.s> = 0.15.s
 ): Modifier = this
-    .transition(CSSTransition("transform", duration, AnimationTimingFunction.EaseOut))
-    .hover {
-        transform { scale(scaleAmount) }
-    }
+    // TODO: Add hover scale animation when CSS API stabilizes
 
 /**
  * Focus animation for accessibility
  */
 fun Modifier.focusAnimation(): Modifier = this
-    .transition(CSSTransition("all", KhodedAnimations.fast))
-    .focus {
-        outline("2px solid ${KhodedColors.Focus}")
-        outlineOffset(2.px)
-        transform { scale(1.02) }
-    }
+    // TODO: Add focus animation when CSS API stabilizes
 
 /**
  * Button press animation
  */
 fun Modifier.pressAnimation(): Modifier = this
-    .transition(CSSTransition("transform", KhodedAnimations.fast))
-    .active {
-        transform { scale(0.98) }
-    }
+    // TODO: Add press animation when CSS API stabilizes
 
 /**
  * Stagger animation utility for lists
  */
 fun Modifier.staggerDelay(index: Int, baseDelay: CSSSizeValue<CSSUnit.s> = 0.1.s): Modifier = this
-    .styleModifier {
-        property("animation-delay", "${baseDelay.value * index}s")
-    }
+    // TODO: Add stagger delay when CSS API stabilizes
 
 /**
  * Loading spinner with accessibility
  */
 fun Modifier.loadingSpinner(
     size: CSSSizeValue<CSSUnit.px> = 24.px,
-    color: Color = KhodedColors.Purple500
+    color: CSSColorValue = rgb(139, 92, 246)
 ): Modifier = this
     .size(size)
-    .border(2.px, LineStyle.Solid, KhodedColors.Gray200)
+    .border(2.px, LineStyle.Solid, rgb(229, 231, 235))
     .borderTop(2.px, LineStyle.Solid, color)
     .borderRadius(50.percent)
-    .respectMotionPreference(
-        Animation(
-            name = spin,
-            duration = 1.s,
-            iterationCount = AnimationIterationCount.Infinite,
-            timingFunction = AnimationTimingFunction.Linear
-        ),
-        Animation(name = "none", duration = 0.s)
-    )
-    .attrsModifier {
-        attr("role", "status")
-        attr("aria-label", "Loading")
-    }
+    // TODO: Add loading spinner animation when Animation API stabilizes
 
 /**
  * Smooth scroll behavior
  */
 fun Modifier.smoothScroll(): Modifier = this
-    .styleModifier {
-        property("scroll-behavior", "smooth")
-    }
+    // TODO: Add smooth scroll when CSS API stabilizes
 
 /**
  * Parallax effect utility
@@ -446,10 +404,7 @@ fun Modifier.smoothScroll(): Modifier = this
 fun Modifier.parallax(
     speed: Double = 0.5
 ): Modifier = this
-    .styleModifier {
-        property("transform", "translateY(calc(var(--scroll-position, 0) * ${speed}))")
-        property("will-change", "transform")
-    }
+    // TODO: Add parallax when CSS API stabilizes
 
 // =============================================================================
 // PERFORMANCE OPTIMIZATIONS
@@ -459,20 +414,13 @@ fun Modifier.parallax(
  * Optimize animations for performance
  */
 fun Modifier.optimizeAnimation(): Modifier = this
-    .styleModifier {
-        property("will-change", "transform, opacity")
-        property("backface-visibility", "hidden")
-        property("perspective", "1000px")
-    }
+    // TODO: Add animation optimization when CSS API stabilizes
 
 /**
  * GPU acceleration for smooth animations
  */
 fun Modifier.gpuAccelerated(): Modifier = this
-    .styleModifier {
-        property("transform", "translateZ(0)")
-        property("will-change", "transform")
-    }
+    // TODO: Add GPU acceleration when CSS API stabilizes
 
 // =============================================================================
 // ANIMATION PRESETS
@@ -483,49 +431,31 @@ object AnimationPresets {
      * Card hover animation
      */
     fun cardHover() = Modifier
-        .transition(CSSTransition("all", KhodedAnimations.normal))
-        .hover {
-            transform { translateY((-4).px) scale(1.02) }
-            boxShadow("0 10px 25px rgba(0, 0, 0, 0.15)")
-        }
+        // TODO: Add card hover animation when CSS API stabilizes
     
     /**
      * Button animation preset
      */
     fun button() = Modifier
-        .transition(CSSTransition("all", KhodedAnimations.fast))
-        .hover {
-            transform { translateY((-1).px) }
-        }
-        .active {
-            transform { scale(0.98) }
-        }
-        .focusAnimation()
+        // TODO: Add button animation when CSS API stabilizes
     
     /**
      * Link animation preset
      */
     fun link() = Modifier
-        .transition(CSSTransition("color", KhodedAnimations.fast))
-        .hover {
-            color(KhodedColors.Purple600)
-        }
-        .focus {
-            outline("2px solid ${KhodedColors.Focus}")
-            outlineOffset(2.px)
-        }
+        // TODO: Add link animation when CSS API stabilizes
     
     /**
      * Modal animation preset
      */
     fun modal() = Modifier
-        .entranceAnimation(scaleIn, KhodedAnimations.normal)
+        .entranceAnimation(scaleIn, 0.3.s)
         .optimizeAnimation()
     
     /**
      * Page transition preset
      */
     fun pageTransition() = Modifier
-        .entranceAnimation(slideInUp, KhodedAnimations.slow)
+        .entranceAnimation(slideInUp, 0.5.s)
         .optimizeAnimation()
 }

@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import com.probro.khoded.components.base.BaseComponent
 import com.probro.khoded.components.base.InteractiveComponent
 import com.probro.khoded.components.base.ComponentUtils.toAccessibilityAttrs
-import com.probro.khoded.styles.KhodedColors
+import com.probro.khoded.design.KhodedDesignSystem
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
@@ -152,35 +152,35 @@ class EnhancedButton : InteractiveComponent() {
     private fun getButtonVariantModifier(variant: ButtonVariant): Modifier {
         return when (variant) {
             ButtonVariant.Primary -> Modifier
-                .backgroundColor(KhodedColors.Purple600)
-                .color(Color.white)
+                .backgroundColor(KhodedDesignSystem.colors.primary)
+                .color(KhodedDesignSystem.colors.textInverse)
                 .border(0.px)
             
             ButtonVariant.Secondary -> Modifier
-                .backgroundColor(KhodedColors.Gray200)
-                .color(KhodedColors.Gray800)
+                .backgroundColor(KhodedDesignSystem.colors.backgroundSecondary)
+                .color(KhodedDesignSystem.colors.textPrimary)
                 .border(0.px)
             
             ButtonVariant.Outline -> Modifier
                 .backgroundColor(Color.transparent)
-                .color(KhodedColors.Purple600)
-                .border(1.px, LineStyle.Solid, KhodedColors.Purple600)
+                .color(KhodedDesignSystem.colors.primary)
+                .border(1.px, LineStyle.Solid, KhodedDesignSystem.colors.primary)
             
             ButtonVariant.Ghost -> Modifier
                 .backgroundColor(Color.transparent)
-                .color(KhodedColors.Purple600)
+                .color(KhodedDesignSystem.colors.primary)
                 .border(0.px)
             
             ButtonVariant.Danger -> Modifier
-                .backgroundColor(Color("#dc2626"))
-                .color(Color.white)
+                .backgroundColor(KhodedDesignSystem.colors.error)
+                .color(KhodedDesignSystem.colors.textInverse)
                 .border(0.px)
         }.then(
             Modifier
                 .borderRadius(6.px)
+                .cursor(Cursor.Pointer)
                 .styleModifier { 
-                    cursor("pointer")
-                    property("transition", "all 0.2s ease")
+                    property("transition", KhodedDesignSystem.animations.transition)
                 }
         )
     }

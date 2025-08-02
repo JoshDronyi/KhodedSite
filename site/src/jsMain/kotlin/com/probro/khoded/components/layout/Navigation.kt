@@ -1,32 +1,61 @@
-// Navigation.kt - Header, Footer, and Navigation components
+// Navigation.kt - Simplified Header and Navigation components  
 package com.probro.khoded.components.layout
 
 import androidx.compose.runtime.*
-import com.probro.khoded.styles.KhodedColors
-import com.probro.khoded.styles.KhodedSpacing
-import com.probro.khoded.styles.KhodedTypography
-import com.probro.khoded.styles.KhodedRadius
-import com.probro.khoded.styles.KhodedAnimations
-import com.probro.khoded.styles.KhodedShadows
-import com.varabyte.kobweb.compose.css.*
-import com.varabyte.kobweb.compose.foundation.layout.*
+import com.probro.khoded.design.KhodedDesignSystem
 import com.varabyte.kobweb.compose.ui.*
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.silk.components.forms.*
-import com.varabyte.kobweb.silk.components.layout.*
-import com.varabyte.kobweb.silk.components.navigation.*
-import com.varabyte.kobweb.silk.components.style.*
-import com.varabyte.kobweb.silk.components.text.*
-import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.theme.*
-import kotlinx.coroutines.*
+import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.silk.components.navigation.Link
 import org.jetbrains.compose.web.css.*
+import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.attributes.*
+import kotlinx.browser.window
+import kotlinx.browser.document
 
 // =============================================================================
-// HEADER COMPONENT
+// HEADER COMPONENT - Simplified Implementation
 // =============================================================================
+
+/**
+ * Skip Navigation Component - WCAG 2.4.1 Level A Compliance
+ * Allows keyboard and screen reader users to bypass navigation
+ */  
+@Composable
+private fun SkipNavigation() {
+    A(
+        href = "#main-content",
+        attrs = Modifier
+            .position(Position.Absolute)
+            .left((-10000).px)
+            .top(0.px)
+            .width(1.px)
+            .height(1.px)
+            .overflow(Overflow.Hidden)
+            .toAttrs {
+                attr("aria-label", "Skip to main content")
+                style {
+                    property("&:focus", """
+                        left: 6px !important;
+                        top: 7px !important;
+                        width: auto !important;
+                        height: auto !important;
+                        padding: 8px !important;
+                        background: white !important;
+                        color: black !important;
+                        z-index: 999999 !important;
+                        text-decoration: none !important;
+                        border-radius: 4px !important;
+                        border: 2px solid #0066cc !important;
+                        font-weight: bold !important;
+                    """)
+                }
+            }
+    ) {
+        Text("Skip to main content")
+    }
+}
 
 @Composable
 fun Header(
@@ -38,15 +67,17 @@ fun Header(
     
     // Track scroll position for header styling
     LaunchedEffect(Unit) {
-        val handleScroll = {
-            isScrolled = kotlinx.browser.window.pageYOffset > 50
+        val handleScroll = { _: dynamic ->
+            isScrolled = window.pageYOffset > 50
         }
         
-        kotlinx.browser.window.addEventListener("scroll", handleScroll)
-        // Cleanup handled by Compose
+        window.addEventListener("scroll", handleScroll)
     }
     
-    org.jetbrains.compose.web.dom.Header(
+    // Add skip navigation first (for screen readers and keyboard users)
+    SkipNavigation()
+    
+    Header(
         attrs = modifier
             .fillMaxWidth()
             .position(Position.Fixed)
@@ -54,78 +85,36 @@ fun Header(
             .left(0.px)
             .right(0.px)
             .zIndex(1000)
-            .background(
+            .backgroundColor(
                 when {
-                    transparent && !isScrolled -> "rgba(255, 255, 255, 0.1)"
-                    transparent && isScrolled -> "rgba(255, 255, 255, 0.95)"
-                    else -> Color.white.toString()
+                    transparent && !isScrolled -> rgba(255, 255, 255, 0.1)
+                    transparent && isScrolled -> rgba(255, 255, 255, 0.95)
+                    else -> Color.white
                 }
             )
-            .backdropFilter(if (transparent) "blur(10px)" else "none")
-            .borderBottom(
-                if (!transparent || isScrolled) 1.px else 0.px,
-                LineStyle.Solid,
-                KhodedColors.Gray200
-            )
-            .transition(CSSTransition("all", KhodedAnimations.normal))
+            .attrsModifier {
+                style {
+                    property("backdrop-filter", if (transparent) "blur(10px)" else "none")
+                    property("border-bottom", if (!transparent || isScrolled) "1px solid #e5e7eb" else "none")
+                    property("transition", "all 0.3s ease")
+                }
+            }
             .toAttrs {
                 attr("role", "banner")
             }
     ) {
-        Container {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .minHeight(KhodedSpacing.xl6)
-                    .alignItems(AlignItems.Center)
-                    .justifyContent(JustifyContent.SpaceBetween)
-                    .padding(vertical = KhodedSpacing.lg)
-            ) {
-                // Logo
+        SimpleContainer {
+            SimpleRow {
                 Logo(transparent = transparent && !isScrolled)
-                
-                // Desktop Navigation
-                DesktopNavigation(
-                    modifier = Modifier
-                        .display(DisplayStyle.None)
-                        .breakpoint(Breakpoint.LG) {
-                            display(DisplayStyle.Flex)
-                        },
-                    transparent = transparent && !isScrolled
-                )
-                
-                // Desktop CTA Button
-                Row(
-                    modifier = Modifier
-                        .gap(KhodedSpacing.md)
-                        .display(DisplayStyle.None)
-                        .breakpoint(Breakpoint.LG) {
-                            display(DisplayStyle.Flex)
-                        }
-                ) {
-                    KhodedButton(
-                        text = "FREE CONSULTATION",
-                        onClick = { scrollToSection("contact") },
-                        variant = if (transparent && !isScrolled) ButtonVariant.Ghost else ButtonVariant.Primary,
-                        size = ButtonSize.Medium
-                    )
-                }
-                
-                // Mobile Menu Button
+                DesktopNavigation(transparent = transparent && !isScrolled)
                 MobileMenuButton(
                     isOpen = isMenuOpen,
                     onClick = { isMenuOpen = !isMenuOpen },
-                    transparent = transparent && !isScrolled,
-                    modifier = Modifier
-                        .display(DisplayStyle.Flex)
-                        .breakpoint(Breakpoint.LG) {
-                            display(DisplayStyle.None)
-                        }
+                    transparent = transparent && !isScrolled
                 )
             }
         }
         
-        // Mobile Navigation Menu
         if (isMenuOpen) {
             MobileNavigationMenu(
                 onClose = { isMenuOpen = false }
@@ -137,66 +126,85 @@ fun Header(
 @Composable
 private fun Logo(transparent: Boolean = false) {
     Link(
-        href = "/",
-        modifier = Modifier
-            .textDecorationLine(TextDecorationLine.None)
-            .attrsModifier {
-                attr("aria-label", "Khoded home page")
-            }
+        "/"
     ) {
-        Row(
-            modifier = Modifier
-                .gap(KhodedSpacing.sm)
-                .alignItems(AlignItems.Center)
+        Div(
+            attrs = Modifier
+                .attrsModifier {
+                    style {
+                        property("display", "flex")
+                        property("align-items", "center")
+                        property("gap", "12px")
+                        property("text-decoration", "none")
+                    }
+                }
+                .toAttrs {
+                    attr("aria-label", "Khoded home page")
+                }
         ) {
-            // Logo Icon
-            Box(
-                modifier = Modifier
+            Div(
+                attrs = Modifier
                     .size(40.px)
-                    .backgroundColor(KhodedColors.Purple500)
-                    .borderRadius(KhodedRadius.md)
-                    .display(DisplayStyle.Flex)
-                    .alignItems(AlignItems.Center)
-                    .justifyContent(JustifyContent.Center)
-                    .color(Color.white)
-                    .fontSize(20.px)
-                    .fontWeight(KhodedTypography.bold)
+                    .backgroundColor(KhodedDesignSystem.colors.primary)
+                    .borderRadius(8.px)
+                    .attrsModifier {
+                        style {
+                            property("display", "flex")
+                            property("align-items", "center")
+                            property("justify-content", "center")
+                            property("color", "white")
+                            property("font-size", "20px")
+                            property("font-weight", "bold")
+                        }
+                    }
+                    .toAttrs()
             ) {
-                Text("</\\>")
+                org.jetbrains.compose.web.dom.Text("</\\>")
             }
             
-            // Logo Text
-            Text(
-                "Khoded",
-                modifier = Modifier
-                    .fontSize(KhodedTypography.xl2)
-                    .fontWeight(KhodedTypography.bold)
+            Span(
+                attrs = Modifier
+                    .fontSize(24.px)
+                    .fontWeight(700)
                     .color(
                         if (transparent) Color.white 
-                        else KhodedColors.TextPrimary
+                        else KhodedDesignSystem.colors.textPrimary
                     )
-                    .letterSpacing((-0.01).em)
-            )
+                    .toAttrs()
+            ) {
+                org.jetbrains.compose.web.dom.Text("Khoded")
+            }
         }
     }
 }
 
 @Composable
 private fun DesktopNavigation(
-    modifier: Modifier = Modifier,
     transparent: Boolean = false
 ) {
     Nav(
-        modifier = modifier
+        attrs = Modifier
             .attrsModifier {
+                style {
+                    property("display", "none")
+                    property("@media (min-width: 1024px)", "{ display: flex; }")
+                }
+            }
+            .toAttrs {
                 attr("role", "navigation")
                 attr("aria-label", "Main navigation")
             }
     ) {
-        Row(
-            modifier = Modifier
-                .gap(KhodedSpacing.xl2)
-                .alignItems(AlignItems.Center)
+        Div(
+            attrs = Modifier
+                .attrsModifier {
+                    style {
+                        property("display", "flex")
+                        property("gap", "32px")
+                        property("align-items", "center")
+                    }
+                }
+                .toAttrs()
         ) {
             NavigationLink(
                 text = "Services",
@@ -229,50 +237,58 @@ private fun DesktopNavigation(
 private fun NavigationLink(
     text: String,
     href: String,
-    transparent: Boolean = false,
-    modifier: Modifier = Modifier
+    transparent: Boolean = false
 ) {
     val isActive = remember(href) {
-        // In a real app, this would check current route
-        kotlinx.browser.window.location.pathname == href
+        window.location.pathname == href
     }
     
     Link(
-        href = href,
-        modifier = modifier
-            .padding(KhodedSpacing.sm, KhodedSpacing.md)
-            .fontSize(KhodedTypography.base)
-            .fontWeight(
-                if (isActive) KhodedTypography.semiBold 
-                else KhodedTypography.medium
-            )
-            .color(
-                when {
-                    isActive && transparent -> Color.white
-                    isActive -> KhodedColors.Purple600
-                    transparent -> Color.white.copy(alpha = 230) // 90% opacity
-                    else -> KhodedColors.TextSecondary
-                }
-            )
-            .textDecorationLine(TextDecorationLine.None)
-            .borderRadius(KhodedRadius.sm)
-            .transition(CSSTransition("all", KhodedAnimations.fast))
-            .hover {
-                color(
-                    if (transparent) Color.white 
-                    else KhodedColors.Purple600
-                )
-                backgroundColor(
-                    if (transparent) Color.white.copy(alpha = 26) // 10% opacity
-                    else KhodedColors.Purple50
-                )
-            }
-            .focus {
-                outline("2px solid ${KhodedColors.Focus}")
-                outlineOffset(2.px)
-            }
+        href
     ) {
-        Text(text)
+        Span(
+            attrs = Modifier
+                .padding(8.px, 16.px)
+                .fontSize(16.px)
+                .fontWeight(if (isActive) 600 else 500)
+                .color(
+                    when {
+                        isActive && transparent -> Color.white
+                        isActive -> KhodedDesignSystem.colors.primaryHover
+                        transparent -> rgba(255, 255, 255, 0.9)
+                        else -> KhodedDesignSystem.colors.textSecondary
+                    }
+                )
+                .borderRadius(6.px)
+                .attrsModifier {
+                    style {
+                        property("text-decoration", "none")
+                        property("transition", "all 0.2s ease")
+                        property("cursor", "pointer")
+                    }
+                }
+                .toAttrs {
+                    onMouseOver {
+                        (it.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                            color = if (transparent) "white" else KhodedDesignSystem.colors.primaryHover.toString()
+                            backgroundColor = if (transparent) "rgba(255,255,255,0.1)" else KhodedDesignSystem.colors.primaryLight.toString()
+                        }
+                    }
+                    onMouseOut {
+                        (it.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                            color = when {
+                                isActive && transparent -> "white"
+                                isActive -> KhodedDesignSystem.colors.primaryHover.toString()
+                                transparent -> "rgba(255,255,255,0.9)"
+                                else -> KhodedDesignSystem.colors.textSecondary.toString()
+                            }
+                            backgroundColor = "transparent"
+                        }
+                    }
+                }
+        ) {
+            org.jetbrains.compose.web.dom.Text(text)
+        }
     }
 }
 
@@ -280,45 +296,47 @@ private fun NavigationLink(
 private fun MobileMenuButton(
     isOpen: Boolean,
     onClick: () -> Unit,
-    transparent: Boolean = false,
-    modifier: Modifier = Modifier
+    transparent: Boolean = false
 ) {
-    org.jetbrains.compose.web.dom.Button(
-        attrs = modifier
-            .size(KhodedSpacing.touchTargetMin)
+    Button(
+        attrs = Modifier
+            .size(44.px)
             .backgroundColor(Color.transparent)
             .border(0.px)
-            .borderRadius(KhodedRadius.sm)
+            .borderRadius(6.px)
             .color(
                 if (transparent) Color.white 
-                else KhodedColors.TextPrimary
+                else KhodedDesignSystem.colors.textPrimary
             )
-            .cursor(Cursor.Pointer)
-            .display(DisplayStyle.Flex)
-            .alignItems(AlignItems.Center)
-            .justifyContent(JustifyContent.Center)
-            .transition(CSSTransition("all", KhodedAnimations.fast))
-            .hover {
-                backgroundColor(
-                    if (transparent) Color.white.copy(alpha = 26) // 10% opacity
-                    else KhodedColors.Gray100
-                )
-            }
-            .focus {
-                outline("2px solid ${KhodedColors.Focus}")
-                outlineOffset(2.px)
+            .attrsModifier {
+                style {
+                    property("cursor", "pointer")
+                    property("display", "flex")
+                    property("align-items", "center")
+                    property("justify-content", "center")
+                    property("transition", "all 0.2s ease")
+                    property("@media (min-width: 1024px)", "{ display: none; }")
+                }
             }
             .toAttrs {
                 attr("aria-label", if (isOpen) "Close menu" else "Open menu")
                 attr("aria-expanded", isOpen.toString())
                 attr("aria-controls", "mobile-navigation")
                 onClick { onClick() }
+                onMouseOver {
+                    (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = 
+                        if (transparent) "rgba(255,255,255,0.1)" else "#f3f4f6"
+                }
+                onMouseOut {
+                    (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "transparent"
+                }
             }
     ) {
-        Box(
-            modifier = Modifier
+        Div(
+            attrs = Modifier
                 .size(24.px)
                 .position(Position.Relative)
+                .toAttrs()
         ) {
             HamburgerIcon(isOpen = isOpen)
         }
@@ -327,36 +345,36 @@ private fun MobileMenuButton(
 
 @Composable
 private fun HamburgerIcon(isOpen: Boolean) {
-    // Animated hamburger menu icon
     repeat(3) { index ->
-        Box(
-            modifier = Modifier
+        Div(
+            attrs = Modifier
                 .position(Position.Absolute)
                 .width(20.px)
                 .height(2.px)
-                .backgroundColor(Color.currentcolor)
+                .backgroundColor(Color.currentColor)
                 .borderRadius(1.px)
                 .left(2.px)
                 .top((6 + index * 6).px)
-                .transition(CSSTransition("all", KhodedAnimations.normal))
-                .transform {
-                    when {
-                        isOpen && index == 0 -> {
-                            translateY(6.px)
-                            rotate(45.deg)
-                        }
-                        isOpen && index == 1 -> {
-                            scale(0)
-                        }
-                        isOpen && index == 2 -> {
-                            translateY((-6).px)
-                            rotate((-45).deg)
-                        }
-                        else -> {
-                            // Default position
+                .attrsModifier {
+                    style {
+                        property("transition", "all 0.3s ease")
+                        when {
+                            isOpen && index == 0 -> {
+                                property("transform", "translateY(6px) rotate(45deg)")
+                            }
+                            isOpen && index == 1 -> {
+                                property("transform", "scale(0)")
+                            }
+                            isOpen && index == 2 -> {
+                                property("transform", "translateY(-6px) rotate(-45deg)")
+                            }
+                            else -> {
+                                property("transform", "translateY(0) rotate(0)")
+                            }
                         }
                     }
                 }
+                .toAttrs()
         )
     }
 }
@@ -366,21 +384,23 @@ private fun MobileNavigationMenu(
     onClose: () -> Unit
 ) {
     // Overlay
-    Box(
-        modifier = Modifier
+    Div(
+        attrs = Modifier
             .position(Position.Fixed)
             .top(0.px)
             .left(0.px)
             .right(0.px)
             .bottom(0.px)
-            .backgroundColor(Color.black.copy(alpha = 128)) // 50% opacity
+            .backgroundColor(rgba(0, 0, 0, 0.5))
             .zIndex(999)
-            .onClick { onClose() }
+            .toAttrs {
+                onClick { onClose() }
+            }
     )
     
     // Menu panel
-    Box(
-        modifier = Modifier
+    Div(
+        attrs = Modifier
             .id("mobile-navigation")
             .position(Position.Fixed)
             .top(0.px)
@@ -388,137 +408,106 @@ private fun MobileNavigationMenu(
             .bottom(0.px)
             .width(280.px)
             .backgroundColor(Color.white)
-            .boxShadow(KhodedShadows.xl)
             .zIndex(1000)
-            .animation(
-                Animation(
-                    name = "slideInRight",
-                    duration = KhodedAnimations.normal,
-                    timingFunction = AnimationTimingFunction.EaseOut
-                )
-            )
             .attrsModifier {
+                style {
+                    property("box-shadow", "0 20px 25px -5px rgba(0, 0, 0, 0.1)")
+                    property("animation", "slideInRight 0.3s ease-out")
+                }
+            }
+            .toAttrs {
                 attr("role", "dialog")
                 attr("aria-label", "Mobile navigation menu")
                 onClick { event -> event.stopPropagation() }
             }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(KhodedSpacing.xl2)
-                .gap(KhodedSpacing.xl)
-        ) {
-            // Close button
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .justifyContent(JustifyContent.SpaceBetween)
-                    .alignItems(AlignItems.Center)
-                    .marginBottom(KhodedSpacing.xl)
-            ) {
-                Text(
-                    "Menu",
-                    modifier = Modifier
-                        .fontSize(KhodedTypography.xl)
-                        .fontWeight(KhodedTypography.semiBold)
-                        .color(KhodedColors.TextPrimary)
-                )
+        SimpleColumn {
+            // Header
+            SimpleRow {
+                H2(
+                    attrs = Modifier
+                        .fontSize(20.px)
+                        .fontWeight(600)
+                        .color(KhodedDesignSystem.colors.textPrimary)
+                        .margin(0.px)
+                        .toAttrs()
+                ) {
+                    org.jetbrains.compose.web.dom.Text("Menu")
+                }
                 
-                org.jetbrains.compose.web.dom.Button(
+                Button(
                     attrs = Modifier
                         .size(32.px)
                         .backgroundColor(Color.transparent)
                         .border(0.px)
-                        .borderRadius(KhodedRadius.sm)
-                        .color(KhodedColors.TextSecondary)
-                        .cursor(Cursor.Pointer)
-                        .hover {
-                            backgroundColor(KhodedColors.Gray100)
+                        .borderRadius(6.px)
+                        .color(KhodedDesignSystem.colors.textSecondary)
+                        .attrsModifier {
+                            style {
+                                property("cursor", "pointer")
+                            }
                         }
                         .toAttrs {
                             attr("aria-label", "Close menu")
                             onClick { onClose() }
+                            onMouseOver {
+                                (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "#f3f4f6"
+                            }
+                            onMouseOut {
+                                (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "transparent"
+                            }
                         }
                 ) {
-                    Text("✕")
+                    org.jetbrains.compose.web.dom.Text("✕")
                 }
             }
             
             // Navigation links
-            Column(
-                modifier = Modifier.gap(KhodedSpacing.lg)
-            ) {
-                MobileNavigationLink(
-                    text = "Home",
-                    href = "/",
-                    icon = "🏠",
-                    onClick = onClose
-                )
-                
-                MobileNavigationLink(
-                    text = "Services",
-                    href = "/services",
-                    icon = "⚙️",
-                    onClick = onClose
-                )
-                
-                MobileNavigationLink(
-                    text = "About",
-                    href = "/about",
-                    icon = "👥",
-                    onClick = onClose
-                )
-                
-                MobileNavigationLink(
-                    text = "Contact",
-                    href = "/contact",
-                    icon = "📞",
-                    onClick = onClose
-                )
-                
-                MobileNavigationLink(
-                    text = "Join Team",
-                    href = "/join-team",
-                    icon = "💼",
-                    onClick = onClose
-                )
+            SimpleColumn {
+                MobileNavigationLink("Home", "/", "🏠", onClose)
+                MobileNavigationLink("Services", "/services", "⚙️", onClose)
+                MobileNavigationLink("About", "/about", "👥", onClose)
+                MobileNavigationLink("Contact", "/contact", "📞", onClose)
+                MobileNavigationLink("Join Team", "/join-team", "💼", onClose)
             }
             
             // CTA Section
-            Box(
-                modifier = Modifier
+            Div(
+                attrs = Modifier
                     .fillMaxWidth()
-                    .marginTop(org.jetbrains.compose.web.css.auto)
-                    .padding(KhodedSpacing.lg)
-                    .backgroundColor(KhodedColors.Purple50)
-                    .borderRadius(KhodedRadius.lg)
-                    .border(1.px, LineStyle.Solid, KhodedColors.Purple200)
+                    .padding(16.px)
+                    .backgroundColor(KhodedDesignSystem.colors.primaryLight)
+                    .borderRadius(12.px)
+                    .border(1.px, LineStyle.Solid, KhodedDesignSystem.colors.borderSecondary)
+                    .attrsModifier {
+                        style {
+                            property("margin-top", "auto")
+                            property("text-align", "center")
+                        }
+                    }
+                    .toAttrs()
             ) {
-                Column(
-                    modifier = Modifier
-                        .gap(KhodedSpacing.md)
-                        .textAlign(TextAlign.Center)
+                P(
+                    attrs = Modifier
+                        .fontSize(16.px)
+                        .fontWeight(600)
+                        .color(KhodedDesignSystem.colors.primaryActive)
+                        .margin(0.px, 0.px, 16.px, 0.px)
+                        .toAttrs()
                 ) {
-                    Text(
-                        "Ready to get started?",
-                        modifier = Modifier
-                            .fontSize(KhodedTypography.base)
-                            .fontWeight(KhodedTypography.semiBold)
-                            .color(KhodedColors.Purple700)
-                    )
-                    
-                    KhodedButton(
-                        text = "Free Consultation",
-                        onClick = {
-                            onClose()
-                            scrollToSection("contact")
-                        },
-                        variant = ButtonVariant.Primary,
-                        size = ButtonSize.Medium,
-                        fullWidth = true
-                    )
+                    org.jetbrains.compose.web.dom.Text("Ready to get started?")
                 }
+                
+                KhodedButton(
+                    text = "Free Consultation",
+                    onClick = {
+                        onClose()
+                        scrollToSection("contact")
+                    },
+                    variant = ButtonVariant.Primary,
+                    size = ButtonSize.Medium,
+                    fullWidth = true
+                )
             }
         }
     }
@@ -532,47 +521,70 @@ private fun MobileNavigationLink(
     onClick: () -> Unit
 ) {
     Link(
-        href = href,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(KhodedSpacing.lg)
-            .borderRadius(KhodedRadius.md)
-            .textDecorationLine(TextDecorationLine.None)
-            .transition(CSSTransition("all", KhodedAnimations.fast))
-            .hover {
-                backgroundColor(KhodedColors.Gray50)
-            }
-            .onClick { onClick() }
+        href
     ) {
-        Row(
-            modifier = Modifier
-                .gap(KhodedSpacing.md)
-                .alignItems(AlignItems.Center)
+        Div(
+            attrs = Modifier
+                .fillMaxWidth()
+                .padding(16.px)
+                .borderRadius(8.px)
+                .attrsModifier {
+                    style {
+                        property("text-decoration", "none")
+                        property("transition", "all 0.2s ease")
+                        property("display", "flex")
+                        property("align-items", "center")
+                        property("gap", "16px")
+                        property("cursor", "pointer")
+                    }
+                }
+                .toAttrs {
+                    onClick { onClick() }
+                    onMouseOver {
+                        (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "#f9fafb"
+                    }
+                    onMouseOut {
+                        (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "transparent"
+                    }
+                }
         ) {
-            Text(
-                icon,
-                modifier = Modifier
+            Span(
+                attrs = Modifier
                     .fontSize(20.px)
                     .width(24.px)
-                    .textAlign(TextAlign.Center)
-            )
+                    .attrsModifier {
+                        style {
+                            property("text-align", "center")
+                        }
+                    }
+                    .toAttrs()
+            ) {
+                org.jetbrains.compose.web.dom.Text(icon)
+            }
             
-            Text(
-                text,
-                modifier = Modifier
-                    .fontSize(KhodedTypography.lg)
-                    .fontWeight(KhodedTypography.medium)
-                    .color(KhodedColors.TextPrimary)
-            )
+            Span(
+                attrs = Modifier
+                    .fontSize(18.px)
+                    .fontWeight(500)
+                    .color(KhodedDesignSystem.colors.textPrimary)
+                    .attrsModifier {
+                        style {
+                            property("flex-grow", "1")
+                        }
+                    }
+                    .toAttrs()
+            ) {
+                org.jetbrains.compose.web.dom.Text(text)
+            }
             
-            Box(modifier = Modifier.flexGrow(1))
-            
-            Text(
-                "→",
-                modifier = Modifier
+            Span(
+                attrs = Modifier
                     .fontSize(16.px)
-                    .color(KhodedColors.TextSecondary)
-            )
+                    .color(KhodedDesignSystem.colors.textSecondary)
+                    .toAttrs()
+            ) {
+                org.jetbrains.compose.web.dom.Text("→")
+            }
         }
     }
 }
@@ -594,26 +606,30 @@ private fun KhodedButton(
 ) {
     org.jetbrains.compose.web.dom.Button(
         attrs = Modifier
-            .padding(KhodedSpacing.md)
+            .padding(KhodedDesignSystem.spacing.md)
             .backgroundColor(
                 when (variant) {
-                    ButtonVariant.Primary -> KhodedColors.Purple500
+                    ButtonVariant.Primary -> KhodedDesignSystem.colors.primary
                     ButtonVariant.Ghost -> Color.transparent
                 }
             )
             .color(
                 when (variant) {
                     ButtonVariant.Primary -> Color.white
-                    ButtonVariant.Ghost -> KhodedColors.Purple500
+                    ButtonVariant.Ghost -> KhodedDesignSystem.colors.primary
                 }
             )
-            .borderRadius(KhodedRadius.md)
+            .borderRadius(KhodedDesignSystem.borderRadius.medium)
             .border(
                 if (variant == ButtonVariant.Ghost) 2.px else 0.px,
                 LineStyle.Solid,
-                KhodedColors.Purple500
+                KhodedDesignSystem.colors.primary
             )
-            .cursor(Cursor.Pointer)
+            .attrsModifier {
+                style {
+                    property("cursor", "pointer")
+                }
+            }
             .apply {
                 if (fullWidth) fillMaxWidth() else this
             }
@@ -640,5 +656,81 @@ private fun scrollToSection(sectionId: String) {
 }
 
 private fun getCurrentYear(): String {
-    return kotlinx.browser.window.Date().getFullYear().toString()
+    return js("new Date().getFullYear()").toString()
 }
+
+// =============================================================================
+// SIMPLE LAYOUT COMPONENTS
+// =============================================================================
+
+@Composable
+fun SimpleContainer(content: @Composable () -> Unit) {
+    Div(
+        attrs = Modifier
+            .fillMaxWidth()
+            .attrsModifier {
+                style {
+                    property("max-width", "1200px")
+                    property("margin", "0 auto")
+                    property("padding", "0 24px")
+                }
+            }
+            .toAttrs()
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun SimpleRow(content: @Composable () -> Unit) {
+    Div(
+        attrs = Modifier
+            .fillMaxWidth()
+            .attrsModifier {
+                style {
+                    property("display", "flex")
+                    property("align-items", "center")
+                    property("justify-content", "space-between")
+                    property("padding", "16px 0")
+                    property("min-height", "64px")
+                }
+            }
+            .toAttrs()
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun SimpleColumn(content: @Composable () -> Unit) {
+    Div(
+        attrs = Modifier
+            .fillMaxSize()
+            .attrsModifier {
+                style {
+                    property("display", "flex")
+                    property("flex-direction", "column")
+                    property("padding", "32px")
+                    property("gap", "24px")
+                }
+            }
+            .toAttrs()
+    ) {
+        content()
+    }
+}
+
+// CSS Animation keyframes
+@Suppress("unused")
+val slideInRightKeyframes = """
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+"""

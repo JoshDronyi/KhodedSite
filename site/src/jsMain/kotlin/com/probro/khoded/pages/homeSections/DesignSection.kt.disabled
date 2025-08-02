@@ -1,0 +1,226 @@
+package com.probro.khoded.pages.homeSections
+
+import androidx.compose.runtime.*
+import com.probro.khoded.components.OptimizedImage
+import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.compose.ui.toAttrs
+import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.*
+
+@Composable
+fun DesignSectionDisplay(data: Pages.Home_Section.Design) = with(data) {
+    Section(
+        attrs = Modifier
+            .fillMaxWidth()
+            .backgroundColor(rgb(249, 250, 251)) // Very light gray
+            .padding(topBottom = 60.px)
+            .styleModifier {
+                property("@media (min-width: 768px)", "{ padding-top: 100px; padding-bottom: 100px; }")
+            }
+            .toAttrs()
+    ) {
+        Div(
+            attrs = Modifier
+                .fillMaxWidth()
+                .maxWidth(1200.px)
+                .padding(leftRight = 20.px)
+                .styleModifier {
+                    property("margin", "0 auto")
+                    property("display", "grid")
+                    property("grid-template-columns", "1fr")
+                    property("gap", "40px")
+                    property("align-items", "center")
+                    property("@media (min-width: 768px)", "{ grid-template-columns: 1fr 1fr; gap: 80px; padding-left: 24px; padding-right: 24px; }")
+                }
+                .toAttrs()
+        ) {
+            // Left side - Content
+            Column(
+                verticalArrangement = Arrangement.spacedBy(24.px),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .styleModifier {
+                        property("text-align", "center")
+                        property("@media (min-width: 768px)", "{ text-align: left; }")
+                    }
+            ) {
+                // Main heading with "just" highlighted
+                H2(
+                    attrs = Modifier
+                        .fontSize(32.px)
+                        .fontWeight(700)
+                        .color(rgb(51, 51, 51))
+                        .margin(0.px)
+                        .lineHeight(1.2)
+                        .styleModifier {
+                            property("@media (min-width: 768px)", "{ font-size: 48px; }")
+                        }
+                        .toAttrs()
+                ) {
+                    Text("Code & design")
+                    Br()
+                    Text("tailor-made ")
+                    Span(
+                        attrs = Modifier
+                            .color(rgb(68, 182, 198)) // Teal color
+                            .toAttrs()
+                    ) {
+                        Text("just")
+                    }
+                    Text(" for")
+                    Br()
+                    Text("your business...")
+                }
+                
+                // Black underline decoration
+                Div(
+                    attrs = Modifier
+                        .width(200.px)
+                        .height(4.px)
+                        .backgroundColor(rgb(51, 51, 51)) // Black color
+                        .borderRadius(2.px)
+                        .toAttrs()
+                )
+                
+                // Description text
+                P(
+                    attrs = Modifier
+                        .fontSize(16.px)
+                        .lineHeight(1.6)
+                        .color(rgb(75, 85, 99))
+                        .margin(0.px)
+                        .maxWidth(500.px)
+                        .toAttrs()
+                ) {
+                    Text("Khoded specializes in creating bespoke websites from the ground up, catering to a diverse clientele, and providing comprehensive branding kits and reliable web hosting solutions to enhance our clients' online presence further.")
+                }
+            }
+            
+            // Right side - Laptop illustration
+            Div(
+                attrs = Modifier
+                    .styleModifier {
+                        property("display", "flex")
+                        property("justify-content", "center")
+                        property("align-items", "center")
+                        property("position", "relative")
+                    }
+                    .toAttrs()
+            ) {
+                OptimizedImage(
+                    src = data.mainImage,
+                    description = "Laptop with code editor and design interface",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .maxWidth(400.px)
+                        .height(250.px)
+                        .styleModifier {
+                            property("object-fit", "contain")
+                            property("@media (min-width: 768px)", "{ max-width: 600px; height: 400px; }")
+                        }
+                )
+                
+                // Floating decorative elements
+                DesignFloatingElements()
+            }
+        }
+    }
+}
+
+@Composable
+private fun DesignFloatingElements() {
+    // Plus/cross decorative element (top left)
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("top", "40px")
+                property("left", "20px")
+                property("width", "30px")
+                property("height", "30px")
+                property("color", "#FBBF24") // Yellow color
+                property("font-size", "24px")
+                property("font-weight", "700")
+                property("display", "flex")
+                property("align-items", "center")
+                property("justify-content", "center")
+                property("animation", "spin 6s linear infinite")
+            }
+            .toAttrs()
+    ) {
+        Text("✕")
+    }
+    
+    // Dotted circle elements (bottom left)
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("bottom", "20px")
+                property("left", "0px")
+                property("width", "150px")
+                property("height", "150px")
+                property("background", "linear-gradient(135deg, #A78BFA 20%, #60A5FA 80%)")
+                property("border-radius", "50%")
+                property("opacity", "0.3")
+                property("animation", "float 4s ease-in-out infinite alternate")
+            }
+            .toAttrs()
+    )
+    
+    // Small floating sphere
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("bottom", "60px")
+                property("left", "80px")
+                property("width", "40px")
+                property("height", "40px")
+                property("background", "linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)")
+                property("border-radius", "50%")
+                property("animation", "float 3s ease-in-out infinite alternate 1s")
+            }
+            .toAttrs()
+    )
+    
+    // 3D ring element
+    Div(
+        attrs = Modifier
+            .styleModifier {
+                property("position", "absolute")
+                property("top", "60px")
+                property("right", "40px")
+                property("width", "60px")
+                property("height", "60px")
+                property("border", "8px solid #60A5FA")
+                property("border-radius", "50%")
+                property("animation", "float 4s ease-in-out infinite alternate 2s")
+            }
+            .toAttrs()
+    )
+}
+
+// Add CSS animations
+@Composable
+fun DesignSectionStyles() {
+    Style {
+        """
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-15px); }
+        }
+        """.trimIndent()
+    }
+}
