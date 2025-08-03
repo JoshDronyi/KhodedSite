@@ -99,7 +99,7 @@ private fun AboutHeader() {
                     }
                 }
             ) {
-                org.jetbrains.compose.web.dom.Text("</&gt;")
+                org.jetbrains.compose.web.dom.Text("</>")
             }
             
             SpanText(
@@ -123,7 +123,7 @@ private fun AboutHeader() {
                 .maxWidth(800.px)
                 .toAttrs()
         ) {
-            Text("Why Connecticut businesses choose Khoded")
+            Text("Why businesses worldwide choose Khoded")
         }
         
         // Description
@@ -137,7 +137,7 @@ private fun AboutHeader() {
                 .maxWidth(700.px)
                 .toAttrs()
         ) {
-            Text("We're early specialists in Kotlin Multiplatform — the technology that's revolutionizing cross-platform development with 80% code reuse and native performance.")
+            Text("Connecticut-based Kotlin Multiplatform specialists serving the Americas, Africa, and beyond — delivering 80% code reuse and native performance to ambitious businesses worldwide.")
         }
     }
 }
@@ -184,15 +184,15 @@ private fun AdvantagesGrid() {
             accentColor = rgb(139, 92, 246)
         )
         
-        // Local Advantage
+        // Global Reach
         AdvantageCard(
-            icon = "🏆",
-            title = "Connecticut-Focused Expertise",
-            description = "We understand the unique needs of Connecticut's key industries — Finance, Healthcare, and Manufacturing — with personalized support via text & email.",
+            icon = "🌍",
+            title = "Global Reach, Personal Touch",
+            description = "Connecticut-based team serving ambitious businesses across the Americas, Africa, and worldwide — with direct founder access and personalized support.",
             highlights = listOf(
-                "Finance industry experience",
-                "Healthcare compliance ready",
-                "Manufacturing solutions",
+                "Americas & Africa focus",
+                "Worldwide service delivery",
+                "Direct founder communication",
                 "Personal support guarantee"
             ),
             accentColor = rgb(34, 197, 94)

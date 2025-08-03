@@ -101,7 +101,7 @@ private fun ServicesHeader() {
                     }
                 }
             ) {
-                org.jetbrains.compose.web.dom.Text("</&gt;")
+                org.jetbrains.compose.web.dom.Text("</>")
             }
             
             SpanText(

@@ -94,7 +94,7 @@ private fun ContactContent() {
                     }
                 }
             ) {
-                org.jetbrains.compose.web.dom.Text("</&gt;")
+                org.jetbrains.compose.web.dom.Text("</>")
             }
             
             SpanText(
@@ -118,7 +118,7 @@ private fun ContactContent() {
                 .maxWidth(800.px)
                 .toAttrs()
         ) {
-            Text("Transform your business with Connecticut's Kotlin Multiplatform experts")
+            Text("Transform your business with Kotlin Multiplatform specialists serving worldwide")
         }
         
         // Description
@@ -132,7 +132,7 @@ private fun ContactContent() {
                 .maxWidth(700.px)
                 .toAttrs()
         ) {
-            Text("Join forward-thinking businesses who've discovered the power of shared codebase development. Get 80% code reuse, 40% faster delivery, and 100% native performance.")
+            Text("Join ambitious businesses across the Americas, Africa, and beyond who are discovering the power of Kotlin Multiplatform. Get 80% code reuse, 40% faster delivery, and 100% native performance.")
         }
     }
 }

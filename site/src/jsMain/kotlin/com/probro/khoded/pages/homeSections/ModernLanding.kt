@@ -155,7 +155,7 @@ private fun BrandHeader() {
                     }
                 }
         ) {
-            Text("</&gt;")
+            Text("</>")
         }
         
         // Brand name
@@ -191,7 +191,7 @@ private fun MainHeadline() {
         
         // Accent word with teal highlight
         SpanText(
-            text = "Building game-changing digital experiences designed to set your brand apart.",
+            text = "Kotlin Multiplatform expertise serving businesses worldwide - from Connecticut to the Americas and Africa.",
             modifier = Modifier
                 .fontSize(24.px)
                 .fontWeight(400)

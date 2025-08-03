@@ -60,7 +60,7 @@ fun Footer(
                     }
                 }
             ) {
-                org.jetbrains.compose.web.dom.Text("</&gt;")
+                org.jetbrains.compose.web.dom.Text("</>")
             }
             
             SpanText(

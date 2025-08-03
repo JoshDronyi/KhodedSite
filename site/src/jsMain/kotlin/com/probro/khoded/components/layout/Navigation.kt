@@ -144,7 +144,7 @@ private fun Logo(transparent: Boolean = false) {
         ) {
             Div(
                 attrs = Modifier
-                    .size(40.px)
+                    .size(KhodedDesignSystem.touchTargets.minimum)
                     .backgroundColor(KhodedDesignSystem.colors.primary)
                     .borderRadius(8.px)
                     .attrsModifier {
@@ -164,7 +164,7 @@ private fun Logo(transparent: Boolean = false) {
             
             Span(
                 attrs = Modifier
-                    .fontSize(24.px)
+                    .fontSize(KhodedDesignSystem.typography.headingLarge)
                     .fontWeight(700)
                     .color(
                         if (transparent) Color.white 
@@ -249,7 +249,7 @@ private fun NavigationLink(
         Span(
             attrs = Modifier
                 .padding(8.px, 16.px)
-                .fontSize(16.px)
+                .fontSize(KhodedDesignSystem.typography.bodyMedium)
                 .fontWeight(if (isActive) 600 else 500)
                 .color(
                     when {
@@ -268,6 +268,17 @@ private fun NavigationLink(
                     }
                 }
                 .toAttrs {
+                    // WCAG 2.2 AA compliant focus states
+                    onFocus { event ->
+                        (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                            setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
+                            outline = "2px solid transparent"
+                            outlineOffset = "2px"
+                        }
+                    }
+                    onBlur { event ->
+                        (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
+                    }
                     onMouseOver {
                         (it.target as? org.w3c.dom.HTMLElement)?.style?.apply {
                             color = if (transparent) "white" else KhodedDesignSystem.colors.primaryHover.toString()
@@ -323,6 +334,17 @@ private fun MobileMenuButton(
                 attr("aria-expanded", isOpen.toString())
                 attr("aria-controls", "mobile-navigation")
                 onClick { onClick() }
+                // WCAG 2.2 AA compliant focus states
+                onFocus { event ->
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                        setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
+                        outline = "2px solid transparent"
+                        outlineOffset = "2px"
+                    }
+                }
+                onBlur { event ->
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
+                }
                 onMouseOver {
                     (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = 
                         if (transparent) "rgba(255,255,255,0.1)" else "#f3f4f6"
@@ -426,7 +448,7 @@ private fun MobileNavigationMenu(
             SimpleRow {
                 H2(
                     attrs = Modifier
-                        .fontSize(20.px)
+                        .fontSize(KhodedDesignSystem.typography.headingMedium)
                         .fontWeight(600)
                         .color(KhodedDesignSystem.colors.textPrimary)
                         .margin(0.px)
@@ -437,7 +459,7 @@ private fun MobileNavigationMenu(
                 
                 Button(
                     attrs = Modifier
-                        .size(32.px)
+                        .size(KhodedDesignSystem.touchTargets.minimum)
                         .backgroundColor(Color.transparent)
                         .border(0.px)
                         .borderRadius(6.px)
@@ -450,6 +472,17 @@ private fun MobileNavigationMenu(
                         .toAttrs {
                             attr("aria-label", "Close menu")
                             onClick { onClose() }
+                            // WCAG 2.2 AA compliant focus states
+                            onFocus { event ->
+                                (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                                    setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
+                                    outline = "2px solid transparent"
+                                    outlineOffset = "2px"
+                                }
+                            }
+                            onBlur { event ->
+                                (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
+                            }
                             onMouseOver {
                                 (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "#f3f4f6"
                             }
@@ -489,7 +522,7 @@ private fun MobileNavigationMenu(
             ) {
                 P(
                     attrs = Modifier
-                        .fontSize(16.px)
+                        .fontSize(KhodedDesignSystem.typography.bodyMedium)
                         .fontWeight(600)
                         .color(KhodedDesignSystem.colors.primaryActive)
                         .margin(0.px, 0.px, 16.px, 0.px)
@@ -540,6 +573,17 @@ private fun MobileNavigationLink(
                 }
                 .toAttrs {
                     onClick { onClick() }
+                    // WCAG 2.2 AA compliant focus states
+                    onFocus { event ->
+                        (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                            setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
+                            outline = "2px solid transparent"
+                            outlineOffset = "2px"
+                        }
+                    }
+                    onBlur { event ->
+                        (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
+                    }
                     onMouseOver {
                         (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "#f9fafb"
                     }
@@ -564,7 +608,7 @@ private fun MobileNavigationLink(
             
             Span(
                 attrs = Modifier
-                    .fontSize(18.px)
+                    .fontSize(KhodedDesignSystem.typography.bodyLarge)
                     .fontWeight(500)
                     .color(KhodedDesignSystem.colors.textPrimary)
                     .attrsModifier {
@@ -579,7 +623,7 @@ private fun MobileNavigationLink(
             
             Span(
                 attrs = Modifier
-                    .fontSize(16.px)
+                    .fontSize(KhodedDesignSystem.typography.bodyMedium)
                     .color(KhodedDesignSystem.colors.textSecondary)
                     .toAttrs()
             ) {
@@ -635,6 +679,17 @@ private fun KhodedButton(
             }
             .toAttrs {
                 onClick { onClick() }
+                // WCAG 2.2 AA compliant focus states
+                onFocus { event ->
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                        setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
+                        outline = "2px solid transparent"
+                        outlineOffset = "2px"
+                    }
+                }
+                onBlur { event ->
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
+                }
             }
     ) {
         Text(text)
