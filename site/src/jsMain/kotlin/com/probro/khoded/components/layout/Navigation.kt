@@ -142,24 +142,26 @@ private fun Logo(transparent: Boolean = false) {
                     attr("aria-label", "Khoded home page")
                 }
         ) {
+            // UPDATED LOGO - Consistent with Landing.kt branding
             Div(
                 attrs = Modifier
-                    .size(KhodedDesignSystem.touchTargets.minimum)
-                    .backgroundColor(KhodedDesignSystem.colors.primary)
-                    .borderRadius(8.px)
+                    .size(32.px, 26.px)  // Proportional to Landing.kt logo
+                    .backgroundColor(KhodedDesignSystem.colors.primary)  // Modern teal
+                    .borderRadius(6.px)  // Slightly more rounded
                     .attrsModifier {
                         style {
                             property("display", "flex")
                             property("align-items", "center")
                             property("justify-content", "center")
                             property("color", "white")
-                            property("font-size", "20px")
-                            property("font-weight", "bold")
+                            property("font-size", "14px")  // Adjusted for nav bar
+                            property("font-weight", "700")
+                            property("font-family", "'Fira Code', 'Consolas', 'Monaco', monospace")  // Landing.kt font
                         }
                     }
                     .toAttrs()
             ) {
-                org.jetbrains.compose.web.dom.Text("</\\>")
+                org.jetbrains.compose.web.dom.Text("</>")  // Consistent with Landing.kt
             }
             
             Span(
@@ -650,10 +652,10 @@ private fun KhodedButton(
 ) {
     org.jetbrains.compose.web.dom.Button(
         attrs = Modifier
-            .padding(KhodedDesignSystem.spacing.md)
+            .padding(18.px, 36.px)  // Landing.kt button padding
             .backgroundColor(
                 when (variant) {
-                    ButtonVariant.Primary -> KhodedDesignSystem.colors.primary
+                    ButtonVariant.Primary -> KhodedDesignSystem.colors.primary  // Modern teal
                     ButtonVariant.Ghost -> Color.transparent
                 }
             )
@@ -663,15 +665,29 @@ private fun KhodedButton(
                     ButtonVariant.Ghost -> KhodedDesignSystem.colors.primary
                 }
             )
-            .borderRadius(KhodedDesignSystem.borderRadius.medium)
+            .borderRadius(12.px)  // Landing.kt button border radius
             .border(
                 if (variant == ButtonVariant.Ghost) 2.px else 0.px,
                 LineStyle.Solid,
-                KhodedDesignSystem.colors.primary
+                when (variant) {
+                    ButtonVariant.Ghost -> rgba(255, 255, 255, 0.4)  // Landing.kt ghost button border
+                    else -> KhodedDesignSystem.colors.primary
+                }
             )
+            .fontSize("clamp(16px, 3vw, 18px)")  // Landing.kt responsive font size
+            .fontWeight(600)
+            .minHeight(56.px)  // Landing.kt button height
             .attrsModifier {
                 style {
                     property("cursor", "pointer")
+                    property("transition", "all 0.3s ease")  // Landing.kt transition
+                    property("text-shadow", "0 1px 4px rgba(0, 0, 0, 0.2)")  // Landing.kt text shadow
+                    property("box-shadow", 
+                        when (variant) {
+                            ButtonVariant.Primary -> "0 4px 12px rgba(6, 182, 212, 0.3)"  // Landing.kt glow
+                            else -> "none"
+                        }
+                    )
                 }
             }
             .apply {
@@ -679,7 +695,7 @@ private fun KhodedButton(
             }
             .toAttrs {
                 onClick { onClick() }
-                // WCAG 2.2 AA compliant focus states
+                // Enhanced focus states from Landing.kt
                 onFocus { event ->
                     (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
                         setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
@@ -688,7 +704,35 @@ private fun KhodedButton(
                     }
                 }
                 onBlur { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", 
+                        when (variant) {
+                            ButtonVariant.Primary -> "0 4px 12px rgba(6, 182, 212, 0.3)"
+                            else -> "none"
+                        }
+                    )
+                }
+                // Landing.kt hover effects
+                onMouseOver { event ->
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                        transform = "translateY(-1px)"
+                        setProperty("box-shadow", 
+                            when (variant) {
+                                ButtonVariant.Primary -> "0 6px 16px rgba(6, 182, 212, 0.4)"
+                                else -> "0 2px 8px rgba(255, 255, 255, 0.1)"
+                            }
+                        )
+                    }
+                }
+                onMouseOut { event ->
+                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
+                        transform = "translateY(0px)"
+                        setProperty("box-shadow", 
+                            when (variant) {
+                                ButtonVariant.Primary -> "0 4px 12px rgba(6, 182, 212, 0.3)"
+                                else -> "none"
+                            }
+                        )
+                    }
                 }
             }
     ) {

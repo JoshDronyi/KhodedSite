@@ -129,37 +129,43 @@ private object RawSpacing {
 // =============================================================================
 
 /**
- * Semantic Color System - WCAG 2.2 AA Compliant
+ * Semantic Color System - WCAG 2.2 AA Compliant - UPDATED TO MATCH LANDING.KT
  * 
  * Colors organized by semantic meaning, not visual appearance.
  * This allows for theme switching and ensures consistent color usage.
+ * Updated to align with the modern navy/teal theme from Landing.kt
  */
 object SemanticColors {
-    // Primary Brand Colors
-    val primary = RawColorPalette.purple500
-    val primaryHover = RawColorPalette.purple600
-    val primaryActive = RawColorPalette.purple700
-    val primaryLight = RawColorPalette.purple100
-    val primaryDark = RawColorPalette.purple700
+    // MODERN BRAND COLORS - Aligned with Landing.kt
+    val primary = rgb(6, 182, 212)              // Teal as primary (matches Landing accent)
+    val primaryHover = rgb(5, 150, 175)         // Darker teal for hover
+    val primaryActive = rgb(4, 120, 140)        // Even darker for active
+    val primaryLight = rgba(6, 182, 212, 0.15)  // Light teal background (matches Landing)
+    val primaryDark = rgb(4, 120, 140)
     
-    // Secondary Colors (Teal)
-    val secondary = RawColorPalette.teal500
-    val secondaryHover = RawColorPalette.teal600
-    val secondaryActive = RawColorPalette.teal700
-    val secondaryLight = RawColorPalette.teal100
+    // NAVY BACKGROUNDS - From Landing.kt
+    val backgroundDark = rgb(15, 23, 42)         // Deep navy background (Landing main bg)
+    val backgroundDarkSecondary = rgb(30, 41, 59) // Slightly lighter navy
+    val backgroundDarkTertiary = rgb(51, 65, 85)  // Even lighter navy
     
-    // Brand Blue Colors (CRITICAL MISSING COLORS FROM ORIGINAL KHODED BRAND)
-    val brandBlue = RawColorPalette.blue500           // Original Khoded blue (#44b6c6)
+    // Secondary Colors (Legacy Purple - maintaining compatibility)
+    val secondary = RawColorPalette.purple500
+    val secondaryHover = RawColorPalette.purple600
+    val secondaryActive = RawColorPalette.purple700
+    val secondaryLight = RawColorPalette.purple100
+    
+    // Brand Blue Colors (KHODED BRAND IDENTITY)
+    val brandBlue = RawColorPalette.blue500           // Original Khoded blue (#44b6c6) 
     val brandBlueHover = RawColorPalette.blueHover    // 80% opacity hover state
     val brandBlueHighlight = RawColorPalette.blueHighlight  // 20% opacity highlight
     val brandBluePowder = RawColorPalette.powderBlue  // Light variant (#92d4de)
     val brandBlueLight = RawColorPalette.lightBlue    // Medium variant (#6bc5d2)
     
-    // Interactive Colors
-    val interactive = RawColorPalette.blue500
-    val interactiveHover = RawColorPalette.blueHover  // Updated to use proper blue hover
-    val interactiveActive = RawColorPalette.blue700
-    val interactiveLight = RawColorPalette.blue100
+    // Interactive Colors (Using modern teal theme)
+    val interactive = rgb(6, 182, 212)           // Primary teal
+    val interactiveHover = rgba(6, 182, 212, 0.8) // Teal with 80% opacity
+    val interactiveActive = rgb(4, 120, 140)     // Darker teal for active
+    val interactiveLight = rgba(6, 182, 212, 0.1) // Very light teal background
     
     // Purple Interactive States (MISSING ALPHA VARIANTS)
     val primaryHoverAlpha = RawColorPalette.purpleHover  // 80% opacity purple hover
@@ -198,12 +204,28 @@ object SemanticColors {
 }
 
 /**
- * Typography System with CSS-compatible values
+ * Typography System with CSS-compatible values - UPDATED WITH RESPONSIVE PATTERNS
+ * Includes both fixed sizes and responsive clamp() functions from Landing.kt
  */
 object TypographySystem {
-    // Font Sizes (returning CSSNumericValue for direct CSS usage)
+    // RESPONSIVE HERO TYPOGRAPHY - From Landing.kt patterns
+    val heroLarge = "clamp(36px, 8vw, 60px)"      // Landing.kt main heading pattern
+    val heroMedium = "clamp(28px, 6vw, 48px)"     // Secondary hero sizing
+    val heroSmall = "clamp(24px, 5vw, 40px)"      // Smaller hero sections
+    
+    // RESPONSIVE SECTION TYPOGRAPHY  
+    val sectionLarge = "clamp(32px, 5vw, 52px)"   // Section headings
+    val sectionMedium = "clamp(24px, 4vw, 32px)"  // Subsection headings
+    val sectionSmall = "clamp(20px, 3vw, 28px)"   // Small section headings
+    
+    // RESPONSIVE BODY TYPOGRAPHY
+    val bodyFluidLarge = "clamp(18px, 4vw, 22px)" // Landing.kt subtitle pattern
+    val bodyFluidMedium = "clamp(16px, 3vw, 18px)" // Standard responsive body
+    val bodyFluidSmall = "clamp(14px, 2.5vw, 16px)" // Small responsive text
+    
+    // FIXED FONT SIZES (for components requiring consistent sizing)
     val displayLarge = 48.px      // Hero headings
-    val displayMedium = 36.px     // Page headings
+    val displayMedium = 36.px     // Page headings  
     val displaySmall = 30.px      // Section headings
     
     val headingLarge = 24.px      // Card headings
@@ -388,14 +410,36 @@ object InputTokens {
 }
 
 /**
- * Card design tokens
+ * Card design tokens - UPDATED WITH LANDING.KT PATTERNS
  */
 object CardTokens {
-    val padding = SpacingSystem.xl2
-    val borderRadius = BorderRadiusSystem.lg
+    // MODERN CARD STYLING - From Landing.kt feature cards
+    val padding = 32.px                                    // Landing.kt card padding
+    val paddingCompact = 24.px                            // Compact variant
+    val paddingLarge = 40.px                              // Large variant
+    
+    val borderRadius = 16.px                              // Landing.kt card border radius
+    val borderRadiusLarge = 20.px                         // Large cards
+    val borderRadiusSmall = 12.px                         // Small cards
+    
+    // BACKGROUNDS - Modern patterns from Landing.kt
+    val backgroundLight = rgba(255, 255, 255, 0.08)       // Landing.kt card background
+    val backgroundDark = rgba(255, 255, 255, 0.05)        // Darker variant
+    val backgroundHover = rgba(255, 255, 255, 0.12)       // Hover state
+    
+    // BORDERS - From Landing.kt
+    val border = rgba(255, 255, 255, 0.15)                // Landing.kt border color
+    val borderHover = rgba(255, 255, 255, 0.25)           // Hover border
+    val borderWidth = 1.px
+    
+    // EFFECTS - From Landing.kt
+    val backdropFilter = "blur(10px)"                      // Landing.kt backdrop blur
     val shadow = ShadowSystem.medium
+    val shadowHover = ShadowSystem.large
+    
+    // LEGACY SUPPORT - For existing components
     val background = SemanticColors.surface
-    val border = SemanticColors.borderSecondary
+    val borderSecondary = SemanticColors.borderSecondary
 }
 
 /**
