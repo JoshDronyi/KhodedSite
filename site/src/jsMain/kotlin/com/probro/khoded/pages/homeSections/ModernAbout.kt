@@ -23,7 +23,7 @@ fun ModernAboutSection() {
     Section(
         attrs = Modifier
             .fillMaxWidth()
-            .backgroundColor(rgb(15, 23, 42)) // Dark navy background
+            .backgroundColor(KhodedDesignSystem.colors.backgroundDark) // Use design system navy
             .padding(topBottom = 120.px, leftRight = 24.px)
             .toAttrs {
                 id("about")
@@ -81,13 +81,13 @@ private fun AboutHeader() {
                 .padding(10.px, 24.px)
                 .borderRadius(50.px)
         ) {
-            // Mini logo
+            // Mini logo - Using design system
             org.jetbrains.compose.web.dom.Div(
                 attrs = {
                     style {
                         width(20.px)
                         height(16.px)
-                        backgroundColor(rgb(6, 182, 212))
+                        backgroundColor(KhodedDesignSystem.colors.primary)  // Design system teal
                         borderRadius(4.px)
                         display(DisplayStyle.Flex)
                         property("align-items", "center")
@@ -105,37 +105,45 @@ private fun AboutHeader() {
             SpanText(
                 text = "Our Competitive Advantage",
                 modifier = Modifier
-                    .fontSize(14.px)
+                    .fontSize(KhodedDesignSystem.typography.bodyFluidSmall)  // Responsive typography
                     .fontWeight(600)
-                    .color(rgb(6, 182, 212))
+                    .color(KhodedDesignSystem.colors.primary)  // Design system teal
             )
         }
         
-        // Main heading
+        // Main heading - Using responsive design system typography
         H2(
             attrs = Modifier
-                .fontSize(52.px)
+                .fontSize(KhodedDesignSystem.typography.sectionLarge)  // Responsive section heading
                 .fontWeight(800)
                 .color(Color.white)
                 .textAlign(TextAlign.Center)
                 .lineHeight(1.2)
                 .letterSpacing((-0.5).px)
                 .maxWidth(800.px)
-                .toAttrs()
+                .toAttrs {
+                    style {
+                        property("text-shadow", "0 2px 10px rgba(0, 0, 0, 0.3)")  // Landing.kt text shadow
+                    }
+                }
         ) {
             Text("Why businesses worldwide choose Khoded")
         }
         
-        // Description
+        // Description - Using responsive typography
         P(
             attrs = Modifier
-                .fontSize(20.px)
+                .fontSize(KhodedDesignSystem.typography.bodyFluidLarge)  // Responsive body text
                 .fontWeight(400)
-                .color(rgba(255, 255, 255, 0.8))
+                .color(rgba(255, 255, 255, 0.95))  // Enhanced readability
                 .textAlign(TextAlign.Center)
                 .lineHeight(1.6)
                 .maxWidth(700.px)
-                .toAttrs()
+                .toAttrs {
+                    style {
+                        property("text-shadow", "0 1px 8px rgba(0, 0, 0, 0.4)")  // Landing.kt text shadow
+                    }
+                }
         ) {
             Text("Connecticut-based Kotlin Multiplatform specialists serving the Americas, Africa, and beyond — delivering 80% code reuse and native performance to ambitious businesses worldwide.")
         }
@@ -211,16 +219,16 @@ private fun AdvantageCard(
     Div(
         attrs = Modifier
             .fillMaxWidth()
-            .backgroundColor(rgba(255, 255, 255, 0.05))
-            .borderRadius(20.px)
-            .padding(32.px)
+            .backgroundColor(KhodedDesignSystem.card.backgroundLight)  // Design system card background
+            .borderRadius(KhodedDesignSystem.card.borderRadiusLarge)   // Design system border radius
+            .padding(KhodedDesignSystem.card.padding)                  // Design system padding
             .toAttrs {
                 style {
-                    border(1.px, LineStyle.Solid, rgba(255, 255, 255, 0.1))
-                    property("backdrop-filter", "blur(10px)")
+                    border(KhodedDesignSystem.card.borderWidth, LineStyle.Solid, KhodedDesignSystem.card.border)
+                    property("backdrop-filter", KhodedDesignSystem.card.backdropFilter)  // Design system backdrop filter
                     property("transition", "all 0.3s ease")
+                    property("text-shadow", "0 1px 6px rgba(0, 0, 0, 0.3)")  // Landing.kt text shadow for readability
                 }
-                // TODO: Add hover effects when API is available
             }
     ) {
         Column(
@@ -325,14 +333,18 @@ private fun StatsSection() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(48.px)
     ) {
-        // Stats title
+        // Stats title - Using responsive typography
         H3(
             attrs = Modifier
-                .fontSize(32.px)
+                .fontSize(KhodedDesignSystem.typography.sectionMedium)  // Responsive section heading
                 .fontWeight(700)
                 .color(Color.white)
                 .textAlign(TextAlign.Center)
-                .toAttrs()
+                .toAttrs {
+                    style {
+                        property("text-shadow", "0 2px 10px rgba(0, 0, 0, 0.3)")  // Landing.kt text shadow
+                    }
+                }
         ) {
             Text("Driving Success Through Innovation")
         }
@@ -356,12 +368,12 @@ private fun StatsSection() {
             StatMetric("2,500+", "Libraries", "Rich ecosystem for rapid development")
         }
         
-        // Trust indicators
+        // Trust indicators - Using design system
         Div(
             attrs = Modifier
-                .backgroundColor(rgba(6, 182, 212, 0.1))
-                .borderRadius(16.px)
-                .padding(32.px)
+                .backgroundColor(KhodedDesignSystem.colors.primaryLight)  // Design system primary light
+                .borderRadius(KhodedDesignSystem.card.borderRadius)       // Design system border radius
+                .padding(KhodedDesignSystem.card.padding)                 // Design system padding
                 .maxWidth(800.px)
                 .toAttrs()
         ) {
@@ -371,9 +383,9 @@ private fun StatsSection() {
             ) {
                 P(
                     attrs = Modifier
-                        .fontSize(18.px)
+                        .fontSize(KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography
                         .fontWeight(600)
-                        .color(rgb(6, 182, 212))
+                        .color(KhodedDesignSystem.colors.primary)  // Design system teal
                         .textAlign(TextAlign.Center)
                         .toAttrs()
                 ) {
@@ -382,11 +394,15 @@ private fun StatsSection() {
                 
                 P(
                     attrs = Modifier
-                        .fontSize(16.px)
-                        .color(rgba(255, 255, 255, 0.9))
+                        .fontSize(KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography
+                        .color(rgba(255, 255, 255, 0.95))  // Enhanced readability
                         .textAlign(TextAlign.Center)
                         .lineHeight(1.6)
-                        .toAttrs()
+                        .toAttrs {
+                            style {
+                                property("text-shadow", "0 1px 4px rgba(0, 0, 0, 0.3)")  // Landing.kt text shadow
+                            }
+                        }
                 ) {
                     Text("Kotlin Multiplatform is backed by JetBrains and Google, with adoption by industry leaders like Netflix, McDonald's, and Cash App. Join the 23.8% of developers who've already made the switch.")
                 }
@@ -406,13 +422,13 @@ private fun StatMetric(value: String, label: String, description: String) {
             modifier = Modifier
                 .fontSize(48.px)
                 .fontWeight(800)
-                .color(rgb(6, 182, 212))
+                .color(KhodedDesignSystem.colors.primary)  // Design system teal
         )
         
         SpanText(
             text = label,
             modifier = Modifier
-                .fontSize(18.px)
+                .fontSize(KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography
                 .fontWeight(600)
                 .color(Color.white)
         )

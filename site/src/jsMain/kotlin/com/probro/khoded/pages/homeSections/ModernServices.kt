@@ -25,7 +25,7 @@ fun ModernServicesSection() {
     Section(
         attrs = Modifier
             .fillMaxWidth()
-            .backgroundColor(rgb(248, 250, 252)) // Light gray background
+            .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary) // Consistent dark theme
             .padding(topBottom = 120.px, leftRight = 24.px)
             .toAttrs {
                 id("services")
@@ -74,22 +74,22 @@ private fun ServicesHeader() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.px)
     ) {
-        // Section badge with logo
+        // Section badge with logo - Using design system
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.px),
             modifier = Modifier
-                .backgroundColor(rgba(6, 182, 212, 0.1))
+                .backgroundColor(KhodedDesignSystem.colors.primaryLight)  // Design system primary light
                 .padding(8.px, 20.px)
                 .borderRadius(50.px)
         ) {
-            // Mini logo
+            // Mini logo - Using design system
             org.jetbrains.compose.web.dom.Div(
                 attrs = {
                     style {
                         width(20.px)
                         height(16.px)
-                        backgroundColor(rgb(6, 182, 212))
+                        backgroundColor(KhodedDesignSystem.colors.primary)  // Design system teal
                         borderRadius(4.px)
                         display(DisplayStyle.Flex)
                         property("align-items", "center")
