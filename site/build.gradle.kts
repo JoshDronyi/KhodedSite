@@ -40,7 +40,7 @@ kobweb {
 kotlin {
     jvmToolchain(21)
     configAsKobwebApplication("khoded", includeServer = true)
-    
+
 
     sourceSets {
         val commonMain by getting {
@@ -57,7 +57,7 @@ kotlin {
                 implementation(libs.kobweb.compose)
                 implementation(libs.kobweb.silk)
                 implementation(libs.silk.foundation)
-                
+
                 // Icon libraries
                 implementation(libs.silk.icons.fa)
                 implementation(libs.silk.icons.mdi)
@@ -72,20 +72,20 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
-                
+
                 // Additional Ktor dependencies for email service  
                 implementation("io.ktor:ktor-client-plugins:3.0.3")
-                
+
                 // JDBI for lightweight PostgreSQL database access
                 implementation("org.jdbi:jdbi3-core:3.45.1")
                 implementation("org.jdbi:jdbi3-postgres:3.45.1")
                 implementation("org.jdbi:jdbi3-kotlin:3.45.1")
                 implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.45.1")
-                
+
                 // HikariCP for connection pooling
                 implementation("com.zaxxer:HikariCP:5.1.0")
                 implementation("org.postgresql:postgresql:42.7.3")
-                
+
                 // HTTP Status constants
                 implementation("org.apache.httpcomponents:httpcore:4.4.16")
 
@@ -103,7 +103,7 @@ kotlin {
                 // Temporarily disable database dependencies to test the application
                 // Since you're not saving data yet, we can run without database for now
                 // This eliminates ~2.2MB of dependencies during testing
-                
+
                 // Previous heavy database stack (disabled for performance testing):
                 // implementation("org.postgresql:postgresql:42.7.1")          // ~1.1MB
                 // implementation("com.zaxxer:HikariCP:5.1.0")                 // ~150KB + deps
@@ -114,7 +114,7 @@ kotlin {
                 // implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion") // ~100KB
                 // implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")    // ~50KB
                 // implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")     // ~50KB
-                
+
                 // Note: sqlx4k is Native-only (no JVM support), so we'll implement 
                 // a different lightweight solution later or use in-memory storage for now
 
@@ -123,12 +123,14 @@ kotlin {
     }
 }
 
+// Load properties for build configuration
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
+
 buildkonfig {
     packageName = "com.probro.khoded"
     objectName = "KhodedConfig"
     // exposeObjectWithName = "YourAwesomePublicConfig"
-    val properties = Properties()
-    properties.load(project.rootProject.file("local.properties").inputStream())
 
     defaultConfigs {
         //Gmail Config
@@ -146,21 +148,33 @@ buildkonfig {
         buildConfigField(FieldSpec.Type.STRING, "ClientCertUrl", properties.getProperty("client_x509_cert_url"))
         buildConfigField(FieldSpec.Type.STRING, "UniversDomain", properties.getProperty("universe_domain"))
 
-        //Postgres values
-        buildConfigField(FieldSpec.Type.STRING, "devUri", "dev_Uri")
-        buildConfigField(FieldSpec.Type.STRING, "devUsername", "test_user")
-        buildConfigField(FieldSpec.Type.STRING, "devPassword", "test_password")
-        buildConfigField(FieldSpec.Type.STRING, "prodUri", "prod_uri")
-        buildConfigField(FieldSpec.Type.STRING, "prodUsername", "prod_user")
-        buildConfigField(FieldSpec.Type.STRING, "prodPassword", "prod_password")
+        //Postgres values - Using environment variables for security
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "devUri",
+            "\"${properties.getProperty("dev_database_uri", "jdbc:postgresql://localhost:5432/khoded_dev")}\""
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "devUsername",
+            "\"${properties.getProperty("dev_database_username", "khoded_dev_user")}\""
+        )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "devPassword",
+            "\"${properties.getProperty("dev_database_password", "dev_password_change_me")}\""
+        )
+        buildConfigField(FieldSpec.Type.STRING, "prodUri", "\"${properties.getProperty("prod_database_uri", "")}\")")
+        buildConfigField(FieldSpec.Type.STRING, "prodUsername", "\"${properties.getProperty("prod_database_username", "")}\")")
+        buildConfigField(FieldSpec.Type.STRING, "prodPassword", "\"${properties.getProperty("prod_database_password", "")}\"")
     }
 }
 
 flyway {
     driver = "org.postgresql.driver"
-    url = "jdbc:postgresql://localhost:5432/khodedBackendData"
-    user = "admin"
-    password = "khodedData"
+    url = System.getenv("FLYWAY_URL") ?: properties.get("flyway_url").toString()
+    user = System.getenv("FLYWAY_USER") ?: properties.get("flyway_user").toString()
+    password = System.getenv("FLYWAY_PASSWORD") ?: properties.get("flyway_password").toString()
     schemas = arrayOf("khoded_base_state")
     defaultSchema = "khoded_base_state"
 }

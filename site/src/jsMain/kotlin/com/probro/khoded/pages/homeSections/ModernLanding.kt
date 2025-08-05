@@ -47,12 +47,15 @@ fun ModernLandingHero(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .maxWidth(1200.px)
                 .padding(leftRight = 24.px, topBottom = 80.px)
                 .zIndex(10),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Centered content container
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             // Logo and brand
             BrandHeader()
             
@@ -75,6 +78,7 @@ fun ModernLandingHero(
             
             // Trust indicators
             TrustIndicators()
+            }
         }
     }
 }
@@ -178,7 +182,7 @@ private fun MainHeadline() {
     ) {
         // Main headline
         SpanText(
-            text = "The Ultimate Development Solution",
+            text = "The Ultimate Development Experience",
             modifier = Modifier
                 .fontSize(64.px)
                 .fontWeight(800)
@@ -191,14 +195,14 @@ private fun MainHeadline() {
         
         // Accent word with teal highlight
         SpanText(
-            text = "Kotlin Multiplatform expertise serving businesses worldwide - from Connecticut to the Americas and Africa.",
+            text = "Smart businesses choose Kotlin Multiplatform to build iOS & Android apps simultaneously with 80% shared code, slashing time-to-market by months and development costs by up to 60%.",
             modifier = Modifier
                 .fontSize(24.px)
                 .fontWeight(400)
                 .color(rgba(255, 255, 255, 0.8))
                 .textAlign(TextAlign.Center)
                 .lineHeight(1.5)
-                .maxWidth(600.px)
+                .maxWidth(800.px)
         )
     }
 }
@@ -211,7 +215,7 @@ private fun SubHeadline() {
     ) {
         // Tagline
         SpanText(
-            text = "Perform natively, scale effortlessly",
+            text = "One codebase, every platform, guaranteed results",
             modifier = Modifier
                 .fontSize(20.px)
                 .fontWeight(500)
@@ -250,7 +254,7 @@ private fun CTAButtons(onNavigate: (NavigationRoute) -> Unit) {
                 attr("aria-label", "Start your project with Khoded")
             }
         ) {
-            Text("Start Your Project")
+            Text("Get In Touch")
         }
         
         // Secondary CTA
@@ -274,7 +278,7 @@ private fun CTAButtons(onNavigate: (NavigationRoute) -> Unit) {
                 attr("aria-label", "Learn more about Khoded")
             }
         ) {
-            Text("Learn More")
+            Text("See Case Studies")
         }
     }
 }

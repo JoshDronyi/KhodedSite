@@ -17,9 +17,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.H1
+import org.jetbrains.compose.web.dom.Text
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
+import com.varabyte.kobweb.compose.css.functions.clamp
 
 /**
  * About Page - Company Story and Team
@@ -30,8 +33,7 @@ fun AboutPage() {
     ErrorBoundary(config = ErrorBoundaryConfig()) {
         WithNavigation { navigationState ->
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth()
             ) {
                 // Hero Section
                 Column(
@@ -49,20 +51,25 @@ fun AboutPage() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    SpanText(
-                        text = "About Khoded",
-                        modifier = Modifier
-                            .fontSize(48.px)
-                            .fontWeight(700)
-                            .color(Color.white)
-                            .textAlign(TextAlign.Center)
-                            .margin(bottom = 20.px)
-                    )
+                    H1(
+                        attrs = {
+                            style {
+                                property("font-size", KhodedDesignSystem.typography.sectionLarge)  // Responsive clamp string
+                                fontWeight(700)
+                                color(Color.white)
+                                textAlign("center")
+                                marginBottom(20.px)
+                                property("text-shadow", "0 2px 10px rgba(0, 0, 0, 0.3)")  // Enhanced readability
+                            }
+                        }
+                    ) {
+                        Text("About Khoded")
+                    }
 
                     SpanText(
                         "Connecticut's leading Kotlin Multiplatform specialists, delivering 80% code reuse and native performance",
                         modifier = Modifier
-                            .fontSize(20.px)
+                            .fontSize(clamp(16.px, 3.vw, 20.px))  // Responsive using Kobweb clamp
                             .color(Color.white)
                             .textAlign(TextAlign.Center)
                             .maxWidth(600.px)
@@ -73,7 +80,7 @@ fun AboutPage() {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .maxWidth(1200.px)
+                        .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
                         .padding(80.px, 40.px),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(40.px)
@@ -83,7 +90,7 @@ fun AboutPage() {
                         modifier = Modifier
                             .fontSize(36.px)
                             .fontWeight(700)
-                            .color(rgb(15, 23, 42))
+                            .color(Color.white)
                             .textAlign(TextAlign.Center)
                     )
 
@@ -92,7 +99,7 @@ fun AboutPage() {
                         modifier = Modifier
                             .fontSize(18.px)
                             .lineHeight(1.6)
-                            .color(rgb(100, 116, 139))
+                            .color(rgba(255, 255, 255, 0.8))
                             .textAlign(TextAlign.Center)
                             .maxWidth(800.px)
                     )
@@ -102,7 +109,7 @@ fun AboutPage() {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .backgroundColor(rgb(248, 250, 252))
+                        .backgroundColor(KhodedDesignSystem.colors.backgroundDark)
                         .padding(80.px, 40.px),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(60.px)
@@ -112,7 +119,7 @@ fun AboutPage() {
                         modifier = Modifier
                             .fontSize(36.px)
                             .fontWeight(700)
-                            .color(rgb(15, 23, 42))
+                            .color(Color.white)
                             .textAlign(TextAlign.Center)
                     )
 
@@ -142,7 +149,7 @@ fun AboutPage() {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .maxWidth(1200.px)
+                        .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
                         .padding(80.px, 40.px),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(60.px)
@@ -152,7 +159,7 @@ fun AboutPage() {
                         modifier = Modifier
                             .fontSize(36.px)
                             .fontWeight(700)
-                            .color(rgb(15, 23, 42))
+                            .color(Color.white)
                             .textAlign(TextAlign.Center)
                     )
 
@@ -193,10 +200,10 @@ private fun TeamMemberCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(Color.white)
+            .backgroundColor(rgba(255, 255, 255, 0.08))
             .borderRadius(12.px)
             .padding(30.px)
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15)),
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.3)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(15.px)
     ) {
@@ -204,7 +211,7 @@ private fun TeamMemberCard(
         Column(
             modifier = Modifier
                 .size(120.px)
-                .backgroundColor(rgb(229, 231, 235))
+                .backgroundColor(rgba(255, 255, 255, 0.15))
                 .borderRadius(50.percent),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -213,7 +220,7 @@ private fun TeamMemberCard(
                 "Photo",
                 modifier = Modifier
                     .fontSize(14.px)
-                    .color(rgb(107, 114, 128))
+                    .color(rgba(255, 255, 255, 0.6))
             )
         }
 
@@ -222,7 +229,7 @@ private fun TeamMemberCard(
             modifier = Modifier
                 .fontSize(24.px)
                 .fontWeight(700)
-                .color(rgb(15, 23, 42))
+                .color(Color.white)
                 .textAlign(TextAlign.Center)
         )
 
@@ -240,7 +247,7 @@ private fun TeamMemberCard(
             modifier = Modifier
                 .fontSize(14.px)
                 .lineHeight(1.5)
-                .color(rgb(100, 116, 139))
+                .color(rgba(255, 255, 255, 0.7))
                 .textAlign(TextAlign.Center)
         )
     }

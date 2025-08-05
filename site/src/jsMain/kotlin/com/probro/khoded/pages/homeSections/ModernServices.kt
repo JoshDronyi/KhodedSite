@@ -3,6 +3,10 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.design.KhodedDesignSystem
 import com.probro.khoded.utils.*
+import com.probro.khoded.components.layout.KhodedSection
+import com.probro.khoded.components.layout.VerticalSpacer
+import com.probro.khoded.components.branding.KhodedLogo
+import com.probro.khoded.components.branding.LogoSize
 import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.foundation.layout.*
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -22,51 +26,26 @@ import org.jetbrains.compose.web.dom.*
  */
 @Composable
 fun ModernServicesSection() {
-    Section(
-        attrs = Modifier
-            .fillMaxWidth()
-            .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary) // Consistent dark theme
-            .padding(topBottom = 120.px, leftRight = 24.px)
-            .toAttrs {
-                id("services")
-                attr("aria-label", "Our Services")
-            }
+    KhodedSection(
+        id = "services",
+        ariaLabel = "Our Services",
+        backgroundColor = KhodedDesignSystem.colors.backgroundDark
     ) {
-        Container(
-            modifier = Modifier
-                .fillMaxWidth()
-                .maxWidth(1200.px),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Section header
-            ServicesHeader()
-            
-            Div(attrs = { style { height(80.px) } })
-            
-            // Services grid
-            ServicesGrid()
-            
-            Div(attrs = { style { height(60.px) } })
-            
-            // Bottom CTA
-            ServicesCTA()
-        }
+        // Section header
+        ServicesHeader()
+        
+        VerticalSpacer(80.px)
+        
+        // Services grid
+        ServicesGrid()
+        
+        VerticalSpacer(60.px)
+        
+        // Bottom CTA
+        ServicesCTA()
     }
 }
 
-@Composable
-private fun Container(
-    modifier: Modifier = Modifier,
-    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    content: @Composable () -> Unit
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = horizontalAlignment
-    ) {
-        content()
-    }
-}
 
 @Composable
 private fun ServicesHeader() {
@@ -83,26 +62,8 @@ private fun ServicesHeader() {
                 .padding(8.px, 20.px)
                 .borderRadius(50.px)
         ) {
-            // Mini logo - Using design system
-            org.jetbrains.compose.web.dom.Div(
-                attrs = {
-                    style {
-                        width(20.px)
-                        height(16.px)
-                        backgroundColor(KhodedDesignSystem.colors.primary)  // Design system teal
-                        borderRadius(4.px)
-                        display(DisplayStyle.Flex)
-                        property("align-items", "center")
-                        property("justify-content", "center")
-                        fontSize(10.px)
-                        fontWeight(700)
-                        color(Color.white)
-                        fontFamily("'Fira Code', 'Consolas', 'Monaco', monospace")
-                    }
-                }
-            ) {
-                org.jetbrains.compose.web.dom.Text("</>")
-            }
+            // Mini logo - Using unified component
+            KhodedLogo(size = LogoSize.Medium)
             
             SpanText(
                 text = "What We Offer",
@@ -118,14 +79,14 @@ private fun ServicesHeader() {
             attrs = Modifier
                 .fontSize(48.px)
                 .fontWeight(800)
-                .color(rgb(15, 23, 42)) // Dark navy
+                .color(Color.white) // Updated for dark theme consistency
                 .textAlign(TextAlign.Center)
                 .lineHeight(1.2)
                 .letterSpacing((-0.5).px)
                 .maxWidth(700.px)
                 .toAttrs()
         ) {
-            Text("Discover our main three offerings")
+            Text("Three Ways We Save Your Business Time & Money")
         }
         
         // Description
@@ -133,13 +94,13 @@ private fun ServicesHeader() {
             attrs = Modifier
                 .fontSize(18.px)
                 .fontWeight(400)
-                .color(rgb(100, 116, 139)) // Gray
+                .color(rgba(255, 255, 255, 0.8)) // Softer white for dark theme
                 .textAlign(TextAlign.Center)
                 .lineHeight(1.6)
-                .maxWidth(600.px)
+                .maxWidth(700.px)
                 .toAttrs()
         ) {
-            Text("Comprehensive solutions designed to transform your development process and accelerate your business growth.")
+            Text("Choose the approach that fits your business needs: modernize existing apps, launch quickly with proven solutions, or build completely custom experiences that give you competitive advantage.")
         }
     }
 }
@@ -161,9 +122,9 @@ private fun ServicesGrid() {
         // Service 1: Code-Base Transformations
         ServiceCard(
             number = "1",
-            title = "Code-Base Transformations",
-            description = "We create customized development strategies that meet your project's unique requirements, ensuring successful outcomes.",
-            subtitle = "(transfer existing code to multiplatform)",
+            title = "App Modernization & Migration",
+            description = "Transform your existing iOS and Android apps into a single multiplatform solution. Cut maintenance costs by 60% while expanding to new platforms faster than ever.",
+            subtitle = "Save $50K-$200K annually on development costs",
             color = rgb(6, 182, 212), // Teal
             features = listOf(
                 "Legacy system modernization",
@@ -176,9 +137,9 @@ private fun ServicesGrid() {
         // Service 2: Ready-Made Solutions
         ServiceCard(
             number = "2", 
-            title = "Ready-Made Solutions",
-            description = "Our team offers ongoing support throughout every phase of development, ensuring your project stays on track and on time.",
-            subtitle = "(plug + play dashboards/ tools)",
+            title = "Rapid Business Solutions",
+            description = "Launch your mobile presence in weeks, not months. Pre-built, customizable solutions designed for small businesses who need professional apps without enterprise budgets.",
+            subtitle = "Get to market 3-6 months faster than traditional development",
             color = rgb(139, 92, 246), // Purple
             features = listOf(
                 "Pre-built dashboard templates",
@@ -191,9 +152,9 @@ private fun ServicesGrid() {
         // Service 3: Custom Development
         ServiceCard(
             number = "3",
-            title = "Custom Development", 
-            description = "Leverage cutting-edge technologies and innovative approaches that drive your development projects forward and deliver exceptional results.",
-            subtitle = "(tools + apps + MVPs)",
+            title = "Custom Competitive Advantage", 
+            description = "Build unique features that differentiate your business. Custom Kotlin Multiplatform solutions that scale with your growth and adapt to market changes.",
+            subtitle = "Turn your vision into market-leading applications",
             color = rgb(34, 197, 94), // Green
             features = listOf(
                 "Native mobile applications",
@@ -217,7 +178,7 @@ private fun ServiceCard(
     Div(
         attrs = Modifier
             .fillMaxWidth()
-            .backgroundColor(Color.white)
+            .backgroundColor(rgba(255, 255, 255, 0.08)) // Soft semi-transparent background to prevent seizure triggers
             .borderRadius(20.px)
             .padding(32.px)
             .boxShadow(
@@ -270,7 +231,7 @@ private fun ServiceCard(
                         attrs = Modifier
                             .fontSize(24.px)
                             .fontWeight(700)
-                            .color(rgb(15, 23, 42))
+                            .color(Color.white) // Updated for new semi-transparent background
                             .lineHeight(1.3)
                             .toAttrs()
                     ) {
@@ -295,7 +256,7 @@ private fun ServiceCard(
                 attrs = Modifier
                     .fontSize(16.px)
                     .fontWeight(400)
-                    .color(rgb(100, 116, 139))
+                    .color(rgba(255, 255, 255, 0.8)) // Softer white for better readability
                     .lineHeight(1.6)
                     .toAttrs()
             ) {
@@ -339,7 +300,7 @@ private fun ServiceCard(
                             modifier = Modifier
                                 .fontSize(14.px)
                                 .fontWeight(500)
-                                .color(rgb(71, 85, 105))
+                                .color(rgba(255, 255, 255, 0.9)) // Updated for dark theme consistency
                         )
                     }
                 }
@@ -358,7 +319,7 @@ private fun ServicesCTA() {
             attrs = Modifier
                 .fontSize(28.px)
                 .fontWeight(700)
-                .color(rgb(15, 23, 42))
+                .color(Color.white) // Updated for dark theme
                 .textAlign(TextAlign.Center)
                 .toAttrs()
         ) {
@@ -368,9 +329,9 @@ private fun ServicesCTA() {
         P(
             attrs = Modifier
                 .fontSize(16.px)
-                .color(rgb(100, 116, 139))
+                .color(rgba(255, 255, 255, 0.8)) // Consistent with other descriptions
                 .textAlign(TextAlign.Center)
-                .maxWidth(500.px)
+                .maxWidth(700.px)
                 .toAttrs()
         ) {
             Text("Let's discuss how our proven expertise can accelerate your next project.")
@@ -379,18 +340,23 @@ private fun ServicesCTA() {
         org.jetbrains.compose.web.dom.Button(
             attrs = {
                 style {
-                    backgroundColor(rgb(6, 182, 212))
+                    backgroundColor(KhodedDesignSystem.colors.primary)  // Design system color
                     color(Color.white)
                     border(0.px)
                     borderRadius(12.px)
                     padding(16.px, 32.px)
-                    fontSize(16.px)
+                    property("font-size", KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography via property
                     fontWeight(600)
                     cursor(Cursor.Pointer)
                     minHeight(52.px)
                     property("transition", "all 0.3s ease")
+                    property("text-shadow", "0 1px 4px rgba(0, 0, 0, 0.2)")  // Enhanced readability
+                    property("box-shadow", "0 4px 12px rgba(6, 182, 212, 0.3)")  // Modern glow effect
                 }
-                // TODO: Add hover effects when API is available
+                onClick { 
+                    // Navigate to contact page for consultation booking
+                    kotlinx.browser.window.location.href = "/contact"
+                }
                 attr("aria-label", "Get free consultation")
             }
         ) {

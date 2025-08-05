@@ -18,9 +18,12 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.navigation.Link
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.H1
+import org.jetbrains.compose.web.dom.Text
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
+import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 
 /**
@@ -32,8 +35,7 @@ fun ServicesPage() {
     ErrorBoundary(config = ErrorBoundaryConfig()) {
         WithNavigation { navigationState ->
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth()
             ) {
                 // Hero Section
                 Column(
@@ -51,15 +53,20 @@ fun ServicesPage() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    SpanText(
-                        "Our Services",
-                        modifier = Modifier
-                            .fontSize(48.px)
-                            .fontWeight(700)
-                            .color(Color.white)
-                            .textAlign(TextAlign.Center)
-                            .margin(bottom = 20.px)
-                    )
+                    H1(
+                        attrs = {
+                            style {
+                                property("font-size", KhodedDesignSystem.typography.sectionLarge)  // Responsive clamp string
+                                fontWeight(700)
+                                color(Color.white)
+                                textAlign("center")
+                                marginBottom(20.px)
+                                property("text-shadow", "0 2px 10px rgba(0, 0, 0, 0.3)")  // Enhanced readability
+                            }
+                        }
+                    ) {
+                        Text("Our Services")
+                    }
                     
                     SpanText(
                         "Kotlin Multiplatform solutions delivering 80% code reuse and native performance",
@@ -75,7 +82,7 @@ fun ServicesPage() {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .maxWidth(1200.px)
+                        .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
                         .padding(80.px, 40.px),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(60.px)
@@ -189,27 +196,27 @@ private fun ServiceCard(
         modifier = Modifier
             .fillMaxWidth()
             .maxWidth(800.px)
-            .backgroundColor(Color.white)
+            .backgroundColor(rgba(255, 255, 255, 0.08))
             .borderRadius(12.px)
             .padding(40.px)
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15)),
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.3)),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(20.px)
     ) {
         SpanText(
             title,
             modifier = Modifier
-                .fontSize(28.px)
+                .fontSize(clamp(24.px, 4.vw, 32.px))  // Responsive using Kobweb clamp function
                 .fontWeight(700)
-                .color(rgb(15, 23, 42))
+                .color(Color.white)  // White for dark background
         )
         
         SpanText(
             description,
             modifier = Modifier
-                .fontSize(16.px)
+                .fontSize(clamp(14.px, 2.5.vw, 18.px))  // Responsive using Kobweb clamp function
                 .lineHeight(1.6)
-                .color(rgb(100, 116, 139))
+                .color(rgba(255, 255, 255, 0.8))  // Light white for dark background
         )
         
         Column(
@@ -232,7 +239,7 @@ private fun ServiceCard(
                         feature,
                         modifier = Modifier
                             .fontSize(14.px)
-                            .color(rgb(100, 116, 139))
+                            .color(rgba(255, 255, 255, 0.9))
                     )
                 }
             }

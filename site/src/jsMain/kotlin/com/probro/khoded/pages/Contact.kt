@@ -5,6 +5,7 @@ import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.design.KhodedDesignSystem
 import com.probro.khoded.components.widgets.Footer
+import com.probro.khoded.components.forms.ValidatedContactForm
 import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.WithNavigation
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -17,9 +18,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.dom.H1
+import org.jetbrains.compose.web.dom.Text
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
+import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 
 /**
@@ -31,8 +35,7 @@ fun ContactPage() {
     ErrorBoundary(config = ErrorBoundaryConfig()) {
         WithNavigation { navigationState ->
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth()
             ) {
                 // Hero Section
                 Column(
@@ -50,15 +53,20 @@ fun ContactPage() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    SpanText(
-                        "Get In Touch",
-                        modifier = Modifier
-                            .fontSize(48.px)
-                            .fontWeight(700)
-                            .color(Color.white)
-                            .textAlign(TextAlign.Center)
-                            .margin(bottom = 20.px)
-                    )
+                    H1(
+                        attrs = {
+                            style {
+                                property("font-size", KhodedDesignSystem.typography.sectionLarge)  // Responsive clamp string
+                                fontWeight(700)
+                                color(Color.white)
+                                textAlign("center")
+                                marginBottom(20.px)
+                                property("text-shadow", "0 2px 10px rgba(0, 0, 0, 0.3)")  // Enhanced readability
+                            }
+                        }
+                    ) {
+                        Text("Get In Touch")
+                    }
                     
                     SpanText(
                         "Ready to achieve 80% code reuse with Kotlin Multiplatform? Let's discuss your Connecticut business needs.",
@@ -74,7 +82,7 @@ fun ContactPage() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .maxWidth(1200.px)
+                        .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
                         .padding(80.px, 40.px),
                     horizontalArrangement = Arrangement.spacedBy(60.px),
                     verticalAlignment = Alignment.Top
@@ -89,41 +97,15 @@ fun ContactPage() {
                             modifier = Modifier
                                 .fontSize(28.px)
                                 .fontWeight(700)
-                                .color(rgb(15, 23, 42))
+                                .color(Color.white)
                         )
                         
-                        // Contact form placeholder
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .backgroundColor(Color.white)
-                                .borderRadius(12.px)
-                                .padding(40.px)
-                                .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15)),
-                            verticalArrangement = Arrangement.spacedBy(20.px)
-                        ) {
-                            ContactFormField("Name")
-                            ContactFormField("Email")
-                            ContactFormField("Subject")
-                            ContactFormField("Message", isTextArea = true)
-                            
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.px, 24.px)
-                                    .backgroundColor(rgb(6, 182, 212))
-                                    .borderRadius(8.px)
-                                    .cursor(Cursor.Pointer),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                SpanText(
-                                    "Send Message",
-                                    modifier = Modifier
-                                        .fontSize(16.px)
-                                        .fontWeight(600)
-                                        .color(Color.white)
-                                )
+                        // Validated contact form
+                        ValidatedContactForm(
+                            onSubmitSuccess = { message ->
+                                console.log("Contact form submitted successfully: $message")
                             }
-                        }
+                        )
                     }
                     
                     // Right side - Contact info
@@ -136,7 +118,7 @@ fun ContactPage() {
                             modifier = Modifier
                                 .fontSize(28.px)
                                 .fontWeight(700)
-                                .color(rgb(15, 23, 42))
+                                .color(Color.white)
                         )
                         
                         ContactInfoCard(
@@ -210,43 +192,6 @@ fun ContactPage() {
     }
 }
 
-@Composable
-private fun ContactFormField(
-    label: String,
-    isTextArea: Boolean = false
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.px)
-    ) {
-        SpanText(
-            label,
-            modifier = Modifier
-                .fontSize(14.px)
-                .fontWeight(500)
-                .color(rgb(15, 23, 42))
-        )
-        
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(if (isTextArea) 120.px else 48.px)
-                .backgroundColor(rgb(249, 250, 251))
-                .border(1.px, LineStyle.Solid, rgb(209, 213, 219))
-                .borderRadius(8.px)
-                .padding(12.px),
-            verticalArrangement = Arrangement.Top
-        ) {
-            // Form field placeholder
-            SpanText(
-                "Enter ${label.lowercase()}...",
-                modifier = Modifier
-                    .fontSize(14.px)
-                    .color(rgb(156, 163, 175))
-            )
-        }
-    }
-}
 
 @Composable
 private fun ContactInfoCard(
@@ -257,10 +202,10 @@ private fun ContactInfoCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(Color.white)
+            .backgroundColor(rgba(255, 255, 255, 0.08))
             .borderRadius(12.px)
             .padding(24.px)
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 12.px, color = rgba(0, 0, 0, 0.1)),
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 12.px, color = rgba(0, 0, 0, 0.3)),
         verticalArrangement = Arrangement.spacedBy(8.px)
     ) {
         SpanText(
@@ -276,14 +221,14 @@ private fun ContactInfoCard(
             modifier = Modifier
                 .fontSize(18.px)
                 .fontWeight(700)
-                .color(rgb(15, 23, 42))
+                .color(Color.white)
         )
         
         SpanText(
             description,
             modifier = Modifier
                 .fontSize(14.px)
-                .color(rgb(100, 116, 139))
+                .color(rgba(255, 255, 255, 0.8))
         )
     }
 }

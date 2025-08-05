@@ -8,22 +8,14 @@ import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.components.seo.KhodedSEOHead
 import com.probro.khoded.components.seo.SEOConfigs
 import com.probro.khoded.components.widgets.Footer
-// import com.probro.khoded.components.composables.popupscreen.PopUpScreen - disabled
 import com.probro.khoded.pages.homeSections.ModernAboutSection
 import com.probro.khoded.pages.homeSections.ModernContactSection
 import com.probro.khoded.pages.homeSections.ModernLandingHero
 import com.probro.khoded.pages.homeSections.ModernServicesSection
-// import com.probro.khoded.styles.animations.makeInvisibleKeyFrames - disabled
-// import com.probro.khoded.styles.animations.makeVisibleKeyFrames - disabled
-// import com.probro.khoded.styles.animations.shiftBackwardKeyframes - disabled
-// import com.probro.khoded.styles.animations.shiftForwardKeyFrames - disabled
-// import com.probro.khoded.styles.base.BodyStyle - not found, removed
-// import com.probro.khoded.styles.popups.MessagingPopUpTextVariant - disabled
 import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.NavigationRoute
 import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.WithNavigation
-// import com.probro.khoded.utils.popUp.PopUpStateHolders - disabled
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -36,9 +28,15 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.style.animation.toAnimation
 import com.varabyte.kobweb.silk.style.toModifier
+import org.jetbrains.compose.web.css.margin
+import org.jetbrains.compose.web.css.maxWidth
 import org.jetbrains.compose.web.css.ms
+import org.jetbrains.compose.web.css.padding
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.css.vw
+import org.jetbrains.compose.web.css.width
+import org.jetbrains.compose.web.dom.Main
 
 @Page
 @Composable
@@ -72,7 +70,6 @@ fun Index() {
                 ctx.router.navigateTo(page.path)
             }
             Footer()
-            // PopUpComposable() - disabled
         }
     }
 }
@@ -83,49 +80,30 @@ fun HomePageSections(
     onNavigate: (path: NavigationRoute) -> Unit
 ) {
     // Main content wrapper for accessibility
-    org.jetbrains.compose.web.dom.Main(
+    Main(
         attrs = {
             id("main-content")
             attr("role", "main")
             attr("aria-label", "Main page content")
+            style {
+                width(100.vw)
+                maxWidth(100.vw)
+                margin(0.px)
+                padding(0.px)
+            }
         }
     ) {
         Column(
             modifier = modifier,
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.Top
         ) {
-        ModernLandingHero(
-            onNavigate = onNavigate
-        )
-        ModernServicesSection()
-        ModernAboutSection()
-        ModernContactSection()
+            ModernLandingHero(
+                onNavigate = onNavigate
+            )
+            ModernServicesSection()
+            ModernAboutSection()
+            ModernContactSection()
         }
     }
 }
-
-// @Composable
-// fun PopUpComposable(modifier: Modifier = Modifier) {
-//     val popUpState by PopUpStateHolders.MessagingPopUpStateHolder.popUpState.collectAsState()
-//
-//     Box(
-//         contentAlignment = Alignment.Center,
-//         modifier = modifier
-//     ) {
-//         with(popUpState) {
-//             PopUpScreen(
-//                 popUpUIModel = this,
-//                 textVariant = MessagingPopUpTextVariant,
-//                 modifier = Modifier
-//                     .animation(
-//                         if (isShowing) makeVisibleKeyFrames.toAnimation(300.ms)
-//                         else makeInvisibleKeyFrames.toAnimation(300.ms),
-//                         if (isShowing) shiftForwardKeyFrames.toAnimation(300.ms)
-//                         else shiftBackwardKeyframes.toAnimation(300.ms)
-//                     )
-//             )
-//         }
-//     }
-// } - disabled
 

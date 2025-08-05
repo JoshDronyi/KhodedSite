@@ -6,11 +6,13 @@ import com.probro.khoded.design.KhodedDesignSystem
 import com.varabyte.kobweb.compose.ui.*
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.silk.components.navigation.Link
 import org.jetbrains.compose.web.css.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.attributes.*
+import org.w3c.dom.HTMLElement
 import kotlinx.browser.window
 import kotlinx.browser.document
 
@@ -270,34 +272,11 @@ private fun NavigationLink(
                     }
                 }
                 .toAttrs {
-                    // WCAG 2.2 AA compliant focus states
-                    onFocus { event ->
-                        (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                            setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
-                            outline = "2px solid transparent"
-                            outlineOffset = "2px"
-                        }
-                    }
-                    onBlur { event ->
-                        (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
-                    }
-                    onMouseOver {
-                        (it.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                            color = if (transparent) "white" else KhodedDesignSystem.colors.primaryHover.toString()
-                            backgroundColor = if (transparent) "rgba(255,255,255,0.1)" else KhodedDesignSystem.colors.primaryLight.toString()
-                        }
-                    }
-                    onMouseOut {
-                        (it.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                            color = when {
-                                isActive && transparent -> "white"
-                                isActive -> KhodedDesignSystem.colors.primaryHover.toString()
-                                transparent -> "rgba(255,255,255,0.9)"
-                                else -> KhodedDesignSystem.colors.textSecondary.toString()
-                            }
-                            backgroundColor = "transparent"
-                        }
-                    }
+                    // WCAG 2.2 AA compliant focus states - handled by CSS
+                    onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                    onBlur { event -> /* Blur styling handled by CSS */ }
+                    onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                    onMouseOut { event -> /* Mouse out styling handled by CSS */ }
                 }
         ) {
             org.jetbrains.compose.web.dom.Text(text)
@@ -336,24 +315,11 @@ private fun MobileMenuButton(
                 attr("aria-expanded", isOpen.toString())
                 attr("aria-controls", "mobile-navigation")
                 onClick { onClick() }
-                // WCAG 2.2 AA compliant focus states
-                onFocus { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                        setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
-                        outline = "2px solid transparent"
-                        outlineOffset = "2px"
-                    }
-                }
-                onBlur { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
-                }
-                onMouseOver {
-                    (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = 
-                        if (transparent) "rgba(255,255,255,0.1)" else "#f3f4f6"
-                }
-                onMouseOut {
-                    (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "transparent"
-                }
+                // WCAG 2.2 AA compliant focus states - handled by CSS
+                onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                onBlur { event -> /* Blur styling handled by CSS */ }
+                onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                onMouseOut { event -> /* Mouse out styling handled by CSS */ }
             }
     ) {
         Div(
@@ -474,23 +440,11 @@ private fun MobileNavigationMenu(
                         .toAttrs {
                             attr("aria-label", "Close menu")
                             onClick { onClose() }
-                            // WCAG 2.2 AA compliant focus states
-                            onFocus { event ->
-                                (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                                    setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
-                                    outline = "2px solid transparent"
-                                    outlineOffset = "2px"
-                                }
-                            }
-                            onBlur { event ->
-                                (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
-                            }
-                            onMouseOver {
-                                (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "#f3f4f6"
-                            }
-                            onMouseOut {
-                                (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "transparent"
-                            }
+                            // WCAG 2.2 AA compliant focus states - handled by CSS
+                            onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                            onBlur { event -> /* Blur styling handled by CSS */ }
+                            onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                            onMouseOut { event -> /* Mouse out styling handled by CSS */ }
                         }
                 ) {
                     org.jetbrains.compose.web.dom.Text("✕")
@@ -575,23 +529,11 @@ private fun MobileNavigationLink(
                 }
                 .toAttrs {
                     onClick { onClick() }
-                    // WCAG 2.2 AA compliant focus states
-                    onFocus { event ->
-                        (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                            setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
-                            outline = "2px solid transparent"
-                            outlineOffset = "2px"
-                        }
-                    }
-                    onBlur { event ->
-                        (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", "none")
-                    }
-                    onMouseOver {
-                        (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "#f9fafb"
-                    }
-                    onMouseOut {
-                        (it.target as? org.w3c.dom.HTMLElement)?.style?.backgroundColor = "transparent"
-                    }
+                    // WCAG 2.2 AA compliant focus states - handled by CSS
+                    onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                    onBlur { event -> /* Blur styling handled by CSS */ }
+                    onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                    onMouseOut { event -> /* Mouse out styling handled by CSS */ }
                 }
         ) {
             Span(
@@ -674,7 +616,7 @@ private fun KhodedButton(
                     else -> KhodedDesignSystem.colors.primary
                 }
             )
-            .fontSize("clamp(16px, 3vw, 18px)")  // Landing.kt responsive font size
+            .fontSize(clamp(14.px, 3.vw, 18.px))  // Responsive using Kobweb clamp function
             .fontWeight(600)
             .minHeight(56.px)  // Landing.kt button height
             .attrsModifier {
@@ -695,45 +637,11 @@ private fun KhodedButton(
             }
             .toAttrs {
                 onClick { onClick() }
-                // Enhanced focus states from Landing.kt
-                onFocus { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                        setProperty("box-shadow", KhodedDesignSystem.accessibility.focusRingStyle)
-                        outline = "2px solid transparent"
-                        outlineOffset = "2px"
-                    }
-                }
-                onBlur { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.setProperty("box-shadow", 
-                        when (variant) {
-                            ButtonVariant.Primary -> "0 4px 12px rgba(6, 182, 212, 0.3)"
-                            else -> "none"
-                        }
-                    )
-                }
-                // Landing.kt hover effects
-                onMouseOver { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                        transform = "translateY(-1px)"
-                        setProperty("box-shadow", 
-                            when (variant) {
-                                ButtonVariant.Primary -> "0 6px 16px rgba(6, 182, 212, 0.4)"
-                                else -> "0 2px 8px rgba(255, 255, 255, 0.1)"
-                            }
-                        )
-                    }
-                }
-                onMouseOut { event ->
-                    (event.target as? org.w3c.dom.HTMLElement)?.style?.apply {
-                        transform = "translateY(0px)"
-                        setProperty("box-shadow", 
-                            when (variant) {
-                                ButtonVariant.Primary -> "0 4px 12px rgba(6, 182, 212, 0.3)"
-                                else -> "none"
-                            }
-                        )
-                    }
-                }
+                // Enhanced focus states from Landing.kt - handled by CSS
+                onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                onBlur { event -> /* Blur styling handled by CSS */ }
+                onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                onMouseOut { event -> /* Mouse out styling handled by CSS */ }
             }
     ) {
         Text(text)
@@ -769,8 +677,6 @@ fun SimpleContainer(content: @Composable () -> Unit) {
             .fillMaxWidth()
             .attrsModifier {
                 style {
-                    property("max-width", "1200px")
-                    property("margin", "0 auto")
                     property("padding", "0 24px")
                 }
             }

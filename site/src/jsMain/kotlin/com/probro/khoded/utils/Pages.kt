@@ -4,6 +4,7 @@ import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
 import com.probro.khoded.models.Founders
+import kotlinx.browser.document
 
 /**
  * Interface defining the common structure for page sections throughout the application.
@@ -69,7 +70,7 @@ object Pages {
             val mainImage: String = Images.HomePage.landing_Rocket
             val underlineImage: String = Images.Common.blueUnderline
             var ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
-                //TODO: Navigate to the schedule consultation section.
+                scrollToSection("contact")
             }
         }
 
@@ -122,7 +123,7 @@ object Pages {
             //            val subImage: String =
             val quotes: String = Images.HomePage.consultation_Quotes
             val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
-                //TODO: Navigate to the  contact section.
+                scrollToSection("contact")
             }
         }
 
@@ -339,6 +340,20 @@ object Pages {
         }
     }
 
+}
+
+/**
+ * Scrolls smoothly to a section by its element ID
+ * Used by CTA buttons to navigate to different page sections
+ */
+private fun scrollToSection(sectionId: String) {
+    val element = document.getElementById(sectionId)
+    element?.scrollIntoView(
+        kotlin.js.json(
+            "behavior" to "smooth",
+            "block" to "start"
+        )
+    )
 }
 
 typealias WebService = Pair<String, String>

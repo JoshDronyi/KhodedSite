@@ -42,8 +42,7 @@ fun WithNavigation(
 ) {
     val navigationState = rememberNavigationState()
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth()
     ) {
         NavigationHeader()
         content(navigationState)

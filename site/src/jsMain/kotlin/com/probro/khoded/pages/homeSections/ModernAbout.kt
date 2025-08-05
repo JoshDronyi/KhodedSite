@@ -3,7 +3,12 @@ package com.probro.khoded.pages.homeSections
 import androidx.compose.runtime.*
 import com.probro.khoded.design.KhodedDesignSystem
 import com.probro.khoded.utils.*
+import com.probro.khoded.components.layout.KhodedSection
+import com.probro.khoded.components.layout.VerticalSpacer
+import com.probro.khoded.components.branding.KhodedLogo
+import com.probro.khoded.components.branding.LogoSize
 import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.compose.foundation.layout.*
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -20,51 +25,26 @@ import org.jetbrains.compose.web.dom.*
  */
 @Composable
 fun ModernAboutSection() {
-    Section(
-        attrs = Modifier
-            .fillMaxWidth()
-            .backgroundColor(KhodedDesignSystem.colors.backgroundDark) // Use design system navy
-            .padding(topBottom = 120.px, leftRight = 24.px)
-            .toAttrs {
-                id("about")
-                attr("aria-label", "About Khoded")
-            }
+    KhodedSection(
+        id = "about",
+        ariaLabel = "About Khoded", 
+        backgroundColor = KhodedDesignSystem.colors.backgroundDarkSecondary
     ) {
-        Container(
-            modifier = Modifier
-                .fillMaxWidth()
-                .maxWidth(1200.px),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Section header
-            AboutHeader()
-            
-            Div(attrs = { style { height(80.px) } })
-            
-            // Key advantages grid
-            AdvantagesGrid()
-            
-            Div(attrs = { style { height(80.px) } })
-            
-            // Stats and credibility section
-            StatsSection()
-        }
+        // Section header
+        AboutHeader()
+        
+        VerticalSpacer(80.px)
+        
+        // Key advantages grid
+        AdvantagesGrid()
+        
+        VerticalSpacer(80.px)
+        
+        // Stats and credibility section
+        StatsSection()
     }
 }
 
-@Composable
-private fun Container(
-    modifier: Modifier = Modifier,
-    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    content: @Composable () -> Unit
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = horizontalAlignment
-    ) {
-        content()
-    }
-}
 
 @Composable
 private fun AboutHeader() {
@@ -81,31 +61,13 @@ private fun AboutHeader() {
                 .padding(10.px, 24.px)
                 .borderRadius(50.px)
         ) {
-            // Mini logo - Using design system
-            org.jetbrains.compose.web.dom.Div(
-                attrs = {
-                    style {
-                        width(20.px)
-                        height(16.px)
-                        backgroundColor(KhodedDesignSystem.colors.primary)  // Design system teal
-                        borderRadius(4.px)
-                        display(DisplayStyle.Flex)
-                        property("align-items", "center")
-                        property("justify-content", "center")
-                        fontSize(10.px)
-                        fontWeight(700)
-                        color(Color.white)
-                        fontFamily("'Fira Code', 'Consolas', 'Monaco', monospace")
-                    }
-                }
-            ) {
-                org.jetbrains.compose.web.dom.Text("</>")
-            }
+            // Mini logo - Using unified component
+            KhodedLogo(size = LogoSize.Medium)
             
             SpanText(
                 text = "Our Competitive Advantage",
                 modifier = Modifier
-                    .fontSize(KhodedDesignSystem.typography.bodyFluidSmall)  // Responsive typography
+                    .fontSize(clamp(12.px, 2.5.vw, 16.px))  // Responsive typography using Kobweb clamp
                     .fontWeight(600)
                     .color(KhodedDesignSystem.colors.primary)  // Design system teal
             )
@@ -114,7 +76,7 @@ private fun AboutHeader() {
         // Main heading - Using responsive design system typography
         H2(
             attrs = Modifier
-                .fontSize(KhodedDesignSystem.typography.sectionLarge)  // Responsive section heading
+                .fontSize(clamp(28.px, 5.vw, 48.px))  // Responsive section heading using Kobweb clamp
                 .fontWeight(800)
                 .color(Color.white)
                 .textAlign(TextAlign.Center)
@@ -127,25 +89,25 @@ private fun AboutHeader() {
                     }
                 }
         ) {
-            Text("Why businesses worldwide choose Khoded")
+            Text("Why Smart Businesses Choose Kotlin Multiplatform")
         }
         
         // Description - Using responsive typography
         P(
             attrs = Modifier
-                .fontSize(KhodedDesignSystem.typography.bodyFluidLarge)  // Responsive body text
+                .fontSize(clamp(16.px, 3.vw, 22.px))  // Responsive body text using Kobweb clamp
                 .fontWeight(400)
                 .color(rgba(255, 255, 255, 0.95))  // Enhanced readability
                 .textAlign(TextAlign.Center)
                 .lineHeight(1.6)
-                .maxWidth(700.px)
+                .maxWidth(800.px)
                 .toAttrs {
                     style {
                         property("text-shadow", "0 1px 8px rgba(0, 0, 0, 0.4)")  // Landing.kt text shadow
                     }
                 }
         ) {
-            Text("Connecticut-based Kotlin Multiplatform specialists serving the Americas, Africa, and beyond — delivering 80% code reuse and native performance to ambitious businesses worldwide.")
+            Text("Fortune 500 companies like Netflix and McDonald's trust Kotlin Multiplatform. Smart small businesses partner with us to access the same technology advantages at a fraction of the cost.")
         }
     }
 }
@@ -164,16 +126,16 @@ private fun AdvantagesGrid() {
                 }
             }
     ) {
-        // Technical Differentiator
+        // Cost Advantage
         AdvantageCard(
-            icon = "⚡",
-            title = "Kotlin Shared Codebase",
-            description = "Our lean team delivers the same quality as larger agencies, but with 40% reduced development time and cost advantages through efficient code sharing.",
+            icon = "💰",
+            title = "60% Lower Development Costs",
+            description = "Why hire separate iOS and Android teams? Our Kotlin Multiplatform approach lets you build once and deploy everywhere, dramatically reducing both development and maintenance costs.",
             highlights = listOf(
-                "80% code reuse across platforms",
-                "Native performance guaranteed", 
-                "40% faster development",
-                "Cost-effective lean team"
+                "Single development team vs. multiple",
+                "80% shared code = 60% cost savings",
+                "One codebase to maintain",
+                "Faster feature rollouts"
             ),
             accentColor = rgb(6, 182, 212)
         )
@@ -181,27 +143,27 @@ private fun AdvantagesGrid() {
         // Market Position
         AdvantageCard(
             icon = "🎯",
-            title = "Early Market Specialization",
-            description = "While others are still learning, we're already experts. With 2,500+ available libraries and backing from JetBrains & Google, we're ahead of the curve.",
+            title = "3-6 Months Faster Launch",
+            description = "Beat your competition to market. While they're building separate iOS and Android apps, you'll already be serving customers on both platforms with a single development cycle.",
             highlights = listOf(
-                "Early KMP specialization",
-                "2,500+ libraries available",
-                "JetBrains & Google backing",
-                "Adopted by Netflix, McDonald's"
+                "Simultaneous platform launches",
+                "50% faster development cycles", 
+                "Quick market validation",
+                "Rapid feature iterations"
             ),
             accentColor = rgb(139, 92, 246)
         )
         
         // Global Reach
         AdvantageCard(
-            icon = "🌍",
-            title = "Global Reach, Personal Touch",
-            description = "Connecticut-based team serving ambitious businesses across the Americas, Africa, and worldwide — with direct founder access and personalized support.",
+            icon = "🛡️",
+            title = "Risk-Free Technology Choice", 
+            description = "Choose the same technology trusted by Netflix, McDonald's, and Cash App. Kotlin Multiplatform is backed by Google & JetBrains with enterprise-grade support and a growing ecosystem.",
             highlights = listOf(
-                "Americas & Africa focus",
-                "Worldwide service delivery",
-                "Direct founder communication",
-                "Personal support guarantee"
+                "Fortune 500 company adoption",
+                "Google & JetBrains backing",
+                "Enterprise-grade stability",
+                "Growing developer community"
             ),
             accentColor = rgb(34, 197, 94)
         )
@@ -336,7 +298,7 @@ private fun StatsSection() {
         // Stats title - Using responsive typography
         H3(
             attrs = Modifier
-                .fontSize(KhodedDesignSystem.typography.sectionMedium)  // Responsive section heading
+                .fontSize(clamp(24.px, 4.vw, 36.px))  // Responsive section heading using Kobweb clamp
                 .fontWeight(700)
                 .color(Color.white)
                 .textAlign(TextAlign.Center)
@@ -383,7 +345,7 @@ private fun StatsSection() {
             ) {
                 P(
                     attrs = Modifier
-                        .fontSize(KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography
+                        .fontSize(clamp(14.px, 3.vw, 18.px))  // Responsive typography using Kobweb clamp
                         .fontWeight(600)
                         .color(KhodedDesignSystem.colors.primary)  // Design system teal
                         .textAlign(TextAlign.Center)
@@ -394,7 +356,7 @@ private fun StatsSection() {
                 
                 P(
                     attrs = Modifier
-                        .fontSize(KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography
+                        .fontSize(clamp(14.px, 3.vw, 18.px))  // Responsive typography using Kobweb clamp
                         .color(rgba(255, 255, 255, 0.95))  // Enhanced readability
                         .textAlign(TextAlign.Center)
                         .lineHeight(1.6)
@@ -428,7 +390,7 @@ private fun StatMetric(value: String, label: String, description: String) {
         SpanText(
             text = label,
             modifier = Modifier
-                .fontSize(KhodedDesignSystem.typography.bodyFluidMedium)  // Responsive typography
+                .fontSize(clamp(14.px, 3.vw, 18.px))  // Responsive typography using Kobweb clamp
                 .fontWeight(600)
                 .color(Color.white)
         )
