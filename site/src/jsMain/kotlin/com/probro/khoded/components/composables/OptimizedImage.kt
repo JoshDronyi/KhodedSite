@@ -30,10 +30,11 @@ fun OptimizedImage(
                 .backgroundColor(Color("#f8f9fa"))
                 .borderRadius(8.px)
                 .display(DisplayStyle.Flex)
-                .alignItems(AlignItems.Center)
-                .justifyContent(JustifyContent.Center)
                 .border(1.px, LineStyle.Solid, Color("#dee2e6"))
-                .toAttrs()
+                .toAttrs{
+                    attr("align-items", "center")
+                    attr("justify-content", "center")
+                }
         ) {
             Text("Image not available")
         }

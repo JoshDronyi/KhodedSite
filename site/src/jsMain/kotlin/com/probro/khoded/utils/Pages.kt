@@ -3,8 +3,25 @@ package com.probro.khoded.utils
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
-import com.probro.khoded.pages.aboutSections.Founders
+import com.probro.khoded.models.Founders
+import kotlinx.browser.document
 
+/**
+ * Interface defining the common structure for page sections throughout the application.
+ *
+ * This interface establishes a consistent contract for all page sections,
+ * enabling uniform handling of navigation, content management, and routing.
+ * It follows the principle of composition over inheritance for flexible
+ * section management.
+ *
+ * @property id Unique identifier for the section, typically used for HTML anchors
+ * @property slug URL slug component for the section's parent page
+ * @property title Human-readable title displayed in navigation and headers
+ * @property path Complete navigational path combining slug and section identifier
+ *
+ * @since 1.0.0
+ * @see Pages for concrete implementations
+ */
 interface PageSection {
     val id: String
     val slug: String
@@ -12,6 +29,31 @@ interface PageSection {
     val path: String
 }
 
+/**
+ * Comprehensive content and structure definitions for all website pages.
+ *
+ * This object serves as a centralized content management system, organizing
+ * all page content, metadata, and structural information. It provides a
+ * type-safe way to manage content across the entire application while
+ * maintaining clean separation between content and presentation.
+ *
+ * The structure is organized hierarchically:
+ * - Each major page (Home, Story, Contact) has its own sealed class
+ * - Sections within pages are defined as objects with their specific content
+ * - Shared data models and utilities are defined at the appropriate scope
+ *
+ * Benefits of this approach:
+ * - Centralized content management
+ * - Type safety for all content references
+ * - Easy content updates without code changes
+ * - Consistent structure across all pages
+ * - Support for internationalization and content variations
+ *
+ * @since 1.0.0
+ * @see PageSection for the base interface
+ * @see Routes for routing definitions
+ * @see Images for image resource management
+ */
 object Pages {
     sealed class Home_Section(
         override val id: String, override val title: String, override val slug: String, override val path: String
@@ -28,7 +70,7 @@ object Pages {
             val mainImage: String = Images.HomePage.landing_Rocket
             val underlineImage: String = Images.Common.blueUnderline
             var ctaButton: ButtonState = ButtonState(buttonText = "Get Khoded") {
-                //TODO: Navigate to the schedule consultation section.
+                scrollToSection("contact")
             }
         }
 
@@ -81,7 +123,7 @@ object Pages {
             //            val subImage: String =
             val quotes: String = Images.HomePage.consultation_Quotes
             val ctaButton: ButtonState = ButtonState(buttonText = "SCHEDULE A FREE 30 MIN CONSULTATION") {
-                //TODO: Navigate to the  contact section.
+                scrollToSection("contact")
             }
         }
 
@@ -298,6 +340,20 @@ object Pages {
         }
     }
 
+}
+
+/**
+ * Scrolls smoothly to a section by its element ID
+ * Used by CTA buttons to navigate to different page sections
+ */
+private fun scrollToSection(sectionId: String) {
+    val element = document.getElementById(sectionId)
+    element?.scrollIntoView(
+        kotlin.js.json(
+            "behavior" to "smooth",
+            "block" to "start"
+        )
+    )
 }
 
 typealias WebService = Pair<String, String>

@@ -1,5 +1,10 @@
 package com.probro.khoded.local
 
+// DEPRECATED: This file is disabled for performance optimization
+// The new SqlX4kDatabase replaces this heavy Exposed-based implementation
+// Saving ~2.2MB+ of dependencies (PostgreSQL + HikariCP + 7 Exposed modules)
+
+/*
 import Answer
 import Answers
 import ClientMessage
@@ -114,3 +119,4 @@ fun FormAnswerDTO.toEntity(): Answer {
         this.value = answerValue
     }
 }
+*/

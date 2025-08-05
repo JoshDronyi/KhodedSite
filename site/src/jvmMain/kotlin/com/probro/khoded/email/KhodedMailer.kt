@@ -1,5 +1,10 @@
 package com.probro.khoded.email
 
+// DEPRECATED: This file is disabled for performance testing
+// The new KtorEmailService replaces all this functionality
+// with significantly lighter dependencies
+
+/*
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver
@@ -312,3 +317,4 @@ enum class ServiceAccountKey(val value: String) {
     CLIENT_URL("client_x509_cert_url"),
     UNIVERSE_DOMAIN("universe_domain")
 }
+*/

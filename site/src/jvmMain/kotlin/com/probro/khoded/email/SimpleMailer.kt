@@ -1,5 +1,9 @@
 package com.probro.khoded.email
 
+// DEPRECATED: This file is disabled for performance testing
+// The new KtorEmailService replaces all this functionality
+
+/*
 import at.quickme.kotlinmailer.data.SMTPLoginInfo
 import at.quickme.kotlinmailer.delivery.MailerManager
 import at.quickme.kotlinmailer.delivery.mailerBuilder
@@ -54,3 +58,4 @@ class SimpleMailer(val logger: Logger) {
     }
 
 }
+*/
