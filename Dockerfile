@@ -10,9 +10,9 @@ ARG KOBWEB_APP_ROOT="site"
 # final stage, we'll only extract what we need from this stage, saving a lot
 # of space.
 
-FROM openjdk:19-jdk-slim AS export
+FROM openjdk:21-jdk-slim AS export
 
-ENV KOBWEB_CLI_VERSION=0.9.18
+ENV KOBWEB_CLI_VERSION=0.9.20
 ARG KOBWEB_APP_ROOT
 
 # Copy the project code to an arbitrary subdir so we can install stuff in the
@@ -25,11 +25,9 @@ COPY . /project
 # install Chromium.
 RUN apt-get update \
     && apt-get install -y curl gnupg unzip wget \
-    && curl -SLO https://deb.nodesource.com/nsolid_setup_deb.sh | bash -  \
-    && chmod 500 nsolid_setup_deb.sh \
-    && ./nsolid_setup_deb.sh 21 \
-    && apt-get install nodejs -y \
-    && npm install -g npm@10.5.0 \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest \
     && npm init -y \
     && npx playwright install --with-deps chromium
 
@@ -46,14 +44,14 @@ WORKDIR /project/${KOBWEB_APP_ROOT}
 # (many free Cloud tiers only give you 512M of RAM). The following amount
 # should be more than enough to build and export our site.
 RUN mkdir ~/.gradle && \
-    echo "org.gradle.jvmargs=-Xmx256m" >> ~/.gradle/gradle.properties
+    echo "org.gradle.jvmargs=-Xmx1024m" >> ~/.gradle/gradle.properties
 
 RUN kobweb export --notty
 
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
 # server.
-FROM openjdk:19-jdk-slim AS run
+FROM openjdk:21-jdk-slim AS run
 
 ARG KOBWEB_APP_ROOT
 
