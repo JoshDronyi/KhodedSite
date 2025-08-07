@@ -6,6 +6,10 @@ ksp = "2.1.21-2.0.1"
 kotlinx-serialization = "1.8.0"
 kotlinMailer = "0.3.0"
 ktor = "3.0.3"
+jdbi = "3.45.1"
+hikaricp = "5.1.0"
+postgresql = "42.7.3"
+httpcore = "4.4.16"
 # sqlx4k = "0.52.0" # Disabled - no JVM support, causes build failures
 moko = "0.24.4"
 bootstrap = "0.1.6"
@@ -27,7 +31,15 @@ mailer-client = { module = "at.quickme.kotlinmailer:kotlinmailer-html", version.
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-plugins = { module = "io.ktor:ktor-client-plugins", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+jdbi-core = { module = "org.jdbi:jdbi3-core", version.ref = "jdbi" }
+jdbi-postgres = { module = "org.jdbi:jdbi3-postgres", version.ref = "jdbi" }
+jdbi-kotlin = { module = "org.jdbi:jdbi3-kotlin", version.ref = "jdbi" }
+jdbi-kotlin-sqlobject = { module = "org.jdbi:jdbi3-kotlin-sqlobject", version.ref = "jdbi" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+httpcore = { module = "org.apache.httpcomponents:httpcore", version.ref = "httpcore" }
 # sqlx4k-postgres = { module = "io.github.smyrgeorge:sqlx4k-postgres", version.ref = "sqlx4k" } # Disabled - no JVM support
 moko-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "moko" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko" }

@@ -185,13 +185,39 @@ private fun createLinkTag(rel: String, href: String, attributes: Map<String, Str
 private fun addStructuredData(data: Map<String, Any>) {
     val script = document.createElement("script")
     script.setAttribute("type", "application/ld+json")
-    script.textContent = kotlinx.serialization.json.Json.encodeToString(
-        kotlinx.serialization.json.JsonElement.serializer(), 
-        kotlinx.serialization.json.JsonObject(data.mapValues { 
-            kotlinx.serialization.json.JsonPrimitive(it.value.toString()) 
-        })
-    )
+    // Simplified JSON serialization to avoid kotlinx.serialization complexity
+    script.textContent = convertMapToJson(data)
     document.head?.appendChild(script)
+}
+
+private fun convertMapToJson(data: Map<String, Any>): String {
+    return buildString {
+        append("{")
+        data.entries.forEachIndexed { index, (key, value) ->
+            if (index > 0) append(",")
+            append("\"$key\":")
+            append(convertValueToJson(value))
+        }
+        append("}")
+    }
+}
+
+private fun convertValueToJson(value: Any): String {
+    return when (value) {
+        is String -> "\"$value\""
+        is Map<*, *> -> convertMapToJson(value as Map<String, Any>)
+        is List<*> -> {
+            buildString {
+                append("[")
+                value.forEachIndexed { index, item ->
+                    if (index > 0) append(",")
+                    append(convertValueToJson(item ?: ""))
+                }
+                append("]")
+            }
+        }
+        else -> "\"$value\""
+    }
 }
 
 private fun addDefaultStructuredData(config: SEOConfig, currentUrl: String) {

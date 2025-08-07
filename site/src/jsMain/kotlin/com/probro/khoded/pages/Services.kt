@@ -3,9 +3,7 @@ package com.probro.khoded.pages
 import androidx.compose.runtime.Composable
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
-import com.probro.khoded.components.widgets.Footer
 import com.probro.khoded.design.KhodedDesignSystem
-import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.WithNavigation
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -179,8 +177,6 @@ fun ServicesPage() {
                         )
                     }
                 }
-                
-                Footer()
             }
         }
     }

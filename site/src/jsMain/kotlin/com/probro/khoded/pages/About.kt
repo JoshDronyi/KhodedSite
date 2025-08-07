@@ -4,9 +4,8 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.design.KhodedDesignSystem
-import com.probro.khoded.components.widgets.Footer
-import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.WithNavigation
+import com.varabyte.kobweb.compose.css.ColorInterpolationMethod
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -44,7 +43,8 @@ fun AboutPage() {
                             linearGradient(
                                 dir = LinearGradient.Direction.ToBottomRight,
                                 from = rgb(15, 23, 42),    // Deep navy
-                                to = rgb(30, 41, 59)       // Lighter navy
+                                to = rgb(30, 41, 59),       // Lighter navy,
+                                interpolation = ColorInterpolationMethod.ProphotoRgb
                             )
                         )
                         .padding(80.px, 40.px),
@@ -54,7 +54,10 @@ fun AboutPage() {
                     H1(
                         attrs = {
                             style {
-                                property("font-size", KhodedDesignSystem.typography.sectionLarge)  // Responsive clamp string
+                                property(
+                                    "font-size",
+                                    KhodedDesignSystem.typography.sectionLarge
+                                )  // Responsive clamp string
                                 fontWeight(700)
                                 color(Color.white)
                                 textAlign("center")
@@ -185,7 +188,6 @@ fun AboutPage() {
                     }
                 }
 
-                Footer()
             }
         }
     }
