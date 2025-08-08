@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import com.probro.khoded.design.KhodedDesignSystem
 import com.probro.khoded.utils.*
 import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.ColorInterpolationMethod
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.*
@@ -34,7 +35,8 @@ fun ModernLandingHero(
                 linearGradient(
                     dir = LinearGradient.Direction.ToBottomRight,
                     from = rgb(15, 23, 42),    // Deep navy #0f172a
-                    to = rgb(30, 41, 59)       // Lighter navy #1e293b
+                    to = rgb(30, 41, 59),       // Lighter navy #1e293b
+                    interpolation = ColorInterpolationMethod.ProphotoRgb
                 )
             )
             .position(Position.Relative),

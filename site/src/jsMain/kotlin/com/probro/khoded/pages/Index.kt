@@ -1,20 +1,15 @@
 package com.probro.khoded.pages
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.components.seo.KhodedSEOHead
 import com.probro.khoded.components.seo.SEOConfigs
-import com.probro.khoded.components.widgets.Footer
 import com.probro.khoded.pages.homeSections.ModernAboutSection
 import com.probro.khoded.pages.homeSections.ModernContactSection
 import com.probro.khoded.pages.homeSections.ModernLandingHero
 import com.probro.khoded.pages.homeSections.ModernServicesSection
-import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.NavigationRoute
-import com.probro.khoded.utils.Pages
 import com.probro.khoded.utils.WithNavigation
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -69,7 +64,6 @@ fun Index() {
             ) { page ->
                 ctx.router.navigateTo(page.path)
             }
-            Footer()
         }
     }
 }

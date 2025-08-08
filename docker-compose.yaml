@@ -1,10 +1,13 @@
-version: "0.0.2"
+# version field deprecated in Docker Compose v2.35+
 
 services:
   app:
-    build: ./
+    build:
+      context: ./
+      # Use the working Dockerfile that fixes exit code 127 and eliminates redundancies
+      dockerfile: Dockerfile.working
     volumes:
-      - KhodedSite:/project/site
+      - app_data:/project/site
     container_name: KhodedSite
     ports:
       - 8081:8080
@@ -14,8 +17,20 @@ services:
       - KhodedSiteContainer
     depends_on:
       - database
+    # Security and process management (2025 best practices)
+    init: true
+    ipc: host
+    # Memory limit for container-aware JVM (70% of 2GB = ~1.4GB heap)
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+    environment:
+      - DATABASE_URL=jdbc:postgresql://database:5432/khodedBackendData
+      - DATABASE_USER=khodedAdmin
+      - DATABASE_PASSWORD=khodedAdmin
   database:
-    image: postgres:alpine3.19
+    image: postgres:16.4-alpine3.19
     environment:
       - POSTGRES_DB=khodedBackendData
       - POSTGRES_PASSWORD=khodedAdmin
@@ -24,12 +39,14 @@ services:
     expose:
       - 5432
     volumes:
-      - KhodedSite:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     networks:
       - KhodedSiteContainer
 networks:
   KhodedSiteContainer:
     driver: bridge
 volumes:
-  KhodedSite:
+  app_data:
+    driver: local
+  db_data:
     driver: local

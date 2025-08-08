@@ -25,7 +25,7 @@ kobweb {
         index {
             head.add {
                 title("Khoded | Custom Web Development & Digital Solutions for Entrepreneurs")
-                link(rel = "cannonical", href = "https://khoded.onrender.com")
+                link(rel = "canonical", href = "https://khoded.onrender.com")
                 meta(name = "robots", content = "index, follow")
             }
             description.set(
@@ -38,8 +38,28 @@ kobweb {
 }
 
 kotlin {
-    jvmToolchain(21)
+    // Use Java 21.0.8 to match Docker Eclipse Temurin version
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+        vendor.set(JvmVendorSpec.ADOPTIUM) // Eclipse Temurin
+    }
     configAsKobwebApplication("khoded", includeServer = true)
+
+    // Modern 2025 approach: Direct target configuration instead of deprecated targets.withType
+    js(IR) {
+        browser {
+            commonWebpackConfig {
+                mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.PRODUCTION
+                devtool = null // Remove source maps for smaller builds
+            }
+        }
+        // Modern compiler options instead of deprecated kotlinOptions
+        compilerOptions {
+            freeCompilerArgs.add("-Xir-minimized-member-names")
+            freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+            // K2 compiler is default in Kotlin 2.0+, no flag needed
+        }
+    }
 
 
     sourceSets {
@@ -74,20 +94,20 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
 
                 // Additional Ktor dependencies for email service  
-                implementation("io.ktor:ktor-client-plugins:3.0.3")
+                implementation(libs.ktor.client.plugins)
 
                 // JDBI for lightweight PostgreSQL database access
-                implementation("org.jdbi:jdbi3-core:3.45.1")
-                implementation("org.jdbi:jdbi3-postgres:3.45.1")
-                implementation("org.jdbi:jdbi3-kotlin:3.45.1")
-                implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.45.1")
+                implementation(libs.jdbi.core)
+                implementation(libs.jdbi.postgres)
+                implementation(libs.jdbi.kotlin)
+                implementation(libs.jdbi.kotlin.sqlobject)
 
                 // HikariCP for connection pooling
-                implementation("com.zaxxer:HikariCP:5.1.0")
-                implementation("org.postgresql:postgresql:42.7.3")
+                implementation(libs.hikaricp)
+                implementation(libs.postgresql)
 
                 // HTTP Status constants
-                implementation("org.apache.httpcomponents:httpcore:4.4.16")
+                implementation(libs.httpcore)
 
                 // Gmail api dependencies - temporarily disabled for performance testing
                 // The new KtorEmailService replaces these heavy dependencies
@@ -177,4 +197,24 @@ flyway {
     password = System.getenv("FLYWAY_PASSWORD") ?: properties.get("flyway_password").toString()
     schemas = arrayOf("khoded_base_state")
     defaultSchema = "khoded_base_state"
+}
+
+// Gradle build optimizations for smaller Docker images (modern 2025 approach)
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        // Enable aggressive optimizations
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs.add("-Xjsr305=strict")
+    }
+}
+
+// Clean build artifacts to reduce Docker context size
+tasks.register("cleanForDocker") {
+    doFirst {
+        delete("${layout.buildDirectory.get().asFile}/js")
+        delete("${layout.buildDirectory.get().asFile}/classes")
+        delete("${layout.buildDirectory.get().asFile}/generated")
+        delete("${layout.buildDirectory.get().asFile}/tmp")
+        println("Cleaned build artifacts for Docker")
+    }
 }

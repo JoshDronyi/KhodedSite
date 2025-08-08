@@ -4,9 +4,6 @@ import androidx.compose.runtime.Composable
 import com.probro.khoded.components.ErrorBoundary
 import com.probro.khoded.components.ErrorBoundaryConfig
 import com.probro.khoded.design.KhodedDesignSystem
-import com.probro.khoded.components.widgets.Footer
-import com.probro.khoded.components.forms.ValidatedContactForm
-import com.probro.khoded.utils.NavigationHeader
 import com.probro.khoded.utils.WithNavigation
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -100,11 +97,12 @@ fun ContactPage() {
                                 .color(Color.white)
                         )
                         
-                        // Validated contact form
-                        ValidatedContactForm(
-                            onSubmitSuccess = { message ->
-                                console.log("Contact form submitted successfully: $message")
-                            }
+                        // Contact form placeholder
+                        SpanText(
+                            text = "Contact form coming soon. Please email us at admin@khoded.com",
+                            modifier = Modifier
+                                .fontSize(16.px)
+                                .color(rgba(255, 255, 255, 0.8))
                         )
                     }
                     
@@ -185,8 +183,6 @@ fun ContactPage() {
                         }
                     }
                 }
-                
-                Footer()
             }
         }
     }
