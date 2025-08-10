@@ -22,6 +22,7 @@ import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.probro.khoded.components.forms.ValidatedContactForm
 
 /**
  * Contact Page - Get in touch with Khoded
@@ -97,12 +98,13 @@ fun ContactPage() {
                                 .color(Color.white)
                         )
                         
-                        // Contact form placeholder
-                        SpanText(
-                            text = "Contact form coming soon. Please email us at admin@khoded.com",
-                            modifier = Modifier
-                                .fontSize(16.px)
-                                .color(rgba(255, 255, 255, 0.8))
+                        // Validated contact form
+                        ValidatedContactForm(
+                            modifier = Modifier.fillMaxWidth(),
+                            onSubmitSuccess = { message ->
+                                // Optional: Add analytics tracking or other success actions
+                                println("Contact form submitted successfully: $message")
+                            }
                         )
                     }
                     

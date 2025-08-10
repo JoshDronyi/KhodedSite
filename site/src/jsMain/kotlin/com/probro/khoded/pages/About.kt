@@ -22,6 +22,7 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.css.functions.clamp
+import com.probro.khoded.models.Founders
 
 /**
  * About Page - Company Story and Team
@@ -133,17 +134,17 @@ fun AboutPage() {
                         horizontalArrangement = Arrangement.spacedBy(40.px),
                         verticalAlignment = Alignment.Top
                     ) {
-                        // Team member cards would go here
+                        // Founders - Esther and Joshua Dronyi
                         TeamMemberCard(
-                            name = "Esther Founder",
-                            role = "Co-Founder & UX Strategy",
-                            description = "Expert in Kotlin Multiplatform UX patterns and Connecticut market insights, ensuring our solutions meet local business needs."
+                            name = Founders.ESTHER.name,
+                            role = Founders.ESTHER.title,
+                            description = Founders.ESTHER.bio
                         )
 
                         TeamMemberCard(
-                            name = "Josh Founder",
-                            role = "Co-Founder & KMP Architect",
-                            description = "Kotlin Multiplatform specialist with deep expertise in shared codebase architecture and enterprise-grade solutions."
+                            name = Founders.JOSHUA.name,
+                            role = Founders.JOSHUA.title,
+                            description = Founders.JOSHUA.bio
                         )
                     }
                 }

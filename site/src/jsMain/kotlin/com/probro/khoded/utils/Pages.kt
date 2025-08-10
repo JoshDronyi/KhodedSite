@@ -3,6 +3,7 @@ package com.probro.khoded.utils
 import com.probro.khoded.models.ButtonState
 import com.probro.khoded.models.Images
 import com.probro.khoded.models.Routes
+import com.probro.khoded.models.Founder
 import com.probro.khoded.models.Founders
 import kotlinx.browser.document
 
@@ -205,21 +206,21 @@ object Pages {
             val jointFoundersImage = Images.StoryPage.jointFounderImage
 
             val estherBio = TeamBio(
-                name = "Esther Dronyi",
-                position = "CEO/Co-Founder",
+                name = Founders.ESTHER.name,
+                position = Founders.ESTHER.title,
                 image = Images.StoryPage.founderEsther,
-                fullStory = Strings.EstherFounderBio, //"She cool or whateva!"
-                founderType = Founders.CEO,
+                fullStory = Founders.ESTHER.bio,
+                founder = Founders.ESTHER,
                 title = Strings.EstherTitle,
                 desc = Strings.EstherDesc,
                 shortDesc = Strings.EstherShortDesc
             )
             val joshBio = TeamBio(
-                name = "Joshua Dronyi",
-                position = "CTO/Co-Founder",
+                name = Founders.JOSHUA.name,
+                position = Founders.JOSHUA.title,
                 image = Images.StoryPage.founderJosh,
-                fullStory = Strings.JoshFounderBio, //"He cool or whateva!"
-                founderType = Founders.CTO,
+                fullStory = Founders.JOSHUA.bio,
+                founder = Founders.JOSHUA,
                 title = Strings.JoshTitle,
                 desc = Strings.JoshDesc,
                 shortDesc = Strings.JoshShortDesc
@@ -271,7 +272,7 @@ object Pages {
             val shortDesc: String,
             val desc: String,
             val title: String,
-            val founderType: Founders
+            val founder: Founder
         )
 
         data class JobPosition(
