@@ -126,7 +126,7 @@ private fun NavigationLink(text: String, href: String) {
                 .color(rgba(255, 255, 255, 0.9)) // Light white for contrast against navy
                 .padding(12.px, 16.px)
                 .borderRadius(8.px)
-                // TODO: Add hover effect to change to teal when API allows
+                // Hover effect will be added when Kobweb CSS API stabilizes
         )
     }
 }

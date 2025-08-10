@@ -23,3 +23,17 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# SECURITY: Sensitive files - NEVER commit these
+local.properties
+secrets/
+credentials.json
+*.key
+*.pem
+*.p12
+.env
+.env.local
+.env.production
+.env.staging
+**/tokens/
+**/credentials/

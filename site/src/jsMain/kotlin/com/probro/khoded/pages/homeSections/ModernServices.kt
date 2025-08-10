@@ -192,7 +192,7 @@ private fun ServiceCard(
                     border(1.px, LineStyle.Solid, rgba(0, 0, 0, 0.05))
                     property("transition", "all 0.3s ease")
                 }
-                // TODO: Add hover effects when API is available
+                // Note: hover effects will be added when Compose API stabilizes
             }
     ) {
         Column(

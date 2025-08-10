@@ -83,6 +83,12 @@ kotlin {
                 implementation(libs.silk.icons.mdi)
             }
         }
+        
+        val jsTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test.js)
+            }
+        }
         val jvmMain by getting {
             dependencies {
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
@@ -118,7 +124,9 @@ kotlin {
                 // implementation("com.google.auth:google-auth-library-credentials:1.16.1")
                 // implementation("com.google.http-client:google-http-client:1.43.1")
 
-                //TODO: LOOK UP flyway GRADLE DEPENDENCIES for database migrations
+                // Database migrations with Flyway - properly configured
+                implementation(libs.flyway.core)
+                implementation(libs.flyway.postgres)
 
                 // Temporarily disable database dependencies to test the application
                 // Since you're not saving data yet, we can run without database for now
@@ -140,61 +148,61 @@ kotlin {
 
             }
         }
+        
+        val jvmTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test.junit5)
+                runtimeOnly(libs.junit.jupiter.engine)
+                runtimeOnly(libs.junit.platform.launcher)
+            }
+        }
+        
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
+        }
     }
 }
 
-// Load properties for build configuration
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
+// SECURITY: Load configuration from environment variables only
+// No longer loading from local.properties for security
+fun getEnvVar(name: String, default: String = ""): String = System.getenv(name) ?: default
 
 buildkonfig {
     packageName = "com.probro.khoded"
     objectName = "KhodedConfig"
-    // exposeObjectWithName = "YourAwesomePublicConfig"
 
     defaultConfigs {
-        //Gmail Config
-        buildConfigField(FieldSpec.Type.STRING, "Type", properties.getProperty("type"))
-        buildConfigField(FieldSpec.Type.STRING, "ProjectID", properties.getProperty("project_id"))
-        buildConfigField(FieldSpec.Type.STRING, "PrivateKeyID", properties.getProperty("private_key_id"))
-        buildConfigField(FieldSpec.Type.STRING, "PrivateKey", properties.getProperty("private_key"))
-        buildConfigField(FieldSpec.Type.STRING, "ClientEmail", properties.getProperty("client_email"))
-        buildConfigField(FieldSpec.Type.STRING, "ClientID", properties.getProperty("client_id"))
-        buildConfigField(FieldSpec.Type.STRING, "AuthUri", properties.getProperty("auth_uri"))
-        buildConfigField(FieldSpec.Type.STRING, "TokenUri", properties.getProperty("token_uri"))
-        buildConfigField(
-            FieldSpec.Type.STRING, "AuthProviderUrl", properties.getProperty("auth_provider_x509_cert_url")
-        )
-        buildConfigField(FieldSpec.Type.STRING, "ClientCertUrl", properties.getProperty("client_x509_cert_url"))
-        buildConfigField(FieldSpec.Type.STRING, "UniversDomain", properties.getProperty("universe_domain"))
+        // SECURITY: All sensitive values now use environment variables only
+        // Gmail Config - loaded from environment variables
+        buildConfigField(FieldSpec.Type.STRING, "Type", "\"${getEnvVar("GOOGLE_TYPE", "service_account")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "ProjectID", "\"${getEnvVar("GOOGLE_PROJECT_ID")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "PrivateKeyID", "\"${getEnvVar("GOOGLE_PRIVATE_KEY_ID")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "PrivateKey", "\"${getEnvVar("GOOGLE_PRIVATE_KEY")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "ClientEmail", "\"${getEnvVar("GOOGLE_CLIENT_EMAIL")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "ClientID", "\"${getEnvVar("GOOGLE_CLIENT_ID")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "AuthUri", "\"${getEnvVar("GOOGLE_AUTH_URI", "https://accounts.google.com/o/oauth2/auth")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "TokenUri", "\"${getEnvVar("GOOGLE_TOKEN_URI", "https://oauth2.googleapis.com/token")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "AuthProviderUrl", "\"${getEnvVar("GOOGLE_AUTH_PROVIDER_CERT_URL", "https://www.googleapis.com/oauth2/v1/certs")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "ClientCertUrl", "\"${getEnvVar("GOOGLE_CLIENT_CERT_URL")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "UniversDomain", "\"${getEnvVar("GOOGLE_UNIVERSE_DOMAIN", "googleapis.com")}\"")
 
-        //Postgres values - Using environment variables for security
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "devUri",
-            "\"${properties.getProperty("dev_database_uri", "jdbc:postgresql://localhost:5432/khoded_dev")}\""
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "devUsername",
-            "\"${properties.getProperty("dev_database_username", "khoded_dev_user")}\""
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "devPassword",
-            "\"${properties.getProperty("dev_database_password", "dev_password_change_me")}\""
-        )
-        buildConfigField(FieldSpec.Type.STRING, "prodUri", "\"${properties.getProperty("prod_database_uri", "")}\")")
-        buildConfigField(FieldSpec.Type.STRING, "prodUsername", "\"${properties.getProperty("prod_database_username", "")}\")")
-        buildConfigField(FieldSpec.Type.STRING, "prodPassword", "\"${properties.getProperty("prod_database_password", "")}\"")
+        // Database values - Using environment variables for security
+        buildConfigField(FieldSpec.Type.STRING, "devUri", "\"${getEnvVar("DATABASE_DEV_URI", "jdbc:postgresql://localhost:5432/khoded_dev")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "devUsername", "\"${getEnvVar("DATABASE_DEV_USERNAME", "khoded_dev_user")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "devPassword", "\"${getEnvVar("DATABASE_DEV_PASSWORD")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "prodUri", "\"${getEnvVar("DATABASE_PROD_URI")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "prodUsername", "\"${getEnvVar("DATABASE_PROD_USERNAME")}\"")
+        buildConfigField(FieldSpec.Type.STRING, "prodPassword", "\"${getEnvVar("DATABASE_PROD_PASSWORD")}\"")
     }
 }
 
 flyway {
     driver = "org.postgresql.driver"
-    url = System.getenv("FLYWAY_URL") ?: properties.get("flyway_url").toString()
-    user = System.getenv("FLYWAY_USER") ?: properties.get("flyway_user").toString()
-    password = System.getenv("FLYWAY_PASSWORD") ?: properties.get("flyway_password").toString()
+    url = getEnvVar("FLYWAY_URL", "jdbc:postgresql://localhost:5432/khoded_dev")
+    user = getEnvVar("FLYWAY_USER", "khoded_dev_user") 
+    password = getEnvVar("FLYWAY_PASSWORD")
     schemas = arrayOf("khoded_base_state")
     defaultSchema = "khoded_base_state"
 }
@@ -208,6 +216,11 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     }
 }
 
+// Configure JUnit5 for JVM tests
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 // Clean build artifacts to reduce Docker context size
 tasks.register("cleanForDocker") {
     doFirst {
@@ -215,6 +228,6 @@ tasks.register("cleanForDocker") {
         delete("${layout.buildDirectory.get().asFile}/classes")
         delete("${layout.buildDirectory.get().asFile}/generated")
         delete("${layout.buildDirectory.get().asFile}/tmp")
-        println("Cleaned build artifacts for Docker")
+        // Build artifacts cleaned for Docker optimization
     }
 }

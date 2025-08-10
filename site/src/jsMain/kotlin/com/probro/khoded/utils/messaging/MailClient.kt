@@ -4,7 +4,7 @@ import com.probro.khoded.messaging.messageData.FormType
 import com.probro.khoded.messaging.messageData.MailParams
 import com.probro.khoded.messaging.messageData.MailResponse
 import com.probro.khoded.messaging.messageData.MessageData
-import com.probro.khoded.utils.json
+import com.probro.khoded.serialization.json
 import com.varabyte.kobweb.browser.api
 import kotlinx.browser.window
 import kotlinx.coroutines.supervisorScope

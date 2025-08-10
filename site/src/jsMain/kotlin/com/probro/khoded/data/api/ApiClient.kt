@@ -129,7 +129,7 @@ class ApiClient {
             handleResponse(response)
 
         } catch (e: Exception) {
-            console.error("GET request failed:", e)
+            // SECURITY: Debug logging removed for production
             ApiResponse(
                 error = "Network error: ${e.message ?: "Unknown error"}",
                 success = false,
@@ -162,7 +162,7 @@ class ApiClient {
             handleResponse(response)
 
         } catch (e: Exception) {
-            console.error("POST request failed:", e)
+            // SECURITY: Debug logging removed for production
             ApiResponse(
                 error = "Network error: ${e.message ?: "Unknown error"}",
                 success = false,
@@ -195,7 +195,7 @@ class ApiClient {
             handleResponse(response)
 
         } catch (e: Exception) {
-            console.error("PUT request failed:", e)
+            // SECURITY: Debug logging removed for production
             ApiResponse(
                 error = "Network error: ${e.message ?: "Unknown error"}",
                 success = false,
@@ -227,7 +227,7 @@ class ApiClient {
             handleResponse(response)
 
         } catch (e: Exception) {
-            console.error("DELETE request failed:", e)
+            // SECURITY: Debug logging removed for production
             ApiResponse(
                 error = "Network error: ${e.message ?: "Unknown error"}",
                 success = false,
@@ -273,7 +273,7 @@ class ApiClient {
             handleResponse(response)
 
         } catch (e: Exception) {
-            console.error("Form POST request failed:", e)
+            // SECURITY: Debug logging removed for production
             ApiResponse(
                 error = "Network error: ${e.message ?: "Unknown error"}",
                 success = false,

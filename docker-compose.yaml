@@ -4,8 +4,8 @@ services:
   app:
     build:
       context: ./
-      # Use the working Dockerfile that fixes exit code 127 and eliminates redundancies
-      dockerfile: Dockerfile.working
+      # Use the production Dockerfile with all functionality preserved
+      dockerfile: Dockerfile.production
     volumes:
       - app_data:/project/site
     container_name: KhodedSite

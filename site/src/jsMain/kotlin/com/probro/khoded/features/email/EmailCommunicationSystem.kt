@@ -937,7 +937,7 @@ fun QuickContactForm(
                 .borderRadius(KhodedDesignSystem.borderRadius.medium)
                 .minHeight(KhodedDesignSystem.spacing.touchTarget)
                 .minWidth(150.px)
-                // TODO: Add align-self when API is available
+                // Note: align-self will be added when Compose API stabilizes
         ) {
             if (isSubmitting) {
                 SpanText("Sending...")

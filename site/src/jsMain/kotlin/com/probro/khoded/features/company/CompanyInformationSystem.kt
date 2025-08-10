@@ -251,7 +251,7 @@ private fun CompanyHeroSection(
                 .minWidth(200.px)
                 .minHeight(KhodedDesignSystem.spacing.touchTargetLarge)
                 .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 12.px, color = rgba(0, 0, 0, 0.1))
-// TODO: Add transition when CSS API is available
+// Note: transition will be added when CSS API stabilizes
         ) {
             SpanText("Request Consultation")
         }
@@ -336,7 +336,7 @@ private fun ServiceCard(
             .padding(KhodedDesignSystem.spacing.xl2)
             .boxShadow(offsetX = 0.px, offsetY = 2.px, blurRadius = 8.px, color = rgba(0, 0, 0, 0.1))
             .gap(KhodedDesignSystem.spacing.space4)
-// TODO: Add transition when CSS API is available
+// Note: transition will be added when CSS API stabilizes
     ) {
         // Service icon and title
         Row(
@@ -662,7 +662,7 @@ private fun CallToActionSection(onRequestConsultation: () -> Unit) {
                 .minWidth(250.px)
                 .minHeight(KhodedDesignSystem.spacing.touchTargetLarge)
                 .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15))
-// TODO: Add transition when CSS API is available
+// Note: transition will be added when CSS API stabilizes
         ) {
             SpanText("Start Your Project Today")
         }

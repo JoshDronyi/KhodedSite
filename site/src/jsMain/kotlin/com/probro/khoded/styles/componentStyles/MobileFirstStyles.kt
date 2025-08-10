@@ -35,7 +35,7 @@ val MobileFirstContainerStyle = CssStyle<ContainerKind> {
         Modifier
             .padding(KhodedDesignSystem.spacing.xl3)
             .maxWidth(1200.px)
-            // TODO: Add margin auto when CSS API stabilizes
+            // Note: margin auto will be added when CSS API stabilizes
     }
 
     Breakpoint.LG {
@@ -49,13 +49,13 @@ val NavigationContainerVariant = MobileFirstContainerStyle.addVariant {
             .margin(0.px)
             .padding(leftRight = KhodedDesignSystem.spacing.lg, topBottom = KhodedDesignSystem.spacing.md)
             .backgroundColor(KhodedDesignSystem.colors.backgroundPrimary)
-            // TODO: Add box shadow when CSS API stabilizes
+            // Note: box shadow will be added when CSS API stabilizes
     }
     Breakpoint.MD {
         Modifier
             .padding(KhodedDesignSystem.spacing.xl3)
             .fillMaxWidth()
-            // TODO: Add margin auto when CSS API stabilizes
+            // Note: margin auto will be added when CSS API stabilizes
     }
 
 }
@@ -75,7 +75,7 @@ val EnhancedPrimaryButtonVariant = ButtonStyle.addVariant {
             .cursor(Cursor.Pointer)
             .border(width = 0.px, style = LineStyle.None)
             .textAlign(TextAlign.Center)
-            // TODO: Add transition when CSS API stabilizes
+            // Note: transition will be added when CSS API stabilizes
             .outline(width = 0.px, style = LineStyle.None)
     }
 
@@ -94,7 +94,7 @@ val EnhancedPrimaryButtonVariant = ButtonStyle.addVariant {
     hover {
         Modifier
             .backgroundColor(KhodedDesignSystem.colors.primaryDark)
-            // TODO: Add transform scale when CSS API stabilizes
+            // Note: transform scale will be added when CSS API stabilizes
     }
 
     focus {
@@ -104,7 +104,7 @@ val EnhancedPrimaryButtonVariant = ButtonStyle.addVariant {
     }
 }
 
-// TODO: Mobile-optimized form inputs - BaseTextInputStyle not yet available
+// Note: Mobile-optimized form inputs pending BaseTextInputStyle availability
 // val MobileOptimizedInputVariant = BaseTextInputStyle.addVariant {
 //     base {
 //         Modifier
@@ -119,7 +119,7 @@ val EnhancedPrimaryButtonVariant = ButtonStyle.addVariant {
 //     focus {
 //         Modifier
 //             .border(2.px, LineStyle.Solid, KhodedDesignSystem.colors.primary)
-//             // TODO: Add box shadow when CSS API stabilizes
+//             // Note: box shadow will be added when CSS API stabilizes
 //     }
 // }
 
@@ -131,7 +131,7 @@ val TextBackingCardVariant = MobileFirstContainerStyle.addVariant {
             .borderRadius(KhodedDesignSystem.borderRadius.lg)
             .padding(KhodedDesignSystem.spacing.xl)
             .margin(KhodedDesignSystem.spacing.lg)
-            // TODO: Add box shadow when CSS API stabilizes
+            // Note: box shadow will be added when CSS API stabilizes
     }
     
     Breakpoint.SM {

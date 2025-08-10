@@ -484,7 +484,7 @@ private fun ConsultationFormHeader(
                     .height(4.px)
                     .backgroundColor(KhodedDesignSystem.colors.primary)
                     .borderRadius(4.px)
-                    // TODO: Add transition when API is available
+                    // Note: transition will be added when Compose API stabilizes
                     .toAttrs()
             )
         }

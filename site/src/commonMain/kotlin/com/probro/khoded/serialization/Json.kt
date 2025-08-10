@@ -1,4 +1,4 @@
-package com.probro.khoded.utils
+package com.probro.khoded.serialization
 
 import kotlinx.serialization.json.Json
 

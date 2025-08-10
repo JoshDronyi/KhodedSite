@@ -10,9 +10,11 @@ jdbi = "3.45.1"
 hikaricp = "5.1.0"
 postgresql = "42.7.3"
 httpcore = "4.4.16"
-# sqlx4k = "0.52.0" # Disabled - no JVM support, causes build failures
+# sqlx4k = "0.52.0" # Disabled - no JVM support for multiplatform  
+flyway = "10.0.0"
 moko = "0.24.4"
 bootstrap = "0.1.6"
+# Testing framework versions
 
 [libraries]
 kobweb-api = { module = "com.varabyte.kobweb:kobweb-api", version.ref = "kobweb" }
@@ -41,8 +43,17 @@ hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 httpcore = { module = "org.apache.httpcomponents:httpcore", version.ref = "httpcore" }
 # sqlx4k-postgres = { module = "io.github.smyrgeorge:sqlx4k-postgres", version.ref = "sqlx4k" } # Disabled - no JVM support
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-postgres = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
 moko-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "moko" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko" }
+
+# Testing libraries  
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version = "5.10.1" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.10.1" }
 
 
 [plugins]

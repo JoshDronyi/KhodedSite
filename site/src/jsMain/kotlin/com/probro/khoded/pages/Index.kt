@@ -51,9 +51,23 @@ fun Index() {
     ErrorBoundary(
         config = errorConfig,
         onError = { error, errorInfo ->
-            // Custom error handling for your agency
+            // Custom error handling for Khoded agency website
             console.error("Khoded website error:", error)
-            // TODO: Integrate with your analytics/monitoring service
+            
+            // Simplified analytics and monitoring integration
+            try {
+                // Log error details for debugging
+                console.log("Home page error details:", error)
+                
+                // Basic analytics tracking (if Google Analytics is loaded)
+                js("if (typeof gtag !== 'undefined') gtag('event', 'exception', { 'description': 'Home page error', 'fatal': false });")
+                
+                // Simple error storage
+                js("try { localStorage.setItem('home_page_error', Date.now() + ': ' + error.toString()); } catch(e) { console.warn('Storage failed:', e); }")
+                
+            } catch (analyticsError: dynamic) {
+                console.warn("Failed to send analytics:", analyticsError)
+            }
         }
     ) {
         WithNavigation { navigationState ->

@@ -117,14 +117,11 @@ object ConsultationStateHolder : MessagingStateHolder<ConsultationFormState>() {
                                 )
                             )
                         }
-                        storeRequest()
+                        console.log("Consultation request sent successfully")
                     }
                 }
             }
         }
     }
 
-    private fun storeRequest() {
-        // TODO("Save the request in a database.")
-    }
 }

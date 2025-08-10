@@ -39,30 +39,38 @@ fun ClientRequestForm(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        //TODO: ANIMATE SECTION CHANGES
+        // Animated section transitions
         intakeForm.sections.forEachIndexed { index, section ->
             IntakeSectionDisplay(
                 section = section,
                 isLastSection = intakeForm.sections.indices.last == index,
                 modifier = Modifier
-                    .visibility(if (currentSection == index) Visibility.Visible else Visibility.Collapse)
+                    .visibility(if (currentSection == index) Visibility.Visible else Visibility.Hidden)
                     .opacity(if (currentSection == index) 100.percent else 0.percent)
                     .transition(
-                        CSSTransition(property = "visibility", duration = 500.ms),
-                        CSSTransition(property = "opacity", duration = 300.ms)
-                    ),
-                prevSection = {
-                    println("Heading to previous section")
-                    currentSection--
+                        "opacity 0.3s ease-in-out, transform 0.3s ease-in-out".unsafeCast<CSSTransition>()
+                    )
+                    .transform { 
+                        if (currentSection == index) {
+                            translateX(0.px)
+                        } else if (index < currentSection) {
+                            translateX((-50).px)
+                        } else {
+                            translateX(50.px)
+                        }
+                    },
+                onNextClicked = {
+                    if (currentSection < intakeForm.sections.size - 1) {
+                        currentSection++
+                    }
                 },
-                nextSection = {
-                    println("Heading to next section")
-                    currentSection++
-                }
-            ) { isLast ->
-                if (isLast) onCTAClicked()
-                else currentSection = 1
-            }
+                onPreviousClicked = {
+                    if (currentSection > 0) {
+                        currentSection--
+                    }
+                },
+                onSubmitClicked = onCTAClicked
+            )
         }
     }
 }
@@ -147,9 +155,13 @@ private fun SectionQuestions(
         questionList?.forEach { question ->
             QuestionDisplay(
                 question = question,
-            ) {
-                //TODO: IMPLEMENT ACTION FOR SAVING QUESTION ANSWER
-                println("Answered question -> $question")
+            ) { answer ->
+                // Save the answer to the question
+                question.answer = answer
+                println("Saved answer for question '${question.questionText}': $answer")
+                
+                // Optionally persist to local storage or send to backend
+                // For now, we store it in the question object itself
             }
         }
         Row(
