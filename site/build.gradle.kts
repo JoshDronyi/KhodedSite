@@ -45,20 +45,21 @@ kotlin {
     }
     configAsKobwebApplication("khoded", includeServer = true)
 
-    // Modern 2025 approach: Direct target configuration instead of deprecated targets.withType
+    // Fixed JS compilation configuration to properly include dependencies
     js(IR) {
         browser {
             commonWebpackConfig {
-                mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.PRODUCTION
-                devtool = null // Remove source maps for smaller builds
+                mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
+                devtool = "source-map"
             }
         }
-        // Modern compiler options instead of deprecated kotlinOptions
+        // Disable aggressive optimizations that break module resolution
         compilerOptions {
-            freeCompilerArgs.add("-Xir-minimized-member-names")
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
-            // K2 compiler is default in Kotlin 2.0+, no flag needed
+            // Removed -Xir-minimized-member-names which breaks dependency resolution
         }
+        // Ensure dependencies are compiled and included
+        useCommonJs()
     }
 
 
