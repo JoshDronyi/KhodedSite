@@ -1,6 +1,6 @@
 package com.probro.khoded.email
 
-import com.probro.khoded.KhodedConfig
+import com.probro.khoded.config.GmailConfig
 import com.probro.khoded.messaging.messageData.MailResponse
 import com.varabyte.kobweb.api.log.Logger
 import io.ktor.client.*
@@ -94,7 +94,7 @@ class LightweightGmailService(
      * Send email via Gmail API with comprehensive error handling
      */
     suspend fun sendEmail(
-        fromEmail: String = KhodedConfig.ClientEmail,
+        fromEmail: String = GmailConfig.clientEmail,
         toEmail: String,
         subject: String,
         body: String,
@@ -224,7 +224,7 @@ class LightweightGmailService(
             
             // JWT Payload (Claims)
             val payload = mapOf(
-                "iss" to KhodedConfig.ClientEmail, // Issuer (service account email)
+                "iss" to GmailConfig.clientEmail, // Issuer (service account email)
                 "scope" to "https://www.googleapis.com/auth/gmail.send", // Gmail send scope
                 "aud" to OAUTH2_TOKEN_ENDPOINT, // Audience (Google OAuth2 endpoint)
                 "exp" to (now + TOKEN_EXPIRATION_SECONDS), // Expiration time
@@ -237,7 +237,7 @@ class LightweightGmailService(
             
             // Create signature
             val signingInput = "$encodedHeader.$encodedPayload"
-            val signature = signJwt(signingInput, KhodedConfig.PrivateKey)
+            val signature = signJwt(signingInput, GmailConfig.privateKey)
             val encodedSignature = encodeBase64Url(signature)
             
             return "$signingInput.$encodedSignature"
@@ -246,7 +246,7 @@ class LightweightGmailService(
             logger.error("Failed to create JWT assertion: ${e.message}")
             throw GmailAuthenticationException(
                 "JWT creation error: Invalid service account credentials. " +
-                "Solution: Verify KhodedConfig.ClientEmail and KhodedConfig.PrivateKey are correct. " +
+                "Solution: Verify service account credentials are properly configured. " +
                 "The private key should be in PKCS#8 format without BEGIN/END lines.",
                 0,
                 e.stackTraceToString()
