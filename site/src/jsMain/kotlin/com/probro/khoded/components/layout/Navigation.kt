@@ -725,17 +725,4 @@ fun SimpleColumn(content: @Composable () -> Unit) {
     }
 }
 
-// CSS Animation keyframes
-@Suppress("unused")
-val slideInRightKeyframes = """
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-"""
+// Note: slideInRight animation is now handled by KhodedAnimations.kt

@@ -1,7 +1,7 @@
 package com.probro.khoded.features.email
 
 import androidx.compose.runtime.*
-import com.probro.khoded.features.consultation.ConsultationRequest
+import com.probro.khoded.features.consultation.models.ConsultationRequest
 import com.probro.khoded.design.KhodedDesignSystem
 import com.probro.khoded.components.ui.models.KhodedValidation
 import com.probro.khoded.components.ui.models.ValidationResult

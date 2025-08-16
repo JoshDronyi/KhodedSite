@@ -3,7 +3,6 @@ package com.probro.khoded.api
 import com.probro.khoded.IntakeFormDTO
 import com.probro.khoded.api.json
 import com.probro.khoded.email.MailClient
-// Removed deprecated KhodedDB import - now handled by MailClient
 import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
 import com.varabyte.kobweb.api.http.readBodyText

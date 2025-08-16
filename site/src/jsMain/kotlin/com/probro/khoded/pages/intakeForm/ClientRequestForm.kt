@@ -47,9 +47,9 @@ fun ClientRequestForm(
                 modifier = Modifier
                     .visibility(if (currentSection == index) Visibility.Visible else Visibility.Hidden)
                     .opacity(if (currentSection == index) 100.percent else 0.percent)
-                    .transition(
-                        "opacity 0.3s ease-in-out, transform 0.3s ease-in-out".unsafeCast<CSSTransition>()
-                    )
+                    .styleModifier {
+                        transition("opacity 0.3s ease-in-out, transform 0.3s ease-in-out")
+                    }
                     .transform { 
                         if (currentSection == index) {
                             translateX(0.px)
