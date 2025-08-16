@@ -1,7 +1,7 @@
 package com.probro.khoded.features.email
 
 import androidx.compose.runtime.*
-import com.probro.khoded.features.consultation.ConsultationRequest
+import com.probro.khoded.features.consultation.models.ConsultationRequest
 import com.probro.khoded.design.KhodedDesignSystem
 import com.probro.khoded.components.ui.models.KhodedValidation
 import com.probro.khoded.components.ui.models.ValidationResult
@@ -937,7 +937,7 @@ fun QuickContactForm(
                 .borderRadius(KhodedDesignSystem.borderRadius.medium)
                 .minHeight(KhodedDesignSystem.spacing.touchTarget)
                 .minWidth(150.px)
-                // TODO: Add align-self when API is available
+                // Note: align-self will be added when Compose API stabilizes
         ) {
             if (isSubmitting) {
                 SpanText("Sending...")

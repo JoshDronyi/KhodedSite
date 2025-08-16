@@ -36,7 +36,7 @@ class MailClient(
         }
         
         return@supervisorScope ktorEmailService.sendEmail(
-            toEmail = "admin@khoded.com",
+            toEmail = "hello@khoded.com",
             subject = formattedSubject,
             body = formattedBody,
             isHtml = false
@@ -47,7 +47,7 @@ class MailClient(
         logger.info("Got form in mailer and attempting to send using Ktor email service.")
         
         val emailResult = ktorEmailService.sendEmail(
-            toEmail = "admin@khoded.com",
+            toEmail = "hello@khoded.com",
             subject = "${MailSubjects.CLIENT_REQUEST_FORM.value} - ${intakeFormDTO.organization}",
             body = intakeFormDTO.toString(),
             isHtml = false

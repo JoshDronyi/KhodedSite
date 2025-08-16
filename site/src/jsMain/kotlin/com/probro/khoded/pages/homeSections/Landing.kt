@@ -306,12 +306,4 @@ private fun FeatureCard(
     }
 }
 
-// CSS Animation for floating effect
-@Suppress("unused")
-private val floatingAnimation = """
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(1deg); }
-  66% { transform: translateY(5px) rotate(-1deg); }
-}
-"""
+// Note: Float animation is now handled by CoreDesignSystem.kt (floatAnimation)

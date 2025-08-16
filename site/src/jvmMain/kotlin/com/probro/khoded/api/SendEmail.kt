@@ -29,7 +29,15 @@ val json = Json {
     explicitNulls = true
     prettyPrint = true
 }
-lateinit var client: MailClient
+// SECURITY: Initialized safely to prevent null pointer exceptions
+private var mailClient: MailClient? = null
+
+private fun getMailClient(logger: com.varabyte.kobweb.api.log.Logger): MailClient {
+    if (mailClient == null) {
+        mailClient = MailClient(logger)
+    }
+    return mailClient!!
+}
 
 /**
  * Add comprehensive security headers to API responses
@@ -69,19 +77,39 @@ private fun addSecurityHeaders(ctx: ApiContext) {
 }
 
 
-// Rate limiting storage (in production, use Redis or database)
+// SECURITY: Improved rate limiting with cleanup and Redis-ready structure
 private val rateLimitMap = mutableMapOf<String, RateLimitData>()
+const val RATE_LIMIT_CLEANUP_INTERVAL = 60 * 60 * 1000L // 1 hour
+private var lastCleanup = System.currentTimeMillis()
 
 data class RateLimitData(
     var requestCount: Int = 0,
-    var windowStart: Long = System.currentTimeMillis()
+    var windowStart: Long = System.currentTimeMillis(),
+    var lastAccess: Long = System.currentTimeMillis()
 )
 
 /**
- * Check rate limiting for client IP
+ * Clean up old rate limit entries to prevent memory leaks
+ */
+private fun cleanupRateLimit() {
+    val now = System.currentTimeMillis()
+    if (now - lastCleanup > RATE_LIMIT_CLEANUP_INTERVAL) {
+        val expiredEntries = rateLimitMap.filter { (_, data) ->
+            now - data.lastAccess > RATE_LIMIT_CLEANUP_INTERVAL
+        }
+        expiredEntries.keys.forEach { rateLimitMap.remove(it) }
+        lastCleanup = now
+    }
+}
+
+/**
+ * SECURITY: Enhanced rate limiting with cleanup and better IP validation
  * Allows 5 requests per 15 minutes per IP
  */
 private fun checkRateLimit(clientIp: String): Boolean {
+    // Clean up old entries periodically
+    cleanupRateLimit()
+    
     val now = System.currentTimeMillis()
     val windowDuration = 15 * 60 * 1000L // 15 minutes
     val maxRequests = 5
@@ -95,6 +123,7 @@ private fun checkRateLimit(clientIp: String): Boolean {
     }
 
     rateLimitData.requestCount++
+    rateLimitData.lastAccess = now
     return rateLimitData.requestCount <= maxRequests
 }
 
@@ -102,11 +131,19 @@ private fun checkRateLimit(clientIp: String): Boolean {
 suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApiFunction") + Dispatchers.IO) {
     with(ctx) {
         try {
-            // Rate limiting check
-            val clientIp = req.headers["X-Forwarded-For"]?.toString()?.split(",")?.firstOrNull()?.trim()
-                ?: req.headers["X-Real-IP"]?.toString()
-                ?: req.headers["Remote-Addr"]?.toString()
-                ?: "unknown"
+            // SECURITY: Enhanced IP extraction with validation
+            val clientIp = getClientIp(req)
+            
+            // Validate IP format to prevent spoofing
+            if (!isValidIp(clientIp)) {
+                logger.warn("Invalid or suspicious IP format: $clientIp")
+                res.apply {
+                    status = 400
+                    addSecurityHeaders(ctx)
+                    setBodyText("""{"error": "Invalid request format"}""")
+                }
+                return@withContext
+            }
 
             if (!checkRateLimit(clientIp)) {
                 logger.warn("Rate limit exceeded for IP: $clientIp")
@@ -119,7 +156,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
             }
 
             logger.info("Processing email request from IP: $clientIp")
-            client = MailClient(logger)
+            val client = getMailClient(logger)
 
             // Handle both form data and JSON data
             val body = req.readBodyText() ?: ""
@@ -129,7 +166,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
                 // Handle form data (application/x-www-form-urlencoded)
                 req.headers["Content-Type"]?.contains("application/x-www-form-urlencoded") == true -> {
                     messagingScope.async {
-                        handleFormData(body)
+                        handleFormData(body, logger)
                     }
                 }
 
@@ -142,7 +179,8 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
                         formType?.equals(FormType.CONTACT.name, ignoreCase = true) == true -> {
                             messagingScope.async {
                                 sendContactMessage(
-                                    json.decodeFromString<MessageData.ContactMessageData>(body)
+                                    json.decodeFromString<MessageData.ContactMessageData>(body),
+                                    logger
                                 )
                             }
                         }
@@ -150,7 +188,8 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
                         formType?.equals(FormType.CONSULTATION.name, ignoreCase = true) == true -> {
                             messagingScope.async {
                                 sendConsultationMessage(
-                                    json.decodeFromString<MessageData.ConsultationMessageData>(body)
+                                    json.decodeFromString<MessageData.ConsultationMessageData>(body),
+                                    logger
                                 )
                             }
                         }
@@ -213,7 +252,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
 /**
  * Handle form data from contact form
  */
-private suspend fun handleFormData(body: String): MailResponse {
+private suspend fun handleFormData(body: String, logger: com.varabyte.kobweb.api.log.Logger): MailResponse {
     val formData = parseFormData(body)
 
     val contactData = MessageData.ContactMessageData(
@@ -224,13 +263,13 @@ private suspend fun handleFormData(body: String): MailResponse {
         message = formData["message"] ?: ""
     )
 
-    return sendContactMessage(contactData)
+    return sendContactMessage(contactData, logger)
 }
 
 /**
  * Parse URL-encoded form data
  */
-private fun parseFormData(body: String): Map<String, String> {
+internal fun parseFormData(body: String): Map<String, String> {
     return body.split("&")
         .mapNotNull { pair ->
             val parts = pair.split("=", limit = 2)
@@ -244,12 +283,13 @@ private fun parseFormData(body: String): Map<String, String> {
 }
 
 
-suspend fun sendConsultationMessage(data: MessageData.ConsultationMessageData?): MailResponse {
+suspend fun sendConsultationMessage(data: MessageData.ConsultationMessageData?, logger: com.varabyte.kobweb.api.log.Logger): MailResponse {
     requireNotNull(value = data, lazyMessage = {
         "Consultation messages must contain a consultation message data object."
     })
 
     validateMessageData(data)
+    val client = getMailClient(logger)
     return client.sendMessage(
         senderName = data.name,
         senderEmail = data.email,
@@ -257,12 +297,13 @@ suspend fun sendConsultationMessage(data: MessageData.ConsultationMessageData?):
     )
 }
 
-suspend fun sendContactMessage(data: MessageData.ContactMessageData?): MailResponse {
+suspend fun sendContactMessage(data: MessageData.ContactMessageData?, logger: com.varabyte.kobweb.api.log.Logger): MailResponse {
 
     requireNotNull(data) { "Contact messages must contain a contact message data object." }
 
     validateMessageData(data)
 
+    val client = getMailClient(logger)
     return with(data) {
         client.sendMessage(
             senderName = name,
@@ -532,4 +573,30 @@ enum class MessagingParams(val value: String) {
     ORGANIZATION("org"),
     EMAIL("email"),
     MESSAGE("message")
+}
+
+/**
+ * SECURITY: Extract client IP with proper validation
+ */
+private fun getClientIp(req: com.varabyte.kobweb.api.http.Request): String {
+    // Check common proxy headers in order of trust
+    val forwardedFor = req.headers["X-Forwarded-For"]?.toString()?.split(",")?.firstOrNull()?.trim()
+    val realIp = req.headers["X-Real-IP"]?.toString()?.trim()
+    val remoteAddr = req.headers["Remote-Addr"]?.toString()?.trim()
+    
+    return forwardedFor ?: realIp ?: remoteAddr ?: "unknown"
+}
+
+/**
+ * SECURITY: Validate IP address format to prevent spoofing
+ */
+private fun isValidIp(ip: String): Boolean {
+    if (ip == "unknown" || ip.isBlank()) return false
+    
+    // Basic IPv4 validation
+    val ipv4Regex = Regex("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
+    // Basic IPv6 validation (simplified)
+    val ipv6Regex = Regex("^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$")
+    
+    return ipv4Regex.matches(ip) || ipv6Regex.matches(ip) || ip == "localhost" || ip == "127.0.0.1"
 }

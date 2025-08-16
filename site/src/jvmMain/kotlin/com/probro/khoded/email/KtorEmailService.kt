@@ -112,10 +112,15 @@ class KtorEmailService(
                 )
             )
             
+            val sendGridApiKey = System.getenv("SENDGRID_API_KEY")
+            if (sendGridApiKey.isNullOrBlank()) {
+                logger.error("SendGrid API key not configured")
+                return MailResponse.Error("Email service not configured", "Missing SENDGRID_API_KEY environment variable")
+            }
+            
             val response: HttpResponse = httpClient.post("https://api.sendgrid.com/v3/mail/send") {
                 headers {
-                    // You would need a SendGrid API key here
-                    append(HttpHeaders.Authorization, "Bearer YOUR_SENDGRID_API_KEY")
+                    append(HttpHeaders.Authorization, "Bearer $sendGridApiKey")
                     append(HttpHeaders.ContentType, "application/json")
                 }
                 setBody(requestBody)
@@ -149,10 +154,17 @@ class KtorEmailService(
         return try {
             logger.info("Sending email via Mailgun API")
             
-            val response: HttpResponse = httpClient.post("https://api.mailgun.net/v3/YOUR_DOMAIN/messages") {
+            val mailgunDomain = System.getenv("MAILGUN_DOMAIN")
+            val mailgunApiKey = System.getenv("MAILGUN_API_KEY")
+            
+            if (mailgunDomain.isNullOrBlank() || mailgunApiKey.isNullOrBlank()) {
+                logger.error("Mailgun credentials not configured")
+                return MailResponse.Error("Email service not configured", "Missing MAILGUN_DOMAIN or MAILGUN_API_KEY environment variables")
+            }
+            
+            val response: HttpResponse = httpClient.post("https://api.mailgun.net/v3/$mailgunDomain/messages") {
                 headers {
-                    // You would need Mailgun API credentials here
-                    append(HttpHeaders.Authorization, "Basic ${java.util.Base64.getEncoder().encodeToString("api:YOUR_MAILGUN_API_KEY".toByteArray())}")
+                    append(HttpHeaders.Authorization, "Basic ${java.util.Base64.getEncoder().encodeToString("api:$mailgunApiKey".toByteArray())}")
                 }
                 setBody(
                     Parameters.build {
@@ -204,11 +216,21 @@ class KtorEmailService(
                 isHtml = isHtml
             )
             
+            val webhookUrl = System.getenv("EMAIL_WEBHOOK_URL")
+            val webhookSecret = System.getenv("EMAIL_WEBHOOK_SECRET")
+            
+            if (webhookUrl.isNullOrBlank()) {
+                logger.error("Email webhook URL not configured")
+                return MailResponse.Error("Email service not configured", "Missing EMAIL_WEBHOOK_URL environment variable")
+            }
+            
             // This could be a Zapier webhook, Make.com webhook, or custom serverless function
-            val response: HttpResponse = httpClient.post("YOUR_EMAIL_WEBHOOK_URL") {
+            val response: HttpResponse = httpClient.post(webhookUrl) {
                 headers {
                     append(HttpHeaders.ContentType, "application/json")
-                    append("X-API-Key", "YOUR_WEBHOOK_SECRET")
+                    if (!webhookSecret.isNullOrBlank()) {
+                        append("X-API-Key", webhookSecret)
+                    }
                 }
                 setBody(requestBody)
             }

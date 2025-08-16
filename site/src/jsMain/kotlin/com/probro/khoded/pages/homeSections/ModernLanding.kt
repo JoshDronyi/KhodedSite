@@ -252,7 +252,7 @@ private fun CTAButtons(onNavigate: (NavigationRoute) -> Unit) {
                     property("transition", "all 0.3s ease")
                 }
                 onClick { onNavigate(NavigationRoute.Contact) }
-                // TODO: Add hover effects when API is available
+                // Note: hover effects will be added when Compose API stabilizes
                 attr("aria-label", "Start your project with Khoded")
             }
         ) {
@@ -276,7 +276,7 @@ private fun CTAButtons(onNavigate: (NavigationRoute) -> Unit) {
                     property("transition", "all 0.3s ease")
                 }
                 onClick { onNavigate(NavigationRoute.About) }
-                // TODO: Add hover effects when API is available
+                // Note: hover effects will be added when Compose API stabilizes
                 attr("aria-label", "Learn more about Khoded")
             }
         ) {

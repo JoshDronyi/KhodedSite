@@ -237,20 +237,25 @@ class PostgreSQLService(
                     .mapTo(String::class.java)
                     .one()
                 
-                // Insert individual form answers for efficient querying
+                // PERFORMANCE FIX: Use batch processing to avoid N+1 query problem
                 val allAnswers = collectAllAnswers(intakeFormDTO)
-                allAnswers.forEach { (sectionName, answers) ->
-                    answers.forEach { answer ->
-                        handle.createUpdate("""
-                            INSERT INTO form_answers (request_id, question_text, answer_value, section_name) 
-                            VALUES (:requestId::uuid, :questionText, :answerValue, :sectionName)
-                        """.trimIndent())
-                            .bind("requestId", requestId)
-                            .bind("questionText", answer.questionText)
-                            .bind("answerValue", answer.answerValue)
-                            .bind("sectionName", sectionName)
-                            .execute()
+                if (allAnswers.isNotEmpty()) {
+                    val batch = handle.prepareBatch("""
+                        INSERT INTO form_answers (request_id, question_text, answer_value, section_name) 
+                        VALUES (:requestId::uuid, :questionText, :answerValue, :sectionName)
+                    """.trimIndent())
+                    
+                    allAnswers.forEach { (sectionName, answers) ->
+                        answers.forEach { answer ->
+                            batch.bind("requestId", requestId)
+                                 .bind("questionText", answer.questionText)
+                                 .bind("answerValue", answer.answerValue)
+                                 .bind("sectionName", sectionName)
+                                 .add()
+                        }
                     }
+                    
+                    batch.execute()
                 }
                 
                 requestId

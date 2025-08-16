@@ -163,9 +163,11 @@ class FormStateManager<T : MessageData>(
     }
     
     /**
-     * Update form data based on field name (must be implemented for specific data types)
+     * Update form data based on field name - Type-safe implementation
+     * 
+     * Note: The unchecked cast is safe here because we verify the type with `is` checks
+     * before performing the cast, ensuring type safety at runtime.
      */
-    @Suppress("UNCHECKED_CAST")
     private fun updateFormData(data: T, fieldName: String, value: String): T {
         return when (data) {
             is MessageData.ContactMessageData -> {
@@ -176,7 +178,10 @@ class FormStateManager<T : MessageData>(
                     "subject" -> data.copy(subject = value)
                     "message" -> data.copy(message = value)
                     else -> data
-                } as T
+                }.let { 
+                    @Suppress("UNCHECKED_CAST") // Safe: verified with `is MessageData.ContactMessageData`
+                    it as T 
+                }
             }
             is MessageData.ConsultationMessageData -> {
                 when (fieldName) {
@@ -184,8 +189,12 @@ class FormStateManager<T : MessageData>(
                     "email" -> data.copy(email = value)
                     "message" -> data.copy(message = value)
                     else -> data
-                } as T
+                }.let { 
+                    @Suppress("UNCHECKED_CAST") // Safe: verified with `is MessageData.ConsultationMessageData`
+                    it as T 
+                }
             }
+            else -> data // Default case for unknown types
         }
     }
     

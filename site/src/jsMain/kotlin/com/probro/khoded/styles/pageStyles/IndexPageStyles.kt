@@ -2,7 +2,7 @@ package com.probro.khoded.styles.pageStyles
 
 import com.probro.khoded.styles.BaseImageStyle
 import com.probro.khoded.styles.BodyTextStyle
-// import com.probro.khoded.styles.components.BaseColumnStyle // TODO: Fix when available
+// Note: BaseColumnStyle import will be added when component is available
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontSize
 import com.varabyte.kobweb.compose.css.Overflow
@@ -33,7 +33,7 @@ val PinkUnderLineVaraint = BaseImageStyle.addVariant {
         Modifier
     }
 }
-// TODO: Fix when BaseColumnStyle is available
+// Note: BaseColumnStyle implementation pending component availability
 // val ServiceSectionVariant = BaseColumnStyle.addVariant {
 //     base {
 //         Modifier

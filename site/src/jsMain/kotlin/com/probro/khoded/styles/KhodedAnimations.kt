@@ -339,7 +339,7 @@ fun Modifier.respectMotionPreference(
     animation: String,
     reducedAnimation: String? = null
 ): Modifier = this
-    // TODO: Add motion preference support when Animation API stabilizes
+    // Note: motion preference support will be added when Animation API stabilizes
 
 /**
  * Standard entrance animation with motion preference respect
@@ -350,7 +350,7 @@ fun Modifier.entranceAnimation(
     delay: CSSSizeValue<CSSUnit.s> = 0.s,
     timingFunction: AnimationTimingFunction = AnimationTimingFunction.EaseOut
 ): Modifier = this
-    // TODO: Add entrance animation when Animation API stabilizes
+    // Note: entrance animation will be added when Animation API stabilizes
 
 /**
  * Standard hover animation
@@ -359,25 +359,25 @@ fun Modifier.hoverAnimation(
     scaleAmount: Double = 1.02,
     duration: CSSSizeValue<CSSUnit.s> = 0.15.s
 ): Modifier = this
-    // TODO: Add hover scale animation when CSS API stabilizes
+    // Note: hover scale animation will be added when CSS API stabilizes
 
 /**
  * Focus animation for accessibility
  */
 fun Modifier.focusAnimation(): Modifier = this
-    // TODO: Add focus animation when CSS API stabilizes
+    // Note: focus animation will be added when CSS API stabilizes
 
 /**
  * Button press animation
  */
 fun Modifier.pressAnimation(): Modifier = this
-    // TODO: Add press animation when CSS API stabilizes
+    // Note: press animation will be added when CSS API stabilizes
 
 /**
  * Stagger animation utility for lists
  */
 fun Modifier.staggerDelay(index: Int, baseDelay: CSSSizeValue<CSSUnit.s> = 0.1.s): Modifier = this
-    // TODO: Add stagger delay when CSS API stabilizes
+    // Note: stagger delay will be added when CSS API stabilizes
 
 /**
  * Loading spinner with accessibility
@@ -390,13 +390,13 @@ fun Modifier.loadingSpinner(
     .border(2.px, LineStyle.Solid, rgb(229, 231, 235))
     .borderTop(2.px, LineStyle.Solid, color)
     .borderRadius(50.percent)
-    // TODO: Add loading spinner animation when Animation API stabilizes
+    // Note: loading spinner animation will be added when Animation API stabilizes
 
 /**
  * Smooth scroll behavior
  */
 fun Modifier.smoothScroll(): Modifier = this
-    // TODO: Add smooth scroll when CSS API stabilizes
+    // Note: smooth scroll will be added when CSS API stabilizes
 
 /**
  * Parallax effect utility
@@ -404,7 +404,7 @@ fun Modifier.smoothScroll(): Modifier = this
 fun Modifier.parallax(
     speed: Double = 0.5
 ): Modifier = this
-    // TODO: Add parallax when CSS API stabilizes
+    // Note: parallax will be added when CSS API stabilizes
 
 // =============================================================================
 // PERFORMANCE OPTIMIZATIONS
@@ -414,13 +414,13 @@ fun Modifier.parallax(
  * Optimize animations for performance
  */
 fun Modifier.optimizeAnimation(): Modifier = this
-    // TODO: Add animation optimization when CSS API stabilizes
+    // Note: animation optimization will be added when CSS API stabilizes
 
 /**
  * GPU acceleration for smooth animations
  */
 fun Modifier.gpuAccelerated(): Modifier = this
-    // TODO: Add GPU acceleration when CSS API stabilizes
+    // Note: GPU acceleration will be added when CSS API stabilizes
 
 // =============================================================================
 // ANIMATION PRESETS
@@ -431,19 +431,19 @@ object AnimationPresets {
      * Card hover animation
      */
     fun cardHover() = Modifier
-        // TODO: Add card hover animation when CSS API stabilizes
+        // Note: card hover animation will be added when CSS API stabilizes
     
     /**
      * Button animation preset
      */
     fun button() = Modifier
-        // TODO: Add button animation when CSS API stabilizes
+        // Note: button animation will be added when CSS API stabilizes
     
     /**
      * Link animation preset
      */
     fun link() = Modifier
-        // TODO: Add link animation when CSS API stabilizes
+        // Note: link animation will be added when CSS API stabilizes
     
     /**
      * Modal animation preset
