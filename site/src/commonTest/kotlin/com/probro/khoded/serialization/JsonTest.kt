@@ -1,0 +1,122 @@
+package com.probro.khoded.serialization
+
+import com.probro.khoded.messaging.messageData.MessageData
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
+import kotlin.test.*
+
+class JsonTest {
+    
+    @Test
+    fun `should serialize ContactMessageData to JSON`() {
+        val contactData = MessageData.ContactMessageData(
+            name = "John Doe",
+            email = "john@example.com",
+            organization = "Test Corp",
+            message = "Hello world",
+            subject = "Test Subject"
+        )
+        
+        val jsonString = json.encodeToString(contactData)
+        
+        assertTrue(jsonString.contains("\"name\":\"John Doe\""))
+        assertTrue(jsonString.contains("\"email\":\"john@example.com\""))
+        assertTrue(jsonString.contains("\"organization\":\"Test Corp\""))
+        assertTrue(jsonString.contains("\"message\":\"Hello world\""))
+        assertTrue(jsonString.contains("\"subject\":\"Test Subject\""))
+    }
+    
+    @Test
+    fun `should deserialize JSON to ContactMessageData`() {
+        val jsonString = """
+            {
+                "name": "Jane Smith",
+                "email": "jane@example.com",
+                "organization": "Jane Corp",
+                "message": "Test message",
+                "subject": "Test subject"
+            }
+        """.trimIndent()
+        
+        val contactData = json.decodeFromString<MessageData.ContactMessageData>(jsonString)
+        
+        assertEquals("Jane Smith", contactData.name)
+        assertEquals("jane@example.com", contactData.email)
+        assertEquals("Jane Corp", contactData.organization)
+        assertEquals("Test message", contactData.message)
+        assertEquals("Test subject", contactData.subject)
+    }
+    
+    @Test
+    fun `should serialize ConsultationMessageData to JSON`() {
+        val consultationData = MessageData.ConsultationMessageData(
+            name = "Bob Johnson",
+            email = "bob@example.com",
+            message = "I need consultation"
+        )
+        
+        val jsonString = json.encodeToString(consultationData)
+        
+        assertTrue(jsonString.contains("\"name\":\"Bob Johnson\""))
+        assertTrue(jsonString.contains("\"email\":\"bob@example.com\""))
+        assertTrue(jsonString.contains("\"message\":\"I need consultation\""))
+    }
+    
+    @Test
+    fun `should deserialize JSON to ConsultationMessageData`() {
+        val jsonString = """
+            {
+                "name": "Alice Brown",
+                "email": "alice@example.com",
+                "message": "Consultation request"
+            }
+        """.trimIndent()
+        
+        val consultationData = json.decodeFromString<MessageData.ConsultationMessageData>(jsonString)
+        
+        assertEquals("Alice Brown", consultationData.name)
+        assertEquals("alice@example.com", consultationData.email)
+        assertEquals("Consultation request", consultationData.message)
+    }
+    
+    @Test
+    fun `should handle empty optional fields in ContactMessageData`() {
+        val jsonString = """
+            {
+                "name": "Test User",
+                "email": "test@example.com",
+                "organization": "",
+                "message": "Message",
+                "subject": ""
+            }
+        """.trimIndent()
+        
+        val contactData = json.decodeFromString<MessageData.ContactMessageData>(jsonString)
+        
+        assertEquals("Test User", contactData.name)
+        assertEquals("test@example.com", contactData.email)
+        assertEquals("", contactData.organization)
+        assertEquals("Message", contactData.message)
+        assertEquals("", contactData.subject)
+    }
+    
+    @Test
+    fun `should handle special characters in JSON`() {
+        val contactData = MessageData.ContactMessageData(
+            name = "José María",
+            email = "jose@example.com",
+            organization = "Café & Co.",
+            message = "Hello! 你好 🌟",
+            subject = "Special chars: @#$%"
+        )
+        
+        val jsonString = json.encodeToString(contactData)
+        val deserializedData = json.decodeFromString<MessageData.ContactMessageData>(jsonString)
+        
+        assertEquals(contactData.name, deserializedData.name)
+        assertEquals(contactData.email, deserializedData.email)
+        assertEquals(contactData.organization, deserializedData.organization)
+        assertEquals(contactData.message, deserializedData.message)
+        assertEquals(contactData.subject, deserializedData.subject)
+    }
+}

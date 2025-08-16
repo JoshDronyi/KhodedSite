@@ -122,7 +122,7 @@ object ContactPageStateHolder : MessagingStateHolder<ContactFormState>() {
                     _contactForm.update {
                         it.copy(
                             isLoading = false,
-                            stage = MessagingStage.ERROR("Sorry there was an error: ${mailResponse.exceptionMesaage}")
+                            stage = MessagingStage.ERROR("Sorry there was an error: ${mailResponse.exceptionMessage}")
                         )
                     }
                 }

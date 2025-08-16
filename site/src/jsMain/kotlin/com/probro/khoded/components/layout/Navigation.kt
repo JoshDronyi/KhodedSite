@@ -1,17 +1,29 @@
 // Navigation.kt - Simplified Header and Navigation components  
 package com.probro.khoded.components.layout
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.probro.khoded.design.KhodedDesignSystem
-import com.varabyte.kobweb.compose.ui.*
-import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.asAttributesBuilder
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
+import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.silk.components.navigation.Link
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.Position
+import org.jetbrains.compose.web.css.Color
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.*
-import org.jetbrains.compose.web.attributes.*
+import org.jetbrains.compose.web.attributes.tabIndex
 import org.w3c.dom.HTMLElement
 import kotlinx.browser.window
 import kotlinx.browser.document

@@ -1,0 +1,35 @@
+# Security Configuration for Khoded Production
+# Essential security settings and policies
+
+cors:
+  enabled: true
+  allowed_origins:
+    - "https://khoded.com"
+    - "https://www.khoded.com"
+    - "https://khoded.onrender.com"
+  allowed_methods: ["GET", "POST", "OPTIONS"]
+  allowed_headers: ["Content-Type", "Authorization"]
+  expose_headers: ["X-Request-ID"]
+
+rate_limiting:
+  enabled: true
+  requests_per_minute: 60
+  window_size_minutes: 1
+  blocked_duration_minutes: 15
+
+content_security_policy:
+  enabled: true
+  directives:
+    default-src: "'self'"
+    script-src: "'self' 'unsafe-inline' https://cdnjs.cloudflare.com"
+    style-src: "'self' 'unsafe-inline' https://fonts.googleapis.com"
+    font-src: "'self' https://fonts.gstatic.com"
+    img-src: "'self' data: https:"
+    connect-src: "'self'"
+
+headers:
+  X-Frame-Options: "DENY"
+  X-Content-Type-Options: "nosniff"
+  X-XSS-Protection: "1; mode=block"
+  Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+  Referrer-Policy: "strict-origin-when-cross-origin"

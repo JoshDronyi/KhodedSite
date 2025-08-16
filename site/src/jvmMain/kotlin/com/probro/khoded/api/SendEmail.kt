@@ -9,7 +9,8 @@ import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
 import com.varabyte.kobweb.api.http.readBodyText
 import com.varabyte.kobweb.api.http.setBodyText
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.supervisorScope
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.apache.http.HttpStatus
@@ -197,7 +198,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
                         else -> {
                             messagingScope.async {
                                 MailResponse.Error(
-                                    exceptionMesaage = "Unable to handle formType of $formType. Please specify 'CONTACT' or 'CONSULTATION' in the TYPE parameter.",
+                                    exceptionMessage = "Unable to handle formType of $formType. Please specify 'CONTACT' or 'CONSULTATION' in the TYPE parameter.",
                                     stackTrace = "Send Email Api function - Invalid form type."
                                 )
                             }
@@ -210,11 +211,11 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
             with(mailResponse.await()) {
                 when (val response = this) {
                     is MailResponse.Error -> {
-                        logger.error("Email sending failed: ${response.exceptionMesaage}")
+                        logger.error("Email sending failed: ${response.exceptionMessage}")
                         res.apply {
                             status = HttpStatus.SC_BAD_REQUEST
                             addSecurityHeaders(ctx)
-                            setBodyText("""{"error": "${response.exceptionMesaage}"}""")
+                            setBodyText("""{"error": "${response.exceptionMessage}"}""")
                         }
                     }
 

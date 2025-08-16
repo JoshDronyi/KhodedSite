@@ -103,7 +103,7 @@ object ConsultationStateHolder : MessagingStateHolder<ConsultationFormState>() {
                         _consultationState.update {
                             it.copy(
                                 isLoading = false,
-                                stage = MessagingStage.ERROR(this.exceptionMesaage)
+                                stage = MessagingStage.ERROR(this.exceptionMessage)
                             )
                         }
                     }

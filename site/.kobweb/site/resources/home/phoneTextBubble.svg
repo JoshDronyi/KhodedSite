@@ -1,0 +1,20 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="phone" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06B6D4"/>
+      <stop offset="100%" style="stop-color:#0891B2"/>
+    </linearGradient>
+  </defs>
+  <!-- Phone -->
+  <rect x="50" y="30" width="80" height="140" rx="15" fill="url(#phone)" stroke="#0E7490" stroke-width="2"/>
+  <rect x="60" y="50" width="60" height="100" rx="5" fill="white"/>
+  
+  <!-- Text bubble -->
+  <ellipse cx="200" cy="80" rx="60" ry="30" fill="#F1F5F9" stroke="#CBD5E1"/>
+  <polygon points="140,80 160,85 160,75" fill="#F1F5F9" stroke="#CBD5E1"/>
+  
+  <!-- Text lines -->
+  <line x1="170" y1="70" x2="220" y2="70" stroke="#64748B" stroke-width="2"/>
+  <line x1="170" y1="80" x2="210" y2="80" stroke="#64748B" stroke-width="2"/>
+  <line x1="170" y1="90" x2="225" y2="90" stroke="#64748B" stroke-width="2"/>
+</svg>

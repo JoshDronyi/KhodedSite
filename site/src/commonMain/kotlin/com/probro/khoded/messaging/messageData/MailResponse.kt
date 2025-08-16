@@ -11,7 +11,7 @@ sealed class MailResponse {
 
     @Serializable
     data class Error(
-        val exceptionMesaage: String,
+        val exceptionMessage: String,
         val stackTrace: String
     ) : MailResponse() {
         companion object {
