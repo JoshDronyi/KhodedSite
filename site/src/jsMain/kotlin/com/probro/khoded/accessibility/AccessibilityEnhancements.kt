@@ -141,6 +141,7 @@ class FocusManager {
     
     fun startManaging() {
         isManaging = true
+        setupFocusIndicators()
     }
     
     fun stopManaging() {
@@ -160,6 +161,143 @@ class FocusManager {
             val lastFocused = focusHistory.removeLastOrNull()
             (lastFocused as? HTMLElement)?.focus()
         }
+    }
+    
+    private fun setupFocusIndicators() {
+        js("""
+            // Enhanced focus indicators for accessibility compliance
+            const style = document.createElement('style');
+            style.textContent = `
+                .enhanced-focus:focus {
+                    outline: 3px solid #4A90E2 !important;
+                    outline-offset: 2px !important;
+                    box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.3) !important;
+                    border-radius: 4px !important;
+                }
+                
+                .enhanced-focus:focus:not(:focus-visible) {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+                
+                .enhanced-focus:focus-visible {
+                    outline: 3px solid #4A90E2 !important;
+                    outline-offset: 2px !important;
+                    box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.3) !important;
+                }
+                
+                .skip-link {
+                    position: absolute;
+                    top: -40px;
+                    left: 6px;
+                    background: #000;
+                    color: #fff;
+                    padding: 8px;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    z-index: 1000;
+                }
+                
+                .skip-link:focus {
+                    top: 6px;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Add enhanced focus class to all interactive elements
+            const interactiveElements = document.querySelectorAll(
+                'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+            );
+            
+            interactiveElements.forEach(element => {
+                element.classList.add('enhanced-focus');
+            });
+        """)
+    }
+}
+
+// Production-ready accessibility utilities
+object AccessibilityUtils {
+    fun createSkipLinks() {
+        js("""
+            const skipLinks = document.createElement('div');
+            skipLinks.innerHTML = `
+                <a href="#main-content" class="skip-link">Skip to main content</a>
+                <a href="#navigation" class="skip-link">Skip to navigation</a>
+            `;
+            document.body.insertBefore(skipLinks, document.body.firstChild);
+        """)
+    }
+    
+    fun enhanceKeyboardNavigation() {
+        js("""
+            // Trap focus in modals and dialogs
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    const modal = document.querySelector('.modal:not([hidden])');
+                    if (modal) {
+                        trapFocus(modal, e);
+                    }
+                }
+                
+                // ESC key handling for modals
+                if (e.key === 'Escape') {
+                    const modal = document.querySelector('.modal:not([hidden])');
+                    if (modal) {
+                        closeModal(modal);
+                    }
+                }
+            });
+            
+            function trapFocus(container, event) {
+                const focusableElements = container.querySelectorAll(
+                    'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+                );
+                
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (event.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        event.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        event.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+            
+            function closeModal(modal) {
+                modal.setAttribute('hidden', '');
+                // Restore focus to trigger element if available
+                const trigger = modal.dataset.triggerElement;
+                if (trigger) {
+                    document.getElementById(trigger)?.focus();
+                }
+            }
+        """)
+    }
+    
+    fun announcePageChange(pageTitle: String) {
+        js("""
+            const announcement = `Page changed to: ${pageTitle}`;
+            const liveRegion = document.getElementById('page-change-announcer') || createPageChangeAnnouncer();
+            liveRegion.textContent = announcement;
+            
+            function createPageChangeAnnouncer() {
+                const announcer = document.createElement('div');
+                announcer.id = 'page-change-announcer';
+                announcer.setAttribute('aria-live', 'polite');
+                announcer.setAttribute('aria-atomic', 'true');
+                announcer.className = 'sr-only';
+                announcer.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+                document.body.appendChild(announcer);
+                return announcer;
+            }
+        """.replace("${pageTitle}", pageTitle))
     }
 }
 

@@ -28,14 +28,16 @@ services:
     environment:
       - DATABASE_URL=jdbc:postgresql://database:5432/khodedBackendData
       - DATABASE_USER=khodedAdmin
-      - DATABASE_PASSWORD=khodedAdmin
+      - DATABASE_PASSWORD_FILE=/run/secrets/db_password
+    secrets:
+      - db_password
   database:
     image: postgres:16.4-alpine3.19
     environment:
       - POSTGRES_DB=khodedBackendData
-      - POSTGRES_PASSWORD=khodedAdmin
-    ports:
-      - 5432:5432
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+    secrets:
+      - postgres_password
     expose:
       - 5432
     volumes:
@@ -50,3 +52,13 @@ volumes:
     driver: local
   db_data:
     driver: local
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  ssl_cert:
+    file: ./secrets/ssl_cert.pem
+  ssl_key:
+    file: ./secrets/ssl_key.pem
