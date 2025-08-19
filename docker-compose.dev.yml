@@ -1,0 +1,127 @@
+version: "3.8"
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile.minimal
+    container_name: khoded-dev
+    env_file:
+      - .env.development
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount source code for hot reload during development
+      - ./site:/app/site:ro
+      - ./secrets:/app/secrets:ro
+      - dev-logs:/app/logs
+    networks:
+      - khoded-dev-network
+    depends_on:
+      - database
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=DEBUG
+
+  database:
+    image: postgres:16-alpine
+    container_name: khoded-dev-db
+    environment:
+      POSTGRES_DB: khodedBackendData
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: khodedData
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - dev-postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - khoded-dev-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d khodedBackendData"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Development tools
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    container_name: khoded-dev-mail
+    ports:
+      - "1080:1080"  # Web interface
+      - "1025:1025"  # SMTP server
+    networks:
+      - khoded-dev-network
+    restart: unless-stopped
+
+  # Optional: Redis for caching during development
+  redis:
+    image: redis:7-alpine
+    container_name: khoded-dev-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - dev-redis-data:/data
+    networks:
+      - khoded-dev-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Development monitoring (lightweight)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: khoded-dev-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus-dev.yml:/etc/prometheus/prometheus.yml:ro
+      - dev-prometheus-data:/prometheus
+    networks:
+      - khoded-dev-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: khoded-dev-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - dev-grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    networks:
+      - khoded-dev-network
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+networks:
+  khoded-dev-network:
+    driver: bridge
+    name: khoded-dev-network
+
+volumes:
+  dev-postgres-data:
+    driver: local
+  dev-redis-data:
+    driver: local
+  dev-prometheus-data:
+    driver: local
+  dev-grafana-data:
+    driver: local
+  dev-logs:
+    driver: local
