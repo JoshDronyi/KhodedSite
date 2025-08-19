@@ -1,0 +1,111 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: khoded-db
+    env: docker
+    plan: starter
+    region: oregon
+    databases:
+      - name: khoded_production
+        user: khoded_user
+
+  # Web Application
+  - type: web
+    name: khoded-app
+    env: docker
+    plan: starter
+    region: oregon
+    buildCommand: docker build -t khoded-app .
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    numInstances: 1
+    
+    envVars:
+      # Database connection (automatically provided by Render)
+      - key: DATABASE_URL
+        fromDatabase:
+          name: khoded-db
+          property: connectionString
+      
+      # Application environment
+      - key: APP_ENVIRONMENT
+        value: production
+      
+      # Domain configuration
+      - key: PRIMARY_DOMAIN
+        value: khoded.com
+      
+      # CORS settings for production
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://khoded.com,https://www.khoded.com
+      
+      # Gmail API configuration (KhodedProd project)
+      - key: GOOGLE_SERVICE_ACCOUNT_FILE
+        value: /app/secrets/gmail_service_account_key.json
+      
+      # Gmail project configuration
+      - key: GMAIL_PROJECT_NAME
+        value: KhodedProd
+      
+      # Security settings
+      - key: SSL_ENABLED
+        value: true
+      
+      # Performance settings
+      - key: JVM_OPTS
+        value: -Xmx512m -XX:+UseG1GC
+      
+      # Logging
+      - key: LOG_LEVEL
+        value: INFO
+      
+      # Feature flags
+      - key: ENABLE_METRICS
+        value: true
+      - key: ENABLE_PERFORMANCE_MONITORING
+        value: true
+      - key: ENABLE_SECURITY_HEADERS
+        value: true
+      - key: ENABLE_COMPRESSION
+        value: true
+
+    # Secret environment variables (will be prompted during deployment)
+    secretFiles:
+      - key: GMAIL_SERVICE_ACCOUNT_JSON
+        sync: false  # This will be provided manually in Render dashboard
+    
+    # Auto-deploy settings
+    autoDeploy: true
+    branch: main  # Deploy from main branch
+    
+    # Health check configuration
+    healthCheckPath: /health
+    startCommand: ./start.sh
+
+# Build specifications
+builds:
+  - type: docker
+    dockerfilePath: ./Dockerfile
+    context: .
+    args:
+      - KOBWEB_APP_ROOT=site
+
+# Optional: Custom domains (configure after deployment)
+domains:
+  - khoded.com
+  - www.khoded.com
+
+# Environment-specific configurations
+environments:
+  production:
+    plan: starter  # $7/month for web service
+    databases:
+      plan: starter  # $7/month for PostgreSQL
+    
+  staging:
+    plan: starter  # $7/month for staging
+    databases:
+      plan: starter  # $7/month for staging database
+    envVars:
+      - key: GMAIL_PROJECT_NAME
+        value: Khoded-staging

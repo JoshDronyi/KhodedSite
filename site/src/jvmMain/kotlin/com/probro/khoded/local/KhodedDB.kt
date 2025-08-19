@@ -24,16 +24,39 @@ import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionA
 import java.util.*
 import javax.money.Monetary
 
-const val IS_PROD: Boolean = false
+// Detect if running on Render or in production
+val IS_PROD: Boolean = System.getenv("RENDER") != null || System.getenv("APP_ENVIRONMENT") == "production"
 
 object KhodedDB {
     val db by lazy {
         val config = HikariConfig().apply {
-            jdbcUrl = if (IS_PROD) KhodedConfig.prodUri else KhodedConfig.devUri
+            // Use DATABASE_URL environment variable from Render, fallback to build config
+            val databaseUrl = System.getenv("DATABASE_URL")
+            if (databaseUrl != null) {
+                // Render provides DATABASE_URL in format: postgresql://user:pass@host:port/database
+                // HikariCP needs jdbc:postgresql://user:pass@host:port/database
+                jdbcUrl = if (databaseUrl.startsWith("postgresql://")) {
+                    "jdbc:$databaseUrl"
+                } else {
+                    databaseUrl
+                }
+            } else {
+                // Fallback to build config for local development
+                jdbcUrl = if (IS_PROD) KhodedConfig.prodUri else KhodedConfig.devUri
+                username = if (IS_PROD) KhodedConfig.prodUsername else KhodedConfig.devUsername
+                password = if (IS_PROD) KhodedConfig.prodPassword else KhodedConfig.devPassword
+            }
+            
             driverClassName = "org.postgresql.Driver"
-            username = if (IS_PROD) KhodedConfig.prodUsername else KhodedConfig.devUsername
-            password = if (IS_PROD) KhodedConfig.prodPassword else KhodedConfig.devPassword
             maximumPoolSize = 10
+            
+            // Render-specific optimizations
+            if (System.getenv("RENDER") != null) {
+                connectionTimeout = 20000 // 20 seconds
+                idleTimeout = 300000 // 5 minutes
+                maxLifetime = 1200000 // 20 minutes
+                leakDetectionThreshold = 60000 // 1 minute
+            }
         }
         val datasource = HikariDataSource(config)
         Database.connect(datasource = datasource)

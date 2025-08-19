@@ -57,8 +57,22 @@ FROM openjdk:19-jdk-slim AS run
 
 ARG KOBWEB_APP_ROOT
 
+# Install curl for health checks (required by Render)
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 COPY --from=export /project/${KOBWEB_APP_ROOT}/.kobweb .kobweb
 
-EXPOSE 8080
+# Render requires apps to bind to 0.0.0.0 and use PORT environment variable
+ENV HOST=0.0.0.0
+ENV PORT=8080
 
-ENTRYPOINT .kobweb/server/start.sh
+EXPOSE $PORT
+
+# Create a startup script that handles Render's PORT environment variable
+RUN echo '#!/bin/bash\n\
+# Use PORT environment variable from Render, fallback to 8080\n\
+export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
+echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
+exec .kobweb/server/start.sh' > start.sh && chmod +x start.sh
+
+ENTRYPOINT ["./start.sh"]

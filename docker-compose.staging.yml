@@ -1,0 +1,251 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: khoded:staging
+    container_name: khoded-staging
+    env_file:
+      - .env.staging
+    ports:
+      - "8080:8080"
+    volumes:
+      - staging-uploads:/app/uploads
+      - staging-logs:/app/logs
+    networks:
+      - khoded-staging-network
+    depends_on:
+      - database
+      - redis
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.5'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    secrets:
+      - staging_db_password
+      - staging_postgres_password
+      - staging_google_service_account
+    environment:
+      - ENVIRONMENT=staging
+
+  database:
+    image: postgres:16-alpine
+    container_name: khoded-staging-db
+    environment:
+      POSTGRES_DB: khoded_staging
+      POSTGRES_USER: khoded_staging_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/staging_postgres_password
+    volumes:
+      - staging-postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - staging-backups:/backups
+    networks:
+      - khoded-staging-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U khoded_staging_user -d khoded_staging"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    secrets:
+      - staging_postgres_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: khoded-staging-redis
+    volumes:
+      - staging-redis-data:/data
+    networks:
+      - khoded-staging-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+    command: redis-server --appendonly yes --maxmemory 200mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Reverse proxy with SSL termination
+  nginx:
+    image: nginx:alpine
+    container_name: khoded-staging-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/staging.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - staging-nginx-cache:/var/cache/nginx
+    networks:
+      - khoded-staging-network
+    depends_on:
+      - app
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # Production-like monitoring stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: khoded-staging-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    volumes:
+      - ./monitoring/prometheus-staging.yml:/etc/prometheus/prometheus.yml:ro
+      - staging-prometheus-data:/prometheus
+    networks:
+      - khoded-staging-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: khoded-staging-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - staging-grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - khoded-staging-network
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD_FILE=/run/secrets/grafana_password
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+    secrets:
+      - grafana_password
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # Log aggregation
+  loki:
+    image: grafana/loki:latest
+    container_name: khoded-staging-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki-staging.yml:/etc/loki/local-config.yaml:ro
+      - staging-loki-data:/loki
+    networks:
+      - khoded-staging-network
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: khoded-staging-promtail
+    volumes:
+      - ./monitoring/promtail-staging.yml:/etc/promtail/config.yml:ro
+      - staging-logs:/var/log/app:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - khoded-staging-network
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.25'
+
+  # Automated backup service
+  backup:
+    image: postgres:16-alpine
+    container_name: khoded-staging-backup
+    volumes:
+      - staging-backups:/backups
+      - ./scripts/backup-staging.sh:/backup.sh:ro
+    networks:
+      - khoded-staging-network
+    depends_on:
+      - database
+    restart: "no"
+    command: /bin/sh -c "chmod +x /backup.sh && crond -f"
+    environment:
+      - BACKUP_SCHEDULE=0 3 * * *
+      - POSTGRES_HOST=database
+      - POSTGRES_DB=khoded_staging
+      - POSTGRES_USER=khoded_staging_user
+    secrets:
+      - staging_postgres_password
+
+networks:
+  khoded-staging-network:
+    driver: bridge
+    name: khoded-staging-network
+
+volumes:
+  staging-postgres-data:
+    driver: local
+  staging-redis-data:
+    driver: local
+  staging-prometheus-data:
+    driver: local
+  staging-grafana-data:
+    driver: local
+  staging-loki-data:
+    driver: local
+  staging-nginx-cache:
+    driver: local
+  staging-uploads:
+    driver: local
+  staging-logs:
+    driver: local
+  staging-backups:
+    driver: local
+
+secrets:
+  staging_db_password:
+    file: ./secrets/staging_db_password.txt
+  staging_postgres_password:
+    file: ./secrets/staging_postgres_password.txt
+  staging_google_service_account:
+    file: ./secrets/staging_google_service_account.json
+  grafana_password:
+    file: ./secrets/grafana_password.txt
