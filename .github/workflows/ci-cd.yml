@@ -47,10 +47,26 @@ jobs:
 
     - name: Set up environment
       run: |
-        cp .env.${{ matrix.environment }} .env
+        # Create .env from template for testing (no sensitive data)
+        cp .env.template .env
+        # Override with CI environment-specific values
+        case "${{ matrix.environment }}" in
+          development)
+            echo "APP_ENVIRONMENT=development" >> .env
+            ;;
+          staging)
+            echo "APP_ENVIRONMENT=staging" >> .env
+            echo "PRIMARY_DOMAIN=khoded-staging.onrender.com" >> .env
+            ;;
+          production)
+            echo "APP_ENVIRONMENT=production" >> .env
+            echo "PRIMARY_DOMAIN=khoded.onrender.com" >> .env
+            ;;
+        esac
+        
         # Create dummy secrets for testing
         mkdir -p secrets
-        echo '{"type":"service_account","project_id":"test"}' > secrets/gmail_service_account_key.json
+        echo '{"type":"service_account","project_id":"test","client_email":"test@test.com","private_key":"dummy"}' > secrets/gmail_service_account_key.json
 
     - name: Run tests
       run: |
@@ -65,9 +81,9 @@ jobs:
       env:
         ENVIRONMENT: ${{ matrix.environment }}
 
-    - name: Build Docker image (minimal for testing)
+    - name: Build Docker image (for testing)
       run: |
-        docker build -f Dockerfile.minimal -t khoded:${{ matrix.environment }}-test .
+        docker build -f Dockerfile -t khoded:${{ matrix.environment }}-test .
 
     - name: Test Docker image
       run: |
@@ -122,7 +138,7 @@ jobs:
 
     - name: Build development image
       run: |
-        docker build -f Dockerfile.minimal -t khoded:dev .
+        docker build -f Dockerfile -t khoded:dev .
 
     - name: Deploy to development
       run: |
@@ -148,7 +164,7 @@ jobs:
 
     - name: Build staging image
       run: |
-        docker build -f Dockerfile.production -t khoded:staging .
+        docker build -f Dockerfile -t khoded:staging .
 
     - name: Run staging tests
       run: |
