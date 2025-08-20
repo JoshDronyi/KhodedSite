@@ -1,7 +1,8 @@
 package com.probro.khoded.messaging.messageData
 
-import com.probro.khoded.utils.json
+import com.probro.khoded.serialization.json
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 
 interface MessageDataConverter<T> {
     fun serialize(data: T): String

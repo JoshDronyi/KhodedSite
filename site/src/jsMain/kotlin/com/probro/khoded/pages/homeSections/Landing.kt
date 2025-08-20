@@ -1,479 +1,309 @@
 package com.probro.khoded.pages.homeSections
 
-import androidx.compose.runtime.*
-import com.probro.khoded.BaseButtonTextVariant
-import com.probro.khoded.BlueButtonVariant
-import com.probro.khoded.components.widgets.HomePageHeaderVariant
-import com.probro.khoded.models.ButtonState
-import com.probro.khoded.models.KhodedColors
-import com.probro.khoded.styles.BaseTextStyle
-import com.probro.khoded.styles.ImageStyle
-import com.probro.khoded.styles.LandingImageVariant
-import com.probro.khoded.utils.*
-import com.varabyte.kobweb.compose.css.*
-import com.varabyte.kobweb.compose.css.functions.LinearGradient
-import com.varabyte.kobweb.compose.css.functions.linearGradient
+import androidx.compose.runtime.Composable
+import com.probro.khoded.utils.NavigationRoute
+import com.probro.khoded.utils.Pages
+import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.functions.clamp
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.animation.toAnimation
-import com.varabyte.kobweb.silk.components.forms.ButtonStyle
-import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.style.ComponentStyle
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
-import com.varabyte.kobweb.silk.components.style.addVariant
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.components.navigation.Link
+import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.dom.P
-import org.jetbrains.compose.web.dom.Span
-import org.jetbrains.compose.web.dom.Text
-
-
-val BackgroundStyle by ComponentStyle {
-    base {
-        Modifier
-            .fillMaxWidth()
-            .height(Height.FitContent)
-    }
-}
-
-val HomeLandingBackgroundVariant by BackgroundStyle.addVariant {
-    base {
-        Modifier
-            .padding(bottom = 40.px)
-            .backgroundImage(
-                linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
-                    from = KhodedColors.PURPLE.rgb,
-                    to = Colors.RebeccaPurple
-                )
-            )
-    }
-}
-val ServicesBackgroundVariant by BackgroundStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth(80.percent)
-            .padding(topBottom = 40.px)
-            .color(Color.white)
-    }
-}
-val DesignBackgroundVariant by BackgroundStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth(80.percent)
-            .color(Colors.Black)
-            .margin(top = 100.px, bottom = 200.px)
-            .padding(topBottom = 50.px)
-    }
-}
-val ConsultationBackgroundVariant by BackgroundStyle.addVariant {
-    base {
-        Modifier
-            .backgroundImage(
-                linearGradient(
-                    dir = LinearGradient.Direction.ToBottom,
-                    from = Colors.SkyBlue,
-                    to = KhodedColors.PURPLE.rgb
-                )
-            )
-    }
-}
-
+import org.jetbrains.compose.web.dom.*
 
 @Composable
 fun LandingSectionDisplay(
-    header: @Composable (variant: ComponentVariant?, textVariant: ComponentVariant?) -> Unit,
-    onNavigate: (page: PageSection) -> Unit,
+    onNavigate: (path: NavigationRoute) -> Unit,
     data: Pages.Home_Section.Landing
 ) = with(data) {
-    data.apply {
-        ctaButton = ctaButton.copy(onButtonClick = {
-            println("Doing the navigation.")
-            onNavigate(Pages.Home_Section.Consultation)
-        })
-    }
-    Column(
-        modifier = BackgroundStyle.toModifier(HomeLandingBackgroundVariant),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        header(HomePageHeaderVariant, null)
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(80.percent)
-                .id(id),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                src = mainImage,
-                description = "Landing section image.",
-                modifier = ImageStyle.toModifier(LandingImageVariant)
-            )
-            LandingText(
-                modifier = LandingTextStyle.toModifier()
-                    .align(Alignment.TopStart)
-            )
-        }
-    }
-}
-
-val LandingTextStyle by ComponentStyle {
-    base {
-        Modifier
-            .fillMaxWidth(50.percent)
-            .fillMaxHeight()
-            .margin(bottom = 40.px)
-    }
-}
-
-val HomeTitleTextStyle by ComponentStyle {
-    base {
-        Modifier
-            .fontFamily("Times New Roman")
-            .padding(0.px)
-            .margin(0.px)
-            .color(Color.white)
-            .textAlign(TextAlign.Start)
-    }
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Medium)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.XLarge)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(48.px)
-    }
-    Breakpoint.XL {
-        Modifier.fontSize(72.px)
-    }
-}
-
-val ServicesTitleVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-            .color(Colors.Black)
-            .textAlign(TextAlign.Center)
-    }
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(48.px)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(72.px)
-    }
-    Breakpoint.XL
-}
-val DesignTitleVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-            .color(Color.black)
-    }
-
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.XXLarge)
-    }
-    Breakpoint.SM {
-        Modifier.fontSize(48.px)
-    }
-    Breakpoint.MD
-    Breakpoint.LG {
-        Modifier.fontSize(60.px)
-    }
-    Breakpoint.XL
-}
-val ConsultationTitleVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-    }
-}
-val DesignSubTitleVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-            .color(Color.black)
-            .margin(topBottom = 40.px)
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .fontSize(FontSize.XSmall)
-    }
-    Breakpoint.SM {
-        Modifier
-            .fontSize(FontSize.Medium)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Larger)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.XLarge)
-    }
-}
-
-val HomeSubTitleVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-            .fillMaxWidth(80.percent)
-            .textAlign(TextAlign.Start)
-            .color(Color.white)
-            .margin(topBottom = 30.px)
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .fontSize(FontSize.XXSmall)
-            .translateY(ty = 20.px)
-            .fillMaxWidth(60.percent)
-    }
-    Breakpoint.SM {
-        Modifier
-            .fontSize(FontSize.XSmall)
-            .margin(topBottom = 10.px)
-    }
-    Breakpoint.MD {
-        Modifier.fontSize(FontSize.Medium)
-            .margin(topBottom = 20.px)
-    }
-    Breakpoint.LG {
-        Modifier.fontSize(FontSize.XLarge)
-    }
-}
-
-const val LENGTH_OF_TELLS = 5
-
-@Composable
-fun LandingText(
-    modifier: Modifier = Modifier
-) = with(Pages.Home_Section.Landing) {
-    Column(
-        modifier = modifier
-            .scrollSnapStop(ScrollSnapStop.Always)
-            .scrollSnapType(ScrollSnapType.Inherit),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.Start
-    ) {
-        LandingTitle(
-            mainText
-        )
-        LandingSubTitle()
-        ButtonDisplay(
-            ctaButton,
-            BlueButtonVariant,
-            modifier = Modifier
-                .fillMaxWidth(40.percent)
-                .textAlign(TextAlign.Center)
-        ) {
-            P(
-                attrs = BaseTextStyle.toModifier(BaseButtonTextVariant)
-                    .toAttrs()
-            ) {
-                Text(it)
-            }
-        }
-    }
-}
-
-@Composable
-private fun LandingSubTitle() = with(Pages.Home_Section.Landing) {
-    P(
-        attrs = HomeTitleTextStyle.toModifier(HomeSubTitleVariant)
-            .toAttrs()
-    ) {
-        Text(subText)
-    }
-}
-
-val BlueUnderLineVariant by ImageStyle.addVariant {
-    base {
-        Modifier.fillMaxWidth(50.percent)
-            .maxHeight(MaxHeight.MinContent)
-    }
-    Breakpoint.ZERO {
-        Modifier
-    }
-}
-
-val firstLineVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
+    // Full viewport hero section with proper branding
+    Section(
+        attrs = Modifier
             .fillMaxWidth()
-            .textAlign(TextAlign.Center)
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .translateY(ty = 70.px)
-    }
-    Breakpoint.SM
-    Breakpoint.MD
-    Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .translate(tx = 40.px, ty = 20.px)
-            .fontSize(60.px)
-    }
-}
-val PinkTextVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-            .minWidth(Width.MaxContent)
-            .color(Colors.DeepPink)
-            .fontStyle(FontStyle.Italic)
-            .textAlign(TextAlign.End)
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .translateY(ty = 70.px)
-    }
-    Breakpoint.SM
-    Breakpoint.MD
-    Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .translate(tx = 40.px, ty = 20.px)
-//            .fontSize(60.px)
-    }
-}
-val SecondLineVariant by HomeTitleTextStyle.addVariant {
-    base {
-        Modifier
-            .width(Width.FitContent)
-            .textAlign(TextAlign.Start)
-            .margin(left = 10.px)
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .translateY(ty = 70.px)
-    }
-    Breakpoint.SM
-    Breakpoint.MD
-    Breakpoint.LG
-    Breakpoint.XL {
-        Modifier
-            .translate(tx = 40.px, ty = 20.px)
-            .fontSize(60.px)
-    }
-}
-
-@Composable
-private fun LandingTitle(
-    mainText: String,
-    modifier: Modifier = Modifier
-) = with(Pages.Home_Section.Landing) {
-    var sectionPosition by remember { mutableStateOf(SectionPosition.IDLE) }
-
-    val indexOfTells: Int = remember { mainText.indexOf("tells") }
-    val firstLine = remember { mainText.substring(startIndex = 0, endIndex = indexOfTells) }
-    val tells = remember { mainText.substring(indexOfTells, indexOfTells + LENGTH_OF_TELLS) }
-    val secondLine = remember { mainText.substring(startIndex = indexOfTells + LENGTH_OF_TELLS) }
-
-    P(
-        attrs = modifier
-            .id(TitleIDs.landingTitleID)
-            .animation(
-                fallInAnimation.toAnimation(
-                    duration = 600.ms,
-                    timingFunction = AnimationTimingFunction.Ease
-                )
-            )
-            .toAttrs()
+            .minHeight(100.vh)
+            .backgroundColor(rgb(15, 23, 42)) // Deep navy background
+            .padding(topBottom = 80.px, leftRight = 24.px)
+            .toAttrs {
+                id("landing")
+                attr("aria-label", "Khoded Hero Section")
+            }
     ) {
         Column(
-            modifier = LandingTextColumnStyle.toModifier(),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(leftRight = 5.vw),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(60.px)
         ) {
-            Span(
-                attrs = HomeTitleTextStyle.toModifier(firstLineVariant)
-                    .toAttrs()
+            // Hero Content
+            HeroContent(onNavigate)
+
+            // Visual Features Section
+            HeroVisualSection()
+        }
+    }
+}
+
+@Composable
+private fun HeroContent(onNavigate: (NavigationRoute) -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(32.px)
+    ) {
+        // Section badge with Khoded logo
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.px),
+            modifier = Modifier
+                .backgroundColor(rgba(68, 182, 198, 0.15))
+                .padding(10.px, 24.px)
+                .borderRadius(50.px)
+        ) {
+            // Khoded logo icon
+            Div(
+                attrs = Modifier
+                    .size(20.px, 16.px)
+                    .backgroundColor(rgb(68, 182, 198))
+                    .borderRadius(4.px)
+                    .toAttrs {
+                        style {
+                            display(DisplayStyle.Flex)
+                            property("align-items", "center")
+                            property("justify-content", "center")
+                            fontSize(10.px)
+                            fontWeight(700)
+                            color(Color.white)
+                            fontFamily("'Fira Code', 'Consolas', 'Monaco', monospace")
+                        }
+                    }
             ) {
-                Text(firstLine.trim())
+                Text("</>")
             }
-            Row(
+
+            SpanText(
+                text = "Khoded Specializes in Kotlin Multiplatform",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                    .fontSize(clamp(12.px, 2.5.vw, 14.px)) // Responsive sizing
+                    .fontWeight(600)
+                    .color(rgb(6, 182, 212)) // Brighter for better contrast
+            )
+        }
+
+        // Main hero heading - Enhanced contrast and responsive sizing
+        H1(
+            attrs = Modifier
+                .fontSize(clamp(36.px, 8.vw, 60.px)) // Responsive font size
+                .fontWeight(800)
+                .color(Color.white) // Pure white for maximum contrast against navy
+                .textAlign(TextAlign.Center)
+                .lineHeight(1.1)
+                .letterSpacing((-1).px)
+                .maxWidth(900.px)
+                .padding(leftRight = 5.vw)
+                .margin(0.px)
+                .toAttrs {
+                    style {
+                        // Text shadow for enhanced readability
+                        property("text-shadow", "0 2px 10px rgba(0, 0, 0, 0.3)")
+                    }
+                }
+        ) {
+            Text("Build Once, Deploy Everywhere with ")
+            Span(
+                attrs = Modifier
+                    .color(rgb(6, 182, 212)) // Brighter teal for better contrast
+                    .toAttrs {
+                        style {
+                            // Enhanced text shadow for the highlighted text
+                            property("text-shadow", "0 2px 10px rgba(6, 182, 212, 0.4)")
+                        }
+                    }
             ) {
-                Span(
-                    attrs = HomeTitleTextStyle.toModifier(PinkTextVariant)
-                        .toAttrs()
-                ) {
-                    Text(tells.trim())
+                Text("Kotlin Multiplatform")
+            }
+        }
+
+        // Subtitle - Enhanced readability
+        P(
+            attrs = Modifier
+                .fontSize(clamp(18.px, 4.vw, 22.px)) // Responsive font size
+                .color(rgba(255, 255, 255, 0.95)) // Higher opacity for better readability
+                .textAlign(TextAlign.Center)
+                .lineHeight(1.6)
+                .maxWidth(700.px)
+                .padding(leftRight = 5.vw)
+                .margin(0.px)
+                .toAttrs {
+                    style {
+                        // Text shadow for better readability
+                        property("text-shadow", "0 1px 8px rgba(0, 0, 0, 0.4)")
+                    }
                 }
-                Span(
-                    attrs = HomeTitleTextStyle.toModifier(SecondLineVariant)
-                        .toAttrs()
-                ) {
-                    Text(secondLine.trim())
-                }
+        ) {
+            Text("80% code reuse. 40% faster development. 100% native performance. Join businesses worldwide who trust Khoded for their Kotlin Multiplatform solutions.")
+        }
+
+        // Call to action buttons
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(20.px),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Primary CTA - Enhanced readability
+            Button(
+                attrs = Modifier
+                    .backgroundColor(rgb(6, 182, 212)) // Brighter teal for better contrast
+                    .color(Color.white) // Pure white text
+                    .border(0.px)
+                    .borderRadius(12.px)
+                    .padding(18.px, 36.px)
+                    .fontSize(clamp(16.px, 3.vw, 18.px)) // Responsive sizing
+                    .fontWeight(600)
+                    .minHeight(56.px)
+                    .toAttrs {
+                        style {
+                            cursor("pointer")
+                            property("transition", "all 0.3s ease")
+                            property("text-shadow", "0 1px 4px rgba(0, 0, 0, 0.2)") // Text shadow for readability
+                            property("box-shadow", "0 4px 12px rgba(6, 182, 212, 0.3)") // Glow effect
+                        }
+                        attr("aria-label", "Get started with Khoded")
+                        onClick { onNavigate(NavigationRoute.Contact) }
+                    }
+            ) {
+                Text("🚀 GET KHODED")
+            }
+
+            // Secondary CTA - Enhanced readability
+            Link(
+                path = "/services",
+                modifier = Modifier
+                    .color(rgba(255, 255, 255, 0.98)) // Higher opacity for better readability
+                    .fontSize(clamp(16.px, 3.vw, 18.px)) // Responsive sizing
+                    .fontWeight(500)
+                    .padding(18.px, 24.px)
+                    .borderRadius(12.px)
+                    .border(2.px, LineStyle.Solid, rgba(255, 255, 255, 0.4)) // More visible border
+                    .styleModifier {
+                        property("text-shadow", "0 1px 4px rgba(0, 0, 0, 0.3)") // Text shadow for readability
+                        property("transition", "all 0.3s ease")
+                        property("backdrop-filter", "blur(10px)") // Subtle backdrop filter
+                    }
+            ) {
+                SpanText("👀 View Our Work")
             }
         }
     }
-
-    IsOnScreenObservable(
-        sectionID = id
-    ) {
-        sectionPosition = it
-        println("New Position for $id is $it")
-    }
 }
 
-val LandingTextColumnStyle by ComponentStyle {
-    base {
-        Modifier
+/**
+ * Hero Visual Features Section
+ */
+@Composable
+private fun HeroVisualSection() {
+    Row(
+        modifier = Modifier
             .fillMaxWidth()
-    }
-    Breakpoint.ZERO {
-        Modifier
-            .translateY(ty = (-5).px)
-    }
-    Breakpoint.SM {
-        Modifier
-            .translateY(ty = (-40).px)
-    }
-    Breakpoint.MD {
-        Modifier
-            .translateY(ty = (-30).px)
-    }
-    Breakpoint.LG {
-        Modifier
-            .translateY(ty = (-10).px)
-    }
-    Breakpoint.XL {
-        Modifier
-            .translateY(ty = 25.px)
+            .maxWidth(1000.px)
+            .padding(leftRight = 5.vw),
+        horizontalArrangement = Arrangement.spacedBy(32.px, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.Top
+    ) {
+        // Feature cards
+        FeatureCard(
+            icon = "🎨",
+            title = "Design Excellence",
+            description = "State-of-the-art designs that captivate and convert"
+        )
+
+        FeatureCard(
+            icon = "⚡",
+            title = "Lightning Fast",
+            description = "Optimized performance that loads in milliseconds"
+        )
+
+        FeatureCard(
+            icon = "🛡️",
+            title = "Secure & Reliable",
+            description = "Enterprise-grade security and 99.9% uptime"
+        )
     }
 }
-
 
 @Composable
-fun ButtonDisplay(
-    state: ButtonState,
-    buttonVariant: ComponentVariant? = null,
-    modifier: Modifier = Modifier,
-    clickableContent: @Composable (buttonText: String) -> Unit,
-) = with(state) {
-    Box(
-        modifier = ButtonStyle.toModifier(buttonVariant)
-            .then(modifier)
-            .onClick { onButtonClick() },
-        contentAlignment = Alignment.Center
+private fun FeatureCard(
+    icon: String,
+    title: String,
+    description: String
+) {
+    Column(
+        modifier = Modifier
+            .width(280.px)
+            .backgroundColor(rgba(255, 255, 255, 0.08)) // Slightly more visible background
+            .borderRadius(16.px)
+            .padding(32.px)
+            .border(1.px, LineStyle.Solid, rgba(255, 255, 255, 0.15)), // More visible border
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.px)
     ) {
-        clickableContent(buttonText)
+        // Icon
+        Div(
+            attrs = Modifier
+                .size(60.px)
+                .backgroundColor(rgba(68, 182, 198, 0.2))
+                .borderRadius(16.px)
+                .toAttrs {
+                    style {
+                        display(DisplayStyle.Flex)
+                        property("align-items", "center")
+                        property("justify-content", "center")
+                        fontSize(28.px)
+                    }
+                }
+        ) {
+            Text(icon)
+        }
+
+        // Title - Enhanced readability
+        H3(
+            attrs = Modifier
+                .fontSize(clamp(18.px, 3.vw, 20.px)) // Responsive sizing
+                .fontWeight(600)
+                .color(Color.white) // Pure white for maximum contrast
+                .textAlign(TextAlign.Center)
+                .margin(0.px)
+                .toAttrs {
+                    style {
+                        property("text-shadow", "0 1px 6px rgba(0, 0, 0, 0.3)")
+                    }
+                }
+        ) {
+            Text(title)
+        }
+
+        // Description - Enhanced readability
+        P(
+            attrs = Modifier
+                .fontSize(clamp(14.px, 2.5.vw, 16.px)) // Responsive sizing
+                .color(rgba(255, 255, 255, 0.92)) // Higher opacity for better readability
+                .textAlign(TextAlign.Center)
+                .lineHeight(1.5)
+                .margin(0.px)
+                .toAttrs {
+                    style {
+                        property("text-shadow", "0 1px 4px rgba(0, 0, 0, 0.4)")
+                    }
+                }
+        ) {
+            Text(description)
+        }
     }
 }
+
+// Note: Float animation is now handled by CoreDesignSystem.kt (floatAnimation)

@@ -1,3 +1,8 @@
+// DEPRECATED: This file is disabled for performance optimization
+// The new SqlX4kDatabase uses direct SQL instead of Exposed ORM
+// Providing better performance and smaller dependency footprint
+
+/*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -86,4 +91,5 @@ class Answer(id: EntityID<UUID>) : UUIDEntity(id) {
     var value by Answers.value
     var questionText by Answers.questionText
 }
+*/
 

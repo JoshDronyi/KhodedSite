@@ -103,7 +103,7 @@ object ConsultationStateHolder : MessagingStateHolder<ConsultationFormState>() {
                         _consultationState.update {
                             it.copy(
                                 isLoading = false,
-                                stage = MessagingStage.ERROR(this.exceptionMesaage)
+                                stage = MessagingStage.ERROR(this.exceptionMessage)
                             )
                         }
                     }
@@ -117,14 +117,11 @@ object ConsultationStateHolder : MessagingStateHolder<ConsultationFormState>() {
                                 )
                             )
                         }
-                        storeRequest()
+                        console.log("Consultation request sent successfully")
                     }
                 }
             }
         }
     }
 
-    private fun storeRequest() {
-        // TODO("Save the request in a database.")
-    }
 }

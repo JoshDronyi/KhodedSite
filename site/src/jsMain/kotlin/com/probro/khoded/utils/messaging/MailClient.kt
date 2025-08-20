@@ -4,7 +4,7 @@ import com.probro.khoded.messaging.messageData.FormType
 import com.probro.khoded.messaging.messageData.MailParams
 import com.probro.khoded.messaging.messageData.MailResponse
 import com.probro.khoded.messaging.messageData.MessageData
-import com.probro.khoded.utils.json
+import com.probro.khoded.serialization.json
 import com.varabyte.kobweb.browser.api
 import kotlinx.browser.window
 import kotlinx.coroutines.supervisorScope
@@ -34,12 +34,12 @@ object MailClient {
             return@supervisorScope json.decodeFromString<MailResponse.Success>(response)
         } catch (ex: IllegalArgumentException) {
             return@supervisorScope MailResponse.Error.withException(ex).apply {
-                println("Validation Error: $exceptionMesaage")
+                println("Validation Error: $exceptionMessage")
                 println(stackTrace)
             }
         } catch (ex: Exception) {
             return@supervisorScope MailResponse.Error.withException(ex).apply {
-                println("Issue sending message: $exceptionMesaage")
+                println("Issue sending message: $exceptionMessage")
                 println(stackTrace)
             }
         }
@@ -60,7 +60,7 @@ object MailClient {
             println("Issue sending intake form: ${ex.message}")
             ex.printStackTrace()
             return@supervisorScope MailResponse.Error(
-                exceptionMesaage = ex.message ?: "Unknown error.",
+                exceptionMessage = ex.message ?: "Unknown error.",
                 stackTrace = ex.stackTraceToString()
             )
         }

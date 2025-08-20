@@ -8,7 +8,7 @@ on:
 
 env:
   JAVA_VERSION: '21'
-  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=2
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.workers.max=2
 
 jobs:
   # Test and Build Job - runs for all branches
@@ -30,15 +30,19 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ env.JAVA_VERSION }}
 
-    - name: Cache Gradle dependencies
+    - name: Enhanced Gradle caching
       uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          ~/.gradle/kotlin-dsl
+          site/build/js/packages_imported
+          site/kotlin-js-store
+        key: gradle-${{ runner.os }}-${{ matrix.environment }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
         restore-keys: |
-          ${{ runner.os }}-gradle-
+          gradle-${{ runner.os }}-${{ matrix.environment }}-
+          gradle-${{ runner.os }}-
 
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
@@ -47,27 +51,43 @@ jobs:
 
     - name: Set up environment
       run: |
-        cp .env.${{ matrix.environment }} .env
+        # Create .env from template for testing (no sensitive data)
+        cp .env.template .env
+        # Override with CI environment-specific values
+        case "${{ matrix.environment }}" in
+          development)
+            echo "APP_ENVIRONMENT=development" >> .env
+            ;;
+          staging)
+            echo "APP_ENVIRONMENT=staging" >> .env
+            echo "PRIMARY_DOMAIN=khoded-staging.onrender.com" >> .env
+            ;;
+          production)
+            echo "APP_ENVIRONMENT=production" >> .env
+            echo "PRIMARY_DOMAIN=khoded.onrender.com" >> .env
+            ;;
+        esac
+        
         # Create dummy secrets for testing
         mkdir -p secrets
-        echo '{"type":"service_account","project_id":"test"}' > secrets/gmail_service_account_key.json
+        echo '{"type":"service_account","project_id":"test","client_email":"test@test.com","private_key":"dummy"}' > secrets/gmail_service_account_key.json
 
     - name: Run tests
       run: |
         chmod +x gradlew
-        ./gradlew test --no-daemon --console=plain
+        ./gradlew test --no-daemon --console=plain --build-cache --parallel
       env:
         ENVIRONMENT: ${{ matrix.environment }}
 
     - name: Build application
       run: |
-        ./gradlew build --no-daemon --console=plain
+        ./gradlew build --no-daemon --console=plain --build-cache --parallel
       env:
         ENVIRONMENT: ${{ matrix.environment }}
 
-    - name: Build Docker image (minimal for testing)
+    - name: Build Docker image (for testing)
       run: |
-        docker build -f Dockerfile.minimal -t khoded:${{ matrix.environment }}-test .
+        docker build -f Dockerfile -t khoded:${{ matrix.environment }}-test .
 
     - name: Test Docker image
       run: |
@@ -122,7 +142,7 @@ jobs:
 
     - name: Build development image
       run: |
-        docker build -f Dockerfile.minimal -t khoded:dev .
+        docker build -f Dockerfile -t khoded:dev .
 
     - name: Deploy to development
       run: |
@@ -148,7 +168,7 @@ jobs:
 
     - name: Build staging image
       run: |
-        docker build -f Dockerfile.production -t khoded:staging .
+        docker build -f Dockerfile -t khoded:staging .
 
     - name: Run staging tests
       run: |

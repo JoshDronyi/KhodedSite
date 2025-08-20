@@ -1,0 +1,50 @@
+# Development files
+.git
+.gradle
+build/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Test files
+**/test/
+**/*Test.kt
+**/*test.kt
+
+# Log files
+*.log
+current_errors.log
+fresh_build.log
+root_build.log
+kobweb_*.log
+
+# SECURITY: Sensitive files - NEVER include in Docker images
+local.properties
+secrets/
+credentials.json
+*.key
+*.pem
+*.p12
+.env
+.env.local
+.env.production
+.env.staging
+**/tokens/
+**/credentials/
+
+# Build artifacts
+nul
+*.tmp
+*.temp
+kotlin-js-store/
+**/build/
+**/.kobweb/
+
+# Batch scripts
+*.bat
