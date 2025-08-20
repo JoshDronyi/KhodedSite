@@ -11,12 +11,9 @@ env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.workers.max=2
 
 jobs:
-  # Test and Build Job - runs for all branches
+  # Test and Build Job - runs environment-specific tests based on branch
   test-and-build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [development, staging, production]
     
     steps:
     - name: Checkout code
@@ -39,9 +36,9 @@ jobs:
           ~/.gradle/kotlin-dsl
           site/build/js/packages_imported
           site/kotlin-js-store
-        key: gradle-${{ runner.os }}-${{ matrix.environment }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+        key: gradle-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
         restore-keys: |
-          gradle-${{ runner.os }}-${{ matrix.environment }}-
+          gradle-${{ runner.os }}-${{ github.ref_name }}-
           gradle-${{ runner.os }}-
 
     - name: Setup Gradle
@@ -53,18 +50,21 @@ jobs:
       run: |
         # Create .env from template for testing (no sensitive data)
         cp .env.template .env
-        # Override with CI environment-specific values
-        case "${{ matrix.environment }}" in
-          development)
+        # Set environment based on branch
+        case "${{ github.ref_name }}" in
+          develop)
             echo "APP_ENVIRONMENT=development" >> .env
             ;;
           staging)
             echo "APP_ENVIRONMENT=staging" >> .env
             echo "PRIMARY_DOMAIN=khoded-staging.onrender.com" >> .env
             ;;
-          production)
+          main)
             echo "APP_ENVIRONMENT=production" >> .env
             echo "PRIMARY_DOMAIN=khoded.onrender.com" >> .env
+            ;;
+          *)
+            echo "APP_ENVIRONMENT=development" >> .env
             ;;
         esac
         
@@ -77,25 +77,25 @@ jobs:
         chmod +x gradlew
         ./gradlew test --no-daemon --console=plain --build-cache --parallel
       env:
-        ENVIRONMENT: ${{ matrix.environment }}
+        ENVIRONMENT: ${{ github.ref_name }}
 
     - name: Build application
       run: |
         ./gradlew build --no-daemon --console=plain --build-cache --parallel
       env:
-        ENVIRONMENT: ${{ matrix.environment }}
+        ENVIRONMENT: ${{ github.ref_name }}
 
     - name: Build Docker image (for testing)
       run: |
-        docker build -f Dockerfile -t khoded:${{ matrix.environment }}-test .
+        docker build -f Dockerfile -t khoded:${{ github.ref_name }}-test .
 
     - name: Test Docker image
       run: |
-        docker run --rm khoded:${{ matrix.environment }}-test java -version
+        docker run --rm khoded:${{ github.ref_name }}-test java -version
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
-      if: matrix.environment == 'production'
+      if: github.ref_name == 'main'
       with:
         name: build-artifacts
         path: |
