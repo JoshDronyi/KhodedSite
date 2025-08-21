@@ -11,6 +11,13 @@ import com.varabyte.kobweb.api.http.readBodyText
 import com.varabyte.kobweb.api.http.setBodyText
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.async
+import kotlinx.coroutines.Deferred
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.apache.http.HttpStatus
@@ -163,10 +170,10 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
             val body = req.readBodyText() ?: ""
             logger.info("Request body: $body")
 
-            val mailResponse = when {
+            val mailResponse: Deferred<MailResponse> = when {
                 // Handle form data (application/x-www-form-urlencoded)
                 req.headers["Content-Type"]?.contains("application/x-www-form-urlencoded") == true -> {
-                    messagingScope.async {
+                    async {
                         handleFormData(body, logger)
                     }
                 }
@@ -178,7 +185,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
 
                     when {
                         formType?.equals(FormType.CONTACT.name, ignoreCase = true) == true -> {
-                            messagingScope.async {
+                            async {
                                 sendContactMessage(
                                     json.decodeFromString<MessageData.ContactMessageData>(body),
                                     logger
@@ -187,7 +194,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
                         }
 
                         formType?.equals(FormType.CONSULTATION.name, ignoreCase = true) == true -> {
-                            messagingScope.async {
+                            async {
                                 sendConsultationMessage(
                                     json.decodeFromString<MessageData.ConsultationMessageData>(body),
                                     logger
@@ -196,7 +203,7 @@ suspend fun sendEmail(ctx: ApiContext) = withContext(CoroutineName("SendEmailApi
                         }
 
                         else -> {
-                            messagingScope.async {
+                            async {
                                 MailResponse.Error(
                                     exceptionMessage = "Unable to handle formType of $formType. Please specify 'CONTACT' or 'CONSULTATION' in the TYPE parameter.",
                                     stackTrace = "Send Email Api function - Invalid form type."
