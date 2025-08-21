@@ -189,7 +189,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'khoded_admin') THEN
         -- In production, this will use the password from Docker secrets
         -- In development, use the environment variable
-        CREATE ROLE khoded_admin WITH LOGIN PASSWORD 'Kh0d3d_Pr0d_DB_P@ssw0rd_2025_S3cur3!';
+        CREATE ROLE khoded_admin WITH LOGIN PASSWORD current_setting('app.admin_password');
         GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO khoded_admin;
         GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO khoded_admin;
         GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO khoded_admin;

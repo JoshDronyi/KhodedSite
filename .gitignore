@@ -11,6 +11,8 @@ build/
 
 # Secrets and credentials
 secrets/
+!secrets/.gitkeep
+!secrets/*.template
 credentials.json
 *.key
 *.pem

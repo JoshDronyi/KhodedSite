@@ -102,7 +102,14 @@
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" docker build -f Dockerfile.truly-optimized -t khoded:optimized-test .)",
       "Bash(scriptsenv-setup.bat status)",
       "Bash(bash scripts/env-setup.sh:*)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat --version)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat build --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJvm :site:compileKotlinJs --no-daemon --console=plain)",
+      "Bash(/dev/null)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kspKotlinJvm :site:kobwebGenApisFactory --no-daemon --console=plain)",
+      "Bash(gh api:*)",
+      "Bash(git log:*)"
     ],
     "deny": []
   }
