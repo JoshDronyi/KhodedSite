@@ -49,4 +49,5 @@ Thumbs.db
 
 # Kotlin compiler files
 .kotlin/
-*.salive
+*.salive*.log
+diagnostic-report.txt

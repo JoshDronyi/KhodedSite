@@ -14,7 +14,7 @@ plugins {
     alias(libs.plugins.kobwebx.markdown)
     alias(libs.plugins.kotlin.serialization)
     id("com.codingfeline.buildkonfig") version "0.15.1"
-    id("org.flywaydb.flyway") version "10.0.0"
+    id("org.flywaydb.flyway") version "11.1.0"
 }
 
 group = "com.probro.khoded"

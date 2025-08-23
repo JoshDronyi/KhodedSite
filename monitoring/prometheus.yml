@@ -1,0 +1,28 @@
+# Simple Prometheus configuration for small business monitoring
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # Add alerting rules here if needed later
+
+scrape_configs:
+  # Self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Monitor the Khoded application
+  - job_name: 'khoded-app'
+    scrape_interval: 30s
+    metrics_path: '/metrics-api'
+    static_configs:
+      - targets: ['khoded-app:8080']
+    scrape_timeout: 10s
+
+  # Basic health check monitoring
+  - job_name: 'khoded-health'
+    scrape_interval: 60s
+    metrics_path: '/health-api'
+    static_configs:
+      - targets: ['khoded-app:8080']
