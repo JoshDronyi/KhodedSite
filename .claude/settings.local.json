@@ -109,8 +109,24 @@
       "Bash(/dev/null)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kspKotlinJvm :site:kobwebGenApisFactory --no-daemon --console=plain)",
       "Bash(gh api:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" kobweb run --notty)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kobwebStart --no-daemon)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat clean --no-daemon --console=plain)",
+      "Bash(npm run build:*)",
+      "Bash(taskkill:*)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kspKotlinJs --no-daemon --console=plain --info)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJvm --console=plain)",
+      "WebFetch(domain:plugins.gradle.org)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJvm --console=plain --refresh-dependencies)",
+      "Bash(tasklist:*)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat clean --console=plain)",
+      "Bash(GRADLE_OPTS=\"-Dorg.gradle.java.installations.auto-detect=false\" ./gradlew --no-daemon --info build)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "C:\\tmp",
+      "C:\\c"
+    ]
   }
 }
