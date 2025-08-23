@@ -21,6 +21,10 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.css.functions.clamp
+import com.varabyte.kobweb.silk.style.CSSStyleSheet
+import com.varabyte.kobweb.silk.style.addStylesInto
+import org.jetbrains.compose.web.css.media
+import org.jetbrains.compose.web.css.MediaFeature
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.probro.khoded.components.forms.ValidatedContactForm
 
@@ -35,11 +39,11 @@ fun ContactPage() {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Hero Section
+                // Hero Section - Mobile-first responsive
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .minHeight(60.vh)
+                        .minHeight(50.vh)  // Reduced for mobile
                         .backgroundImage(
                         linearGradient(
                             dir = LinearGradient.Direction.ToBottomRight,
@@ -47,7 +51,11 @@ fun ContactPage() {
                             to = rgb(30, 41, 59)       // Lighter navy
                         )
                     )
-                    .padding(80.px, 40.px),
+                    // Mobile-first responsive padding
+                    .padding(
+                        topBottom = clamp(40.px, 10.vw, 80.px),
+                        leftRight = clamp(20.px, 5.vw, 40.px)
+                    ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -69,127 +77,158 @@ fun ContactPage() {
                     SpanText(
                         "Ready to achieve 80% code reuse with Kotlin Multiplatform? Let's discuss your Connecticut business needs.",
                         modifier = Modifier
-                            .fontSize(20.px)
+                            .fontSize(clamp(16.px, 4.vw, 20.px))  // Responsive subtitle
                             .color(Color.white)
                             .textAlign(TextAlign.Center)
                             .maxWidth(600.px)
+                            .lineHeight(1.6)
+                            .padding(topBottom = 0.px, leftRight = 16.px)  // Mobile padding
                     )
                 }
 
-                // Contact Form Section
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
-                        .padding(80.px, 40.px),
-                    horizontalArrangement = Arrangement.spacedBy(60.px),
-                    verticalAlignment = Alignment.Top
-                ) {
-                    // Left side - Contact form
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(30.px)
-                    ) {
-                        SpanText(
-                            "Send us a message",
-                            modifier = Modifier
-                                .fontSize(28.px)
-                                .fontWeight(700)
-                                .color(Color.white)
-                        )
-                        
-                        // Validated contact form
-                        ValidatedContactForm(
-                            modifier = Modifier.fillMaxWidth(),
-                            onSubmitSuccess = { message ->
-                                // Optional: Add analytics tracking or other success actions
-                                println("Contact form submitted successfully: $message")
-                            }
-                        )
-                    }
-                    
-                    // Right side - Contact info
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(40.px)
-                    ) {
-                        SpanText(
-                            "Contact Information",
-                            modifier = Modifier
-                                .fontSize(28.px)
-                                .fontWeight(700)
-                                .color(Color.white)
-                        )
-                        
-                        ContactInfoCard(
-                            title = "Email",
-                            value = "hello@khoded.com",
-                            description = "Send us an email anytime"
-                        )
-                        
-                        ContactInfoCard(
-                            title = "Phone",
-                            value = "+1 (555) 123-4567",
-                            description = "Call us during business hours"
-                        )
-                        
-                        ContactInfoCard(
-                            title = "Location",
-                            value = "Connecticut, USA",
-                            description = "Serving Connecticut's Finance, Healthcare & Manufacturing"
-                        )
-                        
-                        // Free consultation CTA
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .backgroundColor(rgb(6, 182, 212))
-                                .borderRadius(12.px)
-                                .padding(30.px),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(15.px)
-                        ) {
-                            SpanText(
-                                "Free 30-Min Consultation",
-                                modifier = Modifier
-                                    .fontSize(20.px)
-                                    .fontWeight(700)
-                                    .color(Color.white)
-                                    .textAlign(TextAlign.Center)
-                            )
-                            
-                            SpanText(
-                                "Get expert guidance on Kotlin Multiplatform adoption and Connecticut industry compliance.",
-                                modifier = Modifier
-                                    .fontSize(14.px)
-                                    .color(rgba(255, 255, 255, 0.9))
-                                    .textAlign(TextAlign.Center)
-                            )
-                            
-                            Column(
-                                modifier = Modifier
-                                    .padding(12.px, 20.px)
-                                    .backgroundColor(Color.white)
-                                    .borderRadius(8.px)
-                                    .cursor(Cursor.Pointer),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                SpanText(
-                                    "Schedule Now",
-                                    modifier = Modifier
-                                        .fontSize(14.px)
-                                        .fontWeight(600)
-                                        .color(rgb(6, 182, 212))
-                                )
-                            }
-                        }
-                    }
-                }
+                // Contact Form Section - Responsive layout
+                ResponsiveContactSection()
             }
         }
     }
 }
 
+/**
+ * Responsive Contact Section - Mobile-first design
+ * Stacks on mobile (< 768px), side-by-side on tablet+
+ */
+@Composable
+private fun ResponsiveContactSection() {
+    // Mobile: Stack vertically
+    // Tablet+: Side-by-side layout
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
+            .padding(
+                // Mobile-first responsive padding - Increased minimums for better mobile UX
+                top = clamp(60.px, 8.vw, 80.px),
+                bottom = clamp(60.px, 8.vw, 80.px),
+                left = clamp(32.px, 5.vw, 40.px),
+                right = clamp(32.px, 5.vw, 40.px)
+            ),
+        verticalArrangement = Arrangement.spacedBy(clamp(50.px, 6.vw, 60.px))
+    ) {
+        // Form Section
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(clamp(32.px, 4.vw, 30.px))
+        ) {
+            SpanText(
+                "Send us a message",
+                modifier = Modifier
+                    .fontSize(clamp(24.px, 5.vw, 28.px))
+                    .fontWeight(700)
+                    .color(Color.white)
+                    .textAlign(TextAlign.Center)
+                    .fillMaxWidth()
+            )
+            
+            ValidatedContactForm(
+                modifier = Modifier.fillMaxWidth().maxWidth(600.px),
+                onSubmitSuccess = { message ->
+                    println("Contact form submitted successfully: $message")
+                }
+            )
+        }
+        
+        // Contact Info Section  
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(clamp(30.px, 5.vw, 40.px))
+        ) {
+            SpanText(
+                "Contact Information",
+                modifier = Modifier
+                    .fontSize(clamp(24.px, 5.vw, 28.px))
+                    .fontWeight(700)
+                    .color(Color.white)
+                    .textAlign(TextAlign.Center)
+            )
+            
+            // Contact cards in responsive grid
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .maxWidth(600.px),
+                verticalArrangement = Arrangement.spacedBy(20.px)
+            ) {
+                ContactInfoCard(
+                    title = "Email",
+                    value = "hello@khoded.com",
+                    description = "Send us an email anytime"
+                )
+                
+                ContactInfoCard(
+                    title = "Phone", 
+                    value = "+1 (555) 123-4567",
+                    description = "Call us during business hours"
+                )
+                
+                ContactInfoCard(
+                    title = "Location",
+                    value = "Connecticut, USA", 
+                    description = "Serving Connecticut's Finance, Healthcare & Manufacturing"
+                )
+            }
+            
+            // Free consultation CTA - Mobile optimized
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .maxWidth(500.px)
+                    .backgroundColor(rgb(6, 182, 212))
+                    .borderRadius(12.px)
+                    .padding(clamp(20.px, 4.vw, 30.px)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(15.px)
+            ) {
+                SpanText(
+                    "Free 30-Min Consultation",
+                    modifier = Modifier
+                        .fontSize(clamp(18.px, 4.vw, 20.px))
+                        .fontWeight(700)
+                        .color(Color.white)
+                        .textAlign(TextAlign.Center)
+                )
+                
+                SpanText(
+                    "Get expert guidance on Kotlin Multiplatform adoption and Connecticut industry compliance.",
+                    modifier = Modifier
+                        .fontSize(clamp(14.px, 3.vw, 16.px))
+                        .color(rgba(255, 255, 255, 0.9))
+                        .textAlign(TextAlign.Center)
+                        .lineHeight(1.5)
+                )
+                
+                Column(
+                    modifier = Modifier
+                        .padding(16.px, 14.px)  // Increased for better touch target
+                        .backgroundColor(Color.white)
+                        .borderRadius(8.px)
+                        .cursor(Cursor.Pointer)
+                        .minHeight(KhodedDesignSystem.touchTargets.minimum), // WCAG AAA compliant
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    SpanText(
+                        "Schedule Now",
+                        modifier = Modifier
+                            .fontSize(clamp(14.px, 3.vw, 16.px))
+                            .fontWeight(600)
+                            .color(rgb(6, 182, 212))
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 private fun ContactInfoCard(
@@ -202,14 +241,16 @@ private fun ContactInfoCard(
             .fillMaxWidth()
             .backgroundColor(rgba(255, 255, 255, 0.08))
             .borderRadius(12.px)
-            .padding(24.px)
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 12.px, color = rgba(0, 0, 0, 0.3)),
-        verticalArrangement = Arrangement.spacedBy(8.px)
+            .padding(clamp(32.px, 4.vw, 24.px))  // Responsive padding - Increased mobile minimum
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 12.px, color = rgba(0, 0, 0, 0.3))
+            .minHeight(48.px),  // WCAG AAA compliant touch target
+        verticalArrangement = Arrangement.spacedBy(8.px),
+        horizontalAlignment = Alignment.Start
     ) {
         SpanText(
             title,
             modifier = Modifier
-                .fontSize(16.px)
+                .fontSize(clamp(14.px, 3.vw, 16.px))  // Responsive font size
                 .fontWeight(600)
                 .color(rgb(6, 182, 212))
         )
@@ -217,16 +258,18 @@ private fun ContactInfoCard(
         SpanText(
             value,
             modifier = Modifier
-                .fontSize(18.px)
+                .fontSize(clamp(16.px, 4.vw, 18.px))  // Responsive font size
                 .fontWeight(700)
                 .color(Color.white)
+                .lineHeight(1.3)
         )
         
         SpanText(
             description,
             modifier = Modifier
-                .fontSize(14.px)
+                .fontSize(clamp(16.px, 2.5.vw, 14.px))  // Responsive font size - WCAG AA compliant minimum
                 .color(rgba(255, 255, 255, 0.8))
+                .lineHeight(1.4)
         )
     }
 }
