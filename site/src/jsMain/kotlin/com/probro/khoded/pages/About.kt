@@ -203,12 +203,12 @@ private fun ResponsiveValuesSection() {
                 .textAlign(TextAlign.Center)
         )
 
-        // Values in responsive grid
+        // Values in responsive grid - Prevents overflow and better mobile stacking
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .maxWidth(1000.px),
-            verticalArrangement = Arrangement.spacedBy(clamp(32.px, 4.vw, 30.px)),
+                .maxWidth(900.px), // Reduced to prevent overflow
+            verticalArrangement = Arrangement.spacedBy(clamp(24.px, 4.vw, 32.px)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ValueCard(
@@ -302,32 +302,38 @@ private fun ValueCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .maxWidth(600.px)  // Prevent cards from getting too wide
-            .backgroundColor(Color.white)
-            .borderRadius(12.px)
-            .padding(clamp(32.px, 4.vw, 30.px))  // Responsive padding - Increased mobile minimum
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15))
+            .maxWidth(500.px)  // Reduced to prevent overflow on mobile
+            .backgroundColor(rgba(255, 255, 255, 0.95))  // Slightly transparent white for softer appearance
+            .borderRadius(16.px)  // Slightly more rounded for modern look
+            .padding(clamp(28.px, 5.vw, 32.px))  // Better mobile padding
+            .boxShadow(
+                offsetX = 0.px, 
+                offsetY = 6.px, 
+                blurRadius = 20.px, 
+                color = rgba(0, 0, 0, 0.25)
+            )  // Enhanced shadow for better depth
             .minHeight(48.px),  // WCAG AAA compliant touch target
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(clamp(16.px, 3.vw, 15.px))
+        verticalArrangement = Arrangement.spacedBy(clamp(16.px, 3.vw, 18.px))
     ) {
         SpanText(
             title,
             modifier = Modifier
-                .fontSize(clamp(20.px, 4.vw, 24.px))  // Responsive title
+                .fontSize(clamp(22.px, 4.5.vw, 26.px))  // Slightly larger for better hierarchy
                 .fontWeight(700)
-                .color(rgb(15, 23, 42))
+                .color(rgb(15, 23, 42))  // Deep navy - excellent contrast
                 .textAlign(TextAlign.Center)
+                .lineHeight(1.2)
         )
 
         SpanText(
             description,
             modifier = Modifier
-                .fontSize(clamp(14.px, 3.vw, 16.px))  // Responsive description
-                .lineHeight(1.5)
-                .color(rgb(100, 116, 139))
+                .fontSize(clamp(15.px, 3.2.vw, 17.px))  // Slightly larger for better readability
+                .lineHeight(1.6)  // Better line height for readability
+                .color(rgb(71, 85, 105))  // Darker gray for better contrast against light background
                 .textAlign(TextAlign.Center)
-                .padding(leftRight = 8.px)  // Mobile padding
+                .padding(leftRight = clamp(8.px, 2.vw, 12.px))  // Responsive horizontal padding
         )
     }
 }
