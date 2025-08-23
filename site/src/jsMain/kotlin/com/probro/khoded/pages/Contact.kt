@@ -21,11 +21,6 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.functions.LinearGradient
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.css.functions.clamp
-import com.varabyte.kobweb.silk.style.CSSStyleSheet
-import com.varabyte.kobweb.silk.style.addStylesInto
-import org.jetbrains.compose.web.css.media
-import org.jetbrains.compose.web.css.MediaFeature
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.probro.khoded.components.forms.ValidatedContactForm
 
 /**
@@ -154,7 +149,7 @@ private fun ResponsiveContactLayout() {
                 modifier = Modifier
                     .fillMaxWidth()
                     // Mobile/Tablet: Full width, Desktop: Constrained
-                    .maxWidth(clamp(100.percent.value.px, 45.vw, 600.px)),
+                    .maxWidth(600.px),
                 onSubmitSuccess = { message ->
                     println("Contact form submitted successfully: $message")
                 }
