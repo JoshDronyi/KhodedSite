@@ -1,18 +1,18 @@
 [versions]
-jetbrains-compose = "1.8.0"
-kobweb = "0.22.0"
-kotlin = "2.1.21"
-ksp = "2.1.21-2.0.1"
+jetbrains-compose = "1.8.1"
+kobweb = "0.23.1"
+kotlin = "2.2.10"
+ksp = "2.2.10-2.0.2"
 kotlinx-serialization = "1.8.0"
 kotlinMailer = "0.3.0"
 ktor = "3.0.3"
-jdbi = "3.45.1"
+jdbi = "3.46.0"
 hikaricp = "5.1.0"
-postgresql = "42.7.3"
+postgresql = "42.7.5"
 httpcore = "4.4.16"
 # sqlx4k = "0.52.0" # Disabled - no JVM support for multiplatform  
-flyway = "10.0.0"
-moko = "0.24.4"
+flyway = "11.1.0"
+moko = "0.27.0"
 bootstrap = "0.1.6"
 # Testing framework versions
 
@@ -52,8 +52,8 @@ moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version = "5.10.1" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.10.1" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version = "5.11.4" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.11.4" }
 
 
 [plugins]

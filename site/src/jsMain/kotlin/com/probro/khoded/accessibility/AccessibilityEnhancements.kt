@@ -1,9 +1,10 @@
 package com.probro.khoded.accessibility
 
 import androidx.compose.runtime.*
-import com.probro.khoded.styles.*
-import com.varabyte.kobweb.compose.ui.*
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.toAttrs
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.*
@@ -73,11 +74,15 @@ fun LiveRegion(
 ) {
     Div(
         attrs = modifier
-            .position(Position.Absolute)
-            .left((-10000).px)
-            .width(1.px)
-            .height(1.px)
-            .attrsModifier { style { property("overflow", "hidden") } }
+            .attrsModifier {
+                style {
+                    position(Position.Absolute)
+                    left((-10000).px)
+                    width(1.px)
+                    height(1.px)
+                    property("overflow", "hidden")
+                }
+            }
             .toAttrs {
                 attr("aria-live", when (politeness) {
                     LiveRegionPoliteness.Off -> "off"
@@ -165,53 +170,45 @@ class FocusManager {
     
     private fun setupFocusIndicators() {
         js("""
-            // Enhanced focus indicators for accessibility compliance
-            const style = document.createElement('style');
-            style.textContent = `
-                .enhanced-focus:focus {
-                    outline: 3px solid #4A90E2 !important;
-                    outline-offset: 2px !important;
-                    box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.3) !important;
-                    border-radius: 4px !important;
-                }
-                
-                .enhanced-focus:focus:not(:focus-visible) {
-                    outline: none !important;
-                    box-shadow: none !important;
-                }
-                
-                .enhanced-focus:focus-visible {
-                    outline: 3px solid #4A90E2 !important;
-                    outline-offset: 2px !important;
-                    box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.3) !important;
-                }
-                
-                .skip-link {
-                    position: absolute;
-                    top: -40px;
-                    left: 6px;
-                    background: #000;
-                    color: #fff;
-                    padding: 8px;
-                    text-decoration: none;
-                    border-radius: 4px;
-                    z-index: 1000;
-                }
-                
-                .skip-link:focus {
-                    top: 6px;
-                }
-            `;
+            var style = document.createElement('style');
+            style.textContent = '.enhanced-focus:focus {' +
+                'outline: 3px solid #4A90E2 !important;' +
+                'outline-offset: 2px !important;' +
+                'box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.3) !important;' +
+                'border-radius: 4px !important;' +
+            '}' +
+            '.enhanced-focus:focus:not(:focus-visible) {' +
+                'outline: none !important;' +
+                'box-shadow: none !important;' +
+            '}' +
+            '.enhanced-focus:focus-visible {' +
+                'outline: 3px solid #4A90E2 !important;' +
+                'outline-offset: 2px !important;' +
+                'box-shadow: 0 0 0 5px rgba(74, 144, 226, 0.3) !important;' +
+            '}' +
+            '.skip-link {' +
+                'position: absolute;' +
+                'top: -40px;' +
+                'left: 6px;' +
+                'background: #000;' +
+                'color: #fff;' +
+                'padding: 8px;' +
+                'text-decoration: none;' +
+                'border-radius: 4px;' +
+                'z-index: 1000;' +
+            '}' +
+            '.skip-link:focus {' +
+                'top: 6px;' +
+            '}';
             document.head.appendChild(style);
             
-            // Add enhanced focus class to all interactive elements
-            const interactiveElements = document.querySelectorAll(
+            var interactiveElements = document.querySelectorAll(
                 'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
             );
             
-            interactiveElements.forEach(element => {
-                element.classList.add('enhanced-focus');
-            });
+            for (var i = 0; i < interactiveElements.length; i++) {
+                interactiveElements[i].classList.add('enhanced-focus');
+            }
         """)
     }
 }
@@ -220,29 +217,25 @@ class FocusManager {
 object AccessibilityUtils {
     fun createSkipLinks() {
         js("""
-            const skipLinks = document.createElement('div');
-            skipLinks.innerHTML = `
-                <a href="#main-content" class="skip-link">Skip to main content</a>
-                <a href="#navigation" class="skip-link">Skip to navigation</a>
-            `;
+            var skipLinks = document.createElement('div');
+            skipLinks.innerHTML = '<a href="#main-content" class="skip-link">Skip to main content</a>' +
+                '<a href="#navigation" class="skip-link">Skip to navigation</a>';
             document.body.insertBefore(skipLinks, document.body.firstChild);
         """)
     }
     
     fun enhanceKeyboardNavigation() {
         js("""
-            // Trap focus in modals and dialogs
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Tab') {
-                    const modal = document.querySelector('.modal:not([hidden])');
+                    var modal = document.querySelector('.modal:not([hidden])');
                     if (modal) {
                         trapFocus(modal, e);
                     }
                 }
                 
-                // ESC key handling for modals
                 if (e.key === 'Escape') {
-                    const modal = document.querySelector('.modal:not([hidden])');
+                    var modal = document.querySelector('.modal:not([hidden])');
                     if (modal) {
                         closeModal(modal);
                     }
@@ -250,12 +243,12 @@ object AccessibilityUtils {
             });
             
             function trapFocus(container, event) {
-                const focusableElements = container.querySelectorAll(
+                var focusableElements = container.querySelectorAll(
                     'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
                 );
                 
-                const firstElement = focusableElements[0];
-                const lastElement = focusableElements[focusableElements.length - 1];
+                var firstElement = focusableElements[0];
+                var lastElement = focusableElements[focusableElements.length - 1];
                 
                 if (event.shiftKey) {
                     if (document.activeElement === firstElement) {
@@ -272,32 +265,33 @@ object AccessibilityUtils {
             
             function closeModal(modal) {
                 modal.setAttribute('hidden', '');
-                // Restore focus to trigger element if available
-                const trigger = modal.dataset.triggerElement;
+                var trigger = modal.dataset.triggerElement;
                 if (trigger) {
-                    document.getElementById(trigger)?.focus();
+                    var triggerElement = document.getElementById(trigger);
+                    if (triggerElement) {
+                        triggerElement.focus();
+                    }
                 }
             }
         """)
     }
     
     fun announcePageChange(pageTitle: String) {
-        js("""
-            const announcement = `Page changed to: ${pageTitle}`;
-            const liveRegion = document.getElementById('page-change-announcer') || createPageChangeAnnouncer();
-            liveRegion.textContent = announcement;
-            
-            function createPageChangeAnnouncer() {
-                const announcer = document.createElement('div');
-                announcer.id = 'page-change-announcer';
-                announcer.setAttribute('aria-live', 'polite');
-                announcer.setAttribute('aria-atomic', 'true');
-                announcer.className = 'sr-only';
-                announcer.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
-                document.body.appendChild(announcer);
-                return announcer;
-            }
-        """.replace("${pageTitle}", pageTitle))
+        val liveRegion = document.getElementById("page-change-announcer") 
+            ?: createPageChangeAnnouncer()
+        liveRegion.textContent = "Page changed to: $pageTitle"
+    }
+    
+    private fun createPageChangeAnnouncer(): Element {
+        val announcer = document.createElement("div").apply {
+            id = "page-change-announcer"
+            setAttribute("aria-live", "polite")
+            setAttribute("aria-atomic", "true")
+            className = "sr-only"
+            setAttribute("style", "position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;")
+        }
+        document.body?.appendChild(announcer)
+        return announcer
     }
 }
 
@@ -312,11 +306,15 @@ fun ScreenReaderOnly(
 ) {
     Div(
         attrs = modifier
-            .position(Position.Absolute)
-            .left((-10000).px)
-            .width(1.px)
-            .height(1.px)
-            .attrsModifier { style { property("overflow", "hidden") } }
+            .attrsModifier {
+                style {
+                    position(Position.Absolute)
+                    left((-10000).px)
+                    width(1.px)
+                    height(1.px)
+                    property("overflow", "hidden")
+                }
+            }
             .toAttrs {
                 attr("class", "sr-only")
             }

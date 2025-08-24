@@ -11,6 +11,8 @@ build/
 
 # Secrets and credentials
 secrets/
+!secrets/.gitkeep
+!secrets/*.template
 credentials.json
 *.key
 *.pem
@@ -47,4 +49,5 @@ Thumbs.db
 
 # Kotlin compiler files
 .kotlin/
-*.salive
+*.salive*.log
+diagnostic-report.txt

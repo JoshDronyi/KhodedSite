@@ -3,6 +3,7 @@ package com.probro.khoded.api
 import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
 import com.varabyte.kobweb.api.data.getValue
+import com.varabyte.kobweb.api.http.HttpMethod
 import com.varabyte.kobweb.api.http.setBodyText
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -50,8 +51,8 @@ data class PrometheusMetric(
 @Api
 fun metrics(ctx: ApiContext) {
     when (ctx.req.method) {
-        "POST" -> handleMetricsSubmission(ctx)
-        "GET" -> handlePrometheusMetrics(ctx)
+        HttpMethod.POST -> handleMetricsSubmission(ctx)
+        HttpMethod.GET -> handlePrometheusMetrics(ctx)
         else -> {
             ctx.res.status = 405
             ctx.res.setBodyText("Method not allowed")
@@ -61,7 +62,7 @@ fun metrics(ctx: ApiContext) {
 
 private fun handleMetricsSubmission(ctx: ApiContext) {
     try {
-        val requestBody = ctx.req.body ?: ""
+        val requestBody = ctx.req.body?.toString() ?: ""
         
         if (requestBody.isBlank()) {
             ctx.res.status = 400

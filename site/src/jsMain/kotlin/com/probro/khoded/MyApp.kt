@@ -43,22 +43,25 @@ fun initSilk(ctx: InitSilkContext) {
     js("""
         console.log('Khoded application initialized - Performance monitoring & accessibility active');
         
-        // Track initial page load
-        window.addEventListener('load', () => {
+        window.addEventListener('load', function() {
+            var metricData = {
+                metric: 'page_view',
+                value: 1,
+                timestamp: Date.now(),
+                url: window.location.pathname,
+                type: 'initialization'
+            };
+            
             fetch('/api/metrics', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    metric: 'page_view',
-                    value: 1,
-                    timestamp: Date.now(),
-                    url: window.location.pathname,
-                    type: 'initialization'
-                })
-            }).catch(err => console.warn('Failed to send page view metric:', err));
+                body: JSON.stringify(metricData)
+            }).catch(function(err) {
+                console.warn('Failed to send page view metric:', err);
+            });
         });
     """)
 }

@@ -7,14 +7,14 @@ import java.util.*
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-//    alias(libs.plugins.ksp)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kobweb.application)
     alias(libs.plugins.kobwebx.markdown)
     alias(libs.plugins.kotlin.serialization)
     id("com.codingfeline.buildkonfig") version "0.15.1"
-    id("org.flywaydb.flyway") version "10.0.0"
+    id("org.flywaydb.flyway") version "11.1.0"
 }
 
 group = "com.probro.khoded"

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khoded Health Dashboard</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5; 
+        }
+        .dashboard { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .metric { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 6px; 
+        }
+        .metric.good { background: #d4edda; color: #155724; }
+        .metric.warning { background: #fff3cd; color: #856404; }
+        .metric.error { background: #f8d7da; color: #721c24; }
+        .refresh-btn { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        .timestamp { 
+            text-align: right; 
+            color: #666; 
+            font-size: 0.9em; 
+            margin-top: 20px; 
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-up { background: #28a745; }
+        .status-warning { background: #ffc107; }
+        .status-down { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>🚀 Khoded Production Health</h1>
+        
+        <div id="metrics-container">
+            <!-- Metrics will be loaded here -->
+        </div>
+        
+        <button class="refresh-btn" onclick="loadMetrics()">🔄 Refresh</button>
+        
+        <div class="timestamp" id="last-updated">
+            <!-- Last updated time will appear here -->
+        </div>
+    </div>
+
+    <script>
+        async function loadMetrics() {
+            const container = document.getElementById('metrics-container');
+            const timestampEl = document.getElementById('last-updated');
+            
+            container.innerHTML = '<p>Loading metrics...</p>';
+            
+            try {
+                // Check main site health
+                const healthStart = Date.now();
+                const healthResponse = await fetch('/health-api', { 
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const healthTime = Date.now() - healthStart;
+                
+                // Check if metrics endpoint is available
+                let metricsData = null;
+                try {
+                    const metricsResponse = await fetch('/metrics-api');
+                    if (metricsResponse.ok) {
+                        metricsData = await metricsResponse.text();
+                    }
+                } catch (e) {
+                    console.log('Metrics endpoint not available:', e.message);
+                }
+                
+                // Display health status
+                const healthClass = healthResponse.ok ? 'good' : 'error';
+                const healthStatus = healthResponse.ok ? 'UP' : 'DOWN';
+                const statusClass = healthResponse.ok ? 'status-up' : 'status-down';
+                
+                container.innerHTML = `
+                    <div class="metric ${healthClass}">
+                        <span>
+                            <span class="status-indicator ${statusClass}"></span>
+                            Site Health
+                        </span>
+                        <span>${healthStatus} (${healthTime}ms)</span>
+                    </div>
+                    
+                    <div class="metric ${healthTime > 2000 ? 'warning' : 'good'}">
+                        <span>Response Time</span>
+                        <span>${healthTime}ms ${healthTime > 2000 ? '⚠️' : '✅'}</span>
+                    </div>
+                    
+                    <div class="metric good">
+                        <span>API Endpoints</span>
+                        <span>4 active (/health-api, /sendemail, /saveIntakeForm, /metrics-api)</span>
+                    </div>
+                    
+                    <div class="metric ${metricsData ? 'good' : 'warning'}">
+                        <span>Monitoring</span>
+                        <span>${metricsData ? 'Active' : 'Basic'}</span>
+                    </div>
+                    
+                    <div class="metric good">
+                        <span>SSL Certificate</span>
+                        <span>${location.protocol === 'https:' ? 'Valid ✅' : 'Not HTTPS ⚠️'}</span>
+                    </div>
+                `;
+                
+                timestampEl.textContent = `Last updated: ${new Date().toLocaleString()}`;
+                
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="metric error">
+                        <span>
+                            <span class="status-indicator status-down"></span>
+                            Connection Error
+                        </span>
+                        <span>${error.message}</span>
+                    </div>
+                `;
+            }
+        }
+        
+        // Load metrics on page load
+        loadMetrics();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadMetrics, 30000);
+    </script>
+</body>
+</html>
