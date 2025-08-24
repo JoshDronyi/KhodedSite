@@ -148,8 +148,8 @@ private fun ResponsiveContactLayout() {
             ValidatedContactForm(
                 modifier = Modifier
                     .fillMaxWidth()
-                    // Mobile/Tablet: Full width, Desktop: Constrained
-                    .maxWidth(600.px),
+                    // Mobile/Tablet: Full width, Desktop: Constrained with responsive sizing
+                    .maxWidth(clamp(100.percent, 45.vw, 600.px)),
                 onSubmitSuccess = { message ->
                     println("Contact form submitted successfully: $message")
                 }
