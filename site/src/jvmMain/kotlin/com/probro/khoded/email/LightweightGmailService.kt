@@ -338,7 +338,7 @@ class LightweightGmailService(
         return when (response.status) {
             HttpStatusCode.BadRequest -> { // 400
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail API Bad Request (400): The request was malformed or invalid.",
+                    exceptionMessage = "Gmail API Bad Request (400): The request was malformed or invalid.",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. Check MIME message format - ensure no spaces after header field names")
@@ -353,7 +353,7 @@ class LightweightGmailService(
             
             HttpStatusCode.Unauthorized -> { // 401
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail API Unauthorized (401): Authentication failed or token expired.",
+                    exceptionMessage = "Gmail API Unauthorized (401): Authentication failed or token expired.",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. Verify service account credentials in KhodedConfig are correct")
@@ -369,7 +369,7 @@ class LightweightGmailService(
             
             HttpStatusCode.Forbidden -> { // 403
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail API Forbidden (403): Insufficient permissions or quota exceeded.",
+                    exceptionMessage = "Gmail API Forbidden (403): Insufficient permissions or quota exceeded.",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. DOMAIN RESTRICTIONS: Check if user's domain admin has disabled Gmail apps")
@@ -389,7 +389,7 @@ class LightweightGmailService(
             HttpStatusCode.TooManyRequests -> { // 429
                 // This will be retried automatically by executeWithRetry
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail API Rate Limited (429): Too many requests. Retrying with exponential backoff.",
+                    exceptionMessage = "Gmail API Rate Limited (429): Too many requests. Retrying with exponential backoff.",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. This service automatically retries with exponential backoff")
@@ -406,7 +406,7 @@ class LightweightGmailService(
             HttpStatusCode.InternalServerError -> { // 500
                 // This will be retried automatically by executeWithRetry
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail API Server Error (500): Google server encountered an error. Retrying.",
+                    exceptionMessage = "Gmail API Server Error (500): Google server encountered an error. Retrying.",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. This is a temporary Google server issue - automatic retry in progress")
@@ -420,7 +420,7 @@ class LightweightGmailService(
             
             else -> {
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail API Unexpected Error ($statusCode): ${response.status.description}",
+                    exceptionMessage = "Gmail API Unexpected Error ($statusCode): ${response.status.description}",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. Uncommon error code - check Gmail API documentation for $statusCode")
@@ -441,14 +441,14 @@ class LightweightGmailService(
         return when (exception) {
             is GmailAuthenticationException -> {
                 MailResponse.Error(
-                    exceptionMesaage = "Gmail Authentication Error: ${exception.message}",
+                    exceptionMessage = "Gmail Authentication Error: ${exception.message}",
                     stackTrace = exception.developerSolution
                 )
             }
             
             is kotlinx.serialization.SerializationException -> {
                 MailResponse.Error(
-                    exceptionMesaage = "JSON Serialization Error: Invalid response format from Gmail API",
+                    exceptionMessage = "JSON Serialization Error: Invalid response format from Gmail API",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. Gmail API response format may have changed")
@@ -462,7 +462,7 @@ class LightweightGmailService(
             
             is java.net.ConnectException -> {
                 MailResponse.Error(
-                    exceptionMesaage = "Network Connection Error: Cannot reach Gmail API servers",
+                    exceptionMessage = "Network Connection Error: Cannot reach Gmail API servers",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. Check internet connectivity")
@@ -477,7 +477,7 @@ class LightweightGmailService(
             
             is java.net.SocketTimeoutException -> {
                 MailResponse.Error(
-                    exceptionMesaage = "Request Timeout: Gmail API did not respond within 30 seconds",
+                    exceptionMessage = "Request Timeout: Gmail API did not respond within 30 seconds",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. Network latency is high - check connection quality")
@@ -492,7 +492,7 @@ class LightweightGmailService(
             
             else -> {
                 MailResponse.Error(
-                    exceptionMesaage = "Unexpected Error: ${exception.message}",
+                    exceptionMessage = "Unexpected Error: ${exception.message}",
                     stackTrace = buildString {
                         appendLine("DEVELOPER SOLUTION:")
                         appendLine("1. This is an unexpected error type: ${exception::class.simpleName}")

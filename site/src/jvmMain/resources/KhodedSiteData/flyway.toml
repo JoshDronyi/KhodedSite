@@ -22,6 +22,18 @@ validateMigrationNaming = true
   [flyway.check]
   majorTolerance = 0
 
+[environments.development]
+url = "jdbc:postgresql://localhost:5432/khodedBackendData"
+schemas = [ "testDB" ]
+displayName = "Local Development Database"
+
+[environments.production]
+# Use DATABASE_URL environment variable from Render
+url = "${DATABASE_URL}"
+schemas = [ "public" ]
+displayName = "Render Production Database"
+
+# Legacy target for backward compatibility
 [environments.target1]
 url = "jdbc:postgresql://localhost:5432/khodedBackendData"
 schemas = [ "testDB" ]

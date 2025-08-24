@@ -51,7 +51,7 @@ COPY site/ /project/site/
 COPY *.gradle.kts /project/
 COPY *.properties /project/
 COPY gradlew* /project/
-COPY local.properties /project/ 2>/dev/null || true
+# Note: local.properties is excluded by .dockerignore for security
 
 # Install build dependencies including browser for Kobweb export
 # CRITICAL: Kobweb export requires a browser for static site generation

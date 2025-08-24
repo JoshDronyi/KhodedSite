@@ -1,0 +1,19 @@
+site:
+  name: "khoded"
+  
+server:
+  port: 8080
+  
+app:
+  globals:
+    - package: "com.probro.khoded"
+      
+env:
+  DEV:
+    kobweb:
+      server:
+        port: 8080
+  PROD:
+    kobweb:
+      server:
+        port: 8080

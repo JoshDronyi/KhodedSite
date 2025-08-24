@@ -49,7 +49,7 @@ suspend fun demonstrateEmailService(logger: Logger) {
                 logger.info("✅ Email sent successfully using lightweight Gmail service!")
             }
             is MailResponse.Error -> {
-                logger.error("❌ Email failed: ${result.exceptionMesaage}")
+                logger.error("❌ Email failed: ${result.exceptionMessage}")
                 logger.error("Developer solution: ${result.stackTrace}")
             }
         }
@@ -102,7 +102,7 @@ suspend fun demonstrateErrorHandling(logger: Logger) {
         // The service will return a detailed error with specific solutions
         if (result is MailResponse.Error) {
             logger.info("Error caught and handled gracefully:")
-            logger.info("Error: ${result.exceptionMesaage}")
+            logger.info("Error: ${result.exceptionMessage}")
             logger.info("Solution: ${result.stackTrace}")
         }
         

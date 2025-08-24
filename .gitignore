@@ -2,38 +2,52 @@
 .idea/
 build/
 
-# Development and build files
-.claude/
-.kotlin/
-site/.kobweb/server/logs/
-site/.kobweb/server/state.yaml
+# Environment files
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
 
-# OS files
+# Secrets and credentials
+secrets/
+!secrets/.gitkeep
+!secrets/*.template
+credentials.json
+*.key
+*.pem
+*.p12
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/
+
+# Backup files
+backups/
+*.backup
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # IDE files
+.vscode/
 *.swp
 *.swo
-*~
-
-# Log files
-*.log
 
 # Temporary files
 *.tmp
 *.temp
 
-# SECURITY: Sensitive files - NEVER commit these
-local.properties
-secrets/
-credentials.json
-*.key
-*.pem
-*.p12
-.env
-.env.local
-.env.production
-.env.staging
-**/tokens/
-**/credentials/
+# Kotlin compiler files
+.kotlin/
+*.salive*.log
+diagnostic-report.txt

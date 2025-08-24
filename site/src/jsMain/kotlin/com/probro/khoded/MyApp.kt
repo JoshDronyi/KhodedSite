@@ -11,6 +11,9 @@ import com.varabyte.kobweb.silk.style.common.SmoothColorStyle
 import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import com.varabyte.kobweb.silk.theme.colors.systemPreference
+import com.probro.khoded.utils.performance.PerformanceMonitor
+import com.probro.khoded.accessibility.AccessibilityUtils
+import com.probro.khoded.accessibility.FocusManager
 import org.jetbrains.compose.web.css.*
 
 @App
@@ -26,4 +29,39 @@ fun MyApp(content: @Composable () -> Unit) {
 @InitSilk
 fun initSilk(ctx: InitSilkContext) {
     ctx.config.initialColorMode = ColorMode.systemPreference
+    
+    // Initialize performance monitoring for production
+    PerformanceMonitor.measureCoreWebVitals()
+    
+    // Initialize accessibility enhancements
+    val focusManager = FocusManager()
+    focusManager.startManaging()
+    AccessibilityUtils.createSkipLinks()
+    AccessibilityUtils.enhanceKeyboardNavigation()
+    
+    // Track page view for analytics
+    js("""
+        console.log('Khoded application initialized - Performance monitoring & accessibility active');
+        
+        window.addEventListener('load', function() {
+            var metricData = {
+                metric: 'page_view',
+                value: 1,
+                timestamp: Date.now(),
+                url: window.location.pathname,
+                type: 'initialization'
+            };
+            
+            fetch('/api/metrics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(metricData)
+            }).catch(function(err) {
+                console.warn('Failed to send page view metric:', err);
+            });
+        });
+    """)
 }

@@ -35,11 +35,11 @@ fun AboutPage() {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Hero Section
+                // Hero Section - Mobile-first responsive
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .minHeight(60.vh)
+                        .minHeight(50.vh)  // Reduced for mobile
                         .backgroundImage(
                             linearGradient(
                                 dir = LinearGradient.Direction.ToBottomRight,
@@ -48,7 +48,11 @@ fun AboutPage() {
                                 interpolation = ColorInterpolationMethod.ProphotoRgb
                             )
                         )
-                        .padding(80.px, 40.px),
+                        // Mobile-first responsive padding
+                        .padding(
+                            topBottom = clamp(40.px, 10.vw, 80.px),
+                            leftRight = clamp(20.px, 5.vw, 40.px)
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -80,19 +84,22 @@ fun AboutPage() {
                     )
                 }
 
-                // Story Section
+                // Story Section - Mobile responsive
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
-                        .padding(80.px, 40.px),
+                        .padding(
+                            topBottom = clamp(40.px, 8.vw, 80.px),
+                            leftRight = clamp(20.px, 5.vw, 40.px)
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(40.px)
+                    verticalArrangement = Arrangement.spacedBy(clamp(30.px, 5.vw, 40.px))
                 ) {
                     SpanText(
                         "Our Story",
                         modifier = Modifier
-                            .fontSize(36.px)
+                            .fontSize(clamp(28.px, 6.vw, 36.px))  // Responsive heading
                             .fontWeight(700)
                             .color(Color.white)
                             .textAlign(TextAlign.Center)
@@ -101,95 +108,123 @@ fun AboutPage() {
                     SpanText(
                         "Founded as Connecticut's early specialists in Kotlin Multiplatform technology, Khoded bridges the gap between innovative cross-platform development and business results. We help forward-thinking companies in Finance, Healthcare, and Manufacturing achieve 80% code reuse, 40% faster development, and 100% native performance through our proven expertise.",
                         modifier = Modifier
-                            .fontSize(18.px)
+                            .fontSize(clamp(16.px, 4.vw, 18.px))  // Responsive body text
                             .lineHeight(1.6)
                             .color(rgba(255, 255, 255, 0.8))
                             .textAlign(TextAlign.Center)
                             .maxWidth(800.px)
+                            .padding(leftRight = 16.px)  // Mobile padding
                     )
                 }
 
-                // Team Section
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .backgroundColor(KhodedDesignSystem.colors.backgroundDark)
-                        .padding(80.px, 40.px),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(60.px)
-                ) {
-                    SpanText(
-                        "Meet Our Team",
-                        modifier = Modifier
-                            .fontSize(36.px)
-                            .fontWeight(700)
-                            .color(Color.white)
-                            .textAlign(TextAlign.Center)
-                    )
+                // Team Section - Mobile responsive
+                ResponsiveTeamSection()
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .maxWidth(800.px),
-                        horizontalArrangement = Arrangement.spacedBy(40.px),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        // Founders - Esther and Joshua Dronyi
-                        TeamMemberCard(
-                            name = Founders.ESTHER.name,
-                            role = Founders.ESTHER.title,
-                            description = Founders.ESTHER.bio
-                        )
-
-                        TeamMemberCard(
-                            name = Founders.JOSHUA.name,
-                            role = Founders.JOSHUA.title,
-                            description = Founders.JOSHUA.bio
-                        )
-                    }
-                }
-
-                // Values Section
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
-                        .padding(80.px, 40.px),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(60.px)
-                ) {
-                    SpanText(
-                        "Our Values",
-                        modifier = Modifier
-                            .fontSize(36.px)
-                            .fontWeight(700)
-                            .color(Color.white)
-                            .textAlign(TextAlign.Center)
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(40.px),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        ValueCard(
-                            title = "Early Expertise",
-                            description = "Connecticut's first Kotlin Multiplatform specialists, ahead of the curve with proven results."
-                        )
-
-                        ValueCard(
-                            title = "Proven Results",
-                            description = "80% code reuse, 40% faster development, 100% native performance - backed by JetBrains & Google."
-                        )
-
-                        ValueCard(
-                            title = "Local Focus",
-                            description = "Deep understanding of Connecticut's Finance, Healthcare, and Manufacturing industry needs."
-                        )
-                    }
-                }
+                // Values Section - Mobile responsive
+                ResponsiveValuesSection()
 
             }
+        }
+    }
+}
+
+/**
+ * Responsive Team Section - Mobile-first design
+ * Stacks team members vertically on mobile, side-by-side on desktop
+ */
+@Composable
+private fun ResponsiveTeamSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .backgroundColor(KhodedDesignSystem.colors.backgroundDark)
+            .padding(
+                topBottom = clamp(40.px, 8.vw, 80.px),
+                leftRight = clamp(20.px, 5.vw, 40.px)
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(clamp(40.px, 6.vw, 60.px))
+    ) {
+        SpanText(
+            "Meet Our Team",
+            modifier = Modifier
+                .fontSize(clamp(28.px, 6.vw, 36.px))
+                .fontWeight(700)
+                .color(Color.white)
+                .textAlign(TextAlign.Center)
+        )
+
+        // Team members in responsive grid
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .maxWidth(900.px),
+            verticalArrangement = Arrangement.spacedBy(clamp(30.px, 5.vw, 40.px)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TeamMemberCard(
+                name = Founders.ESTHER.name,
+                role = Founders.ESTHER.title,
+                description = Founders.ESTHER.bio
+            )
+
+            TeamMemberCard(
+                name = Founders.JOSHUA.name,
+                role = Founders.JOSHUA.title,
+                description = Founders.JOSHUA.bio
+            )
+        }
+    }
+}
+
+/**
+ * Responsive Values Section - Mobile-first design  
+ * Stacks values vertically on mobile, grid on desktop
+ */
+@Composable
+private fun ResponsiveValuesSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .backgroundColor(KhodedDesignSystem.colors.backgroundDarkSecondary)
+            .padding(
+                topBottom = clamp(60.px, 8.vw, 80.px),
+                leftRight = clamp(32.px, 5.vw, 40.px)
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(clamp(50.px, 6.vw, 60.px))
+    ) {
+        SpanText(
+            "Our Values",
+            modifier = Modifier
+                .fontSize(clamp(28.px, 6.vw, 36.px))
+                .fontWeight(700)
+                .color(Color.white)
+                .textAlign(TextAlign.Center)
+        )
+
+        // Values in responsive grid - Prevents overflow and better mobile stacking
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .maxWidth(900.px), // Reduced to prevent overflow
+            verticalArrangement = Arrangement.spacedBy(clamp(24.px, 4.vw, 32.px)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ValueCard(
+                title = "Early Expertise",
+                description = "Connecticut's first Kotlin Multiplatform specialists, ahead of the curve with proven results."
+            )
+
+            ValueCard(
+                title = "Proven Results", 
+                description = "80% code reuse, 40% faster development, 100% native performance - backed by JetBrains & Google."
+            )
+
+            ValueCard(
+                title = "Local Focus",
+                description = "Deep understanding of Connecticut's Finance, Healthcare, and Manufacturing industry needs."
+            )
         }
     }
 }
@@ -203,17 +238,19 @@ private fun TeamMemberCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .maxWidth(500.px)  // Prevent cards from getting too wide
             .backgroundColor(rgba(255, 255, 255, 0.08))
             .borderRadius(12.px)
-            .padding(30.px)
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.3)),
+            .padding(clamp(24.px, 4.vw, 30.px))  // Responsive padding
+            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.3))
+            .minHeight(KhodedDesignSystem.touchTargets.minimum),  // Minimum touch target
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(15.px)
+        verticalArrangement = Arrangement.spacedBy(clamp(12.px, 3.vw, 15.px))
     ) {
-        // Profile image placeholder
+        // Profile image placeholder - responsive size
         Column(
             modifier = Modifier
-                .size(120.px)
+                .size(clamp(100.px, 20.vw, 120.px))  // Responsive image size
                 .backgroundColor(rgba(255, 255, 255, 0.15))
                 .borderRadius(50.percent),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -222,7 +259,7 @@ private fun TeamMemberCard(
             SpanText(
                 "Photo",
                 modifier = Modifier
-                    .fontSize(14.px)
+                    .fontSize(clamp(12.px, 2.5.vw, 14.px))
                     .color(rgba(255, 255, 255, 0.6))
             )
         }
@@ -230,7 +267,7 @@ private fun TeamMemberCard(
         SpanText(
             name,
             modifier = Modifier
-                .fontSize(24.px)
+                .fontSize(clamp(20.px, 4.vw, 24.px))  // Responsive name
                 .fontWeight(700)
                 .color(Color.white)
                 .textAlign(TextAlign.Center)
@@ -239,7 +276,7 @@ private fun TeamMemberCard(
         SpanText(
             role,
             modifier = Modifier
-                .fontSize(16.px)
+                .fontSize(clamp(14.px, 3.vw, 16.px))  // Responsive role
                 .fontWeight(500)
                 .color(rgb(6, 182, 212))
                 .textAlign(TextAlign.Center)
@@ -248,10 +285,11 @@ private fun TeamMemberCard(
         SpanText(
             description,
             modifier = Modifier
-                .fontSize(14.px)
+                .fontSize(clamp(16.px, 2.5.vw, 14.px))  // Responsive description - WCAG AA compliant minimum
                 .lineHeight(1.5)
                 .color(rgba(255, 255, 255, 0.7))
                 .textAlign(TextAlign.Center)
+                .padding(leftRight = 8.px)  // Mobile padding
         )
     }
 }
@@ -264,29 +302,38 @@ private fun ValueCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(Color.white)
-            .borderRadius(12.px)
-            .padding(30.px)
-            .boxShadow(offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, color = rgba(0, 0, 0, 0.15)),
+            .maxWidth(500.px)  // Reduced to prevent overflow on mobile
+            .backgroundColor(rgba(255, 255, 255, 0.95))  // Slightly transparent white for softer appearance
+            .borderRadius(16.px)  // Slightly more rounded for modern look
+            .padding(clamp(28.px, 5.vw, 32.px))  // Better mobile padding
+            .boxShadow(
+                offsetX = 0.px, 
+                offsetY = 6.px, 
+                blurRadius = 20.px, 
+                color = rgba(0, 0, 0, 0.25)
+            )  // Enhanced shadow for better depth
+            .minHeight(48.px),  // WCAG AAA compliant touch target
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(15.px)
+        verticalArrangement = Arrangement.spacedBy(clamp(16.px, 3.vw, 18.px))
     ) {
         SpanText(
             title,
             modifier = Modifier
-                .fontSize(24.px)
+                .fontSize(clamp(22.px, 4.5.vw, 26.px))  // Slightly larger for better hierarchy
                 .fontWeight(700)
-                .color(rgb(15, 23, 42))
+                .color(rgb(15, 23, 42))  // Deep navy - excellent contrast
                 .textAlign(TextAlign.Center)
+                .lineHeight(1.2)
         )
 
         SpanText(
             description,
             modifier = Modifier
-                .fontSize(16.px)
-                .lineHeight(1.5)
-                .color(rgb(100, 116, 139))
+                .fontSize(clamp(15.px, 3.2.vw, 17.px))  // Slightly larger for better readability
+                .lineHeight(1.6)  // Better line height for readability
+                .color(rgb(71, 85, 105))  // Darker gray for better contrast against light background
                 .textAlign(TextAlign.Center)
+                .padding(leftRight = clamp(8.px, 2.vw, 12.px))  // Responsive horizontal padding
         )
     }
 }

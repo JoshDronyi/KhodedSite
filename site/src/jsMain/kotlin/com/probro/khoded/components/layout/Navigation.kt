@@ -1,17 +1,26 @@
 // Navigation.kt - Simplified Header and Navigation components  
 package com.probro.khoded.components.layout
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.probro.khoded.design.KhodedDesignSystem
-import com.varabyte.kobweb.compose.ui.*
-import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.compose.css.*
 import com.varabyte.kobweb.compose.css.functions.clamp
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
+import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.navigation.Link
 import org.jetbrains.compose.web.css.*
-import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.*
-import org.jetbrains.compose.web.attributes.*
 import org.w3c.dom.HTMLElement
 import kotlinx.browser.window
 import kotlinx.browser.document
@@ -29,12 +38,16 @@ private fun SkipNavigation() {
     A(
         href = "#main-content",
         attrs = Modifier
-            .position(Position.Absolute)
-            .left((-10000).px)
-            .top(0.px)
-            .width(1.px)
-            .height(1.px)
-            .overflow(Overflow.Hidden)
+            .attrsModifier {
+                style {
+                    position(Position.Absolute)
+                    left((-10000).px)
+                    top(0.px)
+                    width(1.px)
+                    height(1.px)
+                    overflow("hidden")
+                }
+            }
             .toAttrs {
                 attr("aria-label", "Skip to main content")
                 style {
@@ -82,20 +95,20 @@ fun Header(
     Header(
         attrs = modifier
             .fillMaxWidth()
-            .position(Position.Fixed)
-            .top(0.px)
-            .left(0.px)
-            .right(0.px)
-            .zIndex(1000)
-            .backgroundColor(
-                when {
-                    transparent && !isScrolled -> rgba(255, 255, 255, 0.1)
-                    transparent && isScrolled -> rgba(255, 255, 255, 0.95)
-                    else -> Color.white
-                }
-            )
             .attrsModifier {
                 style {
+                    position(Position.Fixed)
+                    top(0.px)
+                    left(0.px)
+                    right(0.px)
+                    property("z-index", "1000")
+                    backgroundColor(
+                        when {
+                            transparent && !isScrolled -> Color("rgba(255, 255, 255, 0.1)")
+                            transparent && isScrolled -> Color("rgba(255, 255, 255, 0.95)")
+                            else -> Color.white
+                        }
+                    )
                     property("backdrop-filter", if (transparent) "blur(10px)" else "none")
                     property("border-bottom", if (!transparent || isScrolled) "1px solid #e5e7eb" else "none")
                     property("transition", "all 0.3s ease")
@@ -259,7 +272,7 @@ private fun NavigationLink(
                     when {
                         isActive && transparent -> Color.white
                         isActive -> KhodedDesignSystem.colors.primaryHover
-                        transparent -> rgba(255, 255, 255, 0.9)
+                        transparent -> Color("rgba(255, 255, 255, 0.9)")
                         else -> KhodedDesignSystem.colors.textSecondary
                     }
                 )
@@ -381,7 +394,7 @@ private fun MobileNavigationMenu(
             .left(0.px)
             .right(0.px)
             .bottom(0.px)
-            .backgroundColor(rgba(0, 0, 0, 0.5))
+            .backgroundColor(Color("rgba(0, 0, 0, 0.5)"))
             .zIndex(999)
             .toAttrs {
                 onClick { onClose() }
@@ -612,7 +625,7 @@ private fun KhodedButton(
                 if (variant == ButtonVariant.Ghost) 2.px else 0.px,
                 LineStyle.Solid,
                 when (variant) {
-                    ButtonVariant.Ghost -> rgba(255, 255, 255, 0.4)  // Landing.kt ghost button border
+                    ButtonVariant.Ghost -> Color("rgba(255, 255, 255, 0.4)")  // Landing.kt ghost button border
                     else -> KhodedDesignSystem.colors.primary
                 }
             )
@@ -672,15 +685,11 @@ private fun getCurrentYear(): String {
 
 @Composable
 fun SimpleContainer(content: @Composable () -> Unit) {
-    Div(
-        attrs = Modifier
+    Box(
+        modifier = Modifier
             .fillMaxWidth()
-            .attrsModifier {
-                style {
-                    property("padding", "0 24px")
-                }
-            }
-            .toAttrs()
+            .padding(0.px, 24.px),
+        contentAlignment = Alignment.Center
     ) {
         content()
     }
@@ -688,19 +697,13 @@ fun SimpleContainer(content: @Composable () -> Unit) {
 
 @Composable
 fun SimpleRow(content: @Composable () -> Unit) {
-    Div(
-        attrs = Modifier
+    Row(
+        modifier = Modifier
             .fillMaxWidth()
-            .attrsModifier {
-                style {
-                    property("display", "flex")
-                    property("align-items", "center")
-                    property("justify-content", "space-between")
-                    property("padding", "16px 0")
-                    property("min-height", "64px")
-                }
-            }
-            .toAttrs()
+            .padding(16.px, 0.px)
+            .minHeight(64.px),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         content()
     }
@@ -708,18 +711,12 @@ fun SimpleRow(content: @Composable () -> Unit) {
 
 @Composable
 fun SimpleColumn(content: @Composable () -> Unit) {
-    Div(
-        attrs = Modifier
+    Column(
+        modifier = Modifier
             .fillMaxSize()
-            .attrsModifier {
-                style {
-                    property("display", "flex")
-                    property("flex-direction", "column")
-                    property("padding", "32px")
-                    property("gap", "24px")
-                }
-            }
-            .toAttrs()
+            .padding(32.px)
+            .gap(24.px),
+        verticalArrangement = Arrangement.spacedBy(24.px)
     ) {
         content()
     }
