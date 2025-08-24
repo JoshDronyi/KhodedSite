@@ -44,7 +44,10 @@ nul
 *.temp
 kotlin-js-store/
 **/build/
-**/.kobweb/
+# Exclude .kobweb build artifacts but KEEP site/.kobweb/conf.yaml for plugin detection
+site/.kobweb/site/
+site/.kobweb/server/
+.kobweb/
 
 # Batch scripts
 *.bat
