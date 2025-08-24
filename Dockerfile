@@ -19,6 +19,8 @@ ARG KOBWEB_APP_ROOT
 # Docker container root without worrying about clobbering project files.
 COPY . /project
 
+# Set execute permissions on gradlew
+RUN chmod +x /project/gradlew
 
 # Update and install required OS packages to continue
 # Note: Playwright is a system for running browsers, and here we use it to
@@ -42,14 +44,17 @@ ENV PATH="/kobweb-${KOBWEB_CLI_VERSION}/bin:${PATH}"
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
 
-# Decrease Gradle memory usage to avoid OOM situations in tight environments
-# (many free Cloud tiers only give you 512M of RAM). The following amount
-# should be more than enough to build and export our site.
+# Configure Gradle for Docker builds - increased memory for Kotlin/JS compilation
 RUN mkdir ~/.gradle && \
-    echo "org.gradle.jvmargs=-Xmx256m" >> ~/.gradle/gradle.properties
+    echo "org.gradle.jvmargs=-Xmx1536m -XX:MaxMetaspaceSize=256m" >> ~/.gradle/gradle.properties && \
+    echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties && \
+    echo "kotlin.daemon.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=256m" >> ~/.gradle/gradle.properties
 
-# Build the project first, then export
-RUN ./gradlew build --no-daemon
+# Build from project root first, then export from site directory  
+WORKDIR /project
+RUN ./gradlew build --no-daemon --stacktrace
+
+WORKDIR /project/${KOBWEB_APP_ROOT}
 RUN kobweb export --notty
 
 #-----------------------------------------------------------------------------
