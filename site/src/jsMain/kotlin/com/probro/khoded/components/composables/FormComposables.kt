@@ -84,12 +84,12 @@ fun TextBox(
     val validationService = ValidationServiceProvider.instance
     val enhancedValidation = remember(placeholder, required, validation) {
         if (placeholder.contains("email", ignoreCase = true)) {
-            validation.copy(
+            KhodedValidation(
                 customValidator = { email -> validationService.validateEmail(email) },
                 required = required
             )
         } else {
-            validation.copy(required = required)
+            KhodedValidation(required = required)
         }
     }
 

@@ -21,8 +21,7 @@ import org.jetbrains.compose.web.dom.*
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
+import kotlin.js.Date
 
 /**
  * Validated Contact Form Component
@@ -51,7 +50,6 @@ data class ContactFormState(
     val submitSuccess: String? = null
 )
 
-@OptIn(ExperimentalTime::class)
 @Composable
 fun ValidatedContactForm(
     modifier: Modifier = Modifier,
@@ -126,7 +124,7 @@ fun ValidatedContactForm(
                     "email" to formState.data.email,
                     "subject" to formState.data.subject,
                     "message" to formState.data.message,
-                    "timestamp" to Clock.System.now().toEpochMilliseconds().toString()
+                    "timestamp" to Date.now().toLong().toString()
                 )
 
                 val response = apiClient.postForm("/api/sendemail", formData)

@@ -43,6 +43,13 @@ kotlin {
         languageVersion.set(JavaLanguageVersion.of(21))
         vendor.set(JvmVendorSpec.ADOPTIUM) // Eclipse Temurin
     }
+    
+    // Explicitly set Kotlin language version to avoid deprecation warnings
+    compilerOptions {
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+    }
+    
     configAsKobwebApplication("khoded", includeServer = true)
 
     // Fixed JS compilation configuration to properly include dependencies
@@ -211,10 +218,18 @@ flyway {
 // Gradle build optimizations for smaller Docker images (modern 2025 approach)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions {
+        // Set language version to match KSP version to avoid conflicts
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
         // Enable aggressive optimizations
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
         freeCompilerArgs.add("-Xjsr305=strict")
     }
+}
+
+// Configure KSP to use consistent Kotlin language version  
+ksp {
+    arg("kotlin.version", "1.9")
 }
 
 // Configure JUnit5 for JVM tests

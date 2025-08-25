@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 class MessageDataTest {
 
     @Test
-    fun `should create valid ContactMessageData with all fields`() {
+    fun shouldCreateValidContactMessageDataWithAllFields() {
         val contactData = MessageData.ContactMessageData(
             name = "John Doe",
             email = "john.doe@example.com",
@@ -25,7 +25,7 @@ class MessageDataTest {
     }
 
     @Test
-    fun `should create valid ConsultationMessageData`() {
+    fun shouldCreateValidConsultationMessageData() {
         val consultationData = MessageData.ConsultationMessageData(
             name = "Jane Doe",
             email = "jane@example.com",
@@ -38,7 +38,7 @@ class MessageDataTest {
     }
 
     @Test
-    fun `should handle empty optional fields in ContactMessageData`() {
+    fun shouldHandleEmptyOptionalFieldsInContactMessageData() {
         val contactData = MessageData.ContactMessageData(
             name = "Jane Doe",
             email = "jane@example.com",
@@ -55,7 +55,7 @@ class MessageDataTest {
     }
 
     @Test
-    fun `should handle long messages`() {
+    fun shouldHandleLongMessages() {
         val longMessage = "A".repeat(500)
         val contactData = MessageData.ContactMessageData(
             name = "Test User",
@@ -69,13 +69,13 @@ class MessageDataTest {
     }
 
     @Test
-    fun `FormType enum should have correct values`() {
+    fun formTypeEnumShouldHaveCorrectValues() {
         assertEquals("contact", FormType.CONTACT.value)
         assertEquals("consultation", FormType.CONSULTATION.value)
     }
 
     @Test
-    fun `MailParams enum should have correct values`() {
+    fun mailParamsEnumShouldHaveCorrectValues() {
         assertEquals("type", MailParams.TYPE.value)
     }
 }
@@ -83,7 +83,7 @@ class MessageDataTest {
 class MessageDataConverterTest {
 
     @Test
-    fun `ContactDataConverter should serialize ContactMessageData to JSON`() {
+    fun contactDataConverterShouldSerializeContactMessageDataToJson() {
         val converter = ContactDataConverter()
         val contactData = MessageData.ContactMessageData(
             name = "John Doe",
@@ -103,7 +103,7 @@ class MessageDataConverterTest {
     }
 
     @Test
-    fun `ContactDataConverter should deserialize JSON to ContactMessageData`() {
+    fun contactDataConverterShouldDeserializeJsonToContactMessageData() {
         val converter = ContactDataConverter()
         val json = """
             {
@@ -125,7 +125,7 @@ class MessageDataConverterTest {
     }
 
     @Test
-    fun `ConsultationDataConverter should serialize ConsultationMessageData to JSON`() {
+    fun consultationDataConverterShouldSerializeConsultationMessageDataToJson() {
         val converter = ConsultationDataConverter()
         val consultationData = MessageData.ConsultationMessageData(
             name = "John Doe",
@@ -141,7 +141,7 @@ class MessageDataConverterTest {
     }
 
     @Test
-    fun `ConsultationDataConverter should deserialize JSON to ConsultationMessageData`() {
+    fun consultationDataConverterShouldDeserializeJsonToConsultationMessageData() {
         val converter = ConsultationDataConverter()
         val json = """
             {

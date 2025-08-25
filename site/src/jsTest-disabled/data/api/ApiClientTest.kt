@@ -9,13 +9,13 @@ import kotlin.test.assertNotNull
 class ApiClientTest {
 
     @Test
-    fun `should create ApiClient instance`() {
+    fun shouldCreateApiClientInstance() {
         val apiClient = ApiClient.getInstance()
         assertNotNull(apiClient)
     }
 
     @Test
-    fun `should serialize data to JSON`() {
+    fun shouldSerializeDataToJson() {
         data class TestData(val name: String, val value: Int)
         val testData = TestData("test", 123)
         
@@ -26,7 +26,7 @@ class ApiClientTest {
     }
 
     @Test
-    fun `ApiResponse should handle success responses`() {
+    fun apiResponseShouldHandleSuccessResponses() {
         val successResponse = ApiResponse(
             data = "success data",
             success = true,
@@ -40,7 +40,7 @@ class ApiClientTest {
     }
 
     @Test
-    fun `ApiResponse should handle error responses`() {
+    fun apiResponseShouldHandleErrorResponses() {
         val errorResponse = ApiResponse<String>(
             error = "Something went wrong",
             success = false,
@@ -54,7 +54,7 @@ class ApiClientTest {
     }
 
     @Test
-    fun `ApiError should contain proper error information`() {
+    fun apiErrorShouldContainProperErrorInformation() {
         val apiError = ApiError(
             message = "Validation failed",
             code = "VALIDATION_ERROR",
@@ -68,7 +68,7 @@ class ApiClientTest {
     }
 
     @Test
-    fun `should create proper JSON headers`() {
+    fun shouldCreateProperJsonHeaders() {
         // This test would require accessing private methods, so we'll test behavior indirectly
         val apiClient = ApiClient.getInstance()
         assertNotNull(apiClient)

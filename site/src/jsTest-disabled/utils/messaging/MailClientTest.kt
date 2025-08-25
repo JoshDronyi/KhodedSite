@@ -10,7 +10,7 @@ import kotlinx.coroutines.promise
 class MailClientTest {
     
     @Test
-    fun `should handle contact message sending`() = MainScope().promise {
+    fun shouldHandleContactMessageSending() = MainScope().promise {
         val contactData = MessageData.ContactMessageData(
             name = "Test User",
             email = "test@example.com",
@@ -27,7 +27,7 @@ class MailClientTest {
     }
     
     @Test
-    fun `should handle consultation message sending`() = MainScope().promise {
+    fun shouldHandleConsultationMessageSending() = MainScope().promise {
         val consultationData = MessageData.ConsultationMessageData(
             name = "Consultant",
             email = "consultant@example.com",
@@ -40,7 +40,7 @@ class MailClientTest {
     }
     
     @Test
-    fun `should validate message type matches data type`() = MainScope().promise {
+    fun shouldValidateMessageTypeMatchesDataType() = MainScope().promise {
         val contactData = MessageData.ContactMessageData(
             name = "Test User",
             email = "test@example.com",
@@ -57,7 +57,7 @@ class MailClientTest {
     }
     
     @Test
-    fun `should validate consultation type matches data type`() = MainScope().promise {
+    fun shouldValidateConsultationTypeMatchesDataType() = MainScope().promise {
         val consultationData = MessageData.ConsultationMessageData(
             name = "Consultant",
             email = "consultant@example.com",
@@ -72,7 +72,7 @@ class MailClientTest {
     }
     
     @Test
-    fun `should handle intake form submission`() = MainScope().promise {
+    fun shouldHandleIntakeFormSubmission() = MainScope().promise {
         val intakeForm = JsonObject(mapOf(
             "organization" to JsonPrimitive("Test Organization"),
             "contactEmail" to JsonPrimitive("contact@test.com"),
@@ -87,7 +87,7 @@ class MailClientTest {
     }
     
     @Test
-    fun `should handle empty intake form`() = MainScope().promise {
+    fun shouldHandleEmptyIntakeForm() = MainScope().promise {
         val emptyForm = JsonObject(emptyMap())
         
         val response = MailClient.sendIntakeForm(emptyForm)
@@ -96,18 +96,18 @@ class MailClientTest {
     }
     
     @Test
-    fun `FormType enum should have correct values`() {
+    fun formTypeEnumShouldHaveCorrectValues() {
         assertEquals("contact", FormType.CONTACT.value)
         assertEquals("consultation", FormType.CONSULTATION.value)
     }
     
     @Test
-    fun `MailParams enum should have correct values`() {
+    fun mailParamsEnumShouldHaveCorrectValues() {
         assertEquals("type", MailParams.TYPE.value)
     }
     
     @Test
-    fun `should handle large message data`() = MainScope().promise {
+    fun shouldHandleLargeMessageData() = MainScope().promise {
         val largeMessage = "A".repeat(5000) // 5KB message
         
         val contactData = MessageData.ContactMessageData(

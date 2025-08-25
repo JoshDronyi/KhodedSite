@@ -8,7 +8,7 @@ import kotlin.test.*
 class JsonTest {
     
     @Test
-    fun `should serialize ContactMessageData to JSON`() {
+    fun shouldSerializeContactMessageDataToJson() {
         val contactData = MessageData.ContactMessageData(
             name = "John Doe",
             email = "john@example.com",
@@ -27,7 +27,7 @@ class JsonTest {
     }
     
     @Test
-    fun `should deserialize JSON to ContactMessageData`() {
+    fun shouldDeserializeJsonToContactMessageData() {
         val jsonString = """
             {
                 "name": "Jane Smith",
@@ -48,7 +48,7 @@ class JsonTest {
     }
     
     @Test
-    fun `should serialize ConsultationMessageData to JSON`() {
+    fun shouldSerializeConsultationMessageDataToJson() {
         val consultationData = MessageData.ConsultationMessageData(
             name = "Bob Johnson",
             email = "bob@example.com",
@@ -63,7 +63,7 @@ class JsonTest {
     }
     
     @Test
-    fun `should deserialize JSON to ConsultationMessageData`() {
+    fun shouldDeserializeJsonToConsultationMessageData() {
         val jsonString = """
             {
                 "name": "Alice Brown",
@@ -80,7 +80,7 @@ class JsonTest {
     }
     
     @Test
-    fun `should handle empty optional fields in ContactMessageData`() {
+    fun shouldHandleEmptyOptionalFieldsInContactMessageData() {
         val jsonString = """
             {
                 "name": "Test User",
@@ -101,7 +101,7 @@ class JsonTest {
     }
     
     @Test
-    fun `should handle special characters in JSON`() {
+    fun shouldHandleSpecialCharactersInJson() {
         val contactData = MessageData.ContactMessageData(
             name = "José María",
             email = "jose@example.com",

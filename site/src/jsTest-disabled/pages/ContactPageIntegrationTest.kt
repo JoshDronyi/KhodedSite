@@ -7,20 +7,20 @@ import kotlin.test.assertEquals
 class ContactPageIntegrationTest {
     
     @Test
-    fun `contact page should be accessible`() {
+    fun contactPageShouldBeAccessible() {
         // Verify the contact page exists and is properly defined
         assertTrue(true, "Contact page exists")
     }
     
     @Test
-    fun `contact form should be integrated in contact page`() {
+    fun contactFormShouldBeIntegratedInContactPage() {
         // Test validates that ValidatedContactForm is properly imported and used
         // Since we integrated ValidatedContactForm into Contact.kt, this verifies the integration
         assertTrue(true, "ValidatedContactForm is integrated into contact page")
     }
     
     @Test
-    fun `contact page should have proper structure`() {
+    fun contactPageShouldHaveProperStructure() {
         // Verify the page has the expected sections:
         // 1. Hero section with "Get In Touch" title
         // 2. Contact form section with ValidatedContactForm
@@ -29,7 +29,7 @@ class ContactPageIntegrationTest {
     }
     
     @Test
-    fun `contact form integration should handle success callback`() {
+    fun contactFormIntegrationShouldHandleSuccessCallback() {
         // Test that the onSubmitSuccess callback is properly configured
         val expectedMessage = "Test success message"
         
@@ -44,7 +44,7 @@ class ContactPageIntegrationTest {
     }
     
     @Test
-    fun `contact form should be responsive and accessible`() {
+    fun contactFormShouldBeResponsiveAndAccessible() {
         // Verify the form integration maintains accessibility and responsive design
         assertTrue(true, "Contact form maintains accessibility features")
     }

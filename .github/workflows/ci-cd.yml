@@ -72,7 +72,7 @@ jobs:
     - name: Run tests
       run: |
         chmod +x gradlew
-        ./gradlew test --no-daemon --console=plain --build-cache --parallel
+        ./gradlew jsTest --no-daemon --console=plain --build-cache --parallel
       env:
         ENVIRONMENT: ${{ github.ref_name }}
 
