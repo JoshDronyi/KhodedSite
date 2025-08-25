@@ -14,6 +14,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.TextArea
+import org.jetbrains.compose.web.attributes.InputType
 
 @Composable
 fun KhodedInput(
@@ -33,6 +34,7 @@ fun KhodedInput(
         verticalArrangement = Arrangement.spacedBy(8.px)
     ) {
         Input(
+            type = InputType.Text,
             attrs = Modifier
                 .fillMaxWidth()
                 .padding(12.px, 16.px)
@@ -51,15 +53,13 @@ fun KhodedInput(
                 .onFocusIn { isFocused = true }
                 .onFocusOut { isFocused = false }
                 .toAttrs {
-                    value(value)
-                    if (placeholder.isNotEmpty()) {
-                        placeholder(placeholder)
-                    }
+                    attr("placeholder", placeholder)
                     if (required) {
-                        required()
+                        attr("required", "")
                     }
+                    value(value)
                     onInput { event ->
-                        onValueChange(event.value)
+                        onValueChange(event.value ?: "")
                     }
                     style {
                         property("transition", "border-color 0.2s ease")
@@ -133,16 +133,14 @@ fun KhodedTextArea(
                 .onFocusIn { isFocused = true }
                 .onFocusOut { isFocused = false }
                 .toAttrs {
-                    value(value)
-                    if (placeholder.isNotEmpty()) {
-                        placeholder(placeholder)
-                    }
+                    attr("placeholder", placeholder)
                     if (required) {
-                        required()
+                        attr("required", "")
                     }
-                    maxLength?.let { maxlength(it) }
+                    maxLength?.let { attr("maxlength", it.toString()) }
+                    value(value)
                     onInput { event ->
-                        val newValue = event.value
+                        val newValue = event.value ?: ""
                         if (maxLength == null || newValue.length <= maxLength) {
                             onValueChange(newValue)
                         }
@@ -161,7 +159,6 @@ fun KhodedTextArea(
                 modifier = Modifier
                     .fontSize(12.px)
                     .color(if (isAtLimit) rgb(220, 38, 38) else rgb(107, 114, 128))
-                    .alignSelf(Alignment.End)
             )
         }
     }
