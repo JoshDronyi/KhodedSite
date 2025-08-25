@@ -122,7 +122,8 @@
       "Bash(tasklist:*)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat clean --console=plain)",
       "Bash(GRADLE_OPTS=\"-Dorg.gradle.java.installations.auto-detect=false\" ./gradlew --no-daemon --info build)",
-      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ../gradlew clean --no-daemon --console=plain)"
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ../gradlew clean --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJs --no-daemon --console=plain --continue)"
     ],
     "deny": [],
     "additionalDirectories": [

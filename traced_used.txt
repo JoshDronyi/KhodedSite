@@ -1,0 +1,5 @@
+site/src/jsMain/kotlin/com/probro/khoded/MyApp.kt
+site/src/jsMain/kotlin/com/probro/khoded/pages/Index.kt
+site/src/jsMain/kotlin/com/probro/khoded/pages/About.kt
+site/src/jsMain/kotlin/com/probro/khoded/pages/Contact.kt
+site/src/jsMain/kotlin/com/probro/khoded/pages/Services.kt
