@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 class ValidatedContactFormTest {
 
     @Test
-    fun `ValidationResult should handle valid results`() {
+    fun validationResultShouldHandleValidResults() {
         val validResult = ValidationResult(
             isValid = true,
             message = "",
@@ -23,7 +23,7 @@ class ValidatedContactFormTest {
     }
 
     @Test
-    fun `ValidationResult should handle invalid results`() {
+    fun validationResultShouldHandleInvalidResults() {
         val invalidResult = ValidationResult(
             isValid = false,
             message = "This field is required",
@@ -36,7 +36,7 @@ class ValidatedContactFormTest {
     }
 
     @Test
-    fun `ValidationResult should default to correct severity`() {
+    fun validationResultShouldDefaultToCorrectSeverity() {
         val validResult = ValidationResult(isValid = true)
         assertEquals(ValidationSeverity.Success, validResult.severity)
         
@@ -45,7 +45,7 @@ class ValidatedContactFormTest {
     }
 
     @Test
-    fun `ValidationSeverity should have all expected values`() {
+    fun validationSeverityShouldHaveAllExpectedValues() {
         val success = ValidationSeverity.Success
         val warning = ValidationSeverity.Warning
         val error = ValidationSeverity.Error

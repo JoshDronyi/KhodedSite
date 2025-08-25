@@ -1,6 +1,7 @@
 package com.probro.khoded.services
 
 import com.probro.khoded.components.ui.models.ValidationResult
+import com.probro.khoded.services.ValidationService
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -11,7 +12,7 @@ class ValidationServiceTest {
     private val validationService = ValidationService()
 
     @Test
-    fun `should validate correct email addresses`() {
+    fun shouldValidateCorrectEmailAddresses() {
         val validEmails = listOf(
             "user@example.com",
             "test.email@domain.co.uk",
@@ -29,7 +30,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should reject invalid email addresses`() {
+    fun shouldRejectInvalidEmailAddresses() {
         val invalidEmails = listOf(
             "plainaddress",
             "user@",
@@ -52,7 +53,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should validate various phone number formats`() {
+    fun shouldValidateVariousPhoneNumberFormats() {
         val validPhones = listOf(
             "1234567890",
             "(123) 456-7890",
@@ -71,7 +72,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should reject invalid phone numbers`() {
+    fun shouldRejectInvalidPhoneNumbers() {
         val invalidPhones = listOf(
             "",
             "123",
@@ -88,7 +89,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should validate proper names`() {
+    fun shouldValidateProperNames() {
         val validNames = listOf(
             "John Doe",
             "Mary Jane Smith",
@@ -106,7 +107,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should reject invalid names`() {
+    fun shouldRejectInvalidNames() {
         val invalidNames = listOf(
             "",
             "   ",
@@ -124,7 +125,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should validate proper messages`() {
+    fun shouldValidateProperMessages() {
         val validMessages = listOf(
             "Hello, I would like to inquire about your services.",
             "This is a test message with special characters: áéíóú ñ ç",
@@ -141,7 +142,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should reject invalid messages`() {
+    fun shouldRejectInvalidMessages() {
         val invalidMessages = listOf(
             "",
             "   ",
@@ -156,7 +157,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should validate URLs`() {
+    fun shouldValidateUrls() {
         val validUrls = listOf(
             "https://example.com",
             "http://example.com",
@@ -172,7 +173,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should reject invalid URLs`() {
+    fun shouldRejectInvalidUrls() {
         val invalidUrls = listOf(
             "",
             "not-a-url",
@@ -188,7 +189,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should validate required text fields`() {
+    fun shouldValidateRequiredTextFields() {
         val result1 = validationService.validateRequiredText("Valid text")
         assertTrue(result1.isValid)
 
@@ -200,7 +201,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should validate with custom patterns`() {
+    fun shouldValidateWithCustomPatterns() {
         val alphanumericPattern = Regex("^[A-Za-z0-9]+$")
         
         val result1 = validationService.validatePattern("ABC123", alphanumericPattern)
@@ -211,7 +212,7 @@ class ValidationServiceTest {
     }
 
     @Test
-    fun `should batch validate multiple fields`() {
+    fun shouldBatchValidateMultipleFields() {
         val validResults = listOf(
             ValidationResult(true, ""),
             ValidationResult(true, ""),
