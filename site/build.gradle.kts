@@ -72,6 +72,10 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
+            languageSettings.apply {
+                languageVersion = "1.9"
+                apiVersion = "1.9"
+            }
             dependencies {
                 implementation(compose.runtime)
                 api(libs.kotlinx.serialization.json)
@@ -79,6 +83,10 @@ kotlin {
         }
 
         val jsMain by getting {
+            languageSettings.apply {
+                languageVersion = "1.9"
+                apiVersion = "1.9"
+            }
             dependencies {
                 implementation(compose.html.core)
                 implementation(libs.kobweb.core)
@@ -93,11 +101,19 @@ kotlin {
         }
         
         val jsTest by getting {
+            languageSettings.apply {
+                languageVersion = "1.9"
+                apiVersion = "1.9"
+            }
             dependencies {
                 implementation(libs.kotlin.test.js)
             }
         }
         val jvmMain by getting {
+            languageSettings.apply {
+                languageVersion = "1.9"
+                apiVersion = "1.9"
+            }
             dependencies {
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
 

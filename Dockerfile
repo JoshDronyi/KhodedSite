@@ -50,20 +50,12 @@ RUN mkdir ~/.gradle && \
     echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties && \
     echo "kotlin.daemon.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=256m" >> ~/.gradle/gradle.properties
 
-# Build essential components 
+# Build from project root first, then export from site directory
 WORKDIR /project
-RUN ./gradlew :site:compileKotlinJvm :site:compileKotlinJs :site:jvmJar --no-daemon --stacktrace || echo "Build completed with warnings"
+RUN ./gradlew build --no-daemon --stacktrace
 
-# Try kobweb export, if it fails due to webpack, create minimal server setup
 WORKDIR /project/${KOBWEB_APP_ROOT}
-RUN kobweb export --notty || (echo "Export failed, setting up fallback server" && \
-    mkdir -p .kobweb/server && \
-    cp ../site/build/libs/*.jar .kobweb/server/server.jar 2>/dev/null || echo "No jar to copy" && \
-    echo '#!/bin/bash\nexport KOBWEB_SERVER_PORT=${PORT:-8080}\necho "Starting fallback Kobweb server on port $KOBWEB_SERVER_PORT"\necho "Note: Using fallback due to webpack build issues"\njava -jar server.jar || echo "Server jar not found"' > .kobweb/server/start.sh && \
-    chmod +x .kobweb/server/start.sh)
-
-# Verify the setup
-RUN ls -la .kobweb/server/ && cat .kobweb/server/start.sh
+RUN kobweb export --layout fullstack --notty
 
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb

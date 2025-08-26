@@ -31,7 +31,7 @@ import com.probro.khoded.models.Founders
 @Composable
 fun AboutPage() {
     ErrorBoundary(config = ErrorBoundaryConfig()) {
-        WithNavigation { navigationState ->
+        WithNavigation { _navigationState ->
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {

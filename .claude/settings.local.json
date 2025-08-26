@@ -127,7 +127,11 @@
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJvm --no-daemon --console=plain --continue)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kspKotlinJvm --no-daemon --console=plain)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat --stop)",
-      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileTestKotlinJs --no-daemon --console=plain)"
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileTestKotlinJs --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileProductionExecutableKotlinJs --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:jsBrowserProductionWebpack --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:jsBrowserDevelopmentWebpack --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" docker build -f Dockerfile -t khoded:webpack-test .)"
     ],
     "deny": [],
     "additionalDirectories": [

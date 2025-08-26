@@ -70,7 +70,7 @@ fun Index() {
             }
         }
     ) {
-        WithNavigation { navigationState ->
+        WithNavigation { _navigationState ->
             HomePageSections(
                 Modifier
                     .maxWidth(100.vw)
