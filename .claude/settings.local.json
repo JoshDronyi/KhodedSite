@@ -125,7 +125,9 @@
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ../gradlew clean --no-daemon --console=plain)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJs --no-daemon --console=plain --continue)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileKotlinJvm --no-daemon --console=plain --continue)",
-      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kspKotlinJvm --no-daemon --console=plain)"
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:kspKotlinJvm --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat --stop)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:compileTestKotlinJs --no-daemon --console=plain)"
     ],
     "deny": [],
     "additionalDirectories": [
