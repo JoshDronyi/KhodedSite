@@ -44,10 +44,10 @@ kotlin {
         vendor.set(JvmVendorSpec.ADOPTIUM) // Eclipse Temurin
     }
     
-    // Set Kotlin language version to match KSP requirements
+    // Set Kotlin language version to match Kotlin 2.0.21
     compilerOptions {
-        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
     }
     
     configAsKobwebApplication("khoded", includeServer = true)
@@ -76,8 +76,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             languageSettings.apply {
-                languageVersion = "1.9"
-                apiVersion = "1.9"
+                languageVersion = "2.0"
+                apiVersion = "2.0"
             }
             dependencies {
                 implementation(compose.runtime)
@@ -87,8 +87,8 @@ kotlin {
 
         val jsMain by getting {
             languageSettings.apply {
-                languageVersion = "1.9"
-                apiVersion = "1.9"
+                languageVersion = "2.0"
+                apiVersion = "2.0"
             }
             dependencies {
                 implementation(compose.html.core)
@@ -105,8 +105,8 @@ kotlin {
         
         val jsTest by getting {
             languageSettings.apply {
-                languageVersion = "1.9"
-                apiVersion = "1.9"
+                languageVersion = "2.0"
+                apiVersion = "2.0"
             }
             dependencies {
                 implementation(libs.kotlin.test.js)
@@ -114,8 +114,8 @@ kotlin {
         }
         val jvmMain by getting {
             languageSettings.apply {
-                languageVersion = "1.9"
-                apiVersion = "1.9"
+                languageVersion = "2.0"
+                apiVersion = "2.0"
             }
             dependencies {
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
@@ -237,9 +237,9 @@ flyway {
 // Gradle build optimizations for smaller Docker images (modern 2025 approach)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions {
-        // Set language version to match KSP requirements
-        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+        // Set language version to match Kotlin 2.0.21
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
         // Enable aggressive optimizations
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
         freeCompilerArgs.add("-Xjsr305=strict")
@@ -248,7 +248,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 // Configure KSP to use consistent Kotlin language version  
 ksp {
-    arg("kotlin.version", "1.9")
+    arg("kotlin.version", "2.0")
 }
 
 // Configure JUnit5 for JVM tests
