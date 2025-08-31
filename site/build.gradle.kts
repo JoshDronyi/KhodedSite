@@ -44,11 +44,7 @@ kotlin {
         vendor.set(JvmVendorSpec.ADOPTIUM) // Eclipse Temurin
     }
     
-    // Set Kotlin language version to match Kotlin 2.0.21
-    compilerOptions {
-        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-    }
+    // Let Kotlin version be auto-detected from plugin version
     
     configAsKobwebApplication("khoded", includeServer = true)
 
@@ -75,10 +71,6 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            languageSettings.apply {
-                languageVersion = "2.0"
-                apiVersion = "2.0"
-            }
             dependencies {
                 implementation(compose.runtime)
                 api(libs.kotlinx.serialization.json)
@@ -86,10 +78,6 @@ kotlin {
         }
 
         val jsMain by getting {
-            languageSettings.apply {
-                languageVersion = "2.0"
-                apiVersion = "2.0"
-            }
             dependencies {
                 implementation(compose.html.core)
                 implementation(libs.kobweb.core)
@@ -104,19 +92,11 @@ kotlin {
         }
         
         val jsTest by getting {
-            languageSettings.apply {
-                languageVersion = "2.0"
-                apiVersion = "2.0"
-            }
             dependencies {
                 implementation(libs.kotlin.test.js)
             }
         }
         val jvmMain by getting {
-            languageSettings.apply {
-                languageVersion = "2.0"
-                apiVersion = "2.0"
-            }
             dependencies {
                 compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
 
@@ -237,19 +217,14 @@ flyway {
 // Gradle build optimizations for smaller Docker images (modern 2025 approach)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions {
-        // Set language version to match Kotlin 2.0.21
-        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+        // Let language version auto-detect from Kotlin plugin
         // Enable aggressive optimizations
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
         freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
 
-// Configure KSP to use consistent Kotlin language version  
-ksp {
-    arg("kotlin.version", "2.0")
-}
+// Let KSP auto-detect Kotlin version from plugin
 
 // Configure JUnit5 for JVM tests
 tasks.withType<Test> {
