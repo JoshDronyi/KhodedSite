@@ -44,7 +44,7 @@ kotlin {
         vendor.set(JvmVendorSpec.ADOPTIUM) // Eclipse Temurin
     }
     
-    // Explicitly set Kotlin language version to avoid deprecation warnings
+    // Set Kotlin language version to match KSP requirements
     compilerOptions {
         languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
         apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
@@ -60,10 +60,13 @@ kotlin {
                 devtool = "source-map"
             }
         }
-        // Disable aggressive optimizations that break module resolution
+        // Optimized JS compilation settings
         compilerOptions {
-            freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
-            // Removed -Xir-minimized-member-names which breaks dependency resolution
+            freeCompilerArgs.addAll(listOf(
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlin.js.ExperimentalJsExport",
+                "-Xir-generate-inline-anonymous-functions"
+            ))
         }
         // Ensure dependencies are compiled and included
         useCommonJs()
@@ -234,7 +237,7 @@ flyway {
 // Gradle build optimizations for smaller Docker images (modern 2025 approach)
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions {
-        // Set language version to match KSP version to avoid conflicts
+        // Set language version to match KSP requirements
         languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
         apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
         // Enable aggressive optimizations

@@ -10,7 +10,7 @@ ARG KOBWEB_APP_ROOT="site"
 # final stage, we'll only extract what we need from this stage, saving a lot
 # of space.
 
-FROM openjdk:19-jdk-slim AS export
+FROM eclipse-temurin:21-jdk AS export
 
 ENV KOBWEB_CLI_VERSION=0.9.15
 ARG KOBWEB_APP_ROOT
@@ -60,7 +60,7 @@ RUN kobweb export --layout fullstack --notty
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
 # server.
-FROM openjdk:19-jdk-slim AS run
+FROM eclipse-temurin:21-jre AS run
 
 ARG KOBWEB_APP_ROOT
 

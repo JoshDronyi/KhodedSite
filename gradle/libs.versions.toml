@@ -1,8 +1,8 @@
 [versions]
 jetbrains-compose = "1.8.1"
-kobweb = "0.22.0"
-kotlin = "2.2.10"
-ksp = "2.2.10-2.0.2"
+kobweb = "0.21.1"
+kotlin = "2.1.20"
+ksp = "2.1.20-1.0.31"
 kotlinx-serialization = "1.8.0"
 kotlinMailer = "0.3.0"
 ktor = "3.0.3"
