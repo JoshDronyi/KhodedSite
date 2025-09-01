@@ -57,6 +57,11 @@ RUN ./gradlew build --no-daemon --stacktrace
 WORKDIR /project/${KOBWEB_APP_ROOT}
 RUN kobweb export --layout KOBWEB --notty
 
+# Debug: List the exported files
+RUN echo "=== Kobweb export completed. Listing .kobweb directory ===" && \
+    ls -la .kobweb/ && \
+    if [ -d ".kobweb/server" ]; then echo "Server directory contents:"; ls -la .kobweb/server/; fi
+
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
 # server.
@@ -80,6 +85,15 @@ RUN echo '#!/bin/bash\n\
 # Use PORT environment variable from Render, fallback to 8080\n\
 export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
 echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
-exec .kobweb/server/start.sh' > start.sh && chmod +x start.sh
+# Check if server start script exists and run it\n\
+if [ -f ".kobweb/server/start.sh" ]; then\n\
+  exec .kobweb/server/start.sh\n\
+elif [ -f ".kobweb/start.sh" ]; then\n\
+  exec .kobweb/start.sh\n\
+else\n\
+  echo "Error: Kobweb server start script not found"\n\
+  ls -la .kobweb/\n\
+  exit 1\n\
+fi' > start.sh && chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
