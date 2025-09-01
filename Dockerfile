@@ -55,12 +55,10 @@ WORKDIR /project
 RUN ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
-RUN kobweb export --layout KOBWEB --notty
 
-# Debug: List the exported files
-RUN echo "=== Kobweb export completed. Listing .kobweb directory ===" && \
-    ls -la .kobweb/ && \
-    if [ -d ".kobweb/server" ]; then echo "Server directory contents:"; ls -la .kobweb/server/; fi
+# List available JAR files for debugging
+RUN echo "=== Available JAR files ===" && find . -name "*.jar" -type f && \
+    echo "=== Build directory structure ===" && ls -la build/libs/ || echo "No build/libs directory"
 
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
@@ -73,6 +71,7 @@ ARG KOBWEB_APP_ROOT
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=export /project/${KOBWEB_APP_ROOT}/.kobweb .kobweb
+COPY --from=export /project/${KOBWEB_APP_ROOT}/build ./build
 
 # Render requires apps to bind to 0.0.0.0 and use PORT environment variable
 ENV HOST=0.0.0.0
@@ -80,20 +79,27 @@ ENV PORT=8080
 
 EXPOSE $PORT
 
-# Create a startup script that handles Render's PORT environment variable
+# Create a startup script that runs Kobweb server directly
 RUN echo '#!/bin/bash\n\
 # Use PORT environment variable from Render, fallback to 8080\n\
 export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
+export SERVER_PORT=${PORT:-8080}\n\
 echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
-# Check if server start script exists and run it\n\
-if [ -f ".kobweb/server/start.sh" ]; then\n\
-  exec .kobweb/server/start.sh\n\
-elif [ -f ".kobweb/start.sh" ]; then\n\
-  exec .kobweb/start.sh\n\
-else\n\
-  echo "Error: Kobweb server start script not found"\n\
-  ls -la .kobweb/\n\
+\n\
+# Find the server JAR file\n\
+SERVER_JAR=$(find ./build -name "*jvm*.jar" | head -1)\n\
+if [ -z "$SERVER_JAR" ]; then\n\
+  echo "Error: Server JAR not found"\n\
+  echo "Available files:"\n\
+  find ./build -name "*.jar"\n\
   exit 1\n\
-fi' > start.sh && chmod +x start.sh
+fi\n\
+\n\
+echo "Found server JAR: $SERVER_JAR"\n\
+echo "Server configuration:"\n\
+cat .kobweb/conf.yaml\n\
+\n\
+# Run the server JAR with proper configuration\n\
+exec java -jar "$SERVER_JAR"' > start.sh && chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
