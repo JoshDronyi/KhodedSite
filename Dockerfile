@@ -50,22 +50,14 @@ RUN mkdir ~/.gradle && \
     echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties && \
     echo "kotlin.daemon.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=256m" >> ~/.gradle/gradle.properties
 
-# Build from project root first, then export from site directory
+# Build and export using proper Gradle workflow
 WORKDIR /project
-RUN ./gradlew build --no-daemon --stacktrace
+RUN echo "Building project..." && \
+    ./gradlew build --no-daemon --stacktrace && \
+    echo "Build completed, now exporting for production deployment..." && \
+    ./gradlew kobwebExport -PkobwebReuseServer=false -PkobwebEnv=PROD -PkobwebRunLayout=FULLSTACK -PkobwebBuildTarget=RELEASE -PkobwebExportLayout=FULLSTACK --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
-
-# Export the site for production deployment
-# Try both static and fullstack exports to ensure all components are generated
-RUN echo "Step 1: Export static site files..." && \
-    kobweb export --layout static --notty && \
-    echo "Static export completed, checking results..." && \
-    ls -la .kobweb/ 2>/dev/null || echo "No .kobweb directory after static export" && \
-    echo "Step 2: Export server components..." && \
-    kobweb export --layout fullstack --notty && \
-    echo "Fullstack export completed, final results..." && \
-    ls -la .kobweb/ 2>/dev/null || echo "No .kobweb directory after fullstack export"
 
 # List exported content for debugging  
 RUN echo "=== Kobweb export completed ===" && \
