@@ -56,8 +56,8 @@ RUN ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
 
-# Export the site for production deployment
-RUN kobweb export --layout KOBWEB --notty
+# Export the site for production deployment (fullstack generates server components)
+RUN kobweb export --layout fullstack --notty
 
 # List exported content for debugging  
 RUN echo "=== Kobweb export completed ===" && \
