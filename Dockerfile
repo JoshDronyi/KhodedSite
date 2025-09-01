@@ -57,13 +57,15 @@ RUN ./gradlew build --no-daemon --stacktrace
 WORKDIR /project/${KOBWEB_APP_ROOT}
 
 # Export the site for production deployment
-# Check for gitignore issues that might prevent site files from being created
-RUN echo "Checking .kobweb directory before export:" && \
-    ls -la .kobweb 2>/dev/null || echo "No .kobweb directory yet" && \
-    echo "Running fullstack export with production environment..." && \
-    kobweb export --layout fullstack --env prod --notty && \
-    echo "Export completed, checking results..." && \
-    ls -la .kobweb/ 2>/dev/null || echo "Still no .kobweb directory"
+# Try both static and fullstack exports to ensure all components are generated
+RUN echo "Step 1: Export static site files..." && \
+    kobweb export --layout static --notty && \
+    echo "Static export completed, checking results..." && \
+    ls -la .kobweb/ 2>/dev/null || echo "No .kobweb directory after static export" && \
+    echo "Step 2: Export server components..." && \
+    kobweb export --layout fullstack --notty && \
+    echo "Fullstack export completed, final results..." && \
+    ls -la .kobweb/ 2>/dev/null || echo "No .kobweb directory after fullstack export"
 
 # List exported content for debugging  
 RUN echo "=== Kobweb export completed ===" && \
