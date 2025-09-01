@@ -67,8 +67,15 @@ FROM eclipse-temurin:21-jre AS run
 
 ARG KOBWEB_APP_ROOT
 
-# Install curl for health checks (required by Render)
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Install curl for health checks and wget for Kobweb CLI (required by Render)
+RUN apt-get update && apt-get install -y curl wget unzip && rm -rf /var/lib/apt/lists/*
+
+# Install Kobweb CLI in runtime image
+ENV KOBWEB_CLI_VERSION=0.9.15
+RUN wget https://github.com/varabyte/kobweb-cli/releases/download/v${KOBWEB_CLI_VERSION}/kobweb-${KOBWEB_CLI_VERSION}.zip \
+    && unzip kobweb-${KOBWEB_CLI_VERSION}.zip \
+    && rm kobweb-${KOBWEB_CLI_VERSION}.zip
+ENV PATH="/kobweb-${KOBWEB_CLI_VERSION}/bin:${PATH}"
 
 COPY --from=export /project/${KOBWEB_APP_ROOT}/.kobweb .kobweb
 COPY --from=export /project/${KOBWEB_APP_ROOT}/build ./build
@@ -79,36 +86,24 @@ ENV PORT=8080
 
 EXPOSE $PORT
 
-# Create a startup script that runs Kobweb server directly
+# Create a startup script that uses Kobweb CLI to run the server
 RUN echo '#!/bin/bash\n\
 # Use PORT environment variable from Render, fallback to 8080\n\
 export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
 export SERVER_PORT=${PORT:-8080}\n\
 echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
 \n\
-# Find the server JAR file - prioritize main application JAR\n\
-SERVER_JAR=""\n\
-if [ -f "./build/libs/khoded.jar" ]; then\n\
-  SERVER_JAR="./build/libs/khoded.jar"\n\
-elif [ -f "./build/libs/site-jvm.jar" ]; then\n\
-  SERVER_JAR="./build/libs/site-jvm.jar"\n\
-else\n\
-  # Fallback to any non-metadata JAR\n\
-  SERVER_JAR=$(find ./build -name "*.jar" | grep -v metadata | head -1)\n\
-fi\n\
-\n\
-if [ -z "$SERVER_JAR" ]; then\n\
-  echo "Error: Server JAR not found"\n\
-  echo "Available files:"\n\
-  find ./build -name "*.jar"\n\
-  exit 1\n\
-fi\n\
-\n\
-echo "Found server JAR: $SERVER_JAR"\n\
 echo "Server configuration:"\n\
 cat .kobweb/conf.yaml\n\
 \n\
-# Run the server JAR with proper configuration\n\
-exec java -jar "$SERVER_JAR"' > start.sh && chmod +x start.sh
+echo "Available files:"\n\
+ls -la build/libs/\n\
+\n\
+# Use kobweb run command to start the server properly\n\
+# Set environment for production mode\n\
+export KOBWEB_ENV=PROD\n\
+\n\
+echo "Starting Kobweb server using CLI..."\n\
+exec kobweb run --env=PROD --port=$KOBWEB_SERVER_PORT' > start.sh && chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
