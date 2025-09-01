@@ -50,14 +50,14 @@ RUN mkdir ~/.gradle && \
     echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties && \
     echo "kotlin.daemon.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=256m" >> ~/.gradle/gradle.properties
 
-# Build and export using proper Gradle workflow
+# Build project then export using CLI
 WORKDIR /project
 RUN echo "Building project..." && \
-    ./gradlew build --no-daemon --stacktrace && \
-    echo "Build completed, now exporting for production deployment..." && \
-    ./gradlew kobwebExport -PkobwebReuseServer=false -PkobwebEnv=PROD -PkobwebRunLayout=FULLSTACK -PkobwebBuildTarget=RELEASE -PkobwebExportLayout=FULLSTACK --no-daemon --stacktrace
+    ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
+RUN echo "Exporting site with CLI..." && \
+    kobweb export --layout fullstack --notty
 
 # List exported content for debugging  
 RUN echo "=== Kobweb export completed ===" && \
