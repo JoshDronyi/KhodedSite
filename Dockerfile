@@ -12,7 +12,7 @@ ARG KOBWEB_APP_ROOT="site"
 
 FROM eclipse-temurin:21-jdk AS export
 
-ENV KOBWEB_CLI_VERSION=0.9.15
+ENV KOBWEB_CLI_VERSION=0.9.21
 ARG KOBWEB_APP_ROOT
 
 # Copy the project code to an arbitrary subdir so we can install stuff in the
@@ -76,7 +76,7 @@ ARG KOBWEB_APP_ROOT
 RUN apt-get update && apt-get install -y curl wget unzip && rm -rf /var/lib/apt/lists/*
 
 # Install Kobweb CLI in runtime image
-ENV KOBWEB_CLI_VERSION=0.9.15
+ENV KOBWEB_CLI_VERSION=0.9.21
 RUN wget https://github.com/varabyte/kobweb-cli/releases/download/v${KOBWEB_CLI_VERSION}/kobweb-${KOBWEB_CLI_VERSION}.zip \
     && unzip kobweb-${KOBWEB_CLI_VERSION}.zip \
     && rm kobweb-${KOBWEB_CLI_VERSION}.zip
