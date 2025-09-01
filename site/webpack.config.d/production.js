@@ -1,6 +1,5 @@
 // Production optimizations for Kotlin/JS
-// Use shared path from resolve.js or require if not available
-const path = global.webpackPath || require('path');
+// Note: This file doesn't need path module - using relative paths or webpack internals
 
 if (config.mode === 'production') {
     // Enable advanced optimizations
