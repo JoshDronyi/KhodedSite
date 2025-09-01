@@ -61,9 +61,11 @@ RUN kobweb export --layout fullstack --notty
 
 # List exported content for debugging  
 RUN echo "=== Kobweb export completed ===" && \
-    ls -la .kobweb/ && \
-    if [ -d ".kobweb/site" ]; then echo "Site directory:"; ls -la .kobweb/site/; fi && \
-    if [ -d ".kobweb/server" ]; then echo "Server directory:"; ls -la .kobweb/server/; fi
+    echo "Full .kobweb structure:" && \
+    find .kobweb -type f 2>/dev/null || echo "No .kobweb directory found" && \
+    ls -la .kobweb/ 2>/dev/null || echo "Cannot list .kobweb directory" && \
+    if [ -d ".kobweb/site" ]; then echo "Site directory:"; ls -la .kobweb/site/; else echo "No .kobweb/site directory found"; fi && \
+    if [ -d ".kobweb/server" ]; then echo "Server directory:"; ls -la .kobweb/server/; else echo "No .kobweb/server directory found"; fi
 
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
@@ -104,9 +106,18 @@ sed -i "s/port: 8080/port: $KOBWEB_SERVER_PORT/" .kobweb/conf.yaml\n\
 echo "Production server configuration:"\n\
 cat .kobweb/conf.yaml\n\
 \n\
-# Check for exported server components\n\
+# Check for exported server components and site files\n\
 echo "Exported server structure:"\n\
 find .kobweb -type f -name "*.jar" -o -name "start.sh" -o -name "*.js"\n\
+echo "Site directory check:"\n\
+if [ -d ".kobweb/site" ]; then\n\
+  echo ".kobweb/site exists with $(find .kobweb/site -type f | wc -l) files"\n\
+  ls -la .kobweb/site/ | head -10\n\
+else\n\
+  echo "ERROR: .kobweb/site directory missing!"\n\
+  echo "Available .kobweb contents:"\n\
+  ls -la .kobweb/\n\
+fi\n\
 \n\
 # Use the exported server components for production\n\
 if [ -f ".kobweb/server/start.sh" ]; then\n\
