@@ -55,7 +55,7 @@ WORKDIR /project
 RUN ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
-RUN kobweb export --layout fullstack --notty
+RUN kobweb export --layout KOBWEB --notty
 
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
