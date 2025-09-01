@@ -86,8 +86,17 @@ export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
 export SERVER_PORT=${PORT:-8080}\n\
 echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
 \n\
-# Find the server JAR file\n\
-SERVER_JAR=$(find ./build -name "*jvm*.jar" | head -1)\n\
+# Find the server JAR file - prioritize main application JAR\n\
+SERVER_JAR=""\n\
+if [ -f "./build/libs/khoded.jar" ]; then\n\
+  SERVER_JAR="./build/libs/khoded.jar"\n\
+elif [ -f "./build/libs/site-jvm.jar" ]; then\n\
+  SERVER_JAR="./build/libs/site-jvm.jar"\n\
+else\n\
+  # Fallback to any non-metadata JAR\n\
+  SERVER_JAR=$(find ./build -name "*.jar" | grep -v metadata | head -1)\n\
+fi\n\
+\n\
 if [ -z "$SERVER_JAR" ]; then\n\
   echo "Error: Server JAR not found"\n\
   echo "Available files:"\n\
