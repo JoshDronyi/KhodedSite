@@ -93,17 +93,19 @@ export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
 export SERVER_PORT=${PORT:-8080}\n\
 echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
 \n\
-echo "Server configuration:"\n\
+# Update config file with dynamic port if needed\n\
+sed -i "s/port: 8080/port: $KOBWEB_SERVER_PORT/" .kobweb/conf.yaml\n\
+\n\
+echo "Updated server configuration:"\n\
 cat .kobweb/conf.yaml\n\
 \n\
 echo "Available files:"\n\
 ls -la build/libs/\n\
 \n\
-# Use kobweb run command to start the server properly\n\
 # Set environment for production mode\n\
 export KOBWEB_ENV=PROD\n\
 \n\
 echo "Starting Kobweb server using CLI..."\n\
-exec kobweb run --env=PROD --port=$KOBWEB_SERVER_PORT' > start.sh && chmod +x start.sh
+exec kobweb run --env=PROD' > start.sh && chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
