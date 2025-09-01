@@ -111,14 +111,42 @@ cat .kobweb/conf.yaml\n\
 # Check for exported server components and site files\n\
 echo "Exported server structure:"\n\
 find .kobweb -type f -name "*.jar" -o -name "start.sh" -o -name "*.js"\n\
-echo "Site directory check:"\n\
+echo "Site directory check - checking all possible locations:"\n\
+echo "1. Checking .kobweb/site (expected location):"\n\
 if [ -d ".kobweb/site" ]; then\n\
-  echo ".kobweb/site exists with $(find .kobweb/site -type f | wc -l) files"\n\
+  echo "  ✅ .kobweb/site exists with $(find .kobweb/site -type f | wc -l) files"\n\
   ls -la .kobweb/site/ | head -10\n\
 else\n\
-  echo "ERROR: .kobweb/site directory missing!"\n\
-  echo "Available .kobweb contents:"\n\
-  ls -la .kobweb/\n\
+  echo "  ❌ .kobweb/site missing"\n\
+fi\n\
+echo "2. Checking build/processedResources/js/main/public (from config):"\n\
+if [ -d "build/processedResources/js/main/public" ]; then\n\
+  echo "  ✅ build/processedResources/js/main/public exists with $(find build/processedResources/js/main/public -type f | wc -l) files"\n\
+  ls -la build/processedResources/js/main/public/ | head -5\n\
+else\n\
+  echo "  ❌ build/processedResources/js/main/public missing"\n\
+fi\n\
+echo "3. Checking build/kotlin-webpack/js/productionExecutable/ (prod script location):"\n\
+if [ -d "build/kotlin-webpack/js/productionExecutable" ]; then\n\
+  echo "  ✅ build/kotlin-webpack/js/productionExecutable exists"\n\
+  ls -la build/kotlin-webpack/js/productionExecutable/ | head -5\n\
+else\n\
+  echo "  ❌ build/kotlin-webpack/js/productionExecutable missing"\n\
+fi\n\
+echo "4. Available .kobweb contents:"\n\
+ls -la .kobweb/\n\
+echo "5. All files in .kobweb structure:"\n\
+find .kobweb -type f || echo "No files in .kobweb"\n\
+\n\
+# Try to fix missing site directory by creating it from build output\n\
+if [ ! -d ".kobweb/site" ] && [ -d "build/kotlin-webpack/js/productionExecutable" ]; then\n\
+  echo "Attempting to create .kobweb/site from build output..."\n\
+  mkdir -p .kobweb/site\n\
+  cp -r build/kotlin-webpack/js/productionExecutable/* .kobweb/site/ 2>/dev/null || echo "Failed to copy productionExecutable"\n\
+  if [ -d "build/processedResources/js/main/public" ]; then\n\
+    cp -r build/processedResources/js/main/public/* .kobweb/site/ 2>/dev/null || echo "Failed to copy public resources"\n\
+  fi\n\
+  echo "Created .kobweb/site with $(find .kobweb/site -type f | wc -l) files"\n\
 fi\n\
 \n\
 # Use the exported server components for production\n\
