@@ -24,10 +24,15 @@ class ValidationService {
      * Validates email format using comprehensive regex pattern.
      */
     fun validateEmail(email: String): ValidationResult {
+        val trimmedEmail = email.trim()
         return when {
-            email.isEmpty() -> ValidationResult(false, "Email is required")
-            !email.matches(EMAIL_PATTERN) -> ValidationResult(false, "Please enter a valid email address")
-            email.length > MAX_EMAIL_LENGTH -> ValidationResult(false, "Email address is too long")
+            trimmedEmail.isEmpty() -> ValidationResult(false, "Email is required")
+            trimmedEmail.contains("..") -> ValidationResult(false, "Email cannot contain consecutive dots")
+            trimmedEmail.contains(" ") -> ValidationResult(false, "Email cannot contain spaces")
+            trimmedEmail.startsWith(".") || trimmedEmail.endsWith(".") -> ValidationResult(false, "Email cannot start or end with a dot")
+            trimmedEmail.endsWith(".com.") || trimmedEmail.endsWith(".org.") -> ValidationResult(false, "Please enter a valid email address")
+            !trimmedEmail.matches(EMAIL_PATTERN) -> ValidationResult(false, "Please enter a valid email address")
+            trimmedEmail.length > MAX_EMAIL_LENGTH -> ValidationResult(false, "Email address is too long")
             else -> ValidationResult(true, "")
         }
     }
@@ -36,13 +41,23 @@ class ValidationService {
      * Validates phone number format (supports international formats).
      */
     fun validatePhone(phone: String): ValidationResult {
-        val cleanPhone = phone.replace(Regex("[\\s\\-\\(\\)\\.+]"), "").replace(Regex("^1"), "")
+        val cleanPhone = phone.replace(Regex("[\\s\\-\\(\\)\\.+]"), "")
+        // Remove leading '1' only if it's a US number pattern
+        val finalPhone = if (cleanPhone.startsWith("1") && cleanPhone.length == 11) {
+            cleanPhone.substring(1)
+        } else {
+            cleanPhone
+        }
+        
         return when {
-            phone.isEmpty() -> ValidationResult(false, "Phone number is required")
-            cleanPhone.isEmpty() -> ValidationResult(false, "Please enter a valid phone number")
-            cleanPhone.any { !it.isDigit() } -> ValidationResult(false, "Phone number contains invalid characters")
-            cleanPhone.length < MIN_PHONE_LENGTH -> ValidationResult(false, "Phone number is too short")
-            cleanPhone.length > MAX_PHONE_LENGTH -> ValidationResult(false, "Phone number is too long")
+            phone.trim().isEmpty() -> ValidationResult(false, "Phone number is required")
+            finalPhone.isEmpty() -> ValidationResult(false, "Please enter a valid phone number")
+            phone.contains(Regex("[a-zA-Z]")) -> ValidationResult(false, "Phone number contains invalid characters")
+            finalPhone.any { !it.isDigit() } -> ValidationResult(false, "Phone number contains invalid characters")
+            finalPhone.length < MIN_PHONE_LENGTH -> ValidationResult(false, "Phone number is too short")
+            finalPhone.length > MAX_PHONE_LENGTH -> ValidationResult(false, "Phone number is too long")
+            // Reject SSN-like patterns that look like "123-45-6789" 
+            phone.matches(Regex("^\\d{3}-\\d{2}-\\d{4}$")) -> ValidationResult(false, "Invalid phone number format")
             else -> ValidationResult(true, "")
         }
     }
@@ -147,7 +162,7 @@ class ValidationService {
         
         // Phone validation constants - Support international formats after cleaning
         private val PHONE_PATTERN = Regex("^[+]?[1-9][0-9]{6,14}$")
-        private const val MIN_PHONE_LENGTH = 7
+        private const val MIN_PHONE_LENGTH = 7  // Minimum phone number length after cleaning
         private const val MAX_PHONE_LENGTH = 15
         
         // Name validation constants - Support international names with diacritics and Unicode
