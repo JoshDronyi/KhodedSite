@@ -56,9 +56,14 @@ RUN ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
 
-# List available JAR files for debugging
-RUN echo "=== Available JAR files ===" && find . -name "*.jar" -type f && \
-    echo "=== Build directory structure ===" && ls -la build/libs/ || echo "No build/libs directory"
+# Export the site for production deployment
+RUN kobweb export --layout KOBWEB --notty
+
+# List exported content for debugging  
+RUN echo "=== Kobweb export completed ===" && \
+    ls -la .kobweb/ && \
+    if [ -d ".kobweb/site" ]; then echo "Site directory:"; ls -la .kobweb/site/; fi && \
+    if [ -d ".kobweb/server" ]; then echo "Server directory:"; ls -la .kobweb/server/; fi
 
 #-----------------------------------------------------------------------------
 # Create the final stage, which contains just enough bits to run the Kobweb
@@ -86,26 +91,42 @@ ENV PORT=8080
 
 EXPOSE $PORT
 
-# Create a startup script that uses Kobweb CLI to run the server
+# Create a startup script for production Kobweb server
 RUN echo '#!/bin/bash\n\
 # Use PORT environment variable from Render, fallback to 8080\n\
 export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
 export SERVER_PORT=${PORT:-8080}\n\
-echo "Starting Kobweb server on port $KOBWEB_SERVER_PORT"\n\
+echo "Starting Kobweb production server on port $KOBWEB_SERVER_PORT"\n\
 \n\
-# Update config file with dynamic port if needed\n\
+# Update config file with dynamic port\n\
 sed -i "s/port: 8080/port: $KOBWEB_SERVER_PORT/" .kobweb/conf.yaml\n\
 \n\
-echo "Updated server configuration:"\n\
+echo "Production server configuration:"\n\
 cat .kobweb/conf.yaml\n\
 \n\
-echo "Available files:"\n\
-ls -la build/libs/\n\
+# Check for exported server components\n\
+echo "Exported server structure:"\n\
+find .kobweb -type f -name "*.jar" -o -name "start.sh" -o -name "*.js"\n\
 \n\
-# Set environment for production mode\n\
-export KOBWEB_ENV=PROD\n\
-\n\
-echo "Starting Kobweb server using CLI..."\n\
-exec kobweb run --env=PROD' > start.sh && chmod +x start.sh
+# Use the exported server components for production\n\
+if [ -f ".kobweb/server/start.sh" ]; then\n\
+  echo "Using exported server start script"\n\
+  exec .kobweb/server/start.sh\n\
+elif [ -f ".kobweb/start.sh" ]; then\n\
+  echo "Using exported start script"\n\
+  exec .kobweb/start.sh\n\
+else\n\
+  echo "No exported server found, trying direct server execution"\n\
+  # Find the server JAR in the exported structure\n\
+  SERVER_JAR=$(find .kobweb -name "*.jar" | grep -i server | head -1)\n\
+  if [ -n "$SERVER_JAR" ]; then\n\
+    echo "Found server JAR: $SERVER_JAR"\n\
+    exec java -Dserver.port=$KOBWEB_SERVER_PORT -jar "$SERVER_JAR"\n\
+  else\n\
+    echo "No server components found in export. Available files:"\n\
+    find .kobweb -type f\n\
+    exit 1\n\
+  fi\n\
+fi' > start.sh && chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
