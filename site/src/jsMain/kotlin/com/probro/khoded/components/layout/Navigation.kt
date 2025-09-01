@@ -82,7 +82,7 @@ fun Header(
     
     // Track scroll position for header styling
     LaunchedEffect(Unit) {
-        val handleScroll = { _: dynamic ->
+        val handleScroll = { _event: dynamic ->
             isScrolled = window.pageYOffset > 50
         }
         
@@ -286,10 +286,10 @@ private fun NavigationLink(
                 }
                 .toAttrs {
                     // WCAG 2.2 AA compliant focus states - handled by CSS
-                    onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
-                    onBlur { event -> /* Blur styling handled by CSS */ }
-                    onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
-                    onMouseOut { event -> /* Mouse out styling handled by CSS */ }
+                    onFocus { _event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                    onBlur { _event -> /* Blur styling handled by CSS */ }
+                    onMouseOver { _event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                    onMouseOut { _event -> /* Mouse out styling handled by CSS */ }
                 }
         ) {
             org.jetbrains.compose.web.dom.Text(text)
@@ -329,10 +329,10 @@ private fun MobileMenuButton(
                 attr("aria-controls", "mobile-navigation")
                 onClick { onClick() }
                 // WCAG 2.2 AA compliant focus states - handled by CSS
-                onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
-                onBlur { event -> /* Blur styling handled by CSS */ }
-                onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
-                onMouseOut { event -> /* Mouse out styling handled by CSS */ }
+                onFocus { _event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                onBlur { _event -> /* Blur styling handled by CSS */ }
+                onMouseOver { _event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                onMouseOut { _event -> /* Mouse out styling handled by CSS */ }
             }
     ) {
         Div(
@@ -454,10 +454,10 @@ private fun MobileNavigationMenu(
                             attr("aria-label", "Close menu")
                             onClick { onClose() }
                             // WCAG 2.2 AA compliant focus states - handled by CSS
-                            onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
-                            onBlur { event -> /* Blur styling handled by CSS */ }
-                            onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
-                            onMouseOut { event -> /* Mouse out styling handled by CSS */ }
+                            onFocus { _event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                            onBlur { _event -> /* Blur styling handled by CSS */ }
+                            onMouseOver { _event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                            onMouseOut { _event -> /* Mouse out styling handled by CSS */ }
                         }
                 ) {
                     org.jetbrains.compose.web.dom.Text("✕")
@@ -543,10 +543,10 @@ private fun MobileNavigationLink(
                 .toAttrs {
                     onClick { onClick() }
                     // WCAG 2.2 AA compliant focus states - handled by CSS
-                    onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
-                    onBlur { event -> /* Blur styling handled by CSS */ }
-                    onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
-                    onMouseOut { event -> /* Mouse out styling handled by CSS */ }
+                    onFocus { _event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                    onBlur { _event -> /* Blur styling handled by CSS */ }
+                    onMouseOver { _event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                    onMouseOut { _event -> /* Mouse out styling handled by CSS */ }
                 }
         ) {
             Span(
@@ -651,10 +651,10 @@ private fun KhodedButton(
             .toAttrs {
                 onClick { onClick() }
                 // Enhanced focus states from Landing.kt - handled by CSS
-                onFocus { event -> /* Focus styling handled by CSS :focus pseudo-class */ }
-                onBlur { event -> /* Blur styling handled by CSS */ }
-                onMouseOver { event -> /* Hover styling handled by CSS :hover pseudo-class */ }
-                onMouseOut { event -> /* Mouse out styling handled by CSS */ }
+                onFocus { _event -> /* Focus styling handled by CSS :focus pseudo-class */ }
+                onBlur { _event -> /* Blur styling handled by CSS */ }
+                onMouseOver { _event -> /* Hover styling handled by CSS :hover pseudo-class */ }
+                onMouseOut { _event -> /* Mouse out styling handled by CSS */ }
             }
     ) {
         Text(text)

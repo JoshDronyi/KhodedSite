@@ -11,7 +11,7 @@ ARG KOBWEB_APP_ROOT="site"
 #-----------------------------------------------------------------------------
 FROM eclipse-temurin:21-jdk AS deps
 
-ENV KOBWEB_CLI_VERSION=0.9.20
+ENV KOBWEB_CLI_VERSION=0.9.15
 ARG KOBWEB_APP_ROOT
 
 # Copy only build files needed for dependency resolution
@@ -39,7 +39,7 @@ RUN sed -i 's/\r$//' gradlew && \
 #-----------------------------------------------------------------------------
 FROM eclipse-temurin:21-jdk AS export
 
-ENV KOBWEB_CLI_VERSION=0.9.20
+ENV KOBWEB_CLI_VERSION=0.9.15
 ARG KOBWEB_APP_ROOT
 
 # Copy cached Gradle dependencies from deps stage

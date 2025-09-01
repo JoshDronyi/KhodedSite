@@ -31,7 +31,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 @Composable
 fun ServicesPage() {
     ErrorBoundary(config = ErrorBoundaryConfig()) {
-        WithNavigation { navigationState ->
+        WithNavigation { _navigationState ->
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {

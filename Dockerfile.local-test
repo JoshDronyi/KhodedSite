@@ -1,0 +1,58 @@
+#-----------------------------------------------------------------------------
+# Local Pipeline Testing Dockerfile - Exact match to CI/CD environment
+# This replicates the GitHub Actions Ubuntu + Java 21 Temurin environment
+#-----------------------------------------------------------------------------
+
+FROM eclipse-temurin:21-jdk
+
+# Install tools matching the GitHub Actions environment
+RUN apt-get update && \
+    apt-get install -y \
+        curl \
+        wget \
+        unzip \
+        git \
+        gnupg \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables matching pipeline
+ENV JAVA_VERSION=21
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.workers.max=2"
+ENV ENVIRONMENT=development
+
+# Create gradle user with same permissions as pipeline
+RUN useradd -m -s /bin/bash gradle
+USER gradle
+WORKDIR /home/gradle
+
+# Copy project files
+COPY --chown=gradle:gradle . /home/gradle/project
+WORKDIR /home/gradle/project
+
+# Set execute permissions (matching pipeline step)
+RUN chmod +x gradlew
+
+# Create environment setup (matching pipeline)
+RUN if [ -f .env.template ]; then \
+        cp .env.template .env && \
+        echo "APP_ENVIRONMENT=development" >> .env && \
+        echo "PRIMARY_DOMAIN=localhost:8080" >> .env; \
+    else \
+        echo "APP_ENVIRONMENT=development" > .env && \
+        echo "PRIMARY_DOMAIN=localhost:8080" >> .env; \
+    fi
+
+# Create dummy secrets (matching pipeline)
+RUN mkdir -p secrets && \
+    echo '{"type":"service_account","project_id":"test","client_email":"test@test.com","private_key":"dummy"}' > secrets/gmail_service_account_key.json
+
+# Configure Gradle cache (matching pipeline cache strategy)
+RUN mkdir -p ~/.gradle && \
+    echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties && \
+    echo "org.gradle.parallel=true" >> ~/.gradle/gradle.properties && \
+    echo "org.gradle.workers.max=2" >> ~/.gradle/gradle.properties && \
+    echo "org.gradle.build-cache=true" >> ~/.gradle/gradle.properties
+
+# Default command runs the same tests as pipeline
+CMD ["./gradlew", "jsTest", "build", "--no-daemon", "--console=plain", "--build-cache", "--parallel"]

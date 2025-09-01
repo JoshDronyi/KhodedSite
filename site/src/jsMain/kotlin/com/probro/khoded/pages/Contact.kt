@@ -30,7 +30,7 @@ import com.probro.khoded.components.forms.ValidatedContactForm
 @Composable
 fun ContactPage() {
     ErrorBoundary(config = ErrorBoundaryConfig()) {
-        WithNavigation { navigationState ->
+        WithNavigation { _navigationState ->
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
