@@ -1,5 +1,6 @@
 // Enhanced module resolution for Kotlin/JS dependencies
 const path = require('path');
+global.webpackPath = path; // Share path across webpack config files
 
 // Configure resolve before webpack processes entry points
 config.resolve = config.resolve || {};
