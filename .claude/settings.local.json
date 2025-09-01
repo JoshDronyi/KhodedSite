@@ -151,7 +151,13 @@
       "Bash(./docker-pipeline-test.bat)",
       "Bash(./pipeline-analysis.bat)",
       "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" GRADLE_USER_HOME=C:tmp.gradle_pipeline_clean_%RANDOM% ./gradlew.bat :site:compileKotlinJvm --no-daemon --console=plain --info)",
-      "Bash(./validate-build-system.bat)"
+      "Bash(./validate-build-system.bat)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew.bat :site:jsBrowserTest --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" GRADLE_USER_HOME=C:tmp.gradle_webpack_test ./gradlew.bat :site:compileKotlinJs --no-daemon --console=plain)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" ./gradlew :site:jsTest --no-daemon --console=plain --continue)",
+      "Bash(JAVA_HOME=\"C:\\Users\\joshu\\.jdks\\jbr-21.0.7\" docker build -f Dockerfile -t khoded:production-test .)",
+      "WebFetch(domain:render.com)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "additionalDirectories": [
