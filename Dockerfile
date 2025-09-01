@@ -56,7 +56,9 @@ RUN echo "Building project..." && \
     ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
-RUN echo "Exporting site with CLI..." && \
+RUN echo "Step 1: Exporting static site files..." && \
+    kobweb export --layout static --notty && \
+    echo "Step 2: Exporting server components (preserving site files)..." && \
     kobweb export --layout fullstack --notty
 
 # List exported content for debugging  
