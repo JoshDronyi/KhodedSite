@@ -152,10 +152,7 @@ fi\n\
 # Use the exported server components for production\n\
 if [ -f ".kobweb/server/start.sh" ]; then\n\
   echo "Using exported server start script"\n\
-  # Start server with timeout for testing\n\
-  echo "Starting server with 30 second timeout for testing..."\n\
-  timeout 30s .kobweb/server/start.sh || echo "Server test completed (timeout reached - this is expected)"\n\
-  echo "✅ Server startup test completed successfully!"\n\
+  exec .kobweb/server/start.sh\n\
 elif [ -f ".kobweb/start.sh" ]; then\n\
   echo "Using exported start script"\n\
   exec .kobweb/start.sh\n\
