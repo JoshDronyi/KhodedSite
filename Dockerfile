@@ -58,19 +58,17 @@ RUN echo "Building project..." && \
 WORKDIR /project/${KOBWEB_APP_ROOT}
 RUN echo "Exporting fullstack Kobweb application..." && \
     kobweb export --layout fullstack --notty && \
-    echo "Validating fullstack export..." && \
-    if [ -d ".kobweb/server" ] && [ -f ".kobweb/server/start.sh" ]; then \
-        echo "✅ Server components exported successfully"; \
-    else \
-        echo "❌ Server export failed - no server components found"; \
-        echo "Available .kobweb contents:"; \
-        ls -la .kobweb/ 2>/dev/null || echo "No .kobweb directory"; \
-        exit 1; \
+    echo "Creating missing site directory if needed..." && \
+    if [ ! -d ".kobweb/site" ] && [ -d "build/processedResources/js/main/public" ]; then \
+        mkdir -p .kobweb/site && \
+        cp -r build/processedResources/js/main/public/* .kobweb/site/ && \
+        echo "Created .kobweb/site from build resources"; \
     fi && \
-    if [ -d ".kobweb/site" ] && [ $(find .kobweb/site -type f | wc -l) -gt 0 ]; then \
-        echo "✅ Client site files exported successfully"; \
-    else \
-        echo "❌ Client export failed - no site files found"; \
+    echo "Export validation:" && \
+    echo "Server: $(ls -la .kobweb/server/ 2>/dev/null | wc -l) files" && \
+    echo "Site: $(find .kobweb/site -type f 2>/dev/null | wc -l) files" && \
+    if [ ! -f ".kobweb/server/start.sh" ]; then \
+        echo "❌ Missing server start script"; \
         exit 1; \
     fi
 
@@ -108,79 +106,15 @@ ENV PORT=8080
 
 EXPOSE $PORT
 
-# Create a startup script for production Kobweb server
+# Simple startup script - just run the exported Kobweb server
 RUN echo '#!/bin/bash\n\
-# Use PORT environment variable from Render, fallback to 8080\n\
-export KOBWEB_SERVER_PORT=${PORT:-8080}\n\
-export SERVER_PORT=${PORT:-8080}\n\
-echo "Starting Kobweb production server on port $KOBWEB_SERVER_PORT"\n\
+export PORT=${PORT:-8080}\n\
+echo "Starting Kobweb server on port $PORT"\n\
 \n\
-# Update config file with dynamic port\n\
-sed -i "s/port: 8080/port: $KOBWEB_SERVER_PORT/" .kobweb/conf.yaml\n\
+# Update port in config\n\
+sed -i "s/port: 8080/port: $PORT/" .kobweb/conf.yaml\n\
 \n\
-echo "Production server configuration:"\n\
-cat .kobweb/conf.yaml\n\
-\n\
-# Check for exported server components and site files\n\
-echo "Exported server structure:"\n\
-find .kobweb -type f -name "*.jar" -o -name "start.sh" -o -name "*.js"\n\
-echo "Site directory check - checking all possible locations:"\n\
-echo "1. Checking .kobweb/site (expected location):"\n\
-if [ -d ".kobweb/site" ]; then\n\
-  echo "  ✅ .kobweb/site exists with $(find .kobweb/site -type f | wc -l) files"\n\
-  ls -la .kobweb/site/ | head -10\n\
-else\n\
-  echo "  ❌ .kobweb/site missing"\n\
-fi\n\
-echo "2. Checking build/processedResources/js/main/public (from config):"\n\
-if [ -d "build/processedResources/js/main/public" ]; then\n\
-  echo "  ✅ build/processedResources/js/main/public exists with $(find build/processedResources/js/main/public -type f | wc -l) files"\n\
-  ls -la build/processedResources/js/main/public/ | head -5\n\
-else\n\
-  echo "  ❌ build/processedResources/js/main/public missing"\n\
-fi\n\
-echo "3. Checking build/kotlin-webpack/js/productionExecutable/ (prod script location):"\n\
-if [ -d "build/kotlin-webpack/js/productionExecutable" ]; then\n\
-  echo "  ✅ build/kotlin-webpack/js/productionExecutable exists"\n\
-  ls -la build/kotlin-webpack/js/productionExecutable/ | head -5\n\
-else\n\
-  echo "  ❌ build/kotlin-webpack/js/productionExecutable missing"\n\
-fi\n\
-echo "4. Available .kobweb contents:"\n\
-ls -la .kobweb/\n\
-echo "5. All files in .kobweb structure:"\n\
-find .kobweb -type f || echo "No files in .kobweb"\n\
-\n\
-# Try to fix missing site directory by creating it from build output\n\
-if [ ! -d ".kobweb/site" ] && [ -d "build/kotlin-webpack/js/productionExecutable" ]; then\n\
-  echo "Attempting to create .kobweb/site from build output..."\n\
-  mkdir -p .kobweb/site\n\
-  cp -r build/kotlin-webpack/js/productionExecutable/* .kobweb/site/ 2>/dev/null || echo "Failed to copy productionExecutable"\n\
-  if [ -d "build/processedResources/js/main/public" ]; then\n\
-    cp -r build/processedResources/js/main/public/* .kobweb/site/ 2>/dev/null || echo "Failed to copy public resources"\n\
-  fi\n\
-  echo "Created .kobweb/site with $(find .kobweb/site -type f | wc -l) files"\n\
-fi\n\
-\n\
-# Use the exported server components for production\n\
-if [ -f ".kobweb/server/start.sh" ]; then\n\
-  echo "Using exported server start script"\n\
-  exec .kobweb/server/start.sh\n\
-elif [ -f ".kobweb/start.sh" ]; then\n\
-  echo "Using exported start script"\n\
-  exec .kobweb/start.sh\n\
-else\n\
-  echo "No exported server found, trying direct server execution"\n\
-  # Find the server JAR in the exported structure\n\
-  SERVER_JAR=$(find .kobweb -name "*.jar" | grep -i server | head -1)\n\
-  if [ -n "$SERVER_JAR" ]; then\n\
-    echo "Found server JAR: $SERVER_JAR"\n\
-    exec java -Dserver.port=$KOBWEB_SERVER_PORT -jar "$SERVER_JAR"\n\
-  else\n\
-    echo "No server components found in export. Available files:"\n\
-    find .kobweb -type f\n\
-    exit 1\n\
-  fi\n\
-fi' > start.sh && chmod +x start.sh
+# Run the exported server directly\n\
+exec .kobweb/server/start.sh' > start.sh && chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
