@@ -56,10 +56,23 @@ RUN echo "Building project..." && \
     ./gradlew build --no-daemon --stacktrace
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
-RUN echo "Step 1: Exporting static site files..." && \
-    kobweb export --layout static --notty && \
-    echo "Step 2: Exporting server components (preserving site files)..." && \
-    kobweb export --layout fullstack --notty
+RUN echo "Exporting fullstack Kobweb application..." && \
+    kobweb export --layout fullstack --notty && \
+    echo "Validating fullstack export..." && \
+    if [ -d ".kobweb/server" ] && [ -f ".kobweb/server/start.sh" ]; then \
+        echo "✅ Server components exported successfully"; \
+    else \
+        echo "❌ Server export failed - no server components found"; \
+        echo "Available .kobweb contents:"; \
+        ls -la .kobweb/ 2>/dev/null || echo "No .kobweb directory"; \
+        exit 1; \
+    fi && \
+    if [ -d ".kobweb/site" ] && [ $(find .kobweb/site -type f | wc -l) -gt 0 ]; then \
+        echo "✅ Client site files exported successfully"; \
+    else \
+        echo "❌ Client export failed - no site files found"; \
+        exit 1; \
+    fi
 
 # List exported content for debugging  
 RUN echo "=== Kobweb export completed ===" && \
