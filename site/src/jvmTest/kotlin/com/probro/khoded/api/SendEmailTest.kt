@@ -15,7 +15,7 @@ class SendEmailTest {
     fun `should validate contact message data successfully`() {
         val validContactData = MessageData.ContactMessageData(
             name = "John Doe",
-            email = "john@example.com",
+            email = "john@validcompany.com", // Use non-test domain
             organization = "Test Corp",
             subject = "Test subject",
             message = "This is a valid test message with sufficient length."
@@ -29,7 +29,7 @@ class SendEmailTest {
     fun `should validate consultation message data successfully`() {
         val validConsultationData = MessageData.ConsultationMessageData(
             name = "Jane Doe",
-            email = "jane@example.com",
+            email = "jane@validcompany.com", // Use non-test domain
             message = "This is a valid consultation message."
         )
 
@@ -41,7 +41,7 @@ class SendEmailTest {
     fun `should reject empty name`() {
         val invalidContactData = MessageData.ContactMessageData(
             name = "",
-            email = "john@example.com",
+            email = "john@validcompany.com",
             organization = "Test Corp",
             subject = "Test subject",
             message = "This is a test message."
@@ -71,7 +71,7 @@ class SendEmailTest {
     fun `should reject message that is too short`() {
         val invalidContactData = MessageData.ContactMessageData(
             name = "John Doe",
-            email = "john@example.com",
+            email = "john@validcompany.com",
             organization = "Test Corp",
             subject = "Test subject",
             message = "Short"
@@ -86,7 +86,7 @@ class SendEmailTest {
     fun `should reject message with XSS content`() {
         val maliciousContactData = MessageData.ContactMessageData(
             name = "John Doe",
-            email = "john@example.com",
+            email = "john@validcompany.com",
             organization = "Test Corp",
             subject = "Test subject",
             message = "This message contains <script>alert('xss')</script> malicious content."
@@ -101,7 +101,7 @@ class SendEmailTest {
     fun `should reject message with SQL injection patterns`() {
         val maliciousContactData = MessageData.ContactMessageData(
             name = "John Doe",
-            email = "john@example.com",
+            email = "john@validcompany.com",
             organization = "Test Corp",
             subject = "Test subject",
             message = "This message contains DROP TABLE users; malicious content."
@@ -116,7 +116,7 @@ class SendEmailTest {
     fun `should reject name with malicious content`() {
         val maliciousContactData = MessageData.ContactMessageData(
             name = "<script>alert('xss')</script>",
-            email = "john@example.com",
+            email = "john@validcompany.com",
             organization = "Test Corp",
             subject = "Test subject",
             message = "This is a valid test message."
@@ -131,7 +131,7 @@ class SendEmailTest {
     fun `should reject name that is too long`() {
         val invalidContactData = MessageData.ContactMessageData(
             name = "A".repeat(100),
-            email = "john@example.com",
+            email = "john@validcompany.com",
             organization = "Test Corp",
             subject = "Test subject",
             message = "This is a valid test message."
@@ -144,7 +144,7 @@ class SendEmailTest {
 
     @Test
     fun `should reject email that is too long`() {
-        val longEmail = "a".repeat(250) + "@example.com"
+        val longEmail = "a".repeat(250) + "@validcompany.com"
         val invalidContactData = MessageData.ContactMessageData(
             name = "John Doe",
             email = longEmail,
