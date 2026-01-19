@@ -1,5 +1,6 @@
 package com.probro.khoded.data.api
 
+import com.probro.khoded.messaging.messageData.MessageData
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -16,13 +17,17 @@ class ApiClientTest {
 
     @Test
     fun shouldSerializeDataToJson() {
-        data class TestData(val name: String, val value: Int)
-        val testData = TestData("test", 123)
-        
-        val json = ApiClient.toJson(testData)
-        
+        // Use an existing @Serializable class instead of local data class
+        val contactData = MessageData.ContactMessageData(
+            name = "test",
+            email = "test@example.com",
+            message = "test message"
+        )
+
+        val json = ApiClient.toJson(contactData)
+
         assertTrue(json.contains("\"name\":\"test\""))
-        assertTrue(json.contains("\"value\":123"))
+        assertTrue(json.contains("\"email\":\"test@example.com\""))
     }
 
     @Test

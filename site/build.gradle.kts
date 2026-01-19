@@ -159,6 +159,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(libs.kotlin.test.junit5)
+                implementation(libs.kobweb.api) // For Logger and other API classes used in tests
                 runtimeOnly(libs.junit.jupiter.engine)
                 runtimeOnly(libs.junit.platform.launcher)
             }
